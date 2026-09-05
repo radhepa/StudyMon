@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>C-MON, a C study RPG</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/polish.css">
+<link rel="stylesheet" href="css/parchment.css">
+<link rel="stylesheet" href="css/friends.css">
+</head>
+<body>
+
+<div id="app">
+
+  <div id="topbar"></div>
+
+  <!-- ================= TITLE ================= -->
+  <section id="s-title" class="screen on">
+    <div class="sub">A FIELD GUIDE TO C · A POKÉMON ADVENTURE</div>
+    <div class="big">C-MON<span class="title-period">.</span></div><h1 class="title-headline">Study a little. Stay for a battle.</h1>
+    <div class="book">Forouzan &amp; Gilberg · <i>Computer Science: A Structured Programming Approach in C</i></div>
+
+    <div class="title-mons" aria-label="Your adventure companions">
+      <img src="assets/sprites/front/4.png" alt="">
+      <img src="assets/sprites/front/255.png" alt="">
+      <img src="assets/sprites/front/155.png" alt="">
+      <img src="assets/sprites/front/94.png" alt="">
+      <img src="assets/sprites/front/297.png" alt="">
+      <img src="assets/sprites/front/380.png" alt="">
+      <img src="assets/sprites/front/149.png" alt="">
+    </div>
+
+    <div class="panel dark" style="max-width:620px;margin:0 auto 20px;text-align:left">
+      <p style="font-size:14.5px;line-height:1.7;margin:0 0 10px">
+        Fifteen routes, one per chapter of your textbook. Answer a C question to attack.
+        Stronger moves ask harder questions. Win battles to level up, evolve and
+        collect Pokémon from every generation.
+      </p>
+      <p class="small" style="margin:0">
+        Missed questions come back for review. Your Trainer Card
+        shows which chapters need more practice. Pokémon sprites, cries and stats come
+        from PokéAPI. They are saved on your computer, so you can play offline.
+      </p>
+    </div>
+
+    <div class="row" style="justify-content:center">
+      <button class="primary" id="continuebtn" onclick="continueGame()">▶ Continue</button>
+      <button onclick="newGame()">✦ New Game</button>
+    </div>
+  </section>
+
+  <!-- ================= STARTER ================= -->
+  <section id="s-starter" class="screen"></section>
+
+  <!-- ================= MAP ================= -->
+  <section id="s-map" class="screen"></section>
+
+  <!-- ================= BATTLE ================= -->
+  <section id="s-battle" class="screen">
+    <h2 id="btitle"></h2>
+    <div id="battlefield"></div>
+    <div id="battlelog"></div>
+    <div id="quiz"></div>
+    <div class="row" style="margin-top:12px">
+      <button class="ghost" onclick="fleeToMap()">Leave battle</button>
+    </div>
+  </section>
+
+  <!-- ================= DRILL ================= -->
+  <section id="s-drill" class="screen"></section>
+
+  <!-- ================= PARTY ================= -->
+  <section id="s-party" class="screen"></section>
+
+  <!-- ================= DEX ================= -->
+  <section id="s-dex" class="screen"></section>
+
+  <!-- ================= STUDY ================= -->
+  <section id="s-study" class="screen"></section>
+
+  <!-- ================= STATS ================= -->
+  <section id="s-friends" class="screen"></section>
+  <section id="s-stats" class="screen"></section>
+
+</div>
+
+<nav id="nav" style="display:none">
+  <button data-scr="map"   onclick="showScreen('map');renderMap()">🗺 Map</button>
+  <button data-scr="party" onclick="showScreen('party');renderParty()">👥 Party</button>
+  <button data-scr="dex"   onclick="showScreen('dex');renderDex()">📕 Pokédex</button>
+  <button data-scr="study" onclick="showScreen('study');renderStudy()">📖 Notes</button>
+  <button data-scr="stats" onclick="showScreen('stats');renderStats()">📊 Trainer Card</button>
+  <button data-scr="friends" onclick="openFriends()">♥ Friends</button>
+</nav>
+
+<div id="toast" role="status" aria-live="polite"></div>
+<div id="modal" onclick="if(event.target===this)closeModal()"><div class="panel dark box"></div></div>
+<input type="file" id="importfile" accept="application/json" style="display:none">
+
+<script src="js/data/pokedex.js"></script>
+<script src="js/data/world.js"></script>
+<script src="js/data/questions/ch01-03.js"></script>
+<script src="js/data/questions/ch04-06.js"></script>
+<script src="js/data/questions/ch07-09.js"></script>
+<script src="js/data/questions/ch10-12.js"></script>
+<script src="js/data/questions/ch13-15.js"></script>
+<script src="js/data/questions/ch01-03-b.js"></script>
+<script src="js/data/questions/ch04-06-b.js"></script>
+<script src="js/data/questions/ch07-09-b.js"></script>
+<script src="js/data/questions/ch10-12-b.js"></script>
+<script src="js/data/questions/ch13-15-b.js"></script>
+<script src="js/data/questions/topup.js"></script>
+<script src="js/data/trainers.js"></script>
+<script src="js/engine/state.js"></script>
+<script src="js/engine/mons.js"></script>
+<script src="js/engine/quiz.js"></script>
+<script src="js/engine/ui.js"></script>
+<script src="js/engine/battle.js"></script>
+<script src="js/engine/friends.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
