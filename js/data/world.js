@@ -1,4 +1,4 @@
-/* The StudyMon region.
+/* The C-Region.
    Each chapter of Forouzan & Gilberg, "Computer Science: A Structured Programming
    Approach in C", becomes a Route (wild Pokemon to catch) plus a Gym (the boss).
    Chapter topic -> Pokemon type is a deliberate mnemonic: pointers are Ghost because
