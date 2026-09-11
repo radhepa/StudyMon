@@ -118,7 +118,7 @@ function renderTown() {
   ensureTown(); ensureBag();
   var loc = locationById(TOWN_LOC);
   var h = '<div class="section-intro"><span class="eyebrow">' +
-    esc((subjectDef().region || 'THE StudyMon REGION').toUpperCase()) + '</span>' +
+    esc((subjectDef().region || 'THE C-REGION').toUpperCase()) + '</span>' +
     '<h2>' + esc(loc.name) + '</h2><p>' + esc(loc.blurb) + '</p>' +
     '<div class="region-tabs" aria-label="Places">';
   LOCATIONS.forEach(function (l) {

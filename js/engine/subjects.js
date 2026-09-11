@@ -117,7 +117,7 @@ function installSubjects() {
     id: 'c',
     name: 'C',
     short: 'C',
-    region: 'The StudyMon Region',
+    region: 'The C-Region',
     book: 'Forouzan & Afyouni, Computer Science: A Structured Programming Approach in C',
     blurb: 'Fifteen chapters, fifteen routes, one gym each.',
     CHAPTERS: window.CHAPTERS,
