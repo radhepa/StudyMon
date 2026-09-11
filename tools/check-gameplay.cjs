@@ -1,6 +1,6 @@
 /* Deep functional sweep: drives real gameplay paths in an isolated save and
    reports anything that throws or produces impossible state. */
-const {chromium}=require('C:/Users/minal/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const {chromium}=require('./playwright.cjs');
 const results=[];
 function check(n,ok,d){results.push({n,ok,d});console.log((ok?'PASS  ':'FAIL  ')+n+(d?'  ['+d+']':''));}
 (async()=>{

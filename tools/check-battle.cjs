@@ -1,6 +1,6 @@
 /* Play real battles to completion, driving the same functions the buttons call.
    Battles are timer driven, so this waits on state rather than assuming timing. */
-const {chromium}=require('C:/Users/minal/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const {chromium}=require('./playwright.cjs');
 const results=[];
 function check(n,ok,d){results.push({n,ok});console.log((ok?'PASS  ':'FAIL  ')+n+(d?'  ['+d+']':''));}
 (async()=>{

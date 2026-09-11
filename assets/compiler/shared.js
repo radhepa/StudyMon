@@ -810,7 +810,7 @@ class API {
   }
 }
 
-// C-MON adapter: expose isolated runtime constructors.
+// StudyMon adapter: expose isolated runtime constructors.
 API.App = App;
 API.MemFS = MemFS;
 return API;

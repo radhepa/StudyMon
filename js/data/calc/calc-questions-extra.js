@@ -1,6 +1,6 @@
 /* Hand-written questions for the Converging Isles.
 
-   Notation follows the field manual: plain Unicode, no markup, because C-MON
+   Notation follows the field manual: plain Unicode, no markup, because StudyMon
    escapes question text. ∫ₐᵇ for bounds, ² ³ ⁿ for powers, √( ) for radicals,
    Σ for sums, → for limits. Keep it that way - anything with a tag in it will
    render as literal angle brackets in battle.

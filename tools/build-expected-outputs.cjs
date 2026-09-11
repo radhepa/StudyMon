@@ -9,7 +9,7 @@
    expectation instead of silently keeping a stale one. */
 const fs = require('fs');
 const crypto = require('crypto');
-const { chromium } = require('C:/Users/minal/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const { chromium } = require('./playwright.cjs');
 
 const URL = 'http://127.0.0.1:8780/';
 const OUT = 'tools/quest-expected-outputs.json';

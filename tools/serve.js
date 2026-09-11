@@ -1,5 +1,5 @@
-/* Minimal static file server, used by "Play C-MON.bat" when Python is not installed.
-   Serves the C-MON folder on 127.0.0.1 only. */
+/* Minimal static file server, used by "Play StudyMon.bat" when Python is not installed.
+   Serves the StudyMon folder on 127.0.0.1 only. */
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
@@ -90,6 +90,6 @@ http.createServer((req, res) => {
     res.end(buf);
   });
 }).listen(PORT, '127.0.0.1', () => {
-  console.log('C-MON serving ' + ROOT);
+  console.log('StudyMon serving ' + ROOT);
   console.log('Open http://localhost:' + PORT + '  (Ctrl+C to stop)');
 });

@@ -4,7 +4,7 @@
    its own chapters, bosses and exam-only revision routes, and nothing exercised
    them. Everything runs in a fresh context with its own localStorage. */
 const fs = require('fs');
-const { chromium } = require('C:/Users/minal/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const { chromium } = require('./playwright.cjs');
 
 const results = [];
 const LOG = 'output/calc-region-check.log';

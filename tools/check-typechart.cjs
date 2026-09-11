@@ -4,7 +4,7 @@
    the set it is halved by, and the set it cannot touch. Anything the game
    disagrees with is reported in both directions, so a missing entry and a
    spurious one are both caught. */
-const {chromium}=require('C:/Users/minal/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const {chromium}=require('./playwright.cjs');
 const CANON={
  normal:{double:[],half:['rock','steel'],none:['ghost']},
  fire:{double:['grass','ice','bug','steel'],half:['fire','water','rock','dragon'],none:[]},

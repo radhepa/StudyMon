@@ -3,7 +3,7 @@
    Never touches the real save: each scenario runs in a fresh browser context
    whose localStorage is seeded and discarded. */
 const fs = require('fs');
-const { chromium } = require('C:/Users/minal/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const { chromium } = require('./playwright.cjs');
 const URL = 'http://127.0.0.1:8780/';
 const refs = JSON.parse(fs.readFileSync('tools/quest-reference-fixtures.json', 'utf8'));
 

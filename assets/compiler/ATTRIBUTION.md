@@ -1,6 +1,6 @@
 # Bundled toolchain
 
-C-MON compiles and runs Side Quest programs entirely on your machine. Nothing is
+StudyMon compiles and runs Side Quest programs entirely on your machine. Nothing is
 uploaded and no compiler needs to be installed. That is possible because the
 following third-party components are bundled here.
 
@@ -12,7 +12,7 @@ Clang and LLD compiled to WebAssembly, plus the sysroot and the `memfs` /
 - Licence: Apache License 2.0 with LLVM exceptions, see `LICENSE`
 - `shared.js` is modified: `hostWrite` additionally receives the file
   descriptor, so compiler diagnostics can be separated from program output.
-- `worker.js` ships unmodified but is unused; C-MON uses `js/engine/c-worker.js`.
+- `worker.js` ships unmodified but is unused; StudyMon uses `js/engine/c-worker.js`.
 
 | file | size | sha256 (first 32) |
 | --- | --- | --- |

@@ -1,4 +1,4 @@
-"""Static server for C-MON.
+"""Static server for StudyMon.
 
 Plain `python -m http.server` sends no cache headers, so browsers apply
 heuristic caching and keep serving an old copy of the JS and CSS after the game
@@ -38,7 +38,7 @@ class Server(ThreadingHTTPServer):
 
 if __name__ == '__main__':
     os.chdir(ROOT)
-    print('C-MON serving ' + ROOT)
+    print('StudyMon serving ' + ROOT)
     print('Open http://localhost:%d   (close this window to stop)' % PORT)
     try:
         Server(('127.0.0.1', PORT), partial(Handler, directory=ROOT)).serve_forever()

@@ -15,7 +15,7 @@ and C Notes. There are 10 easy (under 30 minutes), 10 medium (30-60 minutes) and
 Original labs aligned to the fourth-edition curriculum for ISBN 9780357506134,
 not copied textbook exercises.
 
-You write the C in C-MON and press Submit. The app compiles it with Clang and
+You write the C in StudyMon and press Submit. The app compiles it with Clang and
 runs it against every test listed below, on your machine, with nothing uploaded.
 Output is compared exactly: every space, every number and the final newline. A
 test passes only on exit code 0 with nothing written to stderr, and the reward is

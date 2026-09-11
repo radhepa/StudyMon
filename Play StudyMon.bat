@@ -1,11 +1,11 @@
 @echo off
-title C-MON
+title StudyMon
 cd /d "%~dp0"
 set PORT=8777
 
 echo.
 echo   ================================
-echo    C-MON  -  a C study RPG
+echo    StudyMon  -  a C study RPG
 echo   ================================
 echo.
 echo   Starting on http://localhost:%PORT%

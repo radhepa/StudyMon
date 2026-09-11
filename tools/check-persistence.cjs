@@ -7,7 +7,7 @@
    browser context with its own localStorage, so the real save is never read
    or written. */
 const fs = require('fs');
-const { chromium } = require('C:/Users/minal/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const { chromium } = require('./playwright.cjs');
 const URL = 'http://127.0.0.1:8780/';
 
 const results = [];

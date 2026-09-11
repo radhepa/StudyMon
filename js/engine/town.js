@@ -3,7 +3,7 @@
 
    Battles here are deliberately chapter-agnostic. Each townsperson suggests a
    chapter that suits them, but you pick what to study, so the cast survives
-   C-MON growing past C into other subjects. */
+   StudyMon growing past C into other subjects. */
 
 var TOWN_LOC = 'town';        // which location is open
 var TOWN_PERSON = null;       // who you are talking to
@@ -118,7 +118,7 @@ function renderTown() {
   ensureTown(); ensureBag();
   var loc = locationById(TOWN_LOC);
   var h = '<div class="section-intro"><span class="eyebrow">' +
-    esc((subjectDef().region || 'THE C-MON REGION').toUpperCase()) + '</span>' +
+    esc((subjectDef().region || 'THE StudyMon REGION').toUpperCase()) + '</span>' +
     '<h2>' + esc(loc.name) + '</h2><p>' + esc(loc.blurb) + '</p>' +
     '<div class="region-tabs" aria-label="Places">';
   LOCATIONS.forEach(function (l) {

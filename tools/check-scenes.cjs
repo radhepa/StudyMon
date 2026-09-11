@@ -3,7 +3,7 @@
    Townsfolk have events only; companions also have outings. Each scene must
    carry a title, a place and beats, and every beat must offer choices that
    render, since a malformed one would strand the player in a modal. */
-const {chromium}=require('C:/Users/minal/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const {chromium}=require('./playwright.cjs');
 (async()=>{
  const b=await chromium.launch({headless:true,executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'});
  const ctx=await b.newContext(); const p=await ctx.newPage();

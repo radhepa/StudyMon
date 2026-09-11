@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function () {
   if (typeof DEX === 'undefined' || typeof CHAPTERS === 'undefined' || typeof QBANK === 'undefined') {
     document.getElementById('app').innerHTML =
       '<div class="panel" style="margin-top:40px"><h2>Data files did not load</h2>' +
-      '<p>Make sure the whole C-MON folder was kept together: index.html, css/, js/ and assets/.</p></div>';
+      '<p>Make sure the whole StudyMon folder was kept together: index.html, css/, js/ and assets/.</p></div>';
     return;
   }
 
@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', function () {
     warn.style.cssText = 'margin:0 0 14px;border-color:#d3323c';
     warn.innerHTML = '<b>This browser will not let this page save your progress.</b>' +
       '<div class="small" style="margin-top:6px">Close this tab and start the game with ' +
-      '<b>Play C-MON.bat</b> instead (in the same folder). That serves the game over ' +
+      '<b>Play StudyMon.bat</b> instead (in the same folder). That serves the game over ' +
       'localhost, where saving works normally.</div>';
     document.getElementById('app').insertBefore(warn, document.getElementById('topbar'));
   }
@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', function () {
     for (var ch in def.QBANK) n += def.QBANK[ch].length;
     lines.push(def.name + ': ' + n + ' questions, ' + def.CHAPTERS.length + ' gyms');
   }
-  console.log('C-MON ready: ' + DEX.length + ' species. ' + lines.join(' | '));
+  console.log('StudyMon ready: ' + DEX.length + ' species. ' + lines.join(' | '));
 
   renderTitle();
   showScreen('title');
