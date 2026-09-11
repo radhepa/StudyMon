@@ -29,7 +29,7 @@ goto :eof
 
 :python
 start "" "http://localhost:%PORT%/"
-python -m http.server %PORT% --bind 127.0.0.1
+python "tools\serve.py" %PORT%
 goto :eof
 
 :node

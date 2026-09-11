@@ -1,0 +1,411 @@
+{
+ "ada": {
+  "dx": 13,
+  "dy": -24,
+  "zoom": 0.98,
+  "erase": [
+   [
+    424,
+    275
+   ]
+  ]
+ },
+ "ansi": {
+  "dx": -9,
+  "dy": -17,
+  "zoom": 1.225,
+  "erase": []
+ },
+ "ari": {
+  "dx": -15,
+  "dy": -8,
+  "zoom": 0.85,
+  "erase": []
+ },
+ "ash-grey": {
+  "dx": 4,
+  "dy": 0,
+  "zoom": 1.2,
+  "erase": []
+ },
+ "astrid-starr": {
+  "dx": -5,
+  "dy": -6,
+  "zoom": 1.265,
+  "erase": []
+ },
+ "bram": {
+  "dx": -20,
+  "dy": 0,
+  "zoom": 1.115,
+  "erase": []
+ },
+ "beni": {
+  "dx": 8,
+  "dy": -8,
+  "zoom": 0.985,
+  "erase": []
+ },
+ "brine": {
+  "dx": -3,
+  "dy": 0,
+  "zoom": 1.08,
+  "erase": []
+ },
+ "coral": {
+  "dx": 1,
+  "dy": -14,
+  "zoom": 1.05,
+  "erase": []
+ },
+ "dax": {
+  "dx": -2,
+  "dy": 0,
+  "zoom": 1,
+  "erase": []
+ },
+ "della-twain": {
+  "dx": -1,
+  "dy": 0,
+  "zoom": 1.05,
+  "erase": []
+ },
+ "dr-ashling": {
+  "dx": 5,
+  "dy": -10,
+  "zoom": 1,
+  "erase": []
+ },
+ "dr-hollis": {
+  "dx": -6,
+  "dy": 0,
+  "zoom": 1,
+  "erase": []
+ },
+ "dr-nimue": {
+  "dx": 1,
+  "dy": 0,
+  "zoom": 1,
+  "erase": []
+ },
+ "dr-oakes": {
+  "dx": -3,
+  "dy": -1,
+  "zoom": 1,
+  "erase": []
+ },
+ "dr-ohm": {
+  "dx": -14,
+  "dy": -19,
+  "zoom": 0.915,
+  "erase": []
+ },
+ "dr-yewell": {
+  "dx": -1,
+  "dy": -1,
+  "zoom": 1,
+  "erase": []
+ },
+ "ellis": {
+  "dx": -6,
+  "dy": -4,
+  "zoom": 1,
+  "erase": []
+ },
+ "fee-seeker": {
+  "dx": -11,
+  "dy": -2,
+  "zoom": 1,
+  "erase": [
+   [
+    367,
+    186
+   ]
+  ]
+ },
+ "fee-seeker-ii": {
+  "dx": -8,
+  "dy": -3,
+  "zoom": 1,
+  "erase": []
+ },
+ "fitz": {
+  "dx": 4,
+  "dy": 0,
+  "zoom": 1,
+  "erase": []
+ },
+ "flint": {
+  "dx": -4,
+  "dy": 0,
+  "zoom": 1,
+  "erase": []
+ },
+ "flo": {
+  "dx": 5,
+  "dy": -1,
+  "zoom": 0.82,
+  "erase": []
+ },
+ "gus": {
+  "dx": 0,
+  "dy": 0,
+  "zoom": 1.115,
+  "erase": []
+ },
+ "ida": {
+  "dx": 0,
+  "dy": -3,
+  "zoom": 1.05,
+  "erase": []
+ },
+ "ida-overflow": {
+  "dx": -6,
+  "dy": 1,
+  "zoom": 1.065,
+  "erase": []
+ },
+ "ink": {
+  "dx": 17,
+  "dy": 1,
+  "zoom": 1.01,
+  "erase": []
+ },
+ "june": {
+  "dx": 22,
+  "dy": -7,
+  "zoom": 0.955,
+  "erase": []
+ },
+ "juno": {
+  "dx": -3,
+  "dy": 2,
+  "zoom": 1.05,
+  "erase": []
+ },
+ "kern": {
+  "dx": -11,
+  "dy": -4,
+  "zoom": 1.055,
+  "erase": []
+ },
+ "kes": {
+  "dx": -1,
+  "dy": -20,
+  "zoom": 1.055,
+  "erase": []
+ },
+ "leif": {
+  "dx": -8,
+  "dy": 0,
+  "zoom": 1.105,
+  "erase": []
+ },
+ "linka-head": {
+  "dx": 3,
+  "dy": 0,
+  "zoom": 1,
+  "erase": []
+ },
+ "marn": {
+  "dx": -29,
+  "dy": 1,
+  "zoom": 1.095,
+  "erase": [
+   [
+    588,
+    221
+   ]
+  ]
+ },
+ "mira": {
+  "dx": -3,
+  "dy": -1,
+  "zoom": 1,
+  "erase": []
+ },
+ "mo": {
+  "dx": -4,
+  "dy": -2,
+  "zoom": 1.055,
+  "erase": []
+ },
+ "moss": {
+  "dx": -31,
+  "dy": -4,
+  "zoom": 1,
+  "erase": []
+ },
+ "ms-lin": {
+  "dx": -1,
+  "dy": -4,
+  "zoom": 0.945,
+  "erase": [
+   [
+    411,
+    251
+   ]
+  ]
+ },
+ "nel": {
+  "dx": 0,
+  "dy": 0,
+  "zoom": 1,
+  "erase": [
+   [
+    392,
+    169
+   ]
+  ]
+ },
+ "nula-terminel": {
+  "dx": -7,
+  "dy": 3,
+  "zoom": 1,
+  "erase": []
+ },
+ "nurse-halcyon": {
+  "dx": 1,
+  "dy": -16,
+  "zoom": 1,
+  "erase": [
+   [
+    523,
+    270
+   ]
+  ]
+ },
+ "opal": {
+  "dx": -8,
+  "dy": -8,
+  "zoom": 0.93,
+  "erase": [
+   [
+    528,
+    289
+   ]
+  ]
+ },
+ "oz": {
+  "dx": -4,
+  "dy": -12,
+  "zoom": 1.035,
+  "erase": []
+ },
+ "padma-align": {
+  "dx": 3,
+  "dy": -6,
+  "zoom": 1,
+  "erase": []
+ },
+ "petra": {
+  "dx": 0,
+  "dy": -1,
+  "zoom": 1,
+  "erase": []
+ },
+ "pim": {
+  "dx": 7,
+  "dy": 0,
+  "zoom": 0.765,
+  "erase": []
+ },
+ "poppy": {
+  "dx": 14,
+  "dy": -7,
+  "zoom": 1,
+  "erase": [
+   [
+    504,
+    257
+   ],
+   [
+    449,
+    57
+   ]
+  ]
+ },
+ "professor-linden": {
+  "dx": -2,
+  "dy": -1,
+  "zoom": 1.095,
+  "erase": []
+ },
+ "quill": {
+  "dx": -2,
+  "dy": -14,
+  "zoom": 1.055,
+  "erase": []
+ },
+ "ren": {
+  "dx": 0,
+  "dy": 0,
+  "zoom": 0.945,
+  "erase": []
+ },
+ "rhea-dexter": {
+  "dx": 1,
+  "dy": -8,
+  "zoom": 1.055,
+  "erase": []
+ },
+ "roan": {
+  "dx": -2,
+  "dy": -2,
+  "zoom": 1.04,
+  "erase": []
+ },
+ "uma-bee": {
+  "dx": 9,
+  "dy": 0,
+  "zoom": 1,
+  "erase": []
+ },
+ "vell": {
+  "dx": 18,
+  "dy": -19,
+  "zoom": 1,
+  "erase": []
+ },
+ "vesta": {
+  "dx": 2,
+  "dy": 2,
+  "zoom": 1,
+  "erase": []
+ },
+ "wade": {
+  "dx": -2,
+  "dy": 0,
+  "zoom": 1,
+  "erase": []
+ },
+ "wren": {
+  "dx": 6,
+  "dy": 0,
+  "zoom": 1,
+  "erase": []
+ },
+ "wynn": {
+  "dx": -2,
+  "dy": 0,
+  "zoom": 1.215,
+  "erase": []
+ },
+ "xora-mask": {
+  "dx": 1,
+  "dy": 1,
+  "zoom": 1.035,
+  "erase": []
+ },
+ "bell": {
+  "dx": 0,
+  "dy": 0,
+  "zoom": 1,
+  "erase": [
+   [
+    560,
+    224
+   ]
+  ]
+ }
+}

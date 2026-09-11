@@ -1,0 +1,822 @@
+/* =============================================================================
+   Loaded last. Battle scene, PC storage, and the alignment pass.
+   ============================================================================= */
+
+/* ---------------------------------------------------------------------------
+   BATTLE SCENE
+
+   assets/ui/battle-forest.png is 1424x748. This clearing has no platforms, so
+   the standing spots were chosen by sampling the artwork for open ground: both
+   are around 70% bare earth with under 10% tree root, clear of the pond and the
+   trunks. Anchors are percentages, so they hold at any width:
+       near / player : 28% across, 83% down
+       far  / foe    : 69% across, 62% down
+   Each slot is translated up by its own height so the sprite's FEET land on the
+   anchor, and the contact shadow does the grounding the platforms used to do.
+   --------------------------------------------------------------------------- */
+#battlefield {
+  position: relative;
+  /* The ratio must hold exactly. background-size:cover only leaves the art
+     uncropped while the box matches the image, and the sprite anchors below are
+     percentages of that art. Capping the HEIGHT would leave the width alone and
+     silently break the ratio, so the cap is applied to the width instead and the
+     height follows from the ratio. */
+  aspect-ratio: 1424 / 748;
+  width: 100%;
+  max-width: calc(62vh * 1424 / 748);
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  margin-inline: auto;
+  overflow: hidden;
+  border: 3px solid #6b4a2f;
+  border-radius: 18px;
+  background-image: url("../assets/ui/battle-forest.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  box-shadow: 0 10px 30px #2a170a33, inset 0 0 0 2px #ffffff22;
+}
+
+/* Gyms, the Elite Four and practice matches reuse the clearing with a shift in
+   light, so each battle type still reads differently. */
+#battlefield.bf-gym    { filter: saturate(.86) hue-rotate(-8deg) brightness(.94); }
+#battlefield.bf-elite  { filter: saturate(.72) hue-rotate(200deg) brightness(.72) contrast(1.12); }
+#battlefield.bf-trainer{ filter: saturate(1.05) brightness(1.05); }
+
+/* The slot carries the height (a percentage of the battlefield, which has a
+   definite height) and the image fills it, so sprites scale with the scene.
+
+   PokeAPI sprites are 96x96 with the creature floating inside: 8% to 34% of the
+   frame below it is transparent, and it is not always centred left to right.
+   seatSprite() in js/engine/ui.js measures each sprite's opaque bounds and sets
+   --seat / --seat-x, so the creature's feet land on the platform centre exactly.
+   The 15% / 50% fallbacks are the averages, used when the measurement cannot run
+   (a page opened straight off the disk cannot read pixels back from a canvas). */
+.bf-slot {
+  position: absolute;
+  display: block;
+  transform: translate(
+      calc(-1 * var(--seat-x, 50%)),
+      calc(-100% + var(--seat, 15%)));
+  pointer-events: none;
+}
+.bf-foe { left: 69%; top: 62%; right: auto; bottom: auto; height: 30%; }
+.bf-you { left: 28%; top: 83%; right: auto; bottom: auto; height: 39%; }
+
+#battlefield .bf-slot img {
+  display: block;
+  height: 100%;
+  width: auto;
+  max-width: none;
+  object-fit: contain;
+  object-position: bottom center;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 4px 3px #21160b4d);
+}
+
+/* Grounding shadow, sat at the anchor point rather than the sprite's edge. */
+.bf-slot::after {
+  content: '';
+  position: absolute;
+  left: var(--seat-x, 50%);
+  bottom: var(--seat, 15%);
+  transform: translate(-50%, 50%);
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, #26350f80 0%, #26350f00 72%);
+  pointer-events: none;
+  z-index: -1;
+}
+.bf-foe::after { width: 84%; height: 16%; }
+.bf-you::after { width: 88%; height: 15%; }
+
+/* HP plates sit in the corners, clear of both platforms. */
+#battlefield .hpbox {
+  position: absolute;
+  min-width: 0;
+  width: min(35%, 300px);
+  padding: 10px 12px;
+  background: #fdf3dbf2;
+  border: 3px solid #6b4a2f;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px #2a170a3a;
+  z-index: 2;
+}
+#battlefield .hpbox.foe { top: 4%;  left: 3%;  right: auto; bottom: auto; }
+#battlefield .hpbox.you { bottom: 4%; right: 3%; left: auto;  top: auto; }
+#battlefield .hpbox .nm { font-size: 13px; font-weight: 700; gap: 8px; align-items: baseline; }
+#battlefield .hpbox .hpbar { height: 10px; margin-top: 6px; }
+#battlefield .hpbox .hpnum { font-size: 11px; margin-top: 4px; }
+#battlefield .hpbox .tp { font-size: 9px; padding: 2px 6px; }
+
+@media (max-width: 760px) {
+  #battlefield { max-width: calc(48vh * 1424 / 748); border-radius: 12px; }
+  #battlefield .hpbox { width: min(44%, 210px); padding: 7px 8px; }
+  #battlefield .hpbox .nm { font-size: 11px; }
+  #battlefield .hpbox .hpnum { font-size: 10px; }
+  #battlefield .bf-foe img { height: 24%; }
+  #battlefield .bf-you img { height: 31%; }
+}
+
+/* ---------------------------------------------------------------------------
+   TRAINER PORTRAITS
+   Head-and-shoulders crops cut from the full-body art by
+   tools/make-trainer-heads.py: transparent, uniform 0.86 aspect, framed from the
+   neck landmark so every face sits at the same size and height. --head-shift
+   corrects the small leftover offset. The partner sits in its own corner disc.
+   --------------------------------------------------------------------------- */
+.trainer-art,
+.friend-card .trainer-art,
+.friend-detail .trainer-art,
+.scene-portrait {
+  position: relative;
+  width: 100%;
+  max-width: 260px;
+  height: 215px;
+  margin: 0 auto 16px;
+  background: radial-gradient(ellipse 74% 62% at 50% 62%, #fff6e0 0%, #eadcbd 62%, #e2d2ae00 100%);
+  border: 0;
+  border-radius: 14px;
+  overflow: visible;
+}
+.friend-detail .trainer-art { max-width: 250px; height: 245px; }
+.scene-portrait { max-width: 250px; height: 235px; }
+
+.trainer-art .trainer-portrait,
+.friend-card .trainer-portrait,
+.friend-detail .trainer-portrait,
+.scene-portrait .trainer-portrait {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  /* Each figure is drawn off-centre in its own file: measured from the artwork,
+     the heads sit between 16% left and 6% right of the image centre. --head-shift
+     is that measurement, so the HEAD lands on the card's centre line rather than
+     the image's bounding box. Set per trainer in js/data/trainers.js.
+     width:auto + height:100% makes the element box match the scaled image
+     exactly, so a percentage translate is a percentage of the visible art. */
+  transform: translateX(calc(-50% - var(--head-shift, 0%)));
+  width: auto;
+  height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+  object-position: bottom center;
+  image-rendering: auto;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  /* Head-and-shoulders crops end on the chest. The last few percent are eased
+     out so the edge reads as framing rather than as a cut through the body. */
+  -webkit-mask-image: linear-gradient(to bottom, #000 88%, transparent 100%);
+          mask-image: linear-gradient(to bottom, #000 88%, transparent 100%);
+}
+
+.trainer-art .trainer-partner,
+.friend-card .trainer-partner,
+.friend-detail .trainer-partner,
+.scene-portrait .trainer-partner {
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
+  left: auto;
+  width: 74px;
+  height: 74px;
+  object-fit: contain;
+  object-position: center;
+  image-rendering: auto;
+  padding: 5px;
+  border-radius: 50%;
+  background: #fbf1d8;
+  border: 2px solid var(--trainer-color, #8e6845);
+  box-shadow: 0 3px 8px #5c3f2733;
+  z-index: 2;
+}
+.friend-detail .trainer-partner,
+.scene-portrait .trainer-partner { width: 82px; height: 82px; }
+
+/* Cards in a row end at the same place regardless of bio length. */
+.friends-grid { align-items: stretch; }
+.friend-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  height: 100%;
+}
+.friend-card > p { flex: 1 0 auto; }
+.friend-card .friend-role,
+.friend-card h3 { text-align: center; }
+.friend-card .friend-hearts { justify-content: center; }
+.friend-card > button { width: 100%; margin-top: auto; }
+
+/* ---------------------------------------------------------------------------
+   PC STORAGE
+   --------------------------------------------------------------------------- */
+.pc-wrap { display: grid; grid-template-columns: 210px 1fr 260px; gap: 18px; align-items: start; }
+
+.pc-col > h3 { margin: 0 0 10px; font-size: 15px; letter-spacing: .02em; }
+
+.pc-party { display: grid; gap: 8px; }
+.pc-slot {
+  display: flex; align-items: center; gap: 10px;
+  width: 100%; min-height: 56px; padding: 6px 10px;
+  background: #fbf2da; border: 2px solid #c3a375; border-radius: 12px;
+  cursor: pointer; text-align: left; box-shadow: none;
+}
+.pc-slot:hover:not(:disabled) { background: #fff9e8; border-color: #9e6b3c; transform: none; }
+.pc-slot.sel { border-color: #9e4b20; background: #fdeccd; box-shadow: 0 0 0 3px #9e4b2033; }
+.pc-slot.empty { color: #a1907a; font-style: italic; justify-content: center; border-style: dashed; cursor: default; }
+.pc-slot img { width: 44px; height: 44px; object-fit: contain; image-rendering: pixelated; flex: none; }
+.pc-slot .s-nm { font-weight: 700; font-size: 13px; line-height: 1.25; }
+.pc-slot .s-lv { font-size: 11px; color: var(--ink-soft); }
+.pc-slot .s-txt { min-width: 0; }
+.pc-slot .s-nm, .pc-slot .s-lv { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+.pc-boxhead { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+.pc-boxhead .pc-title { font-weight: 700; font-size: 15px; }
+.pc-boxhead button { min-height: 34px; padding: 6px 12px; }
+
+.pc-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+.pc-cell {
+  aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+  padding: 3px; background: #f6ead0;
+  border: 2px solid #cdb28c; border-radius: 10px; cursor: pointer; position: relative;
+}
+.pc-cell:hover:not(.empty) { background: #fff9e8; border-color: #9e6b3c; transform: none; }
+.pc-cell.sel { border-color: #9e4b20; background: #fdeccd; box-shadow: 0 0 0 3px #9e4b2033; }
+.pc-cell.empty { border-style: dashed; border-color: #d8c6a4; background: #f2e6cc80; cursor: default; }
+.pc-cell img { width: 100%; height: 100%; object-fit: contain; image-rendering: pixelated; }
+.pc-cell .lvtag {
+  position: absolute; right: 3px; bottom: 2px; font-size: 9px; font-weight: 700;
+  color: #5e4327; background: #fdf3dbcc; border-radius: 5px; padding: 0 3px; pointer-events: none;
+}
+
+.pc-detail { position: sticky; top: 16px; text-align: center; }
+.pc-detail .pc-art { width: 100%; max-width: 190px; margin: 0 auto 8px; display: block; image-rendering: auto; }
+.pc-detail h3 { margin: 0 0 2px; }
+.pc-detail .pc-sub { font-size: 12px; color: var(--ink-soft); margin-bottom: 8px; }
+.pc-detail .tp { margin: 0 2px; }
+.pc-detail .pc-bars { margin: 12px 0 4px; text-align: left; }
+.pc-detail .pc-actions { display: grid; gap: 8px; margin-top: 14px; }
+.pc-detail .pc-actions button { width: 100%; }
+.pc-empty-note { color: var(--ink-soft); font-size: 13px; padding: 26px 8px; }
+
+@media (max-width: 980px) {
+  .pc-wrap { grid-template-columns: 1fr; }
+  .pc-detail { position: static; }
+  .pc-party { grid-template-columns: repeat(2, 1fr); }
+  .pc-grid { grid-template-columns: repeat(5, 1fr); }
+}
+@media (max-width: 560px) {
+  .pc-party { grid-template-columns: 1fr; }
+  .pc-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* Nickname dialog */
+.nick-form { display: grid; gap: 12px; margin-top: 6px; }
+.nick-form input {
+  width: 100%; font: inherit; font-size: 17px; padding: 12px 14px;
+  border: 2px solid #c3a375; border-radius: 10px; background: #fffdf5; color: var(--ink);
+}
+.nick-form input:focus { outline: 3px solid #58aeec; outline-offset: 2px; border-color: #9e6b3c; }
+.nick-hint { font-size: 12px; color: var(--ink-soft); }
+
+/* ---------------------------------------------------------------------------
+   ALIGNMENT PASS
+   --------------------------------------------------------------------------- */
+
+/* Topbar: even spacing, no lone chip stranded on the far right. */
+#topbar { align-items: center; gap: 10px; row-gap: 8px; }
+#topbar .spacer { display: none; }
+#topbar .chip { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+
+/* Party cards: equal height, aligned internals, buttons on a shared baseline. */
+.grid.p3 { align-items: stretch; }
+.party-card { display: flex; flex-direction: column; height: 100%; }
+.party-card .top { align-items: center; gap: 12px; }
+.party-card .portrait-ground { flex: none; display: grid; place-items: center; }
+.party-card .top > div:last-child { min-width: 0; }
+.party-card .nm { line-height: 1.2; word-break: break-word; }
+.party-card .tp { margin-bottom: 3px; }
+.party-card .hpnum { text-align: right; }
+.party-card .party-moves { flex: 1 0 auto; }
+.party-card .card-actions { margin-top: auto; }
+.party-card .card-actions button { flex: 1; text-align: center; }
+
+/* Type pills wrap as a group instead of stacking unevenly card to card. */
+.party-card .top .tp,
+.pc-detail .tp { display: inline-flex; align-items: center; justify-content: center; }
+
+/* Bars line up with the numbers above/below them. */
+.hpbar, .xpbar { width: 100%; }
+
+/* Centre the single-column screens' headings and intro text consistently. */
+.section-intro { max-width: 780px; }
+
+/* Route rows: the three action buttons are equal width and equal height. */
+.route .acts { align-items: stretch; }
+.route .acts button { width: 100%; text-align: center; }
+
+/* Modal images should never overflow their panel. */
+#modal .box img { max-width: 100%; height: auto; }
+
+/* Dex cells: keep the sprite centred in a square regardless of sprite size. */
+.dexcell { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; }
+.dexcell img { width: 62px; height: 62px; object-fit: contain; }
+
+/* A friend's team, so its growth with your badges is visible. */
+.friend-team { margin-top: 16px; }
+.friend-team h3 { margin: 0 0 10px; }
+.team-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.team-row figure {
+  margin: 0; width: 88px; text-align: center;
+  background: #f6ead0; border: 2px solid #cdb28c; border-radius: 12px; padding: 6px 4px;
+}
+.team-row img { width: 60px; height: 60px; object-fit: contain; image-rendering: pixelated; }
+.team-row figcaption { font-size: 11px; line-height: 1.25; color: var(--ink-soft); word-break: break-word; }
+
+/* Heart events play as several beats, so the scene shows where you are and
+   keeps what already happened on screen. */
+.scene-progress { display: flex; align-items: center; gap: 6px; margin: 0 0 14px; }
+.scene-progress span {
+  width: 26px; height: 5px; border-radius: 3px;
+  background: #d9c6a2; display: block;
+}
+.scene-progress span.done { background: #9e4b20; }
+.scene-progress span.now  { background: #d98b3f; }
+.scene-progress em { font-style: normal; font-size: 12px; color: var(--ink-soft); margin-left: 6px; }
+
+.scene-past {
+  border-left: 3px solid #d9c6a2;
+  padding: 2px 0 2px 14px;
+  margin: 0 0 14px;
+  color: var(--ink-soft);
+}
+.scene-past p { margin: 0 0 6px; font-size: 15px; line-height: 1.6; }
+.scene-past blockquote {
+  margin: 6px 0; padding: 6px 12px; font-size: 14px;
+  background: #f3e7cd; border-radius: 8px; border: 0; color: #6b4a2f;
+}
+.scene-past + .scene-prose { margin-top: 4px; }
+
+/* ---------------------------------------------------------------------------
+   THE REGION AND THE SHOP
+   --------------------------------------------------------------------------- */
+.town-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(255px, 1fr)); gap: 16px; margin-top: 18px; }
+
+.town-card {
+  display: flex; flex-direction: column; height: 100%;
+  background: var(--panel); border: 3px solid var(--line); border-radius: 16px;
+  padding: 16px; box-shadow: var(--shadow);
+}
+.town-card.done { border-color: #b3a284; opacity: .92; }
+.town-card h3 { margin: 2px 0 6px; font-size: 19px; }
+.town-card > p.small { flex: 1 0 auto; }
+.town-card > button { margin-top: 12px; width: 100%; text-align: center; }
+
+.town-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.town-cls { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); }
+.town-kind {
+  font-size: 10px; letter-spacing: .06em; text-transform: uppercase;
+  padding: 3px 8px; border-radius: 20px; color: #fff; white-space: nowrap;
+}
+.k-trainer { background: #9e4b20; }
+.k-shop    { background: #4a6f8a; }
+.k-heal    { background: #a2465e; }
+.k-talk    { background: #6f7f4e; }
+.k-gift    { background: #8a6a2f; }
+.town-note { font-size: 12px; color: var(--ink-soft); margin: 8px 0 0; }
+
+.town-team { display: flex; justify-content: center; gap: 8px; margin: 12px 0; flex-wrap: wrap; }
+.town-team figure { margin: 0; width: 76px; text-align: center; }
+.town-team img { width: 56px; height: 56px; object-fit: contain; image-rendering: pixelated; }
+.town-team figcaption { font-size: 11px; color: var(--ink-soft); word-break: break-word; }
+
+#modal .box select,
+.friend-actions select {
+  width: 100%; font: inherit; font-size: 15px; padding: 10px 12px; margin-top: 6px;
+  border: 2px solid #c3a375; border-radius: 10px; background: #fffdf5; color: var(--ink);
+}
+
+/* shop */
+.shop-wallet {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+  background: var(--panel); border: 3px solid var(--line); border-radius: 14px;
+  padding: 14px 18px; margin-bottom: 18px; box-shadow: var(--shadow);
+}
+.shop-wallet b { font-size: 24px; color: #9e4b20; }
+
+.shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; }
+.shop-item {
+  display: flex; flex-direction: column;
+  background: var(--panel); border: 3px solid var(--line); border-radius: 16px;
+  padding: 16px; box-shadow: var(--shadow);
+}
+.shop-item.free { border-style: dashed; }
+.shop-item h3 { margin: 0 0 6px; }
+.shop-item > p.small { flex: 1 0 auto; }
+.shop-buy { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin: 12px 0 10px; }
+.shop-buy .price { font-weight: 700; font-size: 17px; color: #9e4b20; }
+.shop-buy .owned { font-size: 12px; color: var(--ink-soft); }
+.shop-item .row button { flex: 1; text-align: center; }
+
+/* choosing a ball or a potion mid-battle */
+.ball-menu { display: grid; gap: 8px; }
+.ball-opt {
+  display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; width: 100%;
+  text-align: left; padding: 12px 14px;
+  background: #fff; border: 3px solid #c9c2a6; border-radius: 10px; color: var(--ink);
+}
+.ball-opt:hover:not(:disabled) { border-color: var(--accent-2); background: #fffdf3; }
+.ball-name { font-weight: 700; font-size: 15px; }
+.ball-have { font-size: 12px; color: var(--ink-soft); text-align: right; }
+.ball-odds { grid-column: 1 / -1; font-size: 12px; color: var(--ink-soft); }
+
+@media (max-width: 620px) {
+  .town-grid, .shop-grid { grid-template-columns: 1fr; }
+}
+
+/* A townsperson has no painted portrait, so they get a lettered disc. */
+.folk-disc {
+  position: absolute; left: 50%; bottom: 8px; transform: translateX(-50%);
+  width: 116px; height: 116px; border-radius: 50%;
+  display: grid; place-items: center;
+  font-size: 46px; font-weight: 700; color: #fdf3db;
+  background: var(--trainer-color, #8e6845);
+  border: 4px solid #fbf1d8; box-shadow: 0 6px 16px #5c3f2733;
+}
+.friend-card.folk .trainer-art { height: 170px; }
+.friend-detail .folk-disc { width: 132px; height: 132px; font-size: 54px; }
+.region-tabs button.locked { opacity: .55; }
+.region-tabs button.locked small { font-size: 10px; opacity: .8; }
+
+/* ---- People who want more badges than you have ------------------------- */
+.town-card.gated { opacity: .74; }
+.town-card.gated .town-note {
+  font-style: italic;
+  color: var(--ink-soft, #7a6248);
+}
+.town-card.gated h3::after {
+  content: " ✦";
+  color: var(--gold, #b08a3e);
+  font-size: .8em;
+  vertical-align: super;
+}
+.town-card.gated button[disabled] { opacity: .85; }
+
+/* ---- Headshots on the region cards -------------------------------------- */
+/* Same crop and the same --head-shift correction the Friends screen uses, so a
+   face sits identically in both places. Round here, because a town card is a
+   glance rather than a portrait. */
+.town-face {
+  width: 92px;
+  height: 92px;
+  margin: 4px 0 2px;
+  border-radius: 50%;
+  overflow: hidden;
+  position: relative;
+  background: radial-gradient(ellipse at 50% 35%, #fff4d5, #ddc9a3);
+  border: 2px solid var(--trainer-color, #b8976299);
+  box-shadow: 2px 2px 0 #65442d22;
+  flex: none;
+}
+.town-face img {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  height: 118%;
+  width: auto;
+  max-width: none;
+  transform: translateX(calc(-50% - var(--head-shift, 0%)));
+  object-fit: contain;
+}
+.town-card.companion {
+  border-color: var(--trainer-color, #8e6845);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--trainer-color, #8e6845) 8%, transparent), transparent 120px),
+    var(--card-bg, #f3e6c8);
+}
+.town-kind.k-friend { background: #7c5a86; color: #fff2e2; }
+
+@media (max-width: 620px) {
+  .town-face { width: 74px; height: 74px; }
+}
+
+/* Shared normalized portrait framing across region, cards and scenes. */
+.town-face img{height:100%;width:auto;top:0;left:50%;transform:translateX(-50%)}
+.friend-card.folk .trainer-art:has(.trainer-portrait){height:215px}
+.trainer-portrait{object-position:center bottom}
+button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid #8b4d22;outline-offset:3px}
+@media(max-width:620px){.region-tabs button{min-height:44px}.pc-boxhead button{min-height:44px}.shop-grid{min-width:0}.friend-actions{min-width:0}}
+
+/* Larger portrait circles with room for shoulders beneath the face. */
+.town-face{width:110px;height:110px}
+@media(max-width:620px){.town-face{width:89px;height:89px}}
+
+.curriculum-source,.chapter-practice,.curriculum-notice{margin:18px 0;padding:18px;line-height:1.65}.curriculum-source summary,.chapter-practice summary{cursor:pointer;font-weight:600;min-height:32px}.curriculum-source a{color:#704119;text-decoration:underline}
+
+/* ---------------------------------------------------------------- the ferry
+   The berth is not a person, so it does not get a person's card. It reads as a
+   piece of the place: rope-coloured, a little heavier in the border, and it
+   carries the anchor rather than a portrait disc. */
+.town-card.ferry-card {
+  position: relative;          /* the anchor watermark is absolute inside this */
+  overflow: hidden;
+  border-color: #6f7f86;
+  background:
+    radial-gradient(ellipse at 82% 12%, #dfe9ec66, transparent 60%),
+    linear-gradient(#f7efd8, #efe2c4);
+  box-shadow: inset 0 0 0 2px #f8ecd0, 2px 4px 3px #5d3c3033;
+}
+.town-card.ferry-card h3 { color: #3f5a63; }
+.town-card.ferry-card::after {
+  content: '⚓';
+  position: absolute;
+  right: 14px;
+  bottom: 12px;
+  font: 44px Georgia, serif;
+  color: #6f7f8622;
+  pointer-events: none;
+  line-height: 1;
+}
+.town-kind.k-ferry { background: #4f6d78; color: #f2f7f8; }
+
+.chip.region-chip {
+  cursor: pointer;
+  border-color: #6f7f86;
+  color: #3f5a63;
+  font-weight: 600;
+}
+.chip.region-chip:hover { background: #e2edf0; }
+.chip.region-chip:focus-visible { outline: 2px solid #4f6d78; outline-offset: 2px; }
+
+/* Destination list inside the ferry modal. */
+.ferry-list { display: grid; gap: 12px; margin: 18px 0 16px; }
+.ferry-dest {
+  display: grid;
+  gap: 3px;
+  text-align: left;
+  padding: 15px 17px;
+  width: 100%;
+  border: 3px solid #7d6540;
+  border-radius: 8px;
+  background: #f6ead0;
+  cursor: pointer;
+}
+.ferry-dest:hover { background: #fdf3dc; border-color: #4f6d78; }
+.ferry-dest:focus-visible { outline: 2px solid #4f6d78; outline-offset: 2px; }
+.ferry-region { font: 600 21px/1.25 var(--read, Georgia, serif); color: #3d2a1c; }
+.ferry-book { font: italic 13px/1.5 Georgia, serif; color: #6d5537; }
+.ferry-meta {
+  font: 600 11.5px/1.5 var(--read, Georgia, serif);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: #4f6d78;
+}
+.ferry-blurb { font-size: 14px; line-height: 1.6; color: #5a4630; margin-top: 4px; }
+@media (max-width: 620px) {
+  .ferry-region { font-size: 19px; }
+  .town-card.ferry-card::after { font-size: 34px; }
+}
+
+/* ------------------------------------------------------- bosses on the map
+   On the Isles an exam is not a separate wing of the game, it is the next thing
+   on the calendar - so it sits inline in the route list and has to read as a
+   wall rather than as another route. */
+.route.boss {
+  border-color: #7c4a3a;
+  background:
+    linear-gradient(#f6e6cd, #efd9b6);
+  box-shadow: inset 0 0 0 2px #f9ecd2, 2px 4px 3px #5d3c3033;
+}
+.route.boss .num {
+  background: #7c4a3a;
+  color: #fbeed4;
+  text-shadow: 0 1px #4a2a20;
+}
+.route.boss .ttl { color: #6d3a2b; }
+.route.boss.final { border-color: #8a6a1f; }
+.route.boss.final .num { background: #8a6a1f; }
+.route.boss.done { opacity: .92; border-color: #a08464; }
+
+/* A gym you cannot reach until the exam behind you is sat. */
+.route.route-blocked { opacity: .6; }
+.route.route-blocked .num { background: #b6a488; }
+.route-gate {
+  display: inline-block;
+  margin-top: 3px;
+  font-weight: 600;
+  color: #8c4a34;
+}
+.route-only {
+  display: inline-block;
+  margin-top: 3px;
+  font-size: 12.5px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: #7c4a3a;
+  font-weight: 600;
+}
+
+/* What you are walking into. Turns amber when the fight is well above your
+   strongest Pokemon, which is the whole point of giving gyms a level floor. */
+.lvl-hint {
+  font-weight: 600;
+  color: #6b5335;
+  white-space: nowrap;
+}
+.lvl-hint.over { color: #a2541f; }
+
+/* ------------------------------------------------------------- route info
+   The encounter list, shown the way the games show it: a silhouette until you
+   have caught the thing. brightness(0) on a transparent sprite gives a clean
+   black shape without needing a second set of images. */
+.route-tally {
+  margin: 6px 0 14px;
+  font-size: 15px;
+  color: #5a4630;
+}
+.route-tally b { color: #3d2a1c; font-size: 17px; }
+
+.question-base {
+  margin: 18px 0;
+  padding: 16px;
+  border: 2px solid #b69a70;
+  border-radius: 10px;
+  background: #f7ecd2;
+}
+.question-base-head, .question-catalog-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+.question-base h3 { margin: 3px 0 0; font-size: 20px; }
+.question-progress {
+  height: 9px;
+  margin: 12px 0;
+  overflow: hidden;
+  border-radius: 99px;
+  background: #d8c6a5;
+  box-shadow: inset 0 1px 2px #6a4c2b33;
+}
+.question-progress span { display: block; height: 100%; background: #789263; }
+.question-preview { display: grid; gap: 7px; }
+.question-preview > div {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 9px;
+  align-items: baseline;
+  padding: 8px 10px;
+  border-radius: 7px;
+  background: #fff7e4;
+  font-size: 13px;
+  line-height: 1.45;
+}
+.question-preview span, .question-preview small { color: #806846; white-space: nowrap; }
+.question-catalog-head { margin-bottom: 14px; }
+.question-catalog-head h2 { margin: 2px 0 3px; }
+.question-catalog {
+  display: grid;
+  gap: 10px;
+  margin: 8px 0 18px;
+  max-height: 62vh;
+  overflow-y: auto;
+  padding: 3px;
+}
+.question-entry {
+  padding: 13px 14px;
+  border: 2px solid #c8b28f;
+  border-radius: 9px;
+  background: #f7ebd0;
+}
+.question-entry.encountered { border-color: #83966c; background: #f4efd5; }
+.question-entry.unseen { color: #665640; }
+.question-entry-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; font-size: 11px; color: #806846; }
+.question-status { margin-left: auto; font-weight: 700; color: #746246; }
+.question-entry.encountered .question-status { color: #587044; }
+.question-entry-text { margin-top: 9px; font-size: 15px; line-height: 1.55; }
+.question-entry .qcode { margin: 10px 0 0; max-height: 170px; }
+
+/* The question bank now has four-digit totals. Keep the Trainer Card's summary
+   values centered inside their cards instead of letting long counters overflow. */
+#s-stats .trainer-summary-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+#s-stats .trainer-summary-grid .statbox { min-width: 0; }
+#s-stats .statbox.bank-seen .v {
+  font-size: clamp(21px, 2.6vw, 30px);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+  #s-stats .trainer-summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+.routegrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 10px;
+  margin: 4px 0 16px;
+  max-height: 46vh;
+  overflow-y: auto;
+  padding: 4px;
+}
+.routecell {
+  margin: 0;
+  padding: 8px 4px 6px;
+  border: 2px solid #cbb595;
+  border-radius: 9px;
+  background: #f3e6c9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  position: relative;
+  min-width: 0;
+}
+/* Beats "#modal .box img" from style.css and the height:auto reset above it. */
+#modal .box .routecell img,
+.routecell img {
+  width: 62px;
+  height: 62px;
+  max-width: 62px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+.routecell figcaption {
+  font-size: 11.5px;
+  line-height: 1.3;
+  text-align: center;
+  color: #5a4630;
+  overflow-wrap: anywhere;
+}
+
+/* Not caught yet: black shape, and no name at all until you have met it. */
+#modal .box .routecell.unknown img, #modal .box .routecell.met img,
+.routecell.unknown img, .routecell.met img { filter: brightness(0); opacity: .82; }
+.routecell.unknown { background: #e8dcc0; }
+.routecell.unknown figcaption { color: #93805f; letter-spacing: .1em; }
+.routecell.met figcaption { color: #7b6444; font-style: italic; }
+.routecell.have {
+  border-color: #9b7a45;
+  background: linear-gradient(#fdf4dd, #f4e6c4);
+  box-shadow: inset 0 0 0 1px #fff6dd;
+}
+.routecell.have figcaption { color: #3d2a1c; font-weight: 600; }
+
+.rar {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  font-size: 8.5px;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-weight: 700;
+  color: #fff8e6;
+}
+.r-common   { background: #7d8b6a; }
+.r-uncommon { background: #6f7f9c; }
+.r-rare     { background: #9a5f7e; }
+
+@media (max-width: 620px) {
+  .routegrid { grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 8px; }
+  .routecell img { width: 52px; height: 52px; }
+  .question-base-head, .question-catalog-head { align-items: stretch; flex-direction: column; }
+  .question-base-head button, .question-catalog-head button { width: 100%; }
+  .question-preview > div { grid-template-columns: auto minmax(0, 1fr); }
+  .question-preview small { grid-column: 2; }
+  .question-status { width: 100%; margin-left: 0; }
+}
+
+/* Exam-only chapters in the Notes chapter picker: no gym, no number of their own. */
+.row.tight .exam-ch { color: #7c4a3a; font-weight: 700; }
+
+/* The bottom nav holds seven destinations. A six-column grid left Friends alone
+   on its own row; four columns gives a deliberate 4 + 3 instead. */
+@media (max-width: 620px) {
+  #nav { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
+}
+
+/* Painted faces for gym leaders and bosses.
+
+   The map's numbered disc keeps its footprint so the grid does not move; the
+   portrait simply fills it. Portraits are square and framed head-and-shoulders,
+   so object-fit has nothing to crop and the face lands centred on its own. */
+.route .num.has-face { padding: 0; overflow: hidden; border-radius: 50%; aspect-ratio: 1; display: grid; place-items: center; }
+.route .num.has-face img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.route.boss .num.has-face,
+.route.route-blocked .num.has-face { background: #e7ecdf; }
+
+.gym-greeting .leader-face {
+  width: 138px; height: 138px; border-radius: 50%; object-fit: cover;
+  display: block; margin: 0 auto 14px; background: #e7ecdf;
+  border: 3px solid var(--gym-face-ring, #d2b37d);
+}
+@media (max-width: 620px) { .gym-greeting .leader-face { width: 104px; height: 104px; } }
