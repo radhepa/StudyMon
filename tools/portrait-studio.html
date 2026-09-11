@@ -1,6 +1,6 @@
 <!doctype html>
 <meta charset="utf-8">
-<title>C-MON Portrait Studio</title>
+<title>StudyMon Portrait Studio</title>
 <!--
   Portrait Studio. A temporary workbench for framing portraits and erasing
   leftover background, kept entirely separate from the game.
@@ -298,7 +298,7 @@ $("#find").onclick = function(){
 $("#reset").onclick = function(){ delete edits[cur]; found = []; select(cur); };
 
 /* Saving only writes JSON. This is the button that actually rebuilds the
-   portrait files the game loads, so the change shows up in C-MON. */
+   portrait files the game loads, so the change shows up in StudyMon. */
 function saveEdits(){
   var clean = {};
   Object.keys(edits).forEach(function(n){ if (edited(n)) clean[n] = tune(n); });
@@ -317,7 +317,7 @@ $("#apply").onclick = function(){
     return fetch("/portrait-apply", { method: "POST" });
   }).then(function(r){
     return r.text().then(function(t){
-      status(r.ok ? "applied to the game. Reload C-MON to see it." : t);
+      status(r.ok ? "applied to the game. Reload StudyMon to see it." : t);
     });
   }).catch(function(e){
     status(e.message);

@@ -1,6 +1,6 @@
 /* Two subjects, one trainer.
 
-   C-MON started as one region built on one textbook. It is now a shelf: the C
+   StudyMon started as one region built on one textbook. It is now a shelf: the C
    region for Forouzan, the Converging Isles for MA 16200, and room for whatever
    class comes next. The rule is that your Pokemon, money, bag and friendships
    belong to YOU and cross every border, while badges, chapter scores and review
@@ -117,7 +117,7 @@ function installSubjects() {
     id: 'c',
     name: 'C',
     short: 'C',
-    region: 'The C-MON Region',
+    region: 'The StudyMon Region',
     book: 'Forouzan & Afyouni, Computer Science: A Structured Programming Approach in C',
     blurb: 'Fifteen chapters, fifteen routes, one gym each.',
     CHAPTERS: window.CHAPTERS,

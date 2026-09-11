@@ -4,7 +4,7 @@
    worth proving are that a hint block appears and steps through, and that the
    answer a student would actually type is accepted. */
 const fs = require('fs');
-const { chromium } = require('C:/Users/minal/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const { chromium } = require('./playwright.cjs');
 const results = [];
 const LOG = 'output/calc-problems-check.log';
 try { fs.unlinkSync(LOG); } catch (e) {}

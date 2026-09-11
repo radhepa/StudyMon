@@ -13,7 +13,7 @@ corrections.
 
 # Side Quests are live
 
-Thirty Pokemon-themed C programming labs are available from **Side Quests** in the bottom navigation. Ten easy, ten medium, ten hard. Each has a saved source workspace, lab brief, chapter guide, hints and a one-time reward. You write the C in C-MON, press Run to try it, and press Submit to have it graded. Submitting compiles your program with Clang inside the app and runs it against every test for that lab; the reward is granted only when all of them pass. Nothing leaves your machine and no other tools are needed. Reward berries can be used from the Party screen.
+Thirty Pokemon-themed C programming labs are available from **Side Quests** in the bottom navigation. Ten easy, ten medium, ten hard. Each has a saved source workspace, lab brief, chapter guide, hints and a one-time reward. You write the C in StudyMon, press Run to try it, and press Submit to have it graded. Submitting compiles your program with Clang inside the app and runs it against every test for that lab; the reward is granted only when all of them pass. Nothing leaves your machine and no other tools are needed. Reward berries can be used from the Party screen.
 
 See [the Side Quest handoff](HANDOFF-side-quests.md) and [lab catalog](output/Side%20Quest%20Curriculum.md).
 
@@ -137,7 +137,7 @@ badges the same way the companions' do.
 
 Their battles are deliberately chapter-agnostic. Each character suggests a chapter
 that suits them, but you choose what to revise before the match, so the cast
-survives C-MON growing past C. Swap the curriculum and Ari the Bug Catcher still
+survives StudyMon growing past C. Swap the curriculum and Ari the Bug Catcher still
 wants to fight you about whatever you are revising this week.
 
 Poké Balls are free and unlimited. Running out of them was never the interesting
@@ -275,7 +275,7 @@ Run `node tools/fetch-pokeapi.mjs` followed by `node tools/build-data.mjs` to re
 
 ---
 
-# C-MON — a C study RPG
+# StudyMon — a C study RPG
 
 A Pokémon-style game built on top of **Forouzan & Gilberg, *Computer Science: A
 Structured Programming Approach in C***. Fifteen routes, one per chapter. Every
@@ -287,7 +287,7 @@ Personal study tool. Nothing is published or shared anywhere.
 
 ## How to start it
 
-Double-click **`Play C-MON.bat`**. It starts a tiny local server and opens your
+Double-click **`Play StudyMon.bat`**. It starts a tiny local server and opens your
 browser. Leave the black window open while you play; close it when you're done.
 
 You can also just double-click `index.html` — but some browsers refuse to save
@@ -395,7 +395,7 @@ Keyboard: `1`–`4` or `A`–`D` to answer, `Enter` to continue.
 
 ```
 index.html            the game
-Play C-MON.bat        launcher (starts a local server, opens the browser)
+Play StudyMon.bat        launcher (starts a local server, opens the browser)
 css/style.css         all styling
 js/data/pokedex.js    1025 species: stats, types, moves, evolutions, catch
                       rates                                        (generated)

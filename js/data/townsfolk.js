@@ -12,7 +12,7 @@
        gift     hands over an item once
 
    `ch` is only a suggestion of which chapter suits them. Every battle here lets
-   you choose the chapter yourself, so when C-MON grows past C the same cast
+   you choose the chapter yourself, so when StudyMon grows past C the same cast
    still works: swap the curriculum and Ari still wants to fight you about
    whatever you are revising this week. */
 

@@ -1,6 +1,6 @@
-/* Turn the field manual's authored MCQs into a C-MON question bank.
+/* Turn the field manual's authored MCQs into a StudyMon question bank.
 
-   The manual grades on three bands (warm / core / exam); C-MON asks four tiers,
+   The manual grades on three bands (warm / core / exam); StudyMon asks four tiers,
    because move power picks the tier. warm -> 1, core -> 2 and 3 by position so
    a gym never ends up with an empty middle, exam -> 4.
 
@@ -19,7 +19,7 @@ function chapterOf(lesson) {
   return null;
 }
 
-/* The manual writes for innerHTML; C-MON escapes everything. Bring the few
+/* The manual writes for innerHTML; StudyMon escapes everything. Bring the few
    entities and tags back to plain Unicode so both render identically. */
 function plain(s) {
   return String(s)

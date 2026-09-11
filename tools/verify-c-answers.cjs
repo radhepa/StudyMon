@@ -6,7 +6,7 @@
    so they are wrapped, and anything needing input or randomness is skipped and
    reported rather than guessed at. */
 const fs = require('fs');
-const { chromium } = require('C:/Users/minal/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const { chromium } = require('./playwright.cjs');
 const { window: w } = require('./dump-questions.cjs');
 const URL = 'http://127.0.0.1:8780/';
 

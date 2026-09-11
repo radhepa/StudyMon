@@ -1,4 +1,4 @@
-const {chromium}=require('C:/Users/minal/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const {chromium}=require('./playwright.cjs');
 const assert=require('assert');
 (async()=>{const b=await chromium.launch({headless:true,executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'});try{const p=await b.newPage({viewport:{width:1280,height:1000}});const errors=[];p.on('pageerror',e=>errors.push(e.message));await p.goto('http://127.0.0.1:8780/');console.log(await p.evaluate(()=>{
 const check=(v,m)=>{if(!v)throw Error(m)};S=freshSave();S.party=[makeMon(255,5)];S.settings={sound:false,timer:false,seconds:45};ensureFriends();

@@ -5,7 +5,7 @@
    Bootstrap Town has a jetty, Origin Harbour is a harbour - and it is open from
    the first day.
 
-   That last part is deliberate and should stay that way. C-MON is a study tool
+   That last part is deliberate and should stay that way. StudyMon is a study tool
    for real classes with real exam dates. Gating the calculus region behind C
    badges would mean that the week before a calculus midterm the game refuses to
    teach you calculus, which is the one thing it must never do. The content

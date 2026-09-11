@@ -1,6 +1,6 @@
 /* Every function named in an onclick must exist. A typo here is invisible:
    the button renders, the click throws into the console, and nothing happens. */
-const {chromium}=require('C:/Users/minal/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+const {chromium}=require('./playwright.cjs');
 const fs=require('fs');
 const files=[]; 
 (function walk(d){for(const f of fs.readdirSync(d,{withFileTypes:true})){

@@ -1,4 +1,4 @@
-# Checking C-MON
+# Checking StudyMon
 
 Start the local server first. Everything below drives a real browser against
 `http://127.0.0.1:8780/` in a throwaway context, so **your save is never
@@ -74,9 +74,9 @@ below. Kip is the reference and sits at the top of the list.
 - **Save all edits** writes `tools/portrait-edits.json` and nothing more. The
   game keeps showing the old crops until the files are rebuilt.
 - **Save and apply to game** saves and then rebuilds the portrait files the game
-  actually loads. This is the one to press. Reload C-MON afterwards.
+  actually loads. This is the one to press. Reload StudyMon afterwards.
 
-Saving alone never changes what C-MON shows. That is the whole difference
+Saving alone never changes what StudyMon shows. That is the whole difference
 between the two buttons.
 
 **Save and apply** runs this for you. To do it by hand instead:

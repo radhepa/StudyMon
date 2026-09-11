@@ -36,7 +36,7 @@ function renderTopbar() {
   if (!S) return;
   var due = dueCount();
   $('#topbar').innerHTML =
-    '<span class="logo">C-MON</span>' +
+    '<span class="logo">StudyMon</span>' +
     (typeof regionChip === 'function' ? regionChip() : '') +
     '<span class="chip">◆ <b>' + badgeCount() + '</b>/' + CHAPTERS.length + ' badges</span>' +
     '<span class="chip">₵ <b>' + money().toLocaleString() + '</b></span>' +

@@ -87,7 +87,7 @@ function importSave(file, done) {
   fr.onload = function () {
     try {
       var o = JSON.parse(fr.result);
-      if (!o || o.v !== 1 || !o.party) throw new Error('not a C-MON save');
+      if (!o || o.v !== 1 || !o.party) throw new Error('not a StudyMon save');
       S = o;
     migrateCurriculumSave(S);
     migrateSubjectSave(S);
