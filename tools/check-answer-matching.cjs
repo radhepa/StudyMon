@@ -1,0 +1,14 @@
+const assert=require('assert/strict'),fs=require('fs'),vm=require('vm');
+const ctx={};vm.createContext(ctx);vm.runInContext(fs.readFileSync('js/engine/quiz.js','utf8'),ctx);
+const match=ctx.fillMatches;
+assert.equal(match('Hello!',['Hello!'],{match:'exact'}),true);
+for(const wrong of ['hello!','Hello','Hello!!','"Hello!"'])assert.equal(match(wrong,['Hello!'],{match:'exact'}),false,wrong);
+assert.equal(match('30,  35',['30, 35'],{match:'exact'}),false);
+assert.equal(match('n&=~(1<<5);',['n &= ~(1 << 5)'],{match:'tokens'}),true);
+assert.equal(match('N&=~(1<<5);',['n &= ~(1 << 5)'],{match:'tokens'}),false);
+assert.equal(match('n & =~(1<<5)',['n &= ~(1 << 5)'],{match:'tokens'}),false);
+assert.equal(match('sta tic',['static'],{match:'tokens'}),false);
+assert.equal(match('STATIC',['static'],{match:'tokens'}),false);
+assert.equal(match(' FLOWCHART. ',['flowchart']),true);
+assert.equal(match('',['flowchart']),false);
+console.log('PASS exact output, C tokens, and prose have distinct matching rules');

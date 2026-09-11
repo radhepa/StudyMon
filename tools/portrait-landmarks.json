@@ -1,0 +1,470 @@
+{
+ "ada": {
+  "body": 1118,
+  "chin": 198,
+  "cx": 472.0,
+  "top": 25
+ },
+ "ansi": {
+  "body": 1101,
+  "chin": 206,
+  "cx": 466.0,
+  "top": 25
+ },
+ "ari": {
+  "body": 1061,
+  "chin": 222,
+  "cx": 478.0,
+  "top": 58
+ },
+ "ash-grey": {
+  "body": 1092,
+  "chin": 216,
+  "cx": 455.0,
+  "top": 36
+ },
+ "astrid-starr": {
+  "body": 1092,
+  "chin": 211,
+  "cx": 467.5,
+  "top": 31
+ },
+ "bell": {
+  "body": 1048,
+  "chin": 194,
+  "cx": 506.0,
+  "top": 22
+ },
+ "beni": {
+  "body": 1118,
+  "chin": 198,
+  "cx": 471.0,
+  "top": 25
+ },
+ "bram": {
+  "body": 1086,
+  "chin": 227,
+  "cx": 453.0,
+  "top": 48
+ },
+ "brine": {
+  "body": 1092,
+  "chin": 213,
+  "cx": 461.5,
+  "top": 33
+ },
+ "coral": {
+  "body": 1141,
+  "chin": 182,
+  "cx": 475.0,
+  "top": 6
+ },
+ "dax": {
+  "body": 1111,
+  "chin": 214,
+  "cx": 480.5,
+  "top": 31
+ },
+ "della-twain": {
+  "body": 1086,
+  "chin": 210,
+  "cx": 477.5,
+  "top": 42
+ },
+ "dr-ashling": {
+  "body": 1120,
+  "chin": 195,
+  "cx": 481.0,
+  "top": 22
+ },
+ "dr-birkin": {
+  "body": 1112,
+  "chin": 214,
+  "cx": 474.5,
+  "top": 31
+ },
+ "dr-hale": {
+  "body": 1105,
+  "chin": 220,
+  "cx": 472.0,
+  "top": 38
+ },
+ "dr-hollis": {
+  "body": 1102,
+  "chin": 215,
+  "cx": 449.0,
+  "top": 34
+ },
+ "dr-nimue": {
+  "body": 1113,
+  "chin": 209,
+  "cx": 473.5,
+  "top": 26
+ },
+ "dr-oakes": {
+  "body": 1108,
+  "chin": 209,
+  "cx": 449.0,
+  "top": 27
+ },
+ "dr-ohm": {
+  "body": 1120,
+  "chin": 193,
+  "cx": 459.0,
+  "top": 20
+ },
+ "dr-yewell": {
+  "body": 1132,
+  "chin": 194,
+  "cx": 480.5,
+  "top": 19
+ },
+ "ellis": {
+  "body": 1026,
+  "chin": 190,
+  "cx": 502.5,
+  "top": 21
+ },
+ "fee-seeker": {
+  "body": 1116,
+  "chin": 197,
+  "cx": 468.5,
+  "top": 19
+ },
+ "fee-seeker-ii": {
+  "body": 1122,
+  "chin": 191,
+  "cx": 484.0,
+  "top": 18
+ },
+ "fitz": {
+  "body": 1108,
+  "chin": 214,
+  "cx": 474.5,
+  "top": 32
+ },
+ "flint": {
+  "body": 1102,
+  "chin": 207,
+  "cx": 475.5,
+  "top": 26
+ },
+ "flo": {
+  "body": 1066,
+  "chin": 222,
+  "cx": 477.5,
+  "top": 57
+ },
+ "gus": {
+  "body": 1114,
+  "chin": 211,
+  "cx": 472.5,
+  "top": 28
+ },
+ "holt": {
+  "body": 1099,
+  "chin": 175,
+  "cx": 454.0,
+  "top": 40
+ },
+ "ida": {
+  "body": 1131,
+  "chin": 185,
+  "cx": 490.0,
+  "top": 10
+ },
+ "ida-overflow": {
+  "body": 1109,
+  "chin": 206,
+  "cx": 476.5,
+  "top": 24
+ },
+ "ink": {
+  "body": 1106,
+  "chin": 215,
+  "cx": 487.5,
+  "top": 33
+ },
+ "june": {
+  "body": 1053,
+  "chin": 180,
+  "cx": 530.0,
+  "top": 17
+ },
+ "juno": {
+  "body": 1111,
+  "chin": 207,
+  "cx": 460.5,
+  "top": 24
+ },
+ "kern": {
+  "body": 1113,
+  "chin": 213,
+  "cx": 482.0,
+  "top": 30
+ },
+ "kes": {
+  "body": 1111,
+  "chin": 208,
+  "cx": 463.5,
+  "top": 25
+ },
+ "kip": {
+  "body": 1107,
+  "chin": 195,
+  "cx": 461.5,
+  "top": 24
+ },
+ "leif": {
+  "body": 1101,
+  "chin": 210,
+  "cx": 467.0,
+  "top": 29
+ },
+ "linka-head": {
+  "body": 1122,
+  "chin": 202,
+  "cx": 465.5,
+  "top": 17
+ },
+ "marn": {
+  "body": 1102,
+  "chin": 214,
+  "cx": 459.5,
+  "top": 33
+ },
+ "mira": {
+  "body": 1040,
+  "chin": 191,
+  "cx": 500.0,
+  "top": 30
+ },
+ "mo": {
+  "body": 1096,
+  "chin": 216,
+  "cx": 481.5,
+  "top": 36
+ },
+ "moss": {
+  "body": 1119,
+  "chin": 194,
+  "cx": 441.0,
+  "top": 21
+ },
+ "ms-lin": {
+  "body": 1105,
+  "chin": 197,
+  "cx": 470.5,
+  "top": 26
+ },
+ "nel": {
+  "body": 1107,
+  "chin": 195,
+  "cx": 461.5,
+  "top": 24
+ },
+ "nula-terminel": {
+  "body": 1074,
+  "chin": 215,
+  "cx": 472.5,
+  "top": 49
+ },
+ "nurse-halcyon": {
+  "body": 1117,
+  "chin": 199,
+  "cx": 475.0,
+  "top": 26
+ },
+ "opal": {
+  "body": 1109,
+  "chin": 201,
+  "cx": 476.5,
+  "top": 30
+ },
+ "oz": {
+  "body": 1097,
+  "chin": 210,
+  "cx": 489.5,
+  "top": 29
+ },
+ "padma-align": {
+  "body": 1124,
+  "chin": 188,
+  "cx": 486.0,
+  "top": 14
+ },
+ "perl": {
+  "body": 1112,
+  "chin": 196,
+  "cx": 464.5,
+  "top": 24
+ },
+ "petra": {
+  "body": 1110,
+  "chin": 211,
+  "cx": 486.5,
+  "top": 28
+ },
+ "pim": {
+  "body": 1084,
+  "chin": 211,
+  "cx": 483.0,
+  "top": 43
+ },
+ "poppy": {
+  "body": 1118,
+  "chin": 198,
+  "cx": 484.0,
+  "top": 25
+ },
+ "professor-linden": {
+  "body": 1105,
+  "chin": 216,
+  "cx": 481.0,
+  "top": 34
+ },
+ "quill": {
+  "body": 1092,
+  "chin": 216,
+  "cx": 470.5,
+  "top": 36
+ },
+ "ren": {
+  "body": 1100,
+  "chin": 205,
+  "cx": 454.5,
+  "top": 35
+ },
+ "reva-call": {
+  "body": 1103,
+  "chin": 200,
+  "cx": 448.5,
+  "top": 30
+ },
+ "rhea-dexter": {
+  "body": 1114,
+  "chin": 206,
+  "cx": 477.0,
+  "top": 23
+ },
+ "roan": {
+  "body": 1103,
+  "chin": 216,
+  "cx": 461.5,
+  "top": 35
+ },
+ "rook": {
+  "body": 1118,
+  "chin": 207,
+  "cx": 475.0,
+  "top": 23
+ },
+ "rowan": {
+  "body": 1048,
+  "chin": 194,
+  "cx": 492.0,
+  "top": 22
+ },
+ "sal": {
+  "body": 1115,
+  "chin": 210,
+  "cx": 464.5,
+  "top": 27
+ },
+ "sasha": {
+  "body": 1104,
+  "chin": 213,
+  "cx": 459.5,
+  "top": 31
+ },
+ "seg-fault": {
+  "body": 1109,
+  "chin": 193,
+  "cx": 472.5,
+  "top": 22
+ },
+ "skiff": {
+  "body": 1131,
+  "chin": 196,
+  "cx": 462.0,
+  "top": 10
+ },
+ "tam": {
+  "body": 1117,
+  "chin": 208,
+  "cx": 490.5,
+  "top": 24
+ },
+ "theo": {
+  "body": 1005,
+  "chin": 157,
+  "cx": 532.0,
+  "top": 2
+ },
+ "tilda": {
+  "body": 1070,
+  "chin": 229,
+  "cx": 480.5,
+  "top": 53
+ },
+ "tobin": {
+  "body": 1113,
+  "chin": 194,
+  "cx": 471.0,
+  "top": 22
+ },
+ "tor": {
+  "body": 1102,
+  "chin": 200,
+  "cx": 484.5,
+  "top": 36
+ },
+ "uma-bee": {
+  "body": 1122,
+  "chin": 193,
+  "cx": 478.0,
+  "top": 20
+ },
+ "vell": {
+  "body": 1111,
+  "chin": 212,
+  "cx": 485.0,
+  "top": 29
+ },
+ "vesta": {
+  "body": 1104,
+  "chin": 213,
+  "cx": 476.5,
+  "top": 31
+ },
+ "wade": {
+  "body": 1107,
+  "chin": 208,
+  "cx": 459.0,
+  "top": 26
+ },
+ "wisp": {
+  "body": 1093,
+  "chin": 207,
+  "cx": 464.5,
+  "top": 38
+ },
+ "wren": {
+  "body": 1117,
+  "chin": 208,
+  "cx": 490.5,
+  "top": 24
+ },
+ "wynn": {
+  "body": 1119,
+  "chin": 206,
+  "cx": 472.0,
+  "top": 22
+ },
+ "xora-mask": {
+  "body": 1092,
+  "chin": 224,
+  "cx": 461.0,
+  "top": 44
+ }
+}

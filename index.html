@@ -4,10 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>C-MON, a C study RPG</title>
-<link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="css/polish.css">
-<link rel="stylesheet" href="css/parchment.css">
-<link rel="stylesheet" href="css/friends.css">
+<link rel="icon" type="image/svg+xml" href="assets/pokeball.svg">
+<link rel="stylesheet" href="css/style.css?v=curriculum4-20260905">
+<link rel="stylesheet" href="css/polish.css?v=curriculum4-20260905">
+<link rel="stylesheet" href="css/parchment.css?v=curriculum4-20260905">
+<link rel="stylesheet" href="css/friends.css?v=curriculum4-20260905">
+<link rel="stylesheet" href="css/ui.css?v=calc-stats-20260910">
+<link rel="stylesheet" href="css/side-quests.css">
 </head>
 <body>
 
@@ -17,9 +20,9 @@
 
   <!-- ================= TITLE ================= -->
   <section id="s-title" class="screen on">
-    <div class="sub">A FIELD GUIDE TO C · A POKÉMON ADVENTURE</div>
+    <div class="sub">C AND CALCULUS II · A POKÉMON ADVENTURE</div>
     <div class="big">C-MON<span class="title-period">.</span></div><h1 class="title-headline">Study a little. Stay for a battle.</h1>
-    <div class="book">Forouzan &amp; Gilberg · <i>Computer Science: A Structured Programming Approach in C</i></div>
+    <div class="book">Forouzan &amp; Afyouni · <i>Computer Science: A Structured Programming Approach in C</i> · 4th edition</div>
 
     <div class="title-mons" aria-label="Your adventure companions">
       <img src="assets/sprites/front/4.png" alt="">
@@ -33,9 +36,10 @@
 
     <div class="panel dark" style="max-width:620px;margin:0 auto 20px;text-align:left">
       <p style="font-size:14.5px;line-height:1.7;margin:0 0 10px">
-        Fifteen routes, one per chapter of your textbook. Answer a C question to attack.
-        Stronger moves ask harder questions. Win battles to level up, evolve and
-        collect Pokémon from every generation.
+        Fifteen routes through the C region, one per chapter, and ten more across
+        the Converging Isles for Calculus II. Answer a question to attack. Stronger
+        moves ask harder questions. Win battles to level up, evolve and collect
+        Pokémon from every generation. Your team sails between regions with you.
       </p>
       <p class="small" style="margin:0">
         Missed questions come back for review. Your Trainer Card
@@ -80,8 +84,11 @@
   <section id="s-study" class="screen"></section>
 
   <!-- ================= STATS ================= -->
+  <section id="s-town" class="screen"></section>
+  <section id="s-shop" class="screen"></section>
   <section id="s-friends" class="screen"></section>
   <section id="s-stats" class="screen"></section>
+  <section id="s-quests" class="screen"></section>
 
 </div>
 
@@ -91,33 +98,62 @@
   <button data-scr="dex"   onclick="showScreen('dex');renderDex()">📕 Pokédex</button>
   <button data-scr="study" onclick="showScreen('study');renderStudy()">📖 Notes</button>
   <button data-scr="stats" onclick="showScreen('stats');renderStats()">📊 Trainer Card</button>
+  <button data-scr="town" onclick="openTown()">🏘 Region</button>
   <button data-scr="friends" onclick="openFriends()">♥ Friends</button>
+  <button data-scr="quests" onclick="openSideQuests()">📜 Side Quests</button>
 </nav>
 
 <div id="toast" role="status" aria-live="polite"></div>
 <div id="modal" onclick="if(event.target===this)closeModal()"><div class="panel dark box"></div></div>
 <input type="file" id="importfile" accept="application/json" style="display:none">
 
-<script src="js/data/pokedex.js"></script>
-<script src="js/data/world.js"></script>
-<script src="js/data/questions/ch01-03.js"></script>
-<script src="js/data/questions/ch04-06.js"></script>
-<script src="js/data/questions/ch07-09.js"></script>
-<script src="js/data/questions/ch10-12.js"></script>
-<script src="js/data/questions/ch13-15.js"></script>
-<script src="js/data/questions/ch01-03-b.js"></script>
-<script src="js/data/questions/ch04-06-b.js"></script>
-<script src="js/data/questions/ch07-09-b.js"></script>
-<script src="js/data/questions/ch10-12-b.js"></script>
-<script src="js/data/questions/ch13-15-b.js"></script>
-<script src="js/data/questions/topup.js"></script>
-<script src="js/data/trainers.js"></script>
-<script src="js/engine/state.js"></script>
-<script src="js/engine/mons.js"></script>
-<script src="js/engine/quiz.js"></script>
-<script src="js/engine/ui.js"></script>
-<script src="js/engine/battle.js"></script>
-<script src="js/engine/friends.js"></script>
-<script src="js/main.js"></script>
+<script src="js/data/pokedex.js?v=curriculum4-20260905"></script>
+<script src="js/data/sprite-seat.js?v=curriculum4-20260905"></script>
+<script src="js/data/world.js?v=curriculum4-20260905"></script>
+<script src="js/data/questions/ch01-03.js?v=curriculum4-20260905"></script>
+<script src="js/data/questions/ch04-06.js?v=curriculum4-20260905"></script>
+<script src="js/data/questions/ch07-09.js?v=curriculum4-20260905"></script>
+<script src="js/data/questions/ch10-12.js?v=curriculum4-20260905"></script>
+<script src="js/data/questions/ch13-15.js?v=curriculum4-20260905"></script>
+<script src="js/data/questions/ch01-03-b.js?v=curriculum4-20260905"></script>
+<script src="js/data/questions/ch04-06-b.js?v=curriculum4-20260905"></script>
+<script src="js/data/questions/ch07-09-b.js?v=curriculum4-20260905"></script>
+<script src="js/data/questions/ch10-12-b.js?v=curriculum4-20260905"></script>
+<script src="js/data/questions/ch13-15-b.js?v=curriculum4-20260905"></script>
+<script src="js/data/questions/topup.js?v=curriculum4-20260905"></script>
+<script src="js/data/townsfolk.js?v=curriculum4-20260905"></script>
+<script src="js/data/folk-events.js?v=curriculum4-20260905"></script>
+<script src="js/data/event-beats.js?v=curriculum4-20260905"></script>
+<script src="js/data/trainers.js?v=curriculum4-20260905"></script>
+<script src="js/data/curriculum.js?v=curriculum4-20260905"></script>
+<script src="js/data/questions/edition4.js?v=curriculum4-20260905"></script>
+<script src="js/data/questions/quiz-true-false.js?v=quiz-tf-20260910"></script>
+<script src="js/data/curriculum-notes.js?v=curriculum4-20260905"></script>
+<script src="js/data/calc/calc-world.js?v=calc-20260905"></script>
+<script src="js/data/calc/calc-townsfolk.js?v=calc-20260905"></script>
+<script src="js/data/calc/calc-questions-manual.js?v=calc-20260905"></script>
+<script src="js/data/calc/calc-questions-extra.js?v=calc-20260905"></script>
+<script src="js/data/calc/calc-questions-more.js?v=calc-20260905"></script>
+<script src="js/data/calc/calc-questions-problems.js?v=calc-20260906"></script>
+<script src="js/data/calc/calc-questions-quiz2.js?v=calc-20260910"></script>
+<script src="js/data/calc/calc-questions-field-manual-q3plus.js?v=calc-20260909"></script>
+<script src="js/data/calc/calc-questions-thomas-topup.js?v=calc-20260910"></script>
+<script src="js/data/calc/calc-questions-tenfold.js?v=calc-20260910b"></script>
+<script src="js/data/encounters.js?v=calc-20260905"></script>
+<script src="js/engine/state.js?v=curriculum4-20260905"></script>
+<script src="js/engine/subjects.js?v=calc-20260905"></script>
+<script src="js/engine/mons.js?v=curriculum4-20260905"></script>
+<script src="js/engine/quiz.js?v=curriculum4-20260905"></script>
+<script src="js/engine/ui.js?v=curriculum4-20260905"></script>
+<script src="js/engine/battle.js?v=curriculum4-20260905"></script>
+<script src="js/engine/shop.js?v=curriculum4-20260905"></script>
+<script src="js/engine/town.js?v=curriculum4-20260905"></script>
+<script src="js/engine/pc.js?v=curriculum4-20260905"></script>
+<script src="js/engine/friends.js?v=curriculum4-20260905"></script>
+<script src="js/engine/ferry.js?v=calc-20260905"></script>
+<script src="js/data/side-quests.js"></script>
+<script src="js/engine/side-quests.js"></script>
+<script src="js/engine/evolution-choice.js"></script>
+<script src="js/main.js?v=curriculum4-20260905"></script>
 </body>
 </html>

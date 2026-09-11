@@ -1,0 +1,682 @@
+{
+  "generated": "2026-09-06T07:36:04.746Z",
+  "note": "Generated from verified reference implementations. Reviewed before use; regenerate with tools/build-expected-outputs.cjs.",
+  "cases": {
+    "c-lab-01-case-1": {
+      "stdout": "Trainer ID: 42\nParty count: 3\nFee (cents): 125\n",
+      "hash": "865c1e210b934cb9"
+    },
+    "c-lab-02-case-1": {
+      "stdout": "Total: $13.00\n",
+      "hash": "6fd0e30b1b82a4d5"
+    },
+    "c-lab-02-case-2": {
+      "stdout": "Total: $0.00\n",
+      "hash": "0e75ff210a5e6aaa"
+    },
+    "c-lab-02-case-3": {
+      "stdout": "Total: $495.00\n",
+      "hash": "460811063a7087e2"
+    },
+    "c-lab-02-case-4": {
+      "stdout": "Total: $2.00\n",
+      "hash": "39b4e5f51e174d14"
+    },
+    "c-lab-02-case-5": {
+      "stdout": "Total: $3.00\n",
+      "hash": "c88dacbde7f66152"
+    },
+    "c-lab-02-case-6": {
+      "stdout": "ERROR\n",
+      "hash": "4fc5f43e6e8b6b9d"
+    },
+    "c-lab-02-case-7": {
+      "stdout": "ERROR\n",
+      "hash": "563201d85c5f3e41"
+    },
+    "c-lab-02-case-8": {
+      "stdout": "Total: $53.00\n",
+      "hash": "00a1a3f8796ebc20"
+    },
+    "c-lab-03-case-1": {
+      "stdout": "HEAL\n",
+      "hash": "ac18041043ff2964"
+    },
+    "c-lab-03-case-2": {
+      "stdout": "ATTACK\n",
+      "hash": "5fb3641b14dc3931"
+    },
+    "c-lab-03-case-3": {
+      "stdout": "ATTACK\n",
+      "hash": "cc36cbd993880b2d"
+    },
+    "c-lab-03-case-4": {
+      "stdout": "RETREAT\n",
+      "hash": "920d860077235f73"
+    },
+    "c-lab-03-case-5": {
+      "stdout": "ATTACK\n",
+      "hash": "f720a7581d488a20"
+    },
+    "c-lab-03-case-6": {
+      "stdout": "HEAL\n",
+      "hash": "961aa258950d8b13"
+    },
+    "c-lab-03-case-7": {
+      "stdout": "ERROR\n",
+      "hash": "9cb7061ba0d871f8"
+    },
+    "c-lab-03-case-8": {
+      "stdout": "ERROR\n",
+      "hash": "fa9f266667782aa8"
+    },
+    "c-lab-03-case-9": {
+      "stdout": "HEAL\n",
+      "hash": "869a7529872be12c"
+    },
+    "c-lab-04-case-1": {
+      "stdout": "28 4.00 7\n",
+      "hash": "74520f9cb117d60a"
+    },
+    "c-lab-04-case-2": {
+      "stdout": "0 0.00 1\n",
+      "hash": "8b4be79d20501ab7"
+    },
+    "c-lab-04-case-3": {
+      "stdout": "33 4.71 1\n",
+      "hash": "ad52ba38b1eac383"
+    },
+    "c-lab-04-case-4": {
+      "stdout": "70000 10000.00 1\n",
+      "hash": "48142f229160766f"
+    },
+    "c-lab-04-case-5": {
+      "stdout": "ERROR\n",
+      "hash": "e9763dfa931d432b"
+    },
+    "c-lab-04-case-6": {
+      "stdout": "ERROR\n",
+      "hash": "e6728bc8a6f87b36"
+    },
+    "c-lab-05-case-1": {
+      "stdout": "39\n",
+      "hash": "fa9701f5727c7974"
+    },
+    "c-lab-05-case-2": {
+      "stdout": "30\n",
+      "hash": "6e3510d0536ea16e"
+    },
+    "c-lab-05-case-3": {
+      "stdout": "1\n",
+      "hash": "31a6d2553c48c027"
+    },
+    "c-lab-05-case-4": {
+      "stdout": "-1\n",
+      "hash": "cf9ee0e9f7d1be05"
+    },
+    "c-lab-05-case-5": {
+      "stdout": "25\n",
+      "hash": "2ddfb89177717429"
+    },
+    "c-lab-05-case-6": {
+      "stdout": "0\n",
+      "hash": "61b6b51f71813162"
+    },
+    "c-lab-05-case-7": {
+      "stdout": "-1\n",
+      "hash": "bfd87253e78487d5"
+    },
+    "c-lab-05-case-8": {
+      "stdout": "10000\n",
+      "hash": "58643c2fbdf9bb88"
+    },
+    "c-lab-06-case-1": {
+      "stdout": "5 15 10.00\n",
+      "hash": "2b31dd4e9947ed82"
+    },
+    "c-lab-06-case-2": {
+      "stdout": "5 5 5.00\n",
+      "hash": "b6f204485296d669"
+    },
+    "c-lab-06-case-3": {
+      "stdout": "1 100 40.17\n",
+      "hash": "5d657e2e006d16e4"
+    },
+    "c-lab-06-case-4": {
+      "stdout": "ERROR\n",
+      "hash": "940c0d75e2f0c9c9"
+    },
+    "c-lab-06-case-5": {
+      "stdout": "ERROR\n",
+      "hash": "461f3888230cc6d6"
+    },
+    "c-lab-06-case-6": {
+      "stdout": "ERROR\n",
+      "hash": "ea7594f22ad75abb"
+    },
+    "c-lab-07-case-1": {
+      "stdout": "1 1\n0 1\n1 2\nPikachu\nMr Mime\n",
+      "hash": "54eb38f4d3075a1c"
+    },
+    "c-lab-07-case-2": {
+      "stdout": "-1 0\n-1 0\n-1 0\n1 1\nEevee\n",
+      "hash": "40fe48f97dd69c65"
+    },
+    "c-lab-07-case-3": {
+      "stdout": "1 1\n1 2\n1 3\n1 4\n1 5\n1 6\n-1 6\n0 6\nA\nB\nC\nD\nE\nF\n",
+      "hash": "d7598a3a84beb46b"
+    },
+    "c-lab-07-case-4": {
+      "stdout": "1 1\n-1 1\nABCDEFGHIJKLMNOPQRST\n",
+      "hash": "bf817ebeec020578"
+    },
+    "c-lab-08-case-1": {
+      "stdout": "1\nPikachu 12 0\n",
+      "hash": "7e12540cd95ee98c"
+    },
+    "c-lab-08-case-2": {
+      "stdout": "0\n",
+      "hash": "ed8ba67435248d13"
+    },
+    "c-lab-08-case-3": {
+      "stdout": "2\nSquirtle 20 1\nLapras 30 1\n",
+      "hash": "6e9fe5533617c906"
+    },
+    "c-lab-08-case-4": {
+      "stdout": "0\n",
+      "hash": "d95337b8cbf1dd03"
+    },
+    "c-lab-09-case-1": {
+      "stdout": "INIT 1\n1 1 2 5\n1 2 2 5 10\n1 3 4 5 10 15\n1 4 4 5 10 15 20\n1 5 8 5 10 15 20 25\nCLEAN 0 0 1\nLIVE 0\n",
+      "hash": "1ea4cae5725a2200"
+    },
+    "c-lab-09-case-2": {
+      "stdout": "INIT 1\n1 1 2 5\n1 2 2 5 10\n0 2 2 5 10\n1 3 4 5 10 20\nCLEAN 0 0 1\nLIVE 0\n",
+      "hash": "aaa118563347ec0a"
+    },
+    "c-lab-09-case-3": {
+      "stdout": "INIT 1\n0 0 2\n0 0 2\n1 1 2 7\nCLEAN 0 0 1\nLIVE 0\n",
+      "hash": "6aee95843059837c"
+    },
+    "c-lab-09-case-4": {
+      "stdout": "INIT 1\nOVERFLOW 0\nCLEAN 0 0 1\nLIVE 0\n",
+      "hash": "d2e0d94610b59871"
+    },
+    "c-lab-10-case-1": {
+      "stdout": "SAVE 1\n1 2\nPikachu 12\nZubat 8\n",
+      "hash": "13c27a378a9cdf5f"
+    },
+    "c-lab-10-case-2": {
+      "stdout": "1 2\nPikachu 12\nZubat 8\n",
+      "hash": "c85204a412681f3f"
+    },
+    "c-lab-10-case-3": {
+      "stdout": "0 1\nKeep 1\n",
+      "hash": "a89e9dabb4c3ccfe"
+    },
+    "c-lab-10-case-4": {
+      "stdout": "0 1\nKeep 1\n",
+      "hash": "e5d228d536d0513c"
+    },
+    "c-lab-10-case-5": {
+      "stdout": "1 0\n",
+      "hash": "ad32fb6153fcaa30"
+    },
+    "c-lab-10-case-6": {
+      "stdout": "0 1\nKeep 1\n",
+      "hash": "3ecabafe991d49dd"
+    },
+    "c-lab-10-case-7": {
+      "stdout": "0 1\nKeep 1\n",
+      "hash": "2b03dea2129bb8e8"
+    },
+    "c-lab-11-case-1": {
+      "stdout": "Eevee\n",
+      "hash": "2dbd3bcc3dfd8684"
+    },
+    "c-lab-11-case-2": {
+      "stdout": "Eevee>Vaporeon\nEevee>Jolteon\nEevee>Flareon\n",
+      "hash": "ef97fb934c3653c9"
+    },
+    "c-lab-11-case-3": {
+      "stdout": "Eevee>Vaporeon>Jolteon>Flareon\n",
+      "hash": "487e35dec9e66f07"
+    },
+    "c-lab-11-case-4": {
+      "stdout": "Seed>Bud>Bloom\nSeed>Tree\n",
+      "hash": "1c60b888b820d9a4"
+    },
+    "c-lab-12-case-1": {
+      "stdout": "1\n1\n1\n1\n0\n",
+      "hash": "5b1fb148d22db1a9"
+    },
+    "c-lab-12-case-2": {
+      "stdout": "1\n1\n2\nEevee 5 0\nEevee 10 1\n",
+      "hash": "2736ad840060371a"
+    },
+    "c-lab-12-case-3": {
+      "stdout": "0\n0\n",
+      "hash": "1c985f3454f6840a"
+    },
+    "c-lab-12-case-4": {
+      "stdout": "1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n0\n",
+      "hash": "9e528b17785a2ffc"
+    },
+    "c-lab-12-case-5": {
+      "stdout": "1\n0\n1\nKeep 1 0\n",
+      "hash": "eb24d6ceca13b236"
+    },
+    "c-lab-12-case-6": {
+      "stdout": "1\n1\nPika 7 0\n",
+      "hash": "e1619208f78442bc"
+    },
+    "c-lab-13-case-1": {
+      "stdout": "1.50 30.00\n",
+      "hash": "3b69400c9693be47"
+    },
+    "c-lab-13-case-2": {
+      "stdout": "0.00 0.00\n",
+      "hash": "47bc023dd0b3f6d0"
+    },
+    "c-lab-13-case-3": {
+      "stdout": "100.00 300.00\n",
+      "hash": "dbd131b0c5e21e00"
+    },
+    "c-lab-13-case-4": {
+      "stdout": "2.50 30.00\n",
+      "hash": "60dccb777523454f"
+    },
+    "c-lab-13-case-5": {
+      "stdout": "ERROR\n",
+      "hash": "e6aa410a268603e3"
+    },
+    "c-lab-13-case-6": {
+      "stdout": "ERROR\n",
+      "hash": "2fc6244a5972cfde"
+    },
+    "c-lab-14-case-1": {
+      "stdout": "3 1\n",
+      "hash": "ce755426afbb7cf1"
+    },
+    "c-lab-14-case-2": {
+      "stdout": "3 0\n",
+      "hash": "950a61750f393ca0"
+    },
+    "c-lab-14-case-3": {
+      "stdout": "0 0\n",
+      "hash": "04ce0e2204a89f2c"
+    },
+    "c-lab-14-case-4": {
+      "stdout": "101 1\n",
+      "hash": "4e9036e7f6668113"
+    },
+    "c-lab-14-case-5": {
+      "stdout": "ERROR\n",
+      "hash": "4a25206454581c43"
+    },
+    "c-lab-14-case-6": {
+      "stdout": "ERROR\n",
+      "hash": "763ff7e137709953"
+    },
+    "c-lab-15-case-1": {
+      "stdout": "ERROR\n",
+      "hash": "a90c5f0252d51c62"
+    },
+    "c-lab-15-case-2": {
+      "stdout": "BASIC\n",
+      "hash": "81334277cc1688e7"
+    },
+    "c-lab-15-case-3": {
+      "stdout": "BASIC\n",
+      "hash": "86c462f818dceaf9"
+    },
+    "c-lab-15-case-4": {
+      "stdout": "STANDARD\n",
+      "hash": "35d8b94469cc25b5"
+    },
+    "c-lab-15-case-5": {
+      "stdout": "STANDARD\n",
+      "hash": "b93aa8b1a0fff544"
+    },
+    "c-lab-15-case-6": {
+      "stdout": "ADVANCED\n",
+      "hash": "2038400439cee9ce"
+    },
+    "c-lab-15-case-7": {
+      "stdout": "ADVANCED\n",
+      "hash": "209841d421ccbe97"
+    },
+    "c-lab-15-case-8": {
+      "stdout": "ERROR\n",
+      "hash": "6b32c0c5d6bf2e47"
+    },
+    "c-lab-16-case-1": {
+      "stdout": "*\n",
+      "hash": "8a7774309347da90"
+    },
+    "c-lab-16-case-2": {
+      "stdout": "*\n**\n***\n",
+      "hash": "1755b9d33bfa016c"
+    },
+    "c-lab-16-case-3": {
+      "stdout": "*\n**\n***\n****\n*****\n******\n*******\n********\n*********\n**********\n",
+      "hash": "5a2e33b26c0a5701"
+    },
+    "c-lab-16-case-4": {
+      "stdout": "ERROR\n",
+      "hash": "27ef6925fd4950a0"
+    },
+    "c-lab-16-case-5": {
+      "stdout": "ERROR\n",
+      "hash": "c29fcecd8974f12e"
+    },
+    "c-lab-17-case-1": {
+      "stdout": "2 0 0 0 0 1\n",
+      "hash": "ae034686be14c69b"
+    },
+    "c-lab-17-case-2": {
+      "stdout": "0 0 0 0 0 0\n",
+      "hash": "d2cc03b1ec2fc92f"
+    },
+    "c-lab-17-case-3": {
+      "stdout": "1 1 1 1 1 1\n",
+      "hash": "56ed730dbd2892d5"
+    },
+    "c-lab-17-case-4": {
+      "stdout": "ERROR\n",
+      "hash": "67776d5b56d8e695"
+    },
+    "c-lab-17-case-5": {
+      "stdout": "ERROR\n",
+      "hash": "26440c904948d1fa"
+    },
+    "c-lab-17-case-6": {
+      "stdout": "0 100 0 0 0 0\n",
+      "hash": "3ceaa26cfc4c3762"
+    },
+    "c-lab-18-case-1": {
+      "stdout": "1 3 3\n1\n",
+      "hash": "8f9402a2e52a0476"
+    },
+    "c-lab-18-case-2": {
+      "stdout": "\n-1\n",
+      "hash": "f972b7fecf367e39"
+    },
+    "c-lab-18-case-3": {
+      "stdout": "1 2 3 4 5\n-1\n",
+      "hash": "f823f6255d9664dd"
+    },
+    "c-lab-18-case-4": {
+      "stdout": "100\n0\n",
+      "hash": "cc6083973ea4288c"
+    },
+    "c-lab-18-case-5": {
+      "stdout": "ERROR\n",
+      "hash": "387d7092051a2421"
+    },
+    "c-lab-19-case-1": {
+      "stdout": "10 0 15\n2 3\n",
+      "hash": "cb555ca315c2b674"
+    },
+    "c-lab-19-case-2": {
+      "stdout": "0 0 0\n0 0\n",
+      "hash": "ae9a45114fd8f742"
+    },
+    "c-lab-19-case-3": {
+      "stdout": "18 0 0\n0 0\n",
+      "hash": "9bf6886331b4a22b"
+    },
+    "c-lab-19-case-4": {
+      "stdout": "ERROR\n",
+      "hash": "f225c131dfacf4a0"
+    },
+    "c-lab-20-case-1": {
+      "stdout": "Potion 12\nBerry 0\n",
+      "hash": "33c88da2e91082b1"
+    },
+    "c-lab-20-case-2": {
+      "stdout": "ERROR\nERROR\nERROR\nERROR\n",
+      "hash": "fac9414fd91ebc1e"
+    },
+    "c-lab-20-case-3": {
+      "stdout": "Potion 12\n",
+      "hash": "e6258f957e85a591"
+    },
+    "c-lab-20-case-4": {
+      "stdout": "ERROR\nERROR\nERROR\n",
+      "hash": "a297d9c1bf3f7eeb"
+    },
+    "c-lab-20-case-5": {
+      "stdout": "ERROR\nB 2\n",
+      "hash": "1b7d0e8bdc03d8a0"
+    },
+    "c-lab-20-case-6": {
+      "stdout": "Potion 12\n",
+      "hash": "e87be19c491d8d31"
+    },
+    "c-lab-21-case-1": {
+      "stdout": "1 10 5\n",
+      "hash": "4458add88c769882"
+    },
+    "c-lab-21-case-2": {
+      "stdout": "1 7\n",
+      "hash": "f3758ca717af69bb"
+    },
+    "c-lab-21-case-3": {
+      "stdout": "0 5\n",
+      "hash": "43ee335d3ec98e0e"
+    },
+    "c-lab-21-case-4": {
+      "stdout": "0\n",
+      "hash": "89b991d480800acf"
+    },
+    "c-lab-21-case-5": {
+      "stdout": "1 39\n",
+      "hash": "55fc316c56995c26"
+    },
+    "c-lab-21-case-6": {
+      "stdout": "1 2147483647\n",
+      "hash": "779b297c467309c7"
+    },
+    "c-lab-21-case-7": {
+      "stdout": "0 10\n",
+      "hash": "3e8d19cd2f51c212"
+    },
+    "c-lab-21-case-8": {
+      "stdout": "0 3\n",
+      "hash": "f4da35a44a8608de"
+    },
+    "c-lab-22-case-1": {
+      "stdout": "1 0 25\n1 1 1500\n1 2 125\nNULL 0\n",
+      "hash": "6264786ed5974019"
+    },
+    "c-lab-22-case-2": {
+      "stdout": "0 1 0\n0 1 0\n0 1 0\n0 1 0\nNULL 0\n",
+      "hash": "91fa4fd2c3f9c483"
+    },
+    "c-lab-22-case-3": {
+      "stdout": "1 0 100\n1 1 100000\nNULL 0\n",
+      "hash": "dbce12745a5c5713"
+    },
+    "c-lab-23-case-1": {
+      "stdout": "1\n129\n128\n1\n",
+      "hash": "c69fc78c9ab01fb4"
+    },
+    "c-lab-23-case-2": {
+      "stdout": "8\n8\n8\n0\n1\n",
+      "hash": "28ed0e41df4dcc25"
+    },
+    "c-lab-23-case-3": {
+      "stdout": "ERROR\nERROR\n0\n",
+      "hash": "b2e5cdee3f7884c4"
+    },
+    "c-lab-23-case-4": {
+      "stdout": "ERROR\n0\n",
+      "hash": "924da80f5184ee8f"
+    },
+    "c-lab-24-case-1": {
+      "stdout": "1 1 1\n",
+      "hash": "f0ad0c11b77aceb6"
+    },
+    "c-lab-24-case-2": {
+      "stdout": "0 0 0\n",
+      "hash": "4aa2ea4cf8193d40"
+    },
+    "c-lab-24-case-3": {
+      "stdout": "1 1 0\n",
+      "hash": "85b10a8ce9b62999"
+    },
+    "c-lab-24-case-4": {
+      "stdout": "ERROR\n",
+      "hash": "5dbdc9bbb53947fd"
+    },
+    "c-lab-24-case-5": {
+      "stdout": "1 0 4\n",
+      "hash": "812ba9403aee060e"
+    },
+    "c-lab-25-case-1": {
+      "stdout": "1\n1\n1\n1 10\n1 20\n1 30\n0 -999\nCLEAN 1 1\nLIVE 0\n",
+      "hash": "eb06f549cd8545f7"
+    },
+    "c-lab-25-case-2": {
+      "stdout": "1\n0\n1 1\n0 -999\nCLEAN 1 1\nLIVE 0\n",
+      "hash": "af7239878b397936"
+    },
+    "c-lab-25-case-3": {
+      "stdout": "1\n1\n1 7\n0 -999\nCLEAN 1 1\nLIVE 0\n",
+      "hash": "70b5108f76276ccc"
+    },
+    "c-lab-25-case-4": {
+      "stdout": "1\n1\nCLEAN 1 1\nLIVE 0\n",
+      "hash": "8d364d7d7d7509f6"
+    },
+    "c-lab-25-case-5": {
+      "stdout": "CLEAN 1 1\nLIVE 0\n",
+      "hash": "ef1f7b9a743ac613"
+    },
+    "c-lab-26-case-1": {
+      "stdout": "1\n1\n5\nCLEAN 1\nLIVE 0\n",
+      "hash": "b8a89107e861d000"
+    },
+    "c-lab-26-case-2": {
+      "stdout": "1\n1\n1\n1\n1\n1\n-1\n0\nCLEAN 1\nLIVE 0\n",
+      "hash": "5f3d22a15e6a21a0"
+    },
+    "c-lab-26-case-3": {
+      "stdout": "1\n0\n999\n0\n-1\nCLEAN 1\nLIVE 0\n",
+      "hash": "57bc2e5c25d86cdb"
+    },
+    "c-lab-26-case-4": {
+      "stdout": "1\n0\n2\nCLEAN 1\nLIVE 0\n",
+      "hash": "1712e24013894863"
+    },
+    "c-lab-26-case-5": {
+      "stdout": "CLEAN 1\nLIVE 0\n",
+      "hash": "2cc6740aeb4de1be"
+    },
+    "c-lab-27-case-1": {
+      "stdout": "9\n0 0\n0 1\n1 1\n1 2\n1 3\n2 3\n3 3\n3 4\n4 4\n",
+      "hash": "5992f9da8dfa3d58"
+    },
+    "c-lab-27-case-2": {
+      "stdout": "1\n0 0\n",
+      "hash": "06b6d3493f646cbc"
+    },
+    "c-lab-27-case-3": {
+      "stdout": "0\n",
+      "hash": "1bddfa696e85602d"
+    },
+    "c-lab-27-case-4": {
+      "stdout": "9\n0 0\n0 1\n0 2\n0 3\n0 4\n1 4\n2 4\n3 4\n4 4\n",
+      "hash": "2f9bd9ad6cbd9358"
+    },
+    "c-lab-27-case-5": {
+      "stdout": "0\n",
+      "hash": "5d18ecd85d3b2b59"
+    },
+    "c-lab-28-case-1": {
+      "stdout": "1\n19 00 00 00 05 00\n",
+      "hash": "eed8999f1e5b2058"
+    },
+    "c-lab-28-case-2": {
+      "stdout": "1\n01 04 00 00 64 00\n",
+      "hash": "8666a2a7f19a7aee"
+    },
+    "c-lab-28-case-3": {
+      "stdout": "0\n\n",
+      "hash": "d3f939e33b0ecb45"
+    },
+    "c-lab-28-case-4": {
+      "stdout": "0\n\n",
+      "hash": "bfcfcfd03c42508e"
+    },
+    "c-lab-28-case-5": {
+      "stdout": "1 1025 100\n",
+      "hash": "2a2b06f2cc9b8db1"
+    },
+    "c-lab-28-case-6": {
+      "stdout": "0 7 7\n",
+      "hash": "1b90d013cb7fa29c"
+    },
+    "c-lab-28-case-7": {
+      "stdout": "0 7 7\n",
+      "hash": "9cd4f02a3a712398"
+    },
+    "c-lab-28-case-8": {
+      "stdout": "0 7 7\n",
+      "hash": "772450da9d9cbb30"
+    },
+    "c-lab-28-case-9": {
+      "stdout": "0 7 7\n",
+      "hash": "28cbda97eca3805f"
+    },
+    "c-lab-29-case-1": {
+      "stdout": "1 1 -1 0 0 1 1 40 40 23 40\n",
+      "hash": "01272c88e507235e"
+    },
+    "c-lab-29-case-2": {
+      "stdout": "0 0 -1 0 0 1 1 40 40 40 40\n0 0 -1 0 0 1 1 40 40 40 40\n0 0 -1 0 0 1 1 40 40 40 40\n0 0 -1 0 0 1 1 40 40 40 40\n1 1 -1 0 0 1 1 40 40 23 40\n",
+      "hash": "4fb53d639f254eaa"
+    },
+    "c-lab-29-case-3": {
+      "stdout": "1 1 -1 0 0 1 1 40 40 23 40\n1 0 -1 0 0 1 0 40 40 40 40\n1 1 -1 0 0 1 0 40 40 23 40\n0 1 -1 0 0 1 0 40 40 23 40\n1 0 -1 0 0 1 0 23 40 23 40\n",
+      "hash": "e8d2bf98009628e4"
+    },
+    "c-lab-29-case-4": {
+      "stdout": "1 1 -1 0 0 1 1 40 40 23 40\n1 0 -1 0 0 1 1 23 40 23 40\n1 1 -1 0 0 1 1 23 40 6 40\n1 0 -1 0 0 1 1 6 40 6 40\n1 1 -1 0 1 1 1 6 40 0 40\n1 0 -1 1 1 1 1 0 40 0 40\n1 1 -1 1 1 1 1 0 40 0 23\n1 0 -1 1 1 1 1 0 23 0 23\n1 1 -1 1 1 1 1 0 23 0 6\n1 0 -1 1 1 1 1 0 6 0 6\n1 0 0 1 1 1 1 0 6 0 0\n0 0 0 1 1 1 1 0 6 0 0\n0 0 0 1 1 1 1 0 6 0 0\n0 0 0 1 1 1 1 0 6 0 0\n0 0 0 1 1 1 1 0 6 0 0\n0 0 0 1 1 1 1 0 6 0 0\n0 0 0 1 1 1 1 0 6 0 0\n0 0 0 1 1 1 1 0 6 0 0\n0 0 0 1 1 1 1 0 6 0 0\n0 0 0 1 1 1 1 0 6 0 0\n",
+      "hash": "90eef8a4e183a50e"
+    },
+    "c-lab-29-case-5": {
+      "stdout": "1 1 -1 1 0 1 1 40 40 40 40\n1 0 -1 1 0 1 1 40 23 40 40\n1 1 -1 0 0 1 1 40 23 40 40\n0 1 -1 0 0 1 1 40 23 40 40\n",
+      "hash": "e533fcfb424a1419"
+    },
+    "c-lab-30-case-1": {
+      "stdout": "1\n1\n1 200\n0\n1 200\nREVENUE 400\nLIVE 0\n",
+      "hash": "39827d4afcaed8a2"
+    },
+    "c-lab-30-case-2": {
+      "stdout": "1\n0\n0\n0\n1\n1\nREVENUE 0\nLIVE 0\n",
+      "hash": "c024cea4f3273f45"
+    },
+    "c-lab-30-case-3": {
+      "stdout": "1\n1\n0\n1 2\nMISSING\nREVENUE 0\nLIVE 0\n",
+      "hash": "d6c8512658b5157b"
+    },
+    "c-lab-30-case-4": {
+      "stdout": "1\n2 1\n0\n2 1\nREVENUE 4294967295\nLIVE 0\n",
+      "hash": "ae93c71586ff3280"
+    },
+    "c-lab-30-case-5": {
+      "stdout": "1\n0\n2 3\nREVENUE 0\nLIVE 0\n",
+      "hash": "55bc0ddf18176037"
+    },
+    "c-lab-30-case-6": {
+      "stdout": "1\n0\n2 3\nREVENUE 0\nLIVE 0\n",
+      "hash": "d8f451053d199674"
+    },
+    "c-lab-30-case-7": {
+      "stdout": "1\n1\n1\n1\nREVENUE 0\nLIVE 0\n",
+      "hash": "4fabf24e9146ffe9"
+    }
+  }
+}

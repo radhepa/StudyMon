@@ -1,0 +1,47 @@
+const assert=require('assert');
+const {chromium}=require('C:/Users/minal/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+(async()=>{
+ const browser=await chromium.launch({headless:true,executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'});
+ const page=await browser.newPage({viewport:{width:1280,height:900}});const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.goto('http://127.0.0.1:8780/');
+ await page.evaluate(()=>{S=freshSave();bindProgress('c');S.settings.sound=false;S.party=[makeMon(255,16)];delete S.sideQuests;openSideQuests();});
+ assert.equal(await page.locator('.sq-card').count(),30);
+ await page.selectOption('#sq-difficulty','hard');assert.equal(await page.locator('.sq-card:visible').count(),10);
+ await page.fill('#sq-search','impossible-search');assert.equal(await page.locator('.sq-card:visible').count(),0);assert(await page.locator('#sq-no-results').isVisible());
+ await page.fill('#sq-search','');await page.selectOption('#sq-difficulty','all');
+ await page.screenshot({path:'output/side-quests-board.jpg',type:'jpeg',quality:80,animations:'disabled'});
+ await page.evaluate(()=>openSideQuest('c-lab-01'));
+ await page.getByRole('button',{name:'Use starter',exact:true}).click();assert((await page.inputValue('#sq-source')).includes('TODO'));
+ await page.getByRole('button',{name:'Submit self-review',exact:true}).click();assert((await page.locator('#sq-feedback').innerText()).includes('unchanged starter'));
+ // Synthetic review to test the workflow. The game does not execute this source.
+ const code='#include <stdio.h>\nint main(void){ int trainer=42,party=3,fee=125; printf("%d %d %d\\n",trainer,party,fee); return 0;}';
+ await page.fill('#sq-source',code);await page.fill('#sq-compiler','Synthetic review fixture');await page.fill('#sq-build','cc -std=c11 lab.c -o lab');
+ await page.check('#sq-compiled');
+ for(const el of await page.locator('[data-test-status]').all())await el.selectOption('pass');
+ for(const el of await page.locator('[data-test-evidence]').all())await el.fill('Test fixture: reviewed expected values against the recorded output.');
+ await page.fill('#sq-reflection','The int variables store the three values and printf prints them; I checked changing the party size.');await page.check('#sq-attested');
+ await page.reload();assert(await page.evaluate(()=>loadGame()));await page.evaluate(()=>openSideQuest('c-lab-01'));assert.equal(await page.inputValue('#sq-source'),code);assert(await page.isChecked('#sq-attested'));
+ await page.getByRole('button',{name:'Submit self-review',exact:true}).click();assert.equal(await page.evaluate(()=>sideQuestProgress('c-lab-01').status),'completed');
+ await page.getByRole('button',{name:'Collect reward',exact:true}).click();
+ assert.deepEqual(await page.evaluate(()=>({money:S.money,oran:itemCount('oran')})),{money:1100,oran:3});
+ await page.evaluate(()=>claimSideQuestReward('c-lab-01'));assert.equal(await page.evaluate(()=>S.money),1100);
+ await page.evaluate(()=>{S.party[0].hp=maxHp(S.party[0])-15;showScreen('party');renderParty();});
+ await page.getByRole('button',{name:'Oran Berry × 3',exact:true}).click();await page.locator('#modal button').first().click();
+ assert.equal(await page.evaluate(()=>maxHp(S.party[0])-S.party[0].hp),5);assert.equal(await page.evaluate(()=>itemCount('oran')),2);
+ assert.equal(await page.evaluate(()=>{S.party[0].hp=0;return feedQuestBerry('oran',0);}),false);assert.equal(await page.evaluate(()=>itemCount('oran')),2);
+ // All quest briefs, fixtures and reward data are renderable.
+ const audit=await page.evaluate(()=>{function check(v,m){if(!v)throw Error(m);}for(const q of SIDE_QUESTS){check(q.published&&q.validation.mode==='self-review',q.id);check(q.steps.length===3&&q.validation.requiredTests.length>=3,q.id);check(q.rewards.money>0,q.id);if(q.rewards.pokemon)check(!!dexOf(q.rewards.pokemon.id),q.id);openSideQuest(q.id);check(document.querySelectorAll('[data-test-status]').length===q.validation.requiredTests.length,q.id);}return '30 briefs rendered';});
+ // Rare Pokemon sent to storage with a full team. Claim failures roll back.
+ const rewards=await page.evaluate(()=>{function check(v,m){if(!v)throw Error(m);}S.party=Array.from({length:6},()=>makeMon(255,16));S.box=[];var p=sideQuestProgress('c-lab-09');p.status='completed';var start=S.money;check(claimSideQuestReward('c-lab-09'),'claim');check(S.party.length===6&&S.box.length===1&&S.box[0].id===133,'storage routing');check(S.caught[133]&&S.seen[133],'dex');check(!claimSideQuestReward('c-lab-09'),'duplicate');var target=sideQuestProgress('c-lab-11');target.status='completed';var before=JSON.stringify({money:S.money,items:S.items,box:S.box});var original=Storage.prototype.setItem;Storage.prototype.setItem=function(){throw Error('simulated quota');};var result=claimSideQuestReward('c-lab-11');Storage.prototype.setItem=original;check(result===false,'failure surfaced');check(JSON.stringify({money:S.money,items:S.items,box:S.box})===before,'rollback');check(!sideQuestProgress('c-lab-11').rewardClaimed,'claim reset');return 'reward routing, duplicate and rollback verified';});
+ // Export/import via the real save importer, including progress from both subjects.
+ const persistence=await page.evaluate(async()=>{S.progress.c.badges={1:true};S.progress.calc={badges:{2:true},elite:{},chapterStats:{},srs:{},clock:0};bindProgress('c');saveGame();var backup=JSON.stringify(S);S=freshSave();await new Promise((resolve,reject)=>importSave(new File([backup],'save.json',{type:'application/json'}),e=>e?reject(e):resolve()));if(!sideQuestProgress('c-lab-01').rewardClaimed||!S.progress.c.badges[1]||!S.progress.calc.badges[2])throw Error('import lost progress');switchSubject('calc');openSideQuests();if(sideQuestProgress('c-lab-01').draft.indexOf('trainer')<0)throw Error('cross-region draft');return 'export/import and region switching verified';});
+ await page.evaluate(()=>{openSideQuest('c-lab-02');});
+ await page.setInputFiles('#sq-import',{name:'lab.c',mimeType:'text/plain',buffer:Buffer.from('int main(void){return 1;}')});await page.waitForFunction(()=>sideQuestProgress('c-lab-02').draft==='int main(void){return 1;}');
+ // A download contains the actual draft.
+ const download=page.waitForEvent('download');await page.getByRole('button',{name:'Download .c file',exact:true}).click();assert.equal((await download).suggestedFilename(),'c-lab-02.c');
+ await page.setViewportSize({width:390,height:844});await page.evaluate(()=>openSideQuests());await page.screenshot({path:'output/side-quests-mobile.jpg',type:'jpeg',quality:80,animations:'disabled'});
+ assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'board horizontal overflow');
+ await page.evaluate(()=>openSideQuest('c-lab-28'));assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'detail horizontal overflow');
+ await page.locator('#sq-source').scrollIntoViewIfNeeded();await page.screenshot({path:'output/side-quests-editor-mobile.jpg',type:'jpeg',quality:80,animations:'disabled'});
+ assert.deepEqual(errors,[]);console.log(JSON.stringify({audit,rewards,persistence,ui:'filters, draft reload, file import/download, review feedback, berries, desktop/mobile verified',pageErrors:errors},null,2));await browser.close();
+})().catch(e=>{console.error(e);process.exitCode=1;});

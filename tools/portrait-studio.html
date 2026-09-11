@@ -1,0 +1,347 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>C-MON Portrait Studio</title>
+<!--
+  Portrait Studio. A temporary workbench for framing portraits and erasing
+  leftover background, kept entirely separate from the game.
+
+  Nothing here changes the artwork. Every edit is recorded in
+  tools/portrait-edits.json as numbers and click points, and the Python tools
+  apply them when they rebuild. So an edit can always be undone, and the whole
+  feature can be removed by deleting:
+
+      tools/portrait-studio.html
+      tools/portrait-edits.json
+      the "portrait studio save hook" block in tools/serve.js
+      the EDITS lines in tools/import-portraits.py and tools/reframe-portraits.py
+
+  Open at http://127.0.0.1:8780/tools/portrait-studio.html
+-->
+<style>
+  :root{
+    --ink:#2b2622; --dim:#7a6c5d; --line:#d9cdb8; --paper:#f7f1e2;
+    --card:#fffaf0; --accent:#a8742f; --accent-soft:#e7d3ae;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font:14px/1.55 system-ui,Segoe UI,sans-serif;color:var(--ink);background:var(--paper)}
+  header{padding:14px 20px;border-bottom:1px solid var(--line);display:flex;gap:16px;align-items:center;flex-wrap:wrap;background:var(--card);position:sticky;top:0;z-index:5}
+  header h1{font-size:17px;margin:0;letter-spacing:-.01em}
+  header .sp{flex:1}
+  button{font:inherit;padding:7px 12px;border:1px solid var(--line);background:var(--card);border-radius:7px;cursor:pointer;color:var(--ink)}
+  button:hover{border-color:var(--accent)}
+  button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  button.on{background:var(--accent-soft);border-color:var(--accent)}
+  #wrap{display:grid;grid-template-columns:210px 1fr;height:calc(100dvh - 59px)}
+  #list{overflow:auto;border-right:1px solid var(--line);background:var(--card)}
+  #list button{display:block;width:100%;text-align:left;border:0;border-bottom:1px solid var(--line);border-radius:0;padding:8px 12px;background:none}
+  #list button.sel{background:var(--accent-soft);font-weight:650}
+  #list button.edited::after{content:" *";color:var(--accent)}
+  #main{overflow:auto;padding:20px;display:flex;gap:26px;flex-wrap:wrap;align-items:flex-start}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
+  canvas{display:block;border-radius:8px}
+  #preview{width:380px;height:380px;background:
+    conic-gradient(#e9e2d2 25%,#f8f4ea 0 50%,#e9e2d2 0 75%,#f8f4ea 0) 0 0/24px 24px}
+  #source{max-width:100%;background:
+    conic-gradient(#e9e2d2 25%,#f8f4ea 0 50%,#e9e2d2 0 75%,#f8f4ea 0) 0 0/18px 18px;cursor:crosshair}
+  label{display:flex;align-items:center;gap:10px;margin:9px 0;font-size:13px}
+  label span{width:52px;color:var(--dim)}
+  input[type=range]{flex:1}
+  output{width:52px;text-align:right;font-variant-numeric:tabular-nums;color:var(--dim)}
+  .hint{color:var(--dim);font-size:12.5px;max-width:380px}
+  .erase{font-size:12.5px;color:var(--dim);margin-top:8px;max-width:340px}
+  .erase b{color:var(--ink)}
+  #status{font-size:13px;color:var(--dim)}
+  kbd{background:var(--paper);border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:1px 5px;font:12px ui-monospace,monospace}
+</style>
+
+<header>
+  <h1>Portrait Studio</h1>
+  <button id="mode-bg">Erase background</button>
+  <button id="find">Find leftover white</button>
+  <button id="reset">Reset this one</button>
+  <div class="sp"></div>
+  <span id="status">loading&hellip;</span>
+  <button id="save">Save all edits</button>
+  <button id="apply" class="primary">Save and apply to game</button>
+</header>
+
+<div id="wrap">
+  <div id="list"></div>
+  <div id="main">
+    <div class="panel">
+      <canvas id="preview" width="460" height="460"></canvas>
+      <div class="hint" style="margin-top:10px">
+        The blue lines are the target: hair top on the upper line, chin on the lower
+        one, shoulders below. Match Kip.
+      </div>
+      <label><span>Zoom</span><input type="range" id="zoom" min="0.45" max="1.8" step="0.005"><output id="zoomv"></output></label>
+      <label><span>Across</span><input type="range" id="dx" min="-160" max="160" step="1"><output id="dxv"></output></label>
+      <label><span>Down</span><input type="range" id="dy" min="-160" max="160" step="1"><output id="dyv"></output></label>
+      <div class="hint"><kbd>&larr;</kbd><kbd>&rarr;</kbd><kbd>&uarr;</kbd><kbd>&darr;</kbd> nudge (hold shift for 10) &middot;
+        <kbd>+</kbd><kbd>&minus;</kbd> zoom &middot; <kbd>[</kbd><kbd>]</kbd> previous / next</div>
+    </div>
+    <div class="panel">
+      <canvas id="source"></canvas>
+      <div class="erase" id="erasenote"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var CANVAS = 460, HEAD_TOP = 35, CHIN_Y = 285, FACE_X = 230;
+var marks = {}, edits = {}, names = [], cur = null, eraseMode = false;
+var srcImg = null, srcCanvas = null, srcCtx = null, srcData = null, baseData = null;
+var found = [];
+
+function $(s){ return document.querySelector(s); }
+function status(m){ $("#status").textContent = m; }
+function tune(n){
+  var e = edits[n] || {};
+  return { dx: e.dx || 0, dy: e.dy || 0, zoom: e.zoom || 1, erase: e.erase || [] };
+}
+/* Only count an entry as edited if it actually differs, so the marker in the
+   list matches what Save will write. */
+function edited(n){
+  var t = tune(n);
+  return !!(t.dx || t.dy || t.zoom !== 1 || t.erase.length);
+}
+
+function boot(){
+  fetch("portrait-landmarks.json?" + Date.now()).then(function(r){ return r.json(); }).then(function(m){
+    marks = m;
+    return fetch("portrait-edits.json?" + Date.now()).then(function(r){
+      return r.ok ? r.json() : {};
+    }).catch(function(){ return {}; });
+  }).then(function(e){
+    edits = e || {};
+    names = Object.keys(marks).sort();
+    var k = names.indexOf("kip");
+    if (k > 0) names.splice(0, 0, names.splice(k, 1)[0]);
+    renderList();
+    select(names[0]);
+    status(names.length + " characters");
+  }).catch(function(err){ status("could not load: " + err.message); });
+}
+
+function renderList(){
+  $("#list").innerHTML = names.map(function(n){
+    return '<button data-n="' + n + '" class="' + (n === cur ? "sel " : "") +
+      (edited(n) ? "edited" : "") + '">' + n + (n === "kip" ? " (reference)" : "") + "</button>";
+  }).join("");
+  Array.prototype.forEach.call($("#list").querySelectorAll("button"), function(b){
+    b.onclick = function(){ select(b.dataset.n); };
+  });
+}
+
+function select(n){
+  cur = n;
+  found = [];
+  renderList();
+  var t = tune(n);
+  $("#zoom").value = t.zoom; $("#dx").value = t.dx; $("#dy").value = t.dy;
+  var img = new Image();
+  img.onload = function(){
+    srcImg = img;
+    srcCanvas = document.createElement("canvas");
+    srcCanvas.width = img.width; srcCanvas.height = img.height;
+    srcCtx = srcCanvas.getContext("2d", { willReadFrequently: true });
+    srcCtx.drawImage(img, 0, 0);
+    baseData = srcCtx.getImageData(0, 0, img.width, img.height);
+    applyErases();
+    draw();
+  };
+  img.src = "../assets/trainers/" + n + "-full.png?" + Date.now();
+}
+
+/* Replay the recorded click points onto a clean copy, so removing a point
+   genuinely puts that region back. */
+function applyErases(){
+  srcData = new ImageData(new Uint8ClampedArray(baseData.data), baseData.width, baseData.height);
+  tune(cur).erase.forEach(function(p){ floodClear(p[0], p[1]); });
+  srcCtx.putImageData(srcData, 0, 0);
+}
+
+/* Clear the connected light region containing this pixel. It grows only through
+   pixels close to the seed's own brightness, so it stops at the ink outline and
+   cannot run into the character. */
+function floodClear(sx, sy){
+  var w = srcData.width, h = srcData.height, d = srcData.data;
+  sx = Math.round(sx); sy = Math.round(sy);
+  if (sx < 0 || sy < 0 || sx >= w || sy >= h) return;
+  var s = (sy * w + sx) * 4;
+  if (d[s + 3] === 0) return;
+  var light = (d[s] + d[s + 1] + d[s + 2]) / 3;
+  if (light < 150) return;                      // refuse to erase dark areas
+  var TOL = 26, seen = new Uint8Array(w * h), stack = [sx, sy];
+  while (stack.length){
+    var y = stack.pop(), x = stack.pop();
+    if (x < 0 || y < 0 || x >= w || y >= h) continue;
+    var i = y * w + x;
+    if (seen[i]) continue;
+    var p = i * 4;
+    if (d[p + 3] === 0){ seen[i] = 1; continue; }
+    var lum = (d[p] + d[p + 1] + d[p + 2]) / 3;
+    if (Math.abs(lum - light) > TOL) continue;
+    seen[i] = 1;
+    d[p + 3] = 0;
+    stack.push(x - 1, y, x + 1, y, x, y - 1, x, y + 1);
+  }
+}
+
+/* Find opaque near-white regions the border flood could not reach. These are
+   candidates, not answers: enclosed background and white clothing are the same
+   colour here, so the marks say "look at this", and you decide. */
+function findWhite(){
+  var w = srcData.width, h = srcData.height, d = srcData.data;
+  var seen = new Uint8Array(w * h), out = [];
+  function pure(p){
+    var r = d[p], g = d[p+1], b = d[p+2];
+    return d[p+3] > 0 && r >= 246 && g >= 246 && b >= 246 &&
+           Math.max(r,g,b) - Math.min(r,g,b) <= 6;
+  }
+  for (var y = 0; y < h; y += 2){
+    for (var x = 0; x < w; x += 2){
+      var i = y*w + x;
+      if (seen[i] || !pure(i*4)) continue;
+      var stack = [x, y], n = 0, sx = 0, sy = 0;
+      while (stack.length){
+        var cy = stack.pop(), cx = stack.pop();
+        if (cx < 0 || cy < 0 || cx >= w || cy >= h) continue;
+        var j = cy*w + cx;
+        if (seen[j] || !pure(j*4)) continue;
+        seen[j] = 1; n++; sx += cx; sy += cy;
+        stack.push(cx-1,cy, cx+1,cy, cx,cy-1, cx,cy+1);
+      }
+      if (n >= 350) out.push({ x: Math.round(sx/n), y: Math.round(sy/n), n: n });
+    }
+  }
+  out.sort(function(a,b){ return b.n - a.n; });
+  return out.slice(0, 24);
+}
+
+function draw(){
+  var m = marks[cur], t = tune(cur);
+  var scale = (m.chin - m.top) / (CHIN_Y - HEAD_TOP) / t.zoom;
+  var left = m.cx - (FACE_X + t.dx) * scale;
+  var up = m.top - (HEAD_TOP + t.dy) * scale;
+
+  var c = $("#preview"), x = c.getContext("2d");
+  x.clearRect(0, 0, CANVAS, CANVAS);
+  x.imageSmoothingQuality = "high";
+  x.drawImage(srcCanvas, left, up, CANVAS * scale, CANVAS * scale, 0, 0, CANVAS, CANVAS);
+  x.strokeStyle = "rgba(0,150,220,.75)"; x.lineWidth = 1;
+  [HEAD_TOP, CHIN_Y].forEach(function(y){
+    x.beginPath(); x.moveTo(0, y + 0.5); x.lineTo(CANVAS, y + 0.5); x.stroke();
+  });
+  x.beginPath(); x.moveTo(FACE_X + 0.5, 0); x.lineTo(FACE_X + 0.5, CANVAS); x.stroke();
+
+  var view = $("#source");
+  var vw = 340, vh = Math.round(srcImg.height * vw / srcImg.width);
+  view.width = vw; view.height = vh;
+  var v = view.getContext("2d");
+  v.clearRect(0, 0, vw, vh);
+  v.drawImage(srcCanvas, 0, 0, vw, vh);
+  v.strokeStyle = "#a8742f"; v.lineWidth = 2;
+  var k = vw / srcImg.width;
+  v.strokeRect(left * k, up * k, CANVAS * scale * k, CANVAS * scale * k);
+  found.forEach(function(f){
+    v.beginPath(); v.arc(f.x * k, f.y * k, 7, 0, 6.284);
+    v.strokeStyle = "#c0392b"; v.lineWidth = 2; v.stroke();
+    v.beginPath(); v.arc(f.x * k, f.y * k, 2.5, 0, 6.284);
+    v.fillStyle = "#c0392b"; v.fill();
+  });
+
+  $("#zoomv").value = (+$("#zoom").value).toFixed(2);
+  $("#dxv").value = $("#dx").value;
+  $("#dyv").value = $("#dy").value;
+  var n = tune(cur).erase.length;
+  $("#erasenote").innerHTML = eraseMode
+    ? "<b>Erase mode on.</b> Click a white area to clear it. Click an erased spot again to put it back. " + n + " erased."
+    : n + " erased region" + (n === 1 ? "" : "s") + ". Turn on <b>Erase background</b> to change them.";
+}
+
+function change(){
+  var t = tune(cur);
+  t.dx = +$("#dx").value; t.dy = +$("#dy").value; t.zoom = +$("#zoom").value;
+  edits[cur] = t;
+  renderList(); draw();
+}
+["zoom", "dx", "dy"].forEach(function(id){ $("#" + id).oninput = change; });
+
+$("#mode-bg").onclick = function(){
+  eraseMode = !eraseMode;
+  $("#mode-bg").classList.toggle("on", eraseMode);
+  draw();
+};
+
+$("#source").onclick = function(e){
+  if (!eraseMode) return;
+  var r = e.currentTarget.getBoundingClientRect();
+  var x = Math.round((e.clientX - r.left) / r.width * srcImg.width);
+  var y = Math.round((e.clientY - r.top) / r.height * srcImg.height);
+  var t = tune(cur), hit = -1;
+  for (var i = 0; i < t.erase.length; i++){
+    if (Math.abs(t.erase[i][0] - x) + Math.abs(t.erase[i][1] - y) < srcImg.width * 0.04) hit = i;
+  }
+  if (hit >= 0) t.erase.splice(hit, 1); else t.erase.push([x, y]);
+  edits[cur] = t;
+  applyErases(); renderList(); draw();
+};
+
+$("#find").onclick = function(){
+  found = findWhite();
+  status(found.length ? found.length + " white regions marked on " + cur + " - click the ones that are background"
+                      : "no leftover white found on " + cur);
+  draw();
+};
+
+$("#reset").onclick = function(){ delete edits[cur]; found = []; select(cur); };
+
+/* Saving only writes JSON. This is the button that actually rebuilds the
+   portrait files the game loads, so the change shows up in C-MON. */
+function saveEdits(){
+  var clean = {};
+  Object.keys(edits).forEach(function(n){ if (edited(n)) clean[n] = tune(n); });
+  return fetch("/portrait-edits", { method: "POST", body: JSON.stringify(clean, null, 1) })
+    .then(function(r){
+      if (!r.ok) throw new Error("save failed");
+      return Object.keys(clean).length;
+    });
+}
+
+$("#apply").onclick = function(){
+  $("#apply").disabled = true;
+  status("saving...");
+  saveEdits().then(function(n){
+    status("saved " + n + " characters, rebuilding portraits (this takes a moment)...");
+    return fetch("/portrait-apply", { method: "POST" });
+  }).then(function(r){
+    return r.text().then(function(t){
+      status(r.ok ? "applied to the game. Reload C-MON to see it." : t);
+    });
+  }).catch(function(e){
+    status(e.message);
+  }).then(function(){ $("#apply").disabled = false; });
+};
+
+$("#save").onclick = function(){
+  status("saving...");
+  saveEdits()
+    .then(function(n){ status("saved " + n + " characters. Use Save and apply to put it in the game."); })
+    .catch(function(e){ status(e.message); });
+};
+
+addEventListener("keydown", function(e){
+  if (e.target.tagName === "INPUT") return;
+  var i = names.indexOf(cur), step = e.shiftKey ? 10 : 1;
+  if (e.key === "[") { select(names[(i - 1 + names.length) % names.length]); return; }
+  if (e.key === "]") { select(names[(i + 1) % names.length]); return; }
+  var nudge = { ArrowLeft: ["dx", -step], ArrowRight: ["dx", step],
+                ArrowUp: ["dy", -step], ArrowDown: ["dy", step] }[e.key];
+  if (nudge){ $("#" + nudge[0]).value = +$("#" + nudge[0]).value + nudge[1]; change(); e.preventDefault(); return; }
+  if (e.key === "+" || e.key === "=") { $("#zoom").value = +$("#zoom").value + 0.01; change(); }
+  if (e.key === "-") { $("#zoom").value = +$("#zoom").value - 0.01; change(); }
+});
+
+boot();
+</script>
