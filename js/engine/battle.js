@@ -25,6 +25,7 @@ function startBattle(cfg) {
     foes: cfg.foes,
     foeIx: 0,
     you: you,
+    participants: [you],
     title: cfg.title,
     leader: cfg.leader || null,
     chapter: cfg.chapter || null,
@@ -37,7 +38,6 @@ function startBattle(cfg) {
     correctRun: 0,
     pendingMove: null,
     q: null,
-    timer: null,
     caught: false
   };
   S.totals.battles++;
@@ -85,8 +85,11 @@ function showMoveMenu() {
   if (B.kind === 'wild') {
     h += '<button class="ghost grow" onclick="openBallMenu()">● Throw a ball</button>';
   }
-  h += '<button class="ghost grow" onclick="openPotionMenu()">✚ Potions (' +
-       (itemCount('potion') + itemCount('superpotion')) + ')</button>';
+  var battleItems = Object.keys(ITEMS).filter(function (key) {
+    return itemHasContext(ITEMS[key], 'battle') && ['battle-heal', 'battle-escape'].indexOf(ITEMS[key].effectHandler) >= 0;
+  });
+  var battleItemCount = battleItems.reduce(function (sum, key) { return sum + itemCount(key); }, 0);
+  h += '<button class="ghost grow" onclick="openBattleItemMenu()">✚ Items (' + battleItemCount + ')</button>';
   h += '<button class="ghost grow" onclick="openSwitch()">⇄ Switch</button>';
   if (B.kind === 'wild') h += '<button class="ghost grow" onclick="runAway()">→ Run</button>';
   h += '</div>';
@@ -112,7 +115,6 @@ function askQuestion(tier) {
   B.choiceOrder = null;
   B.choiceOrderQuestion = null;
   B.asked[got.q.id] = true;
-  B.qStart = Date.now();
   renderQuestion();
 }
 
@@ -127,8 +129,6 @@ function renderQuestion() {
   h += '<span>Ch ' + chNum + ' · ' + esc(chapterTitle(chNum)) + '</span>';
   h += '<span class="spacer"></span><span>' + B.pendingMove.label + ' · tier ' + q.t + '</span>';
   h += '</div>';
-
-  if (S.settings.timer) h += '<div class="timerbar"><div class="timerfill" id="tfill" style="width:100%"></div></div>';
 
   h += '<div class="qtext">' + esc(q.q) + '</div>';
   if (q.code) h += '<pre class="qcode">' + esc(q.code) + '</pre>';
@@ -165,12 +165,10 @@ function renderQuestion() {
     fi.focus();
     fi.onkeydown = function (e) { if (e.key === 'Enter') submitFill(); };
   }
-  startTimer();
 }
 
 function revealSelfCheck() {
   if (!B.q || !B.q.selfCheck || B.qAnswered) return;
-  clearInterval(B.timer);
   var button = $('#revealself');
   var solution = $('#selfsolution');
   if (button) button.hidden = true;
@@ -178,21 +176,6 @@ function revealSelfCheck() {
   showAllHints();
   var gotIt = $('#ch0');
   if (gotIt) gotIt.focus();
-}
-
-function startTimer() {
-  clearInterval(B.timer);
-  if (!S.settings.timer) return;
-  var total = S.settings.seconds * 1000;
-  B.timer = setInterval(function () {
-    var left = total - (Date.now() - B.qStart);
-    var f = $('#tfill');
-    if (!f) { clearInterval(B.timer); return; }
-    var pct = Math.max(0, left / total * 100);
-    f.style.width = pct + '%';
-    f.style.background = pct < 25 ? 'var(--red)' : pct < 55 ? 'var(--amber)' : 'var(--accent-2)';
-    if (left <= 0) { clearInterval(B.timer); answer(-1); }
-  }, 100);
 }
 
 function submitFill() {
@@ -204,16 +187,10 @@ function submitFill() {
 function answer(choice, isFill) {
   if (!B.q || B.over || B.qAnswered) return;
   B.qAnswered = true;
-  clearInterval(B.timer);
   var q = B.q;
-  var timedOut = (choice === -1);
   var correct;
-  if (timedOut) correct = false;
-  else if (q.k === 'fill') correct = fillMatches(choice, q.a, q);
+  if (q.k === 'fill') correct = fillMatches(choice, q.a, q);
   else correct = (choice === q.a);
-
-  var seconds = (Date.now() - B.qStart) / 1000;
-  var fast = correct && S.settings.timer && seconds <= S.settings.seconds * 0.35;
 
   var gotBall = recordAnswer(q, correct);
   if (correct) { B.correctThisBattle++; B.correctRun++; }
@@ -236,12 +213,12 @@ function answer(choice, isFill) {
   var card = $('#quiz .qcard');
   var w = document.createElement('div');
   w.className = 'why' + (correct ? '' : ' bad');
-  var head = timedOut ? 'Out of time!' : q.selfCheck ? (correct ? 'Marked correct.' : 'Queued for review.')
-    : correct ? (fast ? 'Correct - and fast!' : 'Correct!') : 'Not quite.';
+  var head = q.selfCheck ? (correct ? 'Marked correct.' : 'Queued for review.')
+    : correct ? 'Correct!' : 'Not quite.';
   var ansTxt = q.k === 'fill' ? q.a[0] : q.c[q.a];
   w.innerHTML = '<b>' + head + '</b>' +
     (correct || q.selfCheck ? '' : '<div style="margin-bottom:6px"><strong>Answer:</strong> ' + esc(ansTxt) + '</div>') +
-    (q.selfCheck && !timedOut ? '' : esc(q.why));
+    (q.selfCheck ? '' : esc(q.why));
   card.appendChild(w);
   // a hint you did not need is still worth reading once the answer is in
   showAllHints();
@@ -249,7 +226,7 @@ function answer(choice, isFill) {
   var next = document.createElement('div');
   next.className = 'row';
   next.style.marginTop = '12px';
-  next.innerHTML = '<button class="primary grow" id="contbtn" onclick="resolveTurn(' + correct + ',' + fast + ')">Continue ▶</button>';
+  next.innerHTML = '<button class="primary grow" id="contbtn" onclick="resolveTurn(' + correct + ')">Continue ▶</button>';
   card.appendChild(next);
   var cb = $('#contbtn'); if (cb) cb.focus();
 
@@ -259,7 +236,7 @@ function answer(choice, isFill) {
 
 /* ---- resolving the turn -------------------------------------------------- */
 
-function resolveTurn(correct, fast) {
+function resolveTurn(correct) {
   if (!B || B.over || B.turnResolving) return;
   B.turnResolving = true;
   if (B.catching) { B.catching = false; resolveCatch(correct); return; }
@@ -269,7 +246,6 @@ function resolveTurn(correct, fast) {
 
   if (correct) {
     var bonus = 1;
-    if (fast) bonus *= 1.3;
     if (S.streak >= 10) bonus *= 1.2;
     else if (S.streak >= 5) bonus *= 1.1;
     var r = damageOf(you, f, mv, bonus);
@@ -279,7 +255,6 @@ function resolveTurn(correct, fast) {
     else {
       line += ' <span class="good">' + r.dmg + ' damage.</span>';
       var el = effLabel(r.eff); if (el) line += ' ' + el;
-      if (fast) line += ' <span class="good">Quick-thinking bonus!</span>';
       if (S.streak >= 5) line += ' <span class="good">Streak x' + S.streak + '!</span>';
     }
     log(line);
@@ -341,33 +316,66 @@ function foeFainted() {
 
   var gain = Math.floor((dexOf(f.id).bst / 6) * f.lvl / 4) + 12;
   if (B.kind !== 'wild') gain = Math.floor(gain * 1.6);
-  var evs = giveXp(B.you, gain);
-  log(monName(B.you).toUpperCase() + ' gained ' + gain + ' EXP.');
-  handleXpEvents(evs);
-
-  battleLater(function () {
-    B.foeIx++;
-    if (B.foeIx >= B.foes.length) { winBattle(); return; }
-    markSeen(foe().id);
-    renderBattle();
-    log((B.leader || 'The opponent') + ' sent out ' + monName(foe()).toUpperCase() + '!');
-    playCry(foe().id);
-    showMoveMenu();
-  }, 1100);
+  var evolutions = awardBattleXp(gain);
+  if (evolutions.length) {
+    for (var i = 0; i < evolutions.length; i++) {
+      showEvolve(evolutions[i], i === evolutions.length - 1 ? function () {
+        battleLater(advanceAfterFoeFaint, 300);
+      } : null);
+    }
+  } else battleLater(advanceAfterFoeFaint, 1100);
 }
 
-function handleXpEvents(evs) {
-  for (var i = 0; i < evs.length; i++) {
-    var e = evs[i];
-    if (e.kind === 'level') log('<span class="good">' + monName(B.you).toUpperCase() + ' grew to level ' + e.lvl + '!</span>');
-    if (e.kind === 'evolve') {
-      log('<span class="good">' + e.from.toUpperCase() + ' evolved into ' + e.to.toUpperCase() + '!</span>');
-      S.caught[e.id] = true; S.seen[e.id] = true;
-      showEvolve(e);
-    }
+function battleXpAwards(fullExp) {
+  var participants = B.participants || [];
+  var sharedExp = haveItem('expShare') ? Math.floor(fullExp * 0.5) : 0;
+  var awards = [];
+  for (var i = 0; i < S.party.length; i++) {
+    var mon = S.party[i];
+    if (mon.hp <= 0 || mon.lvl >= 100) continue;
+    var participated = participants.indexOf(mon) >= 0;
+    var amount = participated ? fullExp : sharedExp;
+    if (amount > 0) awards.push({ mon: mon, amount: amount, participated: participated });
+  }
+  return awards;
+}
+
+function awardBattleXp(fullExp) {
+  var awards = battleXpAwards(fullExp);
+  var evolutions = [];
+  for (var i = 0; i < awards.length; i++) {
+    var award = awards[i];
+    var recipientName = monName(award.mon);
+    var events = giveXp(award.mon, award.amount);
+    log(recipientName.toUpperCase() + ' gained ' + award.amount + ' EXP.');
+    handleXpAward(award.mon, events, evolutions);
   }
   renderBattle();
   saveGame();
+  return evolutions;
+}
+
+function handleXpAward(recipient, evs, evolutions) {
+  for (var i = 0; i < evs.length; i++) {
+    var e = evs[i];
+    if (e.kind === 'level') log('<span class="good">' + (e.name || monName(recipient)).toUpperCase() + ' grew to level ' + e.lvl + '!</span>');
+    if (e.kind === 'evolve') {
+      log('<span class="good">' + e.from.toUpperCase() + ' evolved into ' + e.to.toUpperCase() + '!</span>');
+      S.caught[e.id] = true; S.seen[e.id] = true;
+      evolutions.push(e);
+    }
+  }
+}
+
+function advanceAfterFoeFaint() {
+  B.foeIx++;
+  if (B.foeIx >= B.foes.length) { winBattle(); return; }
+  B.participants = [B.you];
+  markSeen(foe().id);
+  renderBattle();
+  log((B.leader || 'The opponent') + ' sent out ' + monName(foe()).toUpperCase() + '!');
+  playCry(foe().id);
+  showMoveMenu();
 }
 
 function youFainted() {
@@ -402,6 +410,8 @@ function doSwitch(i) {
   var m = S.party[i];
   if (m.hp <= 0 || m === B.you) return;
   B.you = m;
+  if (!B.participants) B.participants = [];
+  if (B.participants.indexOf(m) < 0) B.participants.push(m);
   log('Go, ' + monName(m).toUpperCase() + '!');
   playCry(m.id);
   renderBattle();
@@ -411,32 +421,49 @@ function doSwitch(i) {
 
 /* ---- items and running --------------------------------------------------- */
 
-function openPotionMenu() {
+function battleItemSummary(item) {
+  if (item.effectHandler === 'battle-escape') return 'escape from a wild battle';
+  if (item.healing && item.healing.mode === 'flat') return 'restores ' + item.healing.amount + ' HP';
+  if (item.healing && item.healing.mode === 'fraction') return item.healing.amount >= 1 ? 'restores fully' : 'restores about half';
+  return item.description;
+}
+
+function openBattleItemMenu() {
   if (B.over) return;
   var h = '<div class="qcard"><div class="qhead"><span class="qtag">Use an item</span>' +
     '<span>' + esc(monName(B.you)) + ' · ' + B.you.hp + '/' + maxHp(B.you) + ' HP</span></div><div class="ball-menu">';
-  ['potion', 'superpotion'].forEach(function (key) {
+  Object.keys(ITEMS).filter(function (key) {
+    return itemHasContext(ITEMS[key], 'battle') && ['battle-heal', 'battle-escape'].indexOf(ITEMS[key].effectHandler) >= 0;
+  }).forEach(function (key) {
+    var item = itemById(key);
     var have = itemCount(key);
-    h += '<button class="ball-opt" ' + (have > 0 ? 'onclick="usePotion(\'' + key + '\')"' : 'disabled') + '>' +
-      '<span class="ball-name">' + ITEMS[key].name + '</span>' +
+    h += '<button class="ball-opt" ' + (have > 0 ? 'onclick="useBattleItem(\'' + key + '\')"' : 'disabled') + '>' +
+      '<span class="ball-name">' + item.name + '</span>' +
       '<span class="ball-have">' + have + ' left</span>' +
-      '<span class="ball-odds">' + (ITEMS[key].heal >= 1 ? 'restores fully' : 'restores about half') + '</span></button>';
+      '<span class="ball-odds">' + esc(battleItemSummary(item)) + '</span></button>';
   });
   h += '</div><div class="row" style="margin-top:10px"><button class="ghost grow" onclick="showMoveMenu()">Back</button></div></div>';
   $('#quiz').innerHTML = h;
 }
 
-function usePotion(key) {
-  key = ITEMS[key] && ITEMS[key].kind === 'heal' ? key : 'potion';
-  if (!haveItem(key)) { toast('No ' + ITEMS[key].name + 's left.'); return; }
-  if (B.you.hp >= maxHp(B.you)) { toast(monName(B.you) + ' is already at full HP.'); return; }
-  useItem(key, 1);
-  var heal = Math.min(maxHp(B.you) - B.you.hp, Math.ceil(maxHp(B.you) * ITEMS[key].heal));
-  B.you.hp += heal;
-  log('You used a ' + ITEMS[key].name + '. ' + monName(B.you).toUpperCase() + ' recovered ' + heal + ' HP.');
-  renderBattle(); saveGame();
-  battleLater(function () { foeTurn(false); }, 700);
+/* Compatibility entry point retained for older inline handlers and tests. */
+function openPotionMenu() { openBattleItemMenu(); }
+
+function useBattleItem(key) {
+  var item = itemById(key);
+  if (!item || !itemHasContext(item, 'battle')) return false;
+  if (!haveItem(key)) { toast('No ' + item.name + 's left.'); return false; }
+  var result = performItemEffect(key, 'battle', B.you);
+  if (!result) return false;
+  if (item.effectHandler === 'battle-heal') {
+    log('You used a ' + item.name + '. ' + result.message.toUpperCase());
+    renderBattle();
+    battleLater(function () { foeTurn(false); }, 700);
+  }
+  return true;
 }
+
+function usePotion(key) { return useBattleItem(key); }
 
 function runAway() {
   if (B.kind !== 'wild') { toast('You cannot run from a Gym battle!'); return; }
@@ -562,7 +589,7 @@ function askQuestionForCatch() {
   B.qAnswered = false;
   B.turnResolving = false;
   var got = pickQuestion(B.chapters, 2, B.asked);
-  B.q = got.q; B.qReview = got.review; B.asked[got.q.id] = true; B.qStart = Date.now();
+  B.q = got.q; B.qReview = got.review; B.asked[got.q.id] = true;
   renderQuestion();
   var card = $('#quiz .qcard');
   var note = document.createElement('div');
@@ -611,16 +638,23 @@ function winBattle() {
   if (B.kind === 'gym') {
     var was = !!S.badges[B.chapter.n];
     S.badges[B.chapter.n] = true;
-    giveItem('potion', 2); giveItem('great', 1); addMoney(battlePrize('gym'));
+    var gymBundle = ((GYM_ITEM_REWARDS[activeSubject()] || {})[B.chapter.n] || []);
+    var gymItems = was ? null : claimReceiptItems('gym-reward:' + activeSubject() + ':' + B.chapter.n, gymBundle);
+    addMoney(battlePrize('gym'));
     msg = 'You defeated ' + B.leader + '!';
-    extra = (was ? 'You already had the ' : 'You earned the ') + B.chapter.badge + '!';
+    extra = (was ? 'You already had the ' : 'You earned the ') + B.chapter.badge + '!' +
+      (gymItems ? ' Milestone supplies: ' + itemBundleText(gymItems) + '.' : '');
   } else if (B.kind === 'elite') {
+    var eliteWas = !!S.elite[B.elite.id];
     S.elite[B.elite.id] = true;
-    giveItem('superpotion', 2); giveItem('ultra', 1); addMoney(battlePrize('elite'));
+    var eliteItems = eliteWas ? null : claimReceiptItems('boss-reward:' + activeSubject() + ':' + B.elite.id,
+      BOSS_ITEM_REWARDS[activeSubject()] || []);
+    addMoney(battlePrize('elite'));
     msg = 'You defeated ' + B.elite.name + '!';
     extra = ((typeof isChampion === 'function') ? isChampion(B.elite) : B.elite.id === 'champ')
       ? 'You are the Champion! You have cleared every gym and the final challenge.'
       : 'One step closer to the Champion.';
+    if (eliteItems) extra += ' Victory supplies: ' + itemBundleText(eliteItems) + '.';
   } else {
     msg = 'You won the battle!';
     var won$ = addMoney(battlePrize('wild'));
@@ -632,6 +666,13 @@ function winBattle() {
   syncFriendStory();
   saveGame();
   showResult(true, msg, extra, accTxt);
+}
+
+function itemBundleText(bundle) {
+  return (bundle || []).map(function (entry) {
+    var item = itemById(entry.item);
+    return entry.count + ' ' + (item ? item.name : entry.item) + (entry.count > 1 ? 's' : '');
+  }).join(', ');
 }
 
 function loseBattle() {
@@ -653,7 +694,6 @@ function loseBattle() {
 function finishNpcBattleResult(won) {
   if (!B || B.kind !== 'npc' || B.npcRewarded) return;
   B.npcRewarded = true;
-  clearInterval(B.timer);
   B.over = true;
   var r = finishNpcBattle(won);
   if (won) S.totals.wins++;
@@ -666,6 +706,7 @@ function finishNpcBattleResult(won) {
     '<p>' + B.correctThisBattle + '/' + answered + ' questions correct.</p>' +
     (r && r.prize ? '<p class="friend-change">Prize money: ₵' + r.prize +
       (r.first ? '' : ' (rematch rate)') + '</p>' : '') +
+    (r && r.items ? '<p class="friend-change">First-win supplies: ' + esc(itemBundleText(r.items)) + '.</p>' : '') +
     '<p class="small">Your party has been healed.</p>' +
     '<div class="row" style="justify-content:center;margin-top:12px">' +
     '<button class="primary" onclick="closeModal();openTown()">Back to the region</button>' +

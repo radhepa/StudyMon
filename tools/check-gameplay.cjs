@@ -38,7 +38,7 @@ function check(n,ok,d){results.push({n,ok,d});console.log((ok?'PASS  ':'FAIL  ')
     goWild(1);
     out.battleStarted=!!B&&B.kind==='wild';
     out.battleHasQuestion=!!(B&&B.foes&&B.foes.length);
-    if(B){clearInterval(B.timer);B=null;}
+    if(B)B=null;
   });
 
   // --- gym battle --------------------------------------------------------
@@ -46,7 +46,7 @@ function check(n,ok,d){results.push({n,ok,d});console.log((ok?'PASS  ':'FAIL  ')
     beginGymBattle(1);
     out.gymStarted=!!B&&B.kind==='gym';
     out.gymTeam=B?B.foes.length:0;
-    if(B){clearInterval(B.timer);B=null;}
+    if(B)B=null;
   });
 
   // --- boss gating -------------------------------------------------------

@@ -28,6 +28,128 @@ function check(name, ok, detail) {
   await page.goto(URL);
   await page.evaluate(() => { S = freshSave(); bindProgress('c'); S.settings.sound = false; saveGame(); });
 
+  // Schema 1: old installed saves are backed up exactly, normalized deeply,
+  // and retain data this build does not know about.
+  let r = await page.evaluate(() => {
+    localStorage.removeItem(SAVE_SCHEMA_BACKUP_KEY);
+    const legacy = freshSave();
+    delete legacy.schemaVersion;
+    legacy.settings = { sound: false, extension: { theme: 'field-notes' } };
+    legacy.town = { beaten: { keep: true }, extension: { visits: 7 } };
+    legacy.extension = { nested: { answer: 42 } };
+    const raw = JSON.stringify(legacy, null, 2);
+    localStorage.setItem(SAVE_KEY, raw);
+    const loaded = loadGame();
+    const firstBackup = localStorage.getItem(SAVE_SCHEMA_BACKUP_KEY);
+
+    const second = freshSave();
+    delete second.schemaVersion;
+    second.trainer = 'SECOND';
+    localStorage.setItem(SAVE_KEY, JSON.stringify(second));
+    const loadedAgain = loadGame();
+    return {
+      loaded, loadedAgain,
+      schema: S.schemaVersion,
+      exactBackup: firstBackup === raw,
+      backupUnchanged: localStorage.getItem(SAVE_SCHEMA_BACKUP_KEY) === raw,
+      settingsHydrated: S.settings.sound === true && !('timer' in S.settings) && !('seconds' in S.settings),
+      townHydrated: !!S.town.gifts && !!S.town.met,
+      unknownRoot: legacy.extension.nested.answer === 42,
+      firstUnknownRoot: JSON.parse(firstBackup).extension.nested.answer === 42,
+      firstUnknownNested: JSON.parse(firstBackup).settings.extension.theme === 'field-notes'
+    };
+  });
+  check('legacy installed saves reach the current internal schema', r.loaded && r.loadedAgain && r.schema === 3, 'schema ' + r.schema);
+  check('the pre-schema backup preserves the exact raw JSON once', r.exactBackup && r.backupUnchanged);
+  check('normalization deeply hydrates required nested defaults', r.settingsHydrated && r.townHydrated);
+  check('unknown root and nested fields survive legacy handling', r.unknownRoot && r.firstUnknownRoot && r.firstUnknownNested);
+
+  r = await page.evaluate(() => {
+    const source = {
+      v: 1, schemaVersion: 1, party: [],
+      settings: { sound: false, extension: { contrast: 3 } },
+      town: { beaten: { keep: true } },
+      extension: { future: ['kept'] }
+    };
+    const one = normalizeSave(source);
+    const two = normalizeSave(one);
+    return {
+      same: JSON.stringify(one) === JSON.stringify(two),
+      sourceUntouched: source.town.gifts === undefined,
+      unknown: two.extension.future[0] === 'kept' && two.settings.extension.contrast === 3,
+      nested: !!two.town.gifts && !!two.town.met && typeof two.totals.wins === 'number'
+    };
+  });
+  check('normalization is idempotent and does not mutate its input', r.same && r.sourceUntouched);
+  check('normalization preserves unknown fields while hydrating deeply', r.unknown && r.nested);
+
+  r = await page.evaluate(() => {
+    const malformed = {
+      v: 1, schemaVersion: 1, curriculumVersion: 4, subject: 'c',
+      progress: null, party: {}, box: 'bad', settings: null, town: 'bad',
+      items: [], totals: null, badges: null, elite: null, chapterStats: null, srs: null
+    };
+    localStorage.setItem(SAVE_KEY, JSON.stringify(malformed));
+    const nestedLoaded = loadGame();
+    const nestedFixed = Array.isArray(S.party) && Array.isArray(S.box) &&
+      S.settings && S.town && S.items && S.totals && S.progress.c;
+
+    const before = S;
+    const badRaw = '{"v":1,';
+    localStorage.setItem(SAVE_KEY, badRaw);
+    const badLoaded = loadGame();
+    return { nestedLoaded, nestedFixed: !!nestedFixed, badLoaded,
+             rawUnchanged: localStorage.getItem(SAVE_KEY) === badRaw, liveUnchanged: S === before };
+  });
+  check('malformed nested data is repaired from required defaults', r.nestedLoaded && r.nestedFixed);
+  check('malformed JSON is rejected without changing live or stored data', !r.badLoaded && r.rawUnchanged && r.liveUnchanged);
+
+  r = await page.evaluate(async () => {
+    S = freshSave(); bindProgress('c');
+    const before = S;
+    const futureRaw = JSON.stringify({ v: 1, schemaVersion: CURRENT_SAVE_SCHEMA + 1, party: [], future: true });
+    localStorage.setItem(SAVE_KEY, futureRaw);
+    const loaded = loadGame();
+    const loadSafe = !loaded && S === before && localStorage.getItem(SAVE_KEY) === futureRaw;
+    const importError = await new Promise(resolve => {
+      importSave(new File([futureRaw], 'future.json', { type: 'application/json' }), e => resolve(e && e.message));
+    });
+    return { loadSafe, importSafe: !!importError && S === before && localStorage.getItem(SAVE_KEY) === futureRaw };
+  });
+  check('future schemas are rejected non-destructively on load and import', r.loadSafe && r.importSafe);
+
+  r = await page.evaluate(() => {
+    localStorage.removeItem(SAVE_SCHEMA_BACKUP_KEY);
+    const legacy = freshSave(); delete legacy.schemaVersion;
+    const raw = JSON.stringify(legacy);
+    localStorage.setItem(SAVE_KEY, raw);
+    const before = S;
+    const original = SAVE_MIGRATIONS[1];
+    SAVE_MIGRATIONS[1] = function () { throw new Error('simulated migration failure'); };
+    let loaded;
+    try { loaded = loadGame(); } finally { SAVE_MIGRATIONS[1] = original; }
+    return { loaded, main: localStorage.getItem(SAVE_KEY) === raw, live: S === before,
+             backup: localStorage.getItem(SAVE_SCHEMA_BACKUP_KEY) === raw };
+  });
+  check('a failed migration leaves the main and live saves untouched', !r.loaded && r.main && r.live && r.backup);
+
+  r = await page.evaluate(async () => {
+    const installedBackup = localStorage.getItem(SAVE_SCHEMA_BACKUP_KEY);
+    const legacy = { v: 1, party: [], settings: { sound: false, extension: { import: true } },
+                     extension: { source: 'import' } };
+    const error = await new Promise(resolve => {
+      importSave(new File([JSON.stringify(legacy)], 'legacy.json', { type: 'application/json' }), resolve);
+    });
+    return { ok: !error, schema: S.schemaVersion,
+             unknown: S.extension.source === 'import' && S.settings.extension.import,
+             hydrated: !!S.town.met && typeof S.totals.battles === 'number',
+             installedBackupUntouched: localStorage.getItem(SAVE_SCHEMA_BACKUP_KEY) === installedBackup };
+  });
+  check('legacy imports use the same normalized schema path', r.ok && r.schema === 3 && r.hydrated);
+  check('legacy imports preserve unknown fields without replacing the installed backup', r.unknown && r.installedBackupUntouched);
+
+  await page.evaluate(() => { S = freshSave(); bindProgress('c'); S.settings.sound = false; saveGame(); });
+
   /* Mark a quest as fully passed so its reward may be claimed. */
   const grant = id => page.evaluate(qid => {
     const q = questById(qid), p = sideQuestProgress(qid);
@@ -40,7 +162,7 @@ function check(name, ok, detail) {
 
   // 1. A reward Pokemon arrives when the party is already full.
   await grant('c-lab-09');
-  let r = await page.evaluate(() => {
+  r = await page.evaluate(() => {
     S.party = Array.from({ length: 6 }, () => makeMon(255, 16));
     S.box = [];
     const ok = claimSideQuestReward('c-lab-09');
