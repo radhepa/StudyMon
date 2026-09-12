@@ -303,10 +303,15 @@ button.ghost:hover:not(:disabled) { background: #222c47; }
 .why.bad { background: #fdf0f0; border-left-color: var(--red); }
 .why b { display: block; font-family: var(--pixel); font-size: 9px; margin-bottom: 6px; }
 
-.timerbar { height: 6px; background: #d8d2b8; border-radius: 4px; overflow: hidden; margin-bottom: 12px; }
-.timerfill { height: 100%; background: var(--accent-2); transition: width .2s linear; }
-
 /* ---------- party / dex ------------------------------------------------- */
+.bag-summary { margin-top: 20px; }
+.bag-group { margin-top: 14px; }
+.bag-group > h4 { margin: 0 0 4px; color: var(--ink); }
+.bag-items { display: grid; gap: 8px; }
+.bag-item { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 0; border-top: 1px solid var(--line); }
+.bag-item:first-child { border-top: 0; }
+.bag-item p { margin: 4px 0 0; }
+
 .grid { display: grid; gap: 10px; }
 .grid.p3 { grid-template-columns: repeat(auto-fill, minmax(215px, 1fr)); }
 .grid.p6 { grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); }

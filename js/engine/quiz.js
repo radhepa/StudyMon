@@ -109,6 +109,7 @@ function tagDue(due) {
 /* Record an answer and reschedule. */
 function recordAnswer(q, correct) {
   S.clock++;
+  S.activityClock = (Number(S.activityClock) || 0) + 1;
   var e = S.srs[q.id];
   if (!e) e = S.srs[q.id] = { box: 1, due: 0, r: 0, w: 0 };
 

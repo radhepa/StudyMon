@@ -342,3 +342,19 @@ window.EVENT_BEATS = {
     ]
   ]
 };
+
+/* Link each extra beat group to its already-labelled heart event. Once attached,
+   IDs move with the group and beat even if either source array is reordered. */
+window.labelEventBeatIds = function () {
+  Object.keys(window.EVENT_BEATS).forEach(function (trainerId) {
+    var trainer = window.TRAINERS.find(function (item) { return item.id === trainerId; });
+    window.EVENT_BEATS[trainerId].forEach(function (group, eventIndex) {
+      var event = trainer && trainer.events[eventIndex];
+      group.sceneId = event && event.id;
+      group.forEach(function (beat) {
+        beat.id = group.sceneId + '-beat-' + socialIdPart(beat.s);
+        labelSocialChoices(beat.c, beat.id);
+      });
+    });
+  });
+};

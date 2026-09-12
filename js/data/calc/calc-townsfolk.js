@@ -25,7 +25,7 @@ window.CALC_TOWNSFOLK = [
   { id: 'c-tess', name: 'Tess', cls: 'Lass', loc: 'harbour', kind: 'trainer', ch: 1, team: [16, 21], pay: 130,
     say: 'I can tell you the angle class from the sign of the dot product alone. Watch.',
     win: 'Obtuse. I knew it was obtuse.', lose: 'Positive, so acute. Told you.' },
-  { id: 'c-odell', name: 'Odell', cls: 'Ferryman', loc: 'harbour', kind: 'gift', item: 'potion', amount: 2,
+  { id: 'c-odell', name: 'Odell', cls: 'Ferryman', loc: 'harbour', kind: 'gift', item: 'fieldNotebook', amount: 1,
     say: 'First crossing is on the house. So is this.' },
 
   /* ---------------- The Slide Rule ---------------- */
@@ -39,7 +39,7 @@ window.CALC_TOWNSFOLK = [
     win: 'Fewer integrals in dy. I concede.', lose: 'Two integrals where one would do. As I said.' },
   { id: 'c-suzu', name: 'Suzu', cls: 'Study Group Lead', loc: 'sliderule', kind: 'talk',
     say: 'We meet before every quiz. Bring the problem you could not finish, not the one you could.' },
-  { id: 'c-piet', name: 'Piet', cls: 'Waiter', loc: 'sliderule', kind: 'gift', item: 'potion', amount: 1,
+  { id: 'c-piet', name: 'Piet', cls: 'Waiter', loc: 'sliderule', kind: 'gift', item: 'tinyUmbrella', amount: 1,
     say: 'You have been staring at the same page for an hour. Take this and go outside.' },
   { id: 'c-noor', name: 'Noor', cls: 'Night Owl', loc: 'sliderule', kind: 'trainer', ch: 2, team: [92, 41], pay: 165,
     badges: 2, want: 'Come back with two badges. I only play people who have finished a quiz.',
@@ -50,6 +50,7 @@ window.CALC_TOWNSFOLK = [
   { id: 'c-nurse-flats', name: 'Nurse Nessa', cls: 'Field Nurse', loc: 'flats', kind: 'heal',
     say: 'The tide comes in over the flats in even strips. Very restful. Sit and watch it while I work.' },
   { id: 'c-adia', name: 'Adia', cls: 'Bug Catcher', loc: 'flats', kind: 'trainer', ch: 2, team: [10, 13], pay: 120,
+    firstWinItems: [{ item: 'integralToken', count: 1 }],
     say: 'I count things in strips. Rectangles first, then curves. That is the whole idea, is it not?',
     win: 'More strips next time. Thinner ones.', lose: 'You have to add up ALL of them.' },
   { id: 'c-hollis', name: 'Celia', cls: 'Picnicker', loc: 'flats', kind: 'talk',
@@ -58,7 +59,7 @@ window.CALC_TOWNSFOLK = [
   { id: 'c-fen', name: 'Ludo', cls: 'Camper', loc: 'flats', kind: 'trainer', ch: 3, team: [37, 58], pay: 145,
     say: 'Shells or washers. Pick one and commit. You do not get to change your mind halfway.',
     win: 'You picked the one that avoided solving for x. Correct.', lose: 'Now you have to invert the function. Enjoy.' },
-  { id: 'c-ilse', name: 'Ilse', cls: 'Flower Seller', loc: 'flats', kind: 'gift', item: 'great', amount: 2,
+  { id: 'c-ilse', name: 'Ilse', cls: 'Flower Seller', loc: 'flats', kind: 'gift', item: 'integralToken', amount: 1,
     say: 'For the strip between the curves. Two of them, since there are two curves.' },
 
   /* ---------------- Lathe Point ---------------- */
@@ -89,7 +90,7 @@ window.CALC_TOWNSFOLK = [
     badges: 4, want: 'Four badges. I do not read for people who are still on their first quiz.',
     say: 'I can tell you which technique an integral wants before you finish writing it down.',
     win: 'You named it first. That is the only skill that matters here.', lose: 'Parts. It was always parts.' },
-  { id: 'c-tovah', name: 'Tovah', cls: 'Caver', loc: 'helix', kind: 'gift', item: 'ultra', amount: 1,
+  { id: 'c-tovah', name: 'Tovah', cls: 'Caver', loc: 'helix', kind: 'gift', item: 'carvedWhistle', amount: 1,
     say: 'Take it. The climb from here only gets steeper.' },
 
   /* ---------------- The Integral Table ---------------- */
@@ -112,7 +113,7 @@ window.CALC_TOWNSFOLK = [
   /* ---------------- Hawthorn Observatory ---------------- */
   { id: 'c-nurse-obs', name: 'Nurse Elgar', cls: 'Lab Nurse', loc: 'observatory', kind: 'heal', badges: 6,
     say: 'They measure all night and forget to eat. You are at least going to rest.' },
-  { id: 'c-hawthorn', name: 'Professor Hawthorn', cls: 'Pokémon Professor', loc: 'observatory', kind: 'talk', badges: 7,
+  { id: 'c-hawthorn', name: 'Professor Hawthorn', cls: 'Observatory Director', loc: 'observatory', kind: 'talk', badges: 7,
     want: 'Seven badges. Come back when you have something worth me interrupting a measurement for.',
     say: 'A polynomial can impersonate any smooth function you like, provided you do not walk too far from the centre. My whole life\'s work is finding out how far that is.',
     tip: 'The Ratio Test gives you the radius and then goes silent. The endpoints are two separate problems.' },

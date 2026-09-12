@@ -4,7 +4,7 @@ function fleeToMap() {
   if (B && !B.over && B.kind !== 'wild') {
     if (!confirm('Leave this battle? You will not earn a win or a battle reward.')) return;
   }
-  if (B) { clearInterval(B.timer); B.over = true; }
+  if (B) B.over = true;
   showScreen('map'); renderMap();
 }
 

@@ -47,7 +47,7 @@ function check(n,ok,d){results.push({n,ok});console.log((ok?'PASS  ':'FAIL  ')+n
    log.finalB=B?{over:!!B.over,kind:B.kind}:null;
    log.party=S.party.map(m=>({id:m.id,lvl:m.lvl,hp:m.hp}));
    log.money=S.money;
-   if(B){try{clearInterval(B.timer);}catch(e){}B=null;}
+   if(B)B=null;
    return log;
  },{setup,maxTurns});
 
@@ -82,7 +82,7 @@ function check(n,ok,d){results.push({n,ok});console.log((ok?'PASS  ':'FAIL  ')+n
    }
    out.caught=(S.box.length+S.party.length)>before;
    out.dexCaught=Object.keys(S.caught||{}).length;
-   if(B){try{clearInterval(B.timer);}catch(e){}B=null;}
+   if(B)B=null;
    return out;
  });
  check('throwing balls does not throw errors', c.errors.length===0, c.errors.slice(0,2).join(' | '));
@@ -95,20 +95,20 @@ function check(n,ok,d){results.push({n,ok});console.log((ok?'PASS  ':'FAIL  ')+n
    giveItem('oran',3); giveItem('sitrus',2);
    const max=maxHp(S.party[0]);
    S.party[0].hp=1;
-   const oran=feedQuestBerry('oran',0);
+   const oran=useBagItem('oran',0);
    const afterOran=S.party[0].hp;
-   const sitrus=feedQuestBerry('sitrus',0);
+   const sitrus=useBagItem('sitrus',0);
    const afterSitrus=S.party[0].hp;
    // cannot revive the fainted
    S.party[0].hp=0;
-   const onFainted=feedQuestBerry('oran',0);
+   const onFainted=useBagItem('oran',0);
    // cannot feed at full health
    S.party[0].hp=max;
-   const onFull=feedQuestBerry('oran',0);
+   const onFull=useBagItem('oran',0);
    // cannot feed mid battle
    S.party[0].hp=1; goWild(1);
-   const inBattle=feedQuestBerry('oran',0);
-   if(B){try{clearInterval(B.timer);}catch(e){}B=null;}
+   const inBattle=useBagItem('oran',0);
+   if(B)B=null;
    return {oran,afterOran,sitrus,afterSitrus,onFainted,onFull,inBattle,max,
            left:itemCount('oran')};
  });

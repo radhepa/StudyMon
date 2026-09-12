@@ -105,7 +105,7 @@ function check(n, ok, d) { results.push({ n, ok }); say((ok ? 'PASS  ' : 'FAIL  
     await sleep(600);
     const out = { started, over: !!(B && B.over), badge: !!S.badges[1], asked: asked.length,
                   fromCalc: asked.every(id => /^k/.test(id)), sample: asked.slice(0, 3) };
-    if (B) { try { clearInterval(B.timer); } catch (e) {} B = null; }
+    if (B) B = null;
     return out;
   });
   check('a calculus gym battle starts', r.started);

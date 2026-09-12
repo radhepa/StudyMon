@@ -44,7 +44,7 @@ function saveSideQuestDraft(id,source) {
 function questTouch(p){if(p.status==='not-started'){p.status='in-progress';p.startedAt=Date.now();}}
 function questStatus(p){return p.rewardClaimed&&p.status==='completed'?'Completed':p.status==='completed'?'Completed':p.status==='needs-revision'?'Review needed':p.status==='in-progress'?'In progress':'Not started';}
 function questChapterName(n){var def=subjectDef('c');var c=def && def.CHAPTERS.find(function(x){return x.n===n;});return c?c.title:'Chapter '+n;}
-function questRewardText(q){var r=q.rewards,parts=['₵ '+r.money.toLocaleString()];r.berries.forEach(function(b){parts.push(b.count+' '+(b.id==='oran'?'Oran':'Sitrus')+' Berries');});if(r.pokemon)parts.push(titleCase(dexOf(r.pokemon.id).name)+' Lv '+r.pokemon.level);return parts.join(' · ');}
+function questRewardText(q){var r=q.rewards,parts=['₵ '+r.money.toLocaleString()];r.berries.forEach(function(b){var item=itemById(b.id);parts.push(b.count+' '+(item?item.name:b.id));});if(r.pokemon)parts.push(titleCase(dexOf(r.pokemon.id).name)+' Lv '+r.pokemon.level);return parts.join(' · ');}
 function questEntryCard(){return '<section class="panel sq-entry"><div><span class="eyebrow">C PROGRAMMING</span><h3>Side Quests</h3><p>Put the chapter into practice. Thirty programming jobs, from a quick receipt to a working field journal.</p></div><button class="primary" onclick="openSideQuests()">Visit the quest board</button></section>';}
 function openSideQuests(){cancelCJob();QUEST_ID=null;showScreen('quests');renderSideQuests();}
 function renderSideQuests(){
@@ -72,19 +72,13 @@ function claimSideQuestReward(id){
   if(typeof B!=='undefined'&&B&&!B.over){toast('Finish the battle first.');return false;}
   ensureBag();if(typeof stashProgress==='function')stashProgress();var before=JSON.stringify(S),r=q.rewards,where=null;
   try {
-    addMoney(r.money);r.berries.forEach(function(b){giveItem(b.id,b.count);});
+    addMoney(r.money);r.berries.forEach(function(b){if(!itemById(b.id)||!giveItem(b.id,b.count))throw new Error('invalid item reward '+b.id);});
     if(r.pokemon){var m=makeMon(r.pokemon.id,r.pokemon.level,{shiny:false});where=S.party.length<6?'party':'box';S[where].push(m);S.seen[m.id]=true;S.caught[m.id]=true;S.totals.caught=(S.totals.caught||0)+1;}
     p.rewardClaimed=true;p.rewardReceipt={at:Date.now(),money:r.money,berries:JSON.parse(JSON.stringify(r.berries)),pokemon:r.pokemon,deliveredTo:where};
     if(typeof stashProgress==='function')stashProgress();localStorage.setItem(SAVE_KEY,JSON.stringify(S));
   }catch(e){S=JSON.parse(before);bindProgress(activeSubject());toast('Reward could not be saved. Keep this page open and submit again to retry.');return false;}
-  renderTopbar();if(CUR==='quests'&&QUEST_ID===id)renderSideQuest();toast('All tests passed. Reward collected.'+(where?' Your Pokémon joined '+(where==='box'?'a storage box.':'your party.'):' Berries are in your Party pouch.'));return true;
+  renderTopbar();if(CUR==='quests'&&QUEST_ID===id)renderSideQuest();toast('All tests passed. Reward collected.'+(where?' Your Pokémon joined '+(where==='box'?'a storage box.':'your party.'):' Berries are in your Bag.'));return true;
 }
-/* Quest berries are earned, not sold. Their effect is available between battles. */
-ITEMS.oran={name:'Oran Berry',kind:'berry',price:200,blurb:'Restores 10 HP to a living Pokémon between battles.'};
-ITEMS.sitrus={name:'Sitrus Berry',kind:'berry',price:500,blurb:'Restores a quarter of max HP to a living Pokémon between battles.'};
-function renderQuestBerryPouch(){ensureBag();var h='<section class="panel sq-berries"><h3>Berry pouch</h3><p>Side Quest rewards for the road. Feed a berry to a living party member between battles.</p>';['oran','sitrus'].forEach(function(k){h+='<button '+(!itemCount(k)?'disabled':'')+' onclick="openQuestBerry(\''+k+'\')">'+ITEMS[k].name+' × '+itemCount(k)+'</button> ';});h+='<p class="small">Oran: 10 HP. Sitrus: 25% of max HP. Berries do not revive fainted Pokémon.</p><button class="ghost" onclick="openSideQuests()">Find a Side Quest</button></section>';$('#s-party').insertAdjacentHTML('beforeend',h);}
-function openQuestBerry(key){if(!['oran','sitrus'].includes(key)||!itemCount(key))return;var h='<h2>Feed an '+esc(ITEMS[key].name)+'</h2><div class="row">';S.party.forEach(function(m,i){h+='<button '+(m.hp<=0||m.hp>=maxHp(m)?'disabled':'')+' onclick="feedQuestBerry(\''+key+'\','+i+')">'+esc(monName(m))+'<br>HP '+m.hp+'/'+maxHp(m)+'</button>';});modal(h+'</div><button onclick="closeModal()">Keep it for later</button>');}
-function feedQuestBerry(key,index){if(!['oran','sitrus'].includes(key))return false;if(typeof B!=='undefined'&&B&&!B.over){toast('Berries are for between battles.');return false;}var m=S.party[index];if(!m||m.hp<=0||m.hp>=maxHp(m)||!itemCount(key))return false;var oldHp=m.hp,oldCount=itemCount(key);useItem(key,1);m.hp=Math.min(maxHp(m),m.hp+(key==='oran'?10:Math.max(1,Math.floor(maxHp(m)/4))));if(!questPersist()){m.hp=oldHp;S.items[key]=oldCount;return false;}closeModal();renderParty();toast(monName(m)+' recovered '+(m.hp-oldHp)+' HP.');return true;}
 function openSideQuest(id){if(!questById(id))return;cancelCJob();QUEST_ID=id;showScreen('quests');var p=sideQuestProgress(id),q=questById(id);if(!p.draft){p.draft=q.starterCode;questPersist();}renderSideQuest();}
 function questOpenNotes(n){cancelCJob();if(activeSubject()!=='c')switchSubject('c');goStudy(n);}
 function revealQuestHint(){var q=questById(QUEST_ID),p=sideQuestProgress(QUEST_ID);p.hints=Math.min(q.hints.length,p.hints+1);questPersist();renderSideQuest();}

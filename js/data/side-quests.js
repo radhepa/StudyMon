@@ -585,8 +585,8 @@ window.SIDE_QUESTS = [
       "money": 1400,
       "berries": [
         {
-          "id": "sitrus",
-          "count": 2
+          "id": "revive",
+          "count": 1
         }
       ],
       "pokemon": null
@@ -1161,8 +1161,8 @@ window.SIDE_QUESTS = [
       "money": 3000,
       "berries": [
         {
-          "id": "sitrus",
-          "count": 4
+          "id": "circuitToken",
+          "count": 2
         }
       ],
       "pokemon": {
@@ -2480,8 +2480,8 @@ window.SIDE_QUESTS = [
       "money": 1400,
       "berries": [
         {
-          "id": "sitrus",
-          "count": 2
+          "id": "rareCandy",
+          "count": 1
         }
       ],
       "pokemon": null
@@ -3466,8 +3466,8 @@ window.SIDE_QUESTS = [
       "money": 3000,
       "berries": [
         {
-          "id": "sitrus",
-          "count": 4
+          "id": "prismStone",
+          "count": 1
         }
       ],
       "pokemon": {
