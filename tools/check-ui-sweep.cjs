@@ -4,7 +4,7 @@ const fs=require('fs');
 const p=await b.newPage({viewport:{width:1440,height:1000}}),errors=[];p.on('pageerror',e=>errors.push(e.message));p.on('dialog',d=>d.dismiss());await p.goto('http://127.0.0.1:8780/');
 async function seed(subject,screen){await p.evaluate(({subject,screen})=>{if(B){clearInterval(B.timer);B=null;}cancelCJob();closeModal();S=freshSave();bindProgress('c');S.settings.sound=false;S.party=[makeMon(255,20),makeMon(25,15)];S.box=[makeMon(133,20)];S.money=5000;switchSubject(subject);document.querySelector('#nav').style.display='';document.querySelector('#nav [data-scr="'+screen+'"]').click();},{subject,screen});}
 let clicks=0;const snapshots=[];
-for(const subject of ['c','calc'])for(const screen of ['map','party','dex','study','stats','town','friends','quests']){
+for(const subject of ['c','calc'])for(const screen of ['map','party','kingdom','dex','study','stats','human','friends','quests']){
  await seed(subject,screen);
  const buttons=await p.locator('#s-'+screen+' button:visible:not(:disabled)').evaluateAll(es=>es.map(e=>({text:e.textContent,handler:e.getAttribute('onclick')})));
  for(let i=0;i<buttons.length;i++){
