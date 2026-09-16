@@ -57,7 +57,7 @@ function check(n,ok,d){results.push({n,ok});console.log((ok?'PASS  ':'FAIL  ')+n
     EVOLUTION_CHOICE=m;
     confirmEvolutionChoice(br[0].to);
     o.blockedInBattle=m.id===133;
-    if(B){try{clearInterval(B.timer);}catch(e){}B=null;}
+    if(B)B=null;
   });
 
   t('under level refused',()=>{

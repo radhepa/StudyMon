@@ -23,7 +23,7 @@ function showScreen(name) {
   if(name !== 'kingdom' && typeof kingdomStop === 'function') kingdomStop(true);
   if(name !== 'human' && typeof humanWorldStop === 'function') humanWorldStop(true);
   if (CUR === 'battle' && name !== 'battle' && B && !B.over) {
-    B.over=true; clearInterval(B.timer); saveGame();
+    B.over=true; saveGame();
   }
   CUR = name;
   $$('.screen').forEach(function (s) { s.classList.toggle('on', s.id === 's-' + name); });
@@ -191,13 +191,38 @@ function modal(html) {
 }
 function closeModal() { $('#modal').classList.remove('on'); }
 
-function showEvolve(e) {
+var EVOLUTION_NOTICES = [];
+var EVOLUTION_NOTICE_OPEN = false;
+
+function closeModal() {
+  if (EVOLUTION_NOTICE_OPEN) {
+    var notice = EVOLUTION_NOTICES.shift();
+    if (EVOLUTION_NOTICES.length) renderEvolutionNotice();
+    else {
+      EVOLUTION_NOTICE_OPEN = false;
+      $('#modal').classList.remove('on');
+    }
+    if (notice && notice.done) notice.done();
+    return;
+  }
+  $('#modal').classList.remove('on');
+}
+
+function renderEvolutionNotice() {
+  var e = EVOLUTION_NOTICES[0].event;
   modal('<h2>What? ' + esc(e.from.toUpperCase()) + ' is evolving!</h2>' +
     '<img src="' + artUrl(e.id) + '" alt="">' +
     '<h3 style="color:var(--accent)">' + esc(e.to.toUpperCase()) + '</h3>' +
     '<p class="muted">' + esc(dexOf(e.id).flavor) + '</p>' +
     '<button class="primary" onclick="closeModal()">Continue ▶</button>');
   playCry(e.id);
+}
+
+function showEvolve(e, done) {
+  EVOLUTION_NOTICES.push({ event: e, done: done || null });
+  if (EVOLUTION_NOTICE_OPEN) return;
+  EVOLUTION_NOTICE_OPEN = true;
+  renderEvolutionNotice();
 }
 
 function showCaught(m) {
@@ -547,7 +572,7 @@ function goElite(id) {
 var PARTY_SEL = null;
 
 /* The party screen is the PC storage system now; see js/engine/pc.js. */
-function renderParty() { renderPC(); renderEvolutionChoices(); renderQuestBerryPouch(); }
+function renderParty() { renderPC(); renderEvolutionChoices(); renderBagSummary(); }
 
 /* The old party-card renderer lived here. The party screen is now the PC
    storage system in js/engine/pc.js, so it has been removed. toBox, fromBox
@@ -1026,8 +1051,6 @@ function renderStats() {
     '<button class="danger" onclick="hardReset()">Erase everything</button></div>' +
     '<hr class="sep"><h3 style="color:var(--accent)">Settings</h3><div class="row">' +
     '<button onclick="toggleSetting(\'sound\')">Cries: ' + (S.settings.sound ? 'ON' : 'OFF') + '</button>' +
-    '<button onclick="toggleSetting(\'timer\')">Timer: ' + (S.settings.timer ? 'ON' : 'OFF') + '</button>' +
-    '<button onclick="cycleSeconds()">' + S.settings.seconds + 's per question</button>' +
     '</div></div>';
 
   $('#s-stats').innerHTML = h;
@@ -1039,12 +1062,6 @@ function box(v, l, cls) {
 }
 
 function toggleSetting(k) { S.settings[k] = !S.settings[k]; saveGame(); renderStats(); }
-function cycleSeconds() {
-  var opts = [20, 30, 45, 60, 90];
-  var i = opts.indexOf(S.settings.seconds);
-  S.settings.seconds = opts[(i + 1) % opts.length];
-  saveGame(); renderStats();
-}
 function hardReset() {
   if (!confirm('Erase your save completely? This cannot be undone.')) return;
   wipeSave();

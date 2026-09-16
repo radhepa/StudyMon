@@ -34,6 +34,52 @@ function ensureTown() {
   if (!S.town.beaten || typeof S.town.beaten !== 'object') S.town.beaten = {};
   if (!S.town.gifts || typeof S.town.gifts !== 'object') S.town.gifts = {};
   if (!S.town.met || typeof S.town.met !== 'object') S.town.met = {};
+  if (!S.town.receipts || typeof S.town.receipts !== 'object') S.town.receipts = {};
+  if (!S.town.shopPurchases || typeof S.town.shopPurchases !== 'object' || Array.isArray(S.town.shopPurchases)) S.town.shopPurchases = {};
+  reconcileTownGrants();
+}
+
+function townGrantPeople() {
+  return typeof everyPerson === 'function' ? everyPerson() : TOWNSFOLK;
+}
+
+/* Repair either half of an old or manually edited unique-item receipt pair.
+   When neither half exists, the grant remains waiting for its normal talk. */
+function reconcileTownGrants() {
+  if (!S || !S.town || !S.town.receipts) return;
+  townGrantPeople().forEach(function (person) {
+    var grant = person.grant;
+    var item = grant && itemById(grant.item);
+    if (!grant || !grant.receipt || !item || !item.unique) return;
+    var received = !!S.town.receipts[grant.receipt];
+    var owned = itemCount(grant.item) > 0;
+    if (owned && !received) S.town.receipts[grant.receipt] = true;
+    else if (received && !owned) giveItem(grant.item, grant.amount || 1);
+  });
+}
+
+function claimTownGrant(person) {
+  var grant = person && person.grant;
+  if (!grant || !grant.receipt || !itemById(grant.item)) return null;
+  if (S.town.receipts[grant.receipt]) return null;
+  var item = itemById(grant.item);
+  if (item.unique && itemCount(grant.item) > 0) { S.town.receipts[grant.receipt] = true; return null; }
+  var claimed = claimReceiptItems(grant.receipt, [{ item: grant.item, count: grant.amount || 1 }]);
+  return claimed ? { item: item, amount: grant.amount || 1 } : null;
+}
+
+function claimReceiptItems(receiptId, bundle) {
+  ensureTown(); ensureBag();
+  if (!receiptId || S.town.receipts[receiptId] || !Array.isArray(bundle) || !bundle.length) return null;
+  var normalized = [], valid = bundle.every(function (entry) {
+    var item = entry && itemById(entry.item), count = Math.floor(Number(entry && entry.count) || 0);
+    if (!item || count < 1 || itemCount(entry.item) + count > item.maxStack) return false;
+    normalized.push({ item: entry.item, count: count }); return true;
+  });
+  if (!valid) return null;
+  normalized.forEach(function (entry) { giveItem(entry.item, entry.count); });
+  S.town.receipts[receiptId] = true;
+  return normalized;
 }
 
 function locationOpen(l) { return badgeCount() >= (l.badges || 0); }
@@ -109,8 +155,7 @@ function companionCard(t) {
       ((window.TRAINER_HEAD_SHIFT || {})[t.id] || 0) + '%" src="' + art +
       '" alt="' + esc(t.name) + '"></div>' : '';
   var note = !f.met ? 'You have not spoken yet'
-           : isFriend(t.id) ? friendHearts(f) + '♥ friend'
-           : friendHearts(f) + '♥ · getting to know you';
+           : friendHearts(f) + '♥ · ' + friendStage(f).label;
   return '<article class="town-card companion" style="--trainer-color:' + t.color + '">' +
     '<div class="town-head"><span class="town-cls">' + esc(t.role) + '</span>' +
     '<span class="town-kind k-friend">Friend</span></div>' + face +
@@ -118,7 +163,7 @@ function companionCard(t) {
     '<p class="small">' + esc(t.bio) + '</p>' +
     '<p class="town-note">' + note + '</p>' +
     '<button class="' + (f.met ? '' : 'primary') + '" onclick="openFriend(\'' + t.id + '\')">' +
-    (f.met ? 'Spend time together' : 'Introduce yourself') + '</button></article>';
+    (f.met ? 'Talk, battle, or give a gift' : 'Introduce yourself') + '</button></article>';
 }
 
 function renderTown() {
@@ -157,14 +202,13 @@ function renderTown() {
     if ((p.badges || 0) > badgeCount()) note = p.want || ('Wants ' + p.badges + ' badges first.');
     else if (p.kind === 'trainer') note = beaten ? 'Beaten · rematch any time' : 'Prize ₵' + battlePrize('npc', playerLevel(), p.pay);
     else if (p.kind === 'gift') note = taken ? 'Already given you one' : 'Has something for you';
-    else if (p.kind === 'shop') note = 'Sells balls and potions';
+    else if (p.kind === 'shop') note = shopInventory(p.id).length + ' regional stock lines';
     else if (p.kind === 'heal') note = 'Will heal your party';
     else note = 'Has something to say';
     var fr2 = S.friends && S.friends[p.id];
     var hearts = fr2 ? friendHearts(fr2) : 0;
     if ((p.badges || 0) > badgeCount()) { /* their refusal stands on its own */ }
-    else if (hearts > 0) note += ' · ' + hearts + '♥ friend';
-    else if (fr2 && fr2.points > 0) note += ' · getting to know you';
+    else if (fr2 && fr2.met) note += ' · ' + hearts + '♥ ' + friendStage(fr2).label.toLowerCase() + ' · gifts in friend details';
 
     h += '<article class="town-card' + (p.kind === 'trainer' && beaten ? ' done' : '') +
       ((p.badges || 0) > badgeCount() ? ' gated' : '') + '">' +
@@ -193,15 +237,15 @@ function talkTo(id) {
   S.town.met[p.id] = true;
   if (typeof journalTalk === 'function') journalTalk(p.id);
   var fr = friendship(p.id);
-  if (!fr.met) { fr.met = true; changeFriendship(p.id, 20); syncFriendStory(); }
-  else if (firstMeeting) changeFriendship(p.id, 10);
+  if (fr && !fr.met) { awardFriendship(p.id, 'meet', { source: 'town' }); syncFriendStory(); }
+  else if (fr && firstMeeting) awardFriendship(p.id, 'reencounter', { firstMeeting: true });
 
   if (p.kind === 'shop') { saveGame(); openShop(p.id); return; }
 
   if (p.kind === 'heal') {
-    healParty(); changeFriendship(p.id, 6); saveGame();
+    healParty(); var healAward = awardFriendship(p.id, 'heal', { countMeeting: true }); saveGame();
     modal('<h2>' + esc(p.name) + '</h2><p class="scene-prose">' + esc(p.say) + '</p>' +
-      '<p class="muted">Your party is fully healed.</p>' +
+      '<p class="muted">Your party is fully healed. ' + esc(healAward.message) + '</p>' +
       '<button class="primary" onclick="closeModal();renderTown()">Thank you</button>');
     return;
   }
@@ -214,24 +258,28 @@ function talkTo(id) {
         '<button class="primary" onclick="closeModal();renderTown()">Back</button>');
       return;
     }
+    var giftItem = itemById(p.item);
+    if (!giftItem || !giveItem(p.item, p.amount)) return;
     S.town.gifts[p.id] = true;
-    giveItem(p.item, p.amount);
-    changeFriendship(p.id, 25);
+    awardFriendship(p.id, 'gift', { countMeeting: true });
     saveGame();
     modal('<h2>' + esc(p.name) + '</h2><p class="scene-prose">' + esc(p.say) + '</p>' +
-      '<p class="friend-change">Received ' + p.amount + ' ' + esc(ITEMS[p.item].name) +
+      '<p class="friend-change">Received ' + p.amount + ' ' + esc(giftItem.name) +
       (p.amount > 1 ? 's' : '') + '.</p>' +
       '<button class="primary" onclick="closeModal();renderTown()">Thanks</button>');
     return;
   }
 
   if (p.kind === 'talk') {
-    if (!friendWait(friendship(p.id), 'Talk')) { changeFriendship(p.id, 12); friendship(p.id).lastTalk = S.clock; friendship(p.id).talks++; }
+    var talkAward = fr ? awardFriendship(p.id, 'talk', { source: 'town', countMeeting: true }) : null;
+    var grant = claimTownGrant(p);
     saveGame();
     modal('<h2>' + esc(p.name) + '</h2><span class="friend-role">' + esc(p.cls) + '</span>' +
       '<p class="scene-prose">' + esc(p.say) + '</p>' +
+      (talkAward ? '<p class="small">' + esc(talkAward.message) + '</p>' : '') +
       (p.tip ? '<div class="note" style="text-align:left;margin-top:12px"><b>Worth remembering.</b><br>' +
-        esc(p.tip) + '</div>' : '') +
+        esc(p.tip) + '</div>' : '') + (grant ?
+        '<p class="friend-change">Received ' + grant.amount + ' ' + esc(grant.item.name) + '.</p>' : '') +
       '<button class="primary" onclick="closeModal();renderTown()">Back</button>');
     return;
   }
@@ -284,22 +332,21 @@ function finishNpcBattle(won) {
   var p = townsfolkById(B.npcId);
   if (!p) return null;
   var first = !S.town.beaten[p.id];
-  var prize = 0;
+  var prize = 0, items = null;
   var fr = friendship(p.id);
-  if (!fr.met) { fr.met = true; changeFriendship(p.id, 20); }
-  if (!friendWait(fr, 'Battle')) {
-    changeFriendship(p.id, won ? 22 : 14);
-    fr.lastBattle = S.clock;
-  }
-  fr.battles++; if (won) fr.wins++;
+  if (fr && !fr.met) awardFriendship(p.id, 'meet', { source: 'town' });
+  if (fr) awardFriendship(p.id, 'battle', { source: 'town', won: won,
+    answered: (B.correctThisBattle || 0) + (B.wrongThisBattle || 0), eligibleAtStart: true, countMeeting: true });
+  if (fr && friendshipEligible(p.id)) { fr.battles++; if (won) fr.wins++; }
   if (won) {
     S.town.beaten[p.id] = true;
     prize = battlePrize('npc', playerLevel(), p.npcPay || p.pay);
     if (!first) prize = Math.round(prize * 0.5);      // rematches pay less
     addMoney(prize);
+    if (first && Array.isArray(p.firstWinItems)) items = claimReceiptItems('trainer-win:' + p.id, p.firstWinItems);
   }
   saveGame();
-  return { person: p, prize: prize, first: first, line: won ? p.win : p.lose };
+  return { person: p, prize: prize, first: first, items: items, line: won ? p.win : p.lose };
 }
 
 /* How much of the cast you have found, for the trainer card. */

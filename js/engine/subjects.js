@@ -69,7 +69,6 @@ function switchSubject(id) {
   // across the border would draw its next question from the wrong bank, so end
   // it here rather than leaving a live battle pointing at nothing.
   if (typeof B !== 'undefined' && B && !B.over) {
-    clearInterval(B.timer);
     B.over = true;
     B = null;
   }
@@ -219,6 +218,9 @@ function mapStops() {
 /* Every subject's people, for the friend roster - friendships are shared, so a
    companion you met in the C region is still your friend on the Isles. */
 function everyPerson() {
+  if (typeof castEntries === 'function' && typeof castSource === 'function') {
+    return castEntries({ sourceKind: 'townsfolk' }).map(castSource).filter(Boolean);
+  }
   var out = [];
   for (var id in SUBJECTS) {
     var f = SUBJECTS[id].TOWNSFOLK || [];
@@ -228,6 +230,10 @@ function everyPerson() {
 }
 
 function personSubject(id) {
+  if (typeof castById === 'function') {
+    var member = castById(id);
+    return member ? member.homeSubject : null;
+  }
   for (var s in SUBJECTS) {
     var f = SUBJECTS[s].TOWNSFOLK || [];
     for (var i = 0; i < f.length; i++) if (f[i].id === id) return s;

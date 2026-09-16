@@ -50,7 +50,7 @@ function check(n,ok,d){results.push({n,ok});console.log((ok?'PASS  ':'FAIL  ')+n
   // --- friendship ---------------------------------------------------------
   t('friends',()=>{
     ensureFriends();
-    const id=(TOWNSFOLK[0]||{}).id;
+    const id=(TOWNSFOLK.find(person=>friendshipEligible(person.id))||{}).id;
     const f=friendship(id);
     const before=f.points;
     const moved=changeFriendship(id,250);
@@ -103,18 +103,7 @@ function check(n,ok,d){results.push({n,ok});console.log((ok?'PASS  ':'FAIL  ')+n
     const wasLive=!!B&&!B.over;
     showScreen('map');                       // walk away mid battle
     o.abandon={wasLive,over:!!B&&!!B.over};
-    if(B){try{clearInterval(B.timer);}catch(e){}B=null;}
-  });
-
-  // --- a timed out question counts as wrong ------------------------------
-  t('timeout',()=>{
-    S.party=[makeMon(6,50)];S.streak=4;
-    goWild(1);
-    showMoveMenu(); chooseMove(0);
-    const before=S.totals?S.totals.w:0;
-    answer(-1);                              // -1 is the timeout path
-    o.timeout={countedWrong:(S.totals?S.totals.w:0)>before,streak:S.streak};
-    if(B){try{clearInterval(B.timer);}catch(e){}B=null;}
+    if(B)B=null;
   });
 
   // --- drill answers end to end ------------------------------------------
@@ -164,7 +153,7 @@ function check(n,ok,d){results.push({n,ok});console.log((ok?'PASS  ':'FAIL  ')+n
     if(talk){talkTo(talk.id);o.town.talked=true;try{closeModal();}catch(e){}}
     if(gift){talkTo(gift.id);o.town.gifted=true;try{closeModal();}catch(e){}}
     if(fight){startNpcBattle(fight.id);o.town.npcBattle=!!B&&B.kind==='npc';
-              if(B){try{clearInterval(B.timer);}catch(e){}B=null;}}
+              if(B)B=null;}
   });
 
   return o;
@@ -191,10 +180,8 @@ function check(n,ok,d){results.push({n,ok});console.log((ok?'PASS  ':'FAIL  ')+n
  check('PC moves a Pokemon to the party', r.pcToParty && r.pcToParty.party===3 && r.pcToParty.box===0, JSON.stringify(r.pcToParty));
  check('PC moves a Pokemon to the box', r.pcToBox && r.pcToBox.party===2 && r.pcToBox.box===1, JSON.stringify(r.pcToBox));
  check('PC will not empty the party', r.pcKeepsOne && r.pcKeepsOne.party===1, JSON.stringify(r.pcKeepsOne));
- check('leaving a battle ends it and clears its timer',
+ check('leaving a battle ends it',
        r.abandon && r.abandon.wasLive===true && r.abandon.over===true, JSON.stringify(r.abandon));
- check('a timed out question counts as wrong and breaks the streak',
-       r.timeout && r.timeout.countedWrong===true && r.timeout.streak===0, JSON.stringify(r.timeout));
  check('the drill answers questions and scores them',
        r.drill && r.drill.answered>0 && r.drill.n===r.drill.right && r.drill.right>0, JSON.stringify(r.drill));
  check('a mock exam picks 25 unique questions in both regions',

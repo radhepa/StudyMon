@@ -89,7 +89,9 @@ function monSprite(m, kind) {
 
 function xpToNext(lvl) { return Math.floor(3 * lvl * lvl + 25 * lvl + 25); }
 
-/* Returns a list of event strings describing what happened. */
+/* Returns structured events describing what happened.  Level events retain the
+   name used at that moment so a later evolution in the same award cannot make
+   the battle log attribute an earlier level-up to the wrong species. */
 function giveXp(m, amount) {
   var events = [];
   if (m.lvl >= 100) return events;
@@ -99,7 +101,7 @@ function giveXp(m, amount) {
     var beforeHp = maxHp(m);
     m.lvl++;
     m.hp += maxHp(m) - beforeHp;      // levelling heals by the HP you gained
-    events.push({ kind: 'level', lvl: m.lvl });
+    events.push({ kind: 'level', lvl: m.lvl, name: monName(m) });
     var ev = evolutionFor(m);
     if (ev) {
       var from = monName(m);

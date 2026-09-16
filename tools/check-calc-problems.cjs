@@ -197,7 +197,7 @@ function check(n, ok, d) { results.push({ n, ok }); say((ok ? 'PASS  ' : 'FAIL  
     await sleep(500);
     const out = { over: !!(B && B.over), badge: !!S.badges[1], asked: asked.length,
                   sawProblem: asked.some(id => id.indexOf('-p-') >= 0) };
-    if (B) { try { clearInterval(B.timer); } catch (e) {} B = null; }
+    if (B) B = null;
     return out;
   });
   check('a calculus gym battle still completes', r.over && r.badge, 'asked ' + r.asked);

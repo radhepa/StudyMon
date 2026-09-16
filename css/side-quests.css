@@ -30,7 +30,6 @@
 .sq-test legend { font-size:14px; line-height:1.6; padding:0 8px; max-width:100%; }
 .sq-test label+label { margin-top:10px; }
 .sq-prize-sprite { width:96px; height:96px; object-fit:contain; image-rendering:pixelated; }
-.sq-berries { margin-top:20px; }
 #s-quests .row { flex-wrap:wrap; }
 @media(max-width:700px){.sq-detail-grid,.sq-two,.sq-filters { grid-template-columns:1fr; }.sq-entry{display:block;}.sq-entry button{margin-top:12px;}.sq-grid{grid-template-columns:1fr;}#s-quests .panel{padding:16px;}#s-quests h2{font-size:26px;}#nav { flex-wrap:wrap; }#nav button { flex:1 0 22%; min-width:0; } }
 /* Hidden file controls must stay hidden despite the form input rule above. */

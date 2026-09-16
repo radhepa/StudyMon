@@ -1,0 +1,112 @@
+/* Phase 4 Slice 6: June dialogue, four-event arc and save compatibility. */
+const { chromium } = require('./playwright.cjs');
+
+(async () => {
+  const browser = await chromium.launch({ headless: true, executablePath: 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe' });
+  const page = await browser.newPage();
+  const pageErrors = [];
+  page.on('pageerror', error => pageErrors.push(error.message));
+  await page.goto('http://127.0.0.1:8780/');
+
+  const result = await page.evaluate(() => {
+    function readySave() {
+      S = freshSave(); bindProgress('c'); ensureFriends();
+      const friend = friendship('june'); friend.met = true; friend.meetings = 20; friend.points = 1000;
+      for (let i = 1; i <= 15; i++) S.badges[i] = true;
+      return friend;
+    }
+    const friend = readySave();
+    const report = characterDialogueReport('june');
+    const dialogueErrors = validateCharacterDialogue('june');
+    const eventErrors = validateHeartEventContent('june');
+    const rules = friendEventRules('june');
+    const scenes = rules.map(rule => sceneBeats('june', 'event', rule.eventId));
+    const trainer = TRAINERS.find(t => t.id === 'june');
+    const inventory = CORE_CAST_PRODUCTION.june.eventInventory;
+    const categoryTargets = Object.keys(CORE_CAST_DIALOGUE_CATEGORIES).every(category =>
+      (report.categories[category] || 0) >= CORE_CAST_DIALOGUE_CATEGORIES[category].target);
+    const contaminated = (CORE_CAST_DIALOGUE.june || []).flatMap(pool => pool.lines).filter(line =>
+      /\b(calculus|compiler|pointer|quiz|exam|homework|study|lesson)\b/i.test(line));
+    const contexts = [
+      selectCharacterDialogue('june', { firstMeeting: true }),
+      selectCharacterDialogue('june', { location: 'trail-entrance', mood: 'neutral' }),
+      selectCharacterDialogue('june', { location: 'market-shelter', mood: 'tense' })
+    ];
+    S.items.trailPermit = 1;
+    contexts.push(selectCharacterDialogue('june', { mood: 'neutral' }));
+    delete S.items.trailPermit;
+    S.seen[133] = true;
+    contexts.push(selectCharacterDialogue('june', { mood: 'neutral' }));
+    const deterministicA = selectCharacterDialogue('june', { location: 'lookout', mood: 'neutral' });
+    const deterministicB = selectCharacterDialogue('june', { location: 'lookout', mood: 'neutral' });
+    const freshFirst = nextFriendEvent('june').rule.eventId;
+    friend.events = [rules[0].eventId];
+    const midNext = nextFriendEvent('june').rule.eventId;
+
+    const legacy = freshSave(); bindProgress('c');
+    legacy.friends = { june: freshFriend() };
+    legacy.friends.june.met = true; legacy.friends.june.meetings = 20; legacy.friends.june.points = 1000;
+    legacy.friends.june.events = ['june-event-packing-light', 'june-event-the-washed-out-path',
+      'june-event-a-letter-from-the-road', 'june-event-the-invitation'];
+    const oldScene = sceneBeats('june', 'event', 'june-event-the-invitation');
+    legacy.friends.june.history = [{ kind: 'event', sceneId: oldScene.id,
+      choiceId: oldScene.beats[0].c[0].id, choiceIds: oldScene.beats.map(beat => beat.c[0].id), change: 52, clock: 9 }];
+    activateSave(normalizeSave(legacy)); ensureFriends();
+    const legacyComplete = nextFriendEvent('june') === null;
+    readMemory('june', oldScene.id);
+    const replayTitle = document.querySelector('#s-friends h2') && document.querySelector('#s-friends h2').textContent;
+
+    readySave();
+    const activeId = rules[0].eventId;
+    startFriendScene('june', 'event', activeId);
+    let activeScene = sceneBeats('june', 'event', activeId);
+    for (let i = 0; i < 4; i++) {
+      const beat = activeScene.beats.find(item => item.id === S.friendScene.beatId);
+      resolveFriendChoice(beat.c[0].id);
+    }
+    const pendingBefore = copySaveValue(S.friendScene);
+    activateSave(normalizeSave(copySaveValue(S))); ensureFriends();
+    const interruptedStable = JSON.stringify(S.friendScene) === JSON.stringify(pendingBefore) &&
+      !!sceneBeats('june', 'event', S.friendScene.sceneId).beats.find(beat => beat.id === S.friendScene.beatId);
+    while (S.friendScene) {
+      activeScene = sceneBeats('june', 'event', S.friendScene.sceneId);
+      const beat = activeScene.beats.find(item => item.id === S.friendScene.beatId);
+      resolveFriendChoice(beat.c[0].id);
+    }
+    const consequence = !!S.worldFlags['event:june:' + activeId];
+    const acknowledgment = selectCharacterDialogue('june').poolId === 'june-dialogue-post-spare-lunch';
+
+    return { report, dialogueErrors, eventErrors, categoryTargets, contaminated,
+      ruleIds: rules.map(rule => rule.eventId), beatCounts: scenes.map(scene => scene.beats.length),
+      allSceneIds: trainer.events.map(event => event.id), inventory,
+      contexts: contexts.map(line => line && ({ id: line.id, category: line.category })),
+      deterministic: deterministicA && deterministicB && deterministicA.id === deterministicB.id,
+      freshFirst, midNext, legacyComplete, replayTitle, interruptedStable, consequence, acknowledgment };
+  });
+
+  const activeIds = ['june-event-a-spare-lunch', 'june-event-the-washed-out-path',
+    'june-event-a-map-full-of-blanks', 'june-event-a-place-on-the-map'];
+  const checks = [
+    ['June has at least 250 whole, unique contextual lines', result.report.lines >= 250 && result.report.uniqueTexts === result.report.lines && result.report.uniqueLineIds === result.report.lines],
+    ['every dialogue category meets its production target', result.categoryTargets],
+    ['dialogue conditions and four later acknowledgments validate', result.dialogueErrors.length === 0],
+    ['June dialogue avoids educational voice contamination', result.contaminated.length === 0],
+    ['four active events use the frozen canonical IDs', JSON.stringify(result.ruleIds) === JSON.stringify(activeIds)],
+    ['each active event is substantial and structurally valid', result.beatCounts.every(count => count >= 6) && result.eventErrors.length === 0],
+    ['all seven legacy June scene IDs and inventories remain resolvable', result.allSceneIds.length === 7 && result.inventory.length === 7 && result.inventory.every(event => event.beatIds.length && event.choiceIds.length)],
+    ['first-meeting, location, mood, item, and Pokémon contexts select authored lines', result.contexts.every(Boolean) && result.contexts.map(x => x.category).join(',') === 'firstMeeting,location,recentMoodRumor,itemPokemon,itemPokemon'],
+    ['dialogue selection is deterministic for identical state', result.deterministic],
+    ['fresh and mid-progress saves advance by canonical event ID', result.freshFirst === activeIds[0] && result.midNext === activeIds[1]],
+    ['consolidated legacy completions satisfy all four canonical events', result.legacyComplete],
+    ['a consolidated legacy journal memory still replays', result.replayTitle === 'The invitation'],
+    ['an interrupted late beat survives normalization and resumes by stable ID', result.interruptedStable],
+    ['completion writes a consequence and unlocks later acknowledgment', result.consequence && result.acknowledgment],
+    ['no page errors', pageErrors.length === 0]
+  ];
+  checks.forEach(([name, ok]) => console.log((ok ? 'PASS  ' : 'FAIL  ') + name));
+  if (checks.some(([, ok]) => !ok)) {
+    console.log(JSON.stringify({ ...result, pageErrors }, null, 2));
+    process.exitCode = 1;
+  } else console.log(checks.length + '/' + checks.length + ' checks passed; ' + result.report.lines + ' June lines across ' + result.report.pools + ' context pools');
+  await browser.close();
+})().catch(error => { console.error(error); process.exitCode = 1; });

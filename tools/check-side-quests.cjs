@@ -24,7 +24,8 @@ for (const q of qs) {
   assert(q.published, where + 'published');
   assert.equal(q.validation.mode, 'autograder', where + 'graded by the autograder');
   assert(q.starterCode.length && q.hints.length === 3, where + 'starter and hints');
-  assert(q.rewards.money > 0 && q.rewards.berries.every(b => ['oran', 'sitrus'].includes(b.id) && b.count > 0), where + 'rewards');
+  const itemRewards=['oran','sitrus','revive','circuitToken','rareCandy','prismStone'];
+  assert(q.rewards.money > 0 && q.rewards.berries.every(b => itemRewards.includes(b.id) && b.count > 0), where + 'rewards');
   assert(!JSON.stringify(q).includes('—'), where + 'no em dashes in copy');
   const t = q.estimatedMinutes;
   assert(t.min <= t.max, where + 'time estimate');

@@ -29,7 +29,7 @@ function check(n,ok,d){results.push({n,ok});console.log((ok?'PASS  ':'FAIL  ')+n
    out.after={party:S.party.length,box:S.box.length,caught:Object.keys(S.caught||{}).length};
    out.gained=(out.after.party+out.after.box)-(before.party+before.box);
    out.ballsLeft=itemCount('ultra');
-   if(B){try{clearInterval(B.timer);}catch(e){}B=null;}
+   if(B)B=null;
    return out;
  });
  check('catching throws balls and consumes them', c.throws>0 && c.ballsLeft<30, 'threw '+c.throws+', left '+c.ballsLeft);
@@ -54,7 +54,7 @@ function check(n,ok,d){results.push({n,ok});console.log((ok?'PASS  ':'FAIL  ')+n
    }
    await sleep(700);
    const after={lvl:S.party[0].lvl,xp:S.party[0].xp};
-   if(B){try{clearInterval(B.timer);}catch(e){}B=null;}
+   if(B)B=null;
    return {before,after};
  });
  check('winning a battle awards experience', xp.after.xp>xp.before.xp || xp.after.lvl>xp.before.lvl,
