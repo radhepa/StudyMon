@@ -1,0 +1,140 @@
+/* The journal on the study desk. Lives inside #modal .box, which the parchment
+   skin already paints as aged paper, so this file only draws the ruling, the
+   tiles and the people bars. */
+
+.journal { text-align: left; }
+
+.journal-head { border-bottom: 2px solid #a78b6166; padding-bottom: 12px; margin-bottom: 18px; }
+.journal-eyebrow {
+  display: block;
+  font: 13px var(--read);
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: #8a6a44;
+  margin-bottom: 4px;
+}
+.journal h2 { margin: 0 0 4px; font-size: 32px; }
+.journal-sub { margin: 0; color: #7b6043; font: italic 16px Georgia, serif; }
+
+.journal-empty { color: #7b6043; font: italic 16px Georgia, serif; margin: 8px 0 0; }
+.journal-line { margin: 6px 0 0; color: #55402c; }
+
+/* ---- the four headline numbers ------------------------------------------- */
+.journal-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.journal-tile {
+  display: grid;
+  gap: 2px;
+  padding: 12px 14px;
+  background: #f8edcf;
+  border: 2px solid #b1885a;
+  border-radius: 8px;
+  box-shadow: inset 0 0 0 2px #f3e2bf;
+}
+.journal-tile .jt-label {
+  font: 12.5px var(--read);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #856440;
+}
+.journal-tile .jt-value { font: 30px Georgia, serif; color: #8a5a22; line-height: 1.1; }
+.journal-tile .jt-note { font: italic 14px Georgia, serif; color: #7b6043; }
+
+/* ---- blocks -------------------------------------------------------------- */
+.journal-block { margin: 0 0 20px; }
+.journal-block h3 {
+  margin: 0 0 8px;
+  font: 20px var(--read);
+  color: #6b4525;
+  border-bottom: 1px solid #b59a6c66;
+  padding-bottom: 5px;
+}
+
+/* Who you talked to. The bar is the point of this block: the longest one is
+   the answer to "who did I spend the day with". */
+.journal-people { list-style: none; margin: 0; padding: 0; display: grid; gap: 7px; }
+.journal-people li {
+  display: grid;
+  grid-template-columns: minmax(84px, auto) minmax(0, 1fr) minmax(0, 2fr) 34px;
+  align-items: center;
+  gap: 10px;
+}
+.journal-people .jp-name { font: 17px Georgia, serif; color: #4a2f20; }
+.journal-people li.top .jp-name { font-weight: 700; color: #8a5a22; }
+.journal-people .jp-role {
+  font: 13px var(--read);
+  color: #856440;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.journal-people .jp-bar {
+  height: 11px;
+  background: #e2cfa8;
+  border: 2px solid #a5814f;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.journal-people .jp-bar i { display: block; height: 100%; background: #b8933f; }
+.journal-people li.top .jp-bar i { background: #c07c34; }
+.journal-people .jp-n { font: 16px Georgia, serif; color: #6b4525; text-align: right; }
+
+.journal-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 5px; }
+.journal-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 10px;
+  background: #f3e4c2;
+  border: 1px solid #c0a173;
+  border-radius: 6px;
+  font: 16px Georgia, serif;
+  color: #4a2f20;
+}
+.journal-list li b { color: #8a5a22; white-space: nowrap; }
+
+.journal-notes { list-style: none; margin: 0; padding: 0; display: grid; gap: 5px; }
+.journal-notes li { font: 16px Georgia, serif; color: #4a2f20; }
+.journal-notes .jn-time {
+  display: inline-block;
+  min-width: 74px;
+  color: #856440;
+  font: 13.5px var(--read);
+}
+
+/* ---- the index of earlier pages ------------------------------------------ */
+.journal-index { display: flex; flex-wrap: wrap; gap: 7px; }
+.journal-index button {
+  display: grid;
+  gap: 1px;
+  min-height: 0;
+  padding: 7px 11px;
+  font: 15px Georgia, serif;
+  line-height: 1.25;
+}
+.journal-index button small { font: 12.5px var(--read); color: #7b6043; }
+.journal-index button.on {
+  background: linear-gradient(#f2c46c, #c78035);
+  border-color: #76512b;
+}
+.journal-index button.on small { color: #4a3018; }
+
+.journal-foot {
+  margin: 0 0 16px;
+  padding-top: 12px;
+  border-top: 2px solid #a78b6166;
+  color: #7b6043;
+  font: italic 15px Georgia, serif;
+}
+
+.journal-actions { display: flex; gap: 10px; }
+
+@media (max-width: 620px) {
+  .journal h2 { font-size: 26px; }
+  .journal-people li { grid-template-columns: minmax(0, 1fr) 30px; }
+  .journal-people .jp-role, .journal-people .jp-bar { display: none; }
+}

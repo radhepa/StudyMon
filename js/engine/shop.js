@@ -73,6 +73,7 @@ function addMoney(n) {
   ensureBag();
   n = Math.floor(n);
   S.money = Math.max(0, S.money + n);
+  if (typeof journalMoney === 'function') journalMoney(n);
   return n;
 }
 function money() { ensureBag(); return S.money; }
@@ -133,7 +134,9 @@ function renderShop() {
 
   h += '<p class="muted" style="margin-top:16px">Prize money comes from battles. Wild Pokémon pay a little, ' +
     'trainers around the region pay more, and gym leaders pay best.</p>' +
-    '<div class="row" style="margin-top:12px"><button class="ghost" onclick="openTown()">Back to the region</button></div>';
+    '<div class="row" style="margin-top:12px"><button class="ghost" onclick="' +
+    (typeof humanWorldHasReturn === 'function' && humanWorldHasReturn() ? 'humanWorldReturn()' : 'openTown()') +
+    '">Back to ' + (typeof humanWorldHasReturn === 'function' && humanWorldHasReturn() ? 'Bootstrap Town' : 'the region') + '</button></div>';
 
   $('#s-shop').innerHTML = h;
   renderTopbar();
@@ -151,6 +154,7 @@ function buyItem(key, n) {
   if (!isFinite(cost) || money() < cost) { toast('Not enough money for that.'); return; }
   addMoney(-cost);
   giveItem(key, n);
+  if (typeof collectFirstPurchase === 'function') collectFirstPurchase();
   saveGame();
   renderShop();
   toast('Bought ' + n + ' ' + it.name + (n > 1 ? 's' : '') + '.');

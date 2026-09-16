@@ -27,7 +27,7 @@ window.ENCOUNTERS = {
  calc: {
   1: [[396,"common"],[821,"common"],[187,"common"],[16,"common"],[519,"common"],[278,"uncommon"],[661,"uncommon"],[447,"uncommon"],[66,"uncommon"],[56,"rare"],[852,"rare"],[759,"rare"]],
   2: [[270,"common"],[420,"common"],[548,"common"],[46,"common"],[957,"common"],[1012,"uncommon"],[495,"uncommon"],[252,"uncommon"],[81,"uncommon"],[679,"rare"],[948,"rare"],[331,"rare"]],
-  3: [[290,"common"],[599,"common"],[736,"common"],[850,"common"],[597,"common"],[48,"uncommon"],[540,"uncommon"],[588,"uncommon"],[595,"uncommon"],[304,"rare"],[347,"rare"],[303,"rare"]],
+  3: [[290,"common"],[599,"common"],[736,"common"],[850,"common"],[597,"common"],[48,"uncommon"],[540,"uncommon"],[588,"uncommon"],[595,"uncommon"],[1026,"uncommon"],[1029,"uncommon"],[304,"rare"],[347,"rare"],[303,"rare"]],
   4: [[938,"common"],[179,"common"],[309,"common"],[669,"common"],[439,"common"],[926,"uncommon"],[170,"uncommon"],[684,"uncommon"],[682,"uncommon"],[417,"rare"],[312,"rare"],[184,"rare"]],
   5: [[361,"common"],[582,"common"],[238,"common"],[854,"common"],[92,"common"],[996,"uncommon"],[974,"uncommon"],[425,"uncommon"],[608,"uncommon"],[93,"rare"],[886,"rare"],[124,"rare"]],
   6: [[216,"common"],[667,"common"],[83,"common"],[137,"common"],[735,"common"],[22,"uncommon"],[531,"uncommon"],[277,"uncommon"],[1011,"uncommon"],[398,"rare"],[521,"rare"],[832,"rare"]],

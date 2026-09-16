@@ -9,8 +9,12 @@
 <link rel="stylesheet" href="css/polish.css?v=curriculum4-20260905">
 <link rel="stylesheet" href="css/parchment.css?v=curriculum4-20260905">
 <link rel="stylesheet" href="css/friends.css?v=curriculum4-20260905">
-<link rel="stylesheet" href="css/ui.css?v=calc-stats-20260910">
+<link rel="stylesheet" href="css/ui.css?v=fakemon-crisp-20260914">
 <link rel="stylesheet" href="css/side-quests.css">
+<link rel="stylesheet" href="css/kingdom.css?v=kingdom-collision-20260914">
+<link rel="stylesheet" href="css/human-world.css?v=connected-map-20260915">
+<link rel="stylesheet" href="css/journal.css?v=journal-20260915">
+<link rel="stylesheet" href="css/collectables.css?v=collect-20260915">
 </head>
 <body>
 
@@ -77,6 +81,12 @@
   <!-- ================= PARTY ================= -->
   <section id="s-party" class="screen"></section>
 
+  <!-- ================= KINGDOM ================= -->
+  <section id="s-kingdom" class="screen"></section>
+
+  <!-- ================= BOOTSTRAP TOWN ================= -->
+  <section id="s-human" class="screen"></section>
+
   <!-- ================= DEX ================= -->
   <section id="s-dex" class="screen"></section>
 
@@ -95,10 +105,11 @@
 <nav id="nav" style="display:none">
   <button data-scr="map"   onclick="showScreen('map');renderMap()">🗺 Map</button>
   <button data-scr="party" onclick="showScreen('party');renderParty()">👥 Party</button>
+  <button data-scr="kingdom" onclick="showScreen('kingdom');renderKingdom()">🌿 Kingdom</button>
   <button data-scr="dex"   onclick="showScreen('dex');renderDex()">📕 Pokédex</button>
   <button data-scr="study" onclick="showScreen('study');renderStudy()">📖 Notes</button>
   <button data-scr="stats" onclick="showScreen('stats');renderStats()">📊 Trainer Card</button>
-  <button data-scr="town" onclick="openTown()">🏘 Region</button>
+  <button data-scr="human" onclick="openHumanWorld()">🏘 Bootstrap Town</button>
   <button data-scr="friends" onclick="openFriends()">♥ Friends</button>
   <button data-scr="quests" onclick="openSideQuests()">📜 Side Quests</button>
 </nav>
@@ -108,6 +119,7 @@
 <input type="file" id="importfile" accept="application/json" style="display:none">
 
 <script src="js/data/pokedex.js?v=curriculum4-20260905"></script>
+<script src="js/data/fakemon.js?v=abyssqueak-cries-20260914"></script>
 <script src="js/data/sprite-seat.js?v=curriculum4-20260905"></script>
 <script src="js/data/world.js?v=curriculum4-20260905"></script>
 <script src="js/data/questions/ch01-03.js?v=curriculum4-20260905"></script>
@@ -122,9 +134,12 @@
 <script src="js/data/questions/ch13-15-b.js?v=curriculum4-20260905"></script>
 <script src="js/data/questions/topup.js?v=curriculum4-20260905"></script>
 <script src="js/data/townsfolk.js?v=curriculum4-20260905"></script>
+<script src="js/data/community-housing.js?v=connected-map-20260915"></script>
 <script src="js/data/folk-events.js?v=curriculum4-20260905"></script>
 <script src="js/data/event-beats.js?v=curriculum4-20260905"></script>
 <script src="js/data/trainers.js?v=curriculum4-20260905"></script>
+<script src="js/data/human-world.js?v=connected-map-20260915"></script>
+<script src="js/data/human-world-nav.js?v=connected-map-20260915"></script>
 <script src="js/data/curriculum.js?v=curriculum4-20260905"></script>
 <script src="js/data/questions/edition4.js?v=curriculum4-20260905"></script>
 <script src="js/data/questions/quiz-true-false.js?v=quiz-tf-20260910"></script>
@@ -151,9 +166,17 @@
 <script src="js/engine/pc.js?v=curriculum4-20260905"></script>
 <script src="js/engine/friends.js?v=curriculum4-20260905"></script>
 <script src="js/engine/ferry.js?v=calc-20260905"></script>
+<script src="js/engine/journal.js?v=journal-20260915"></script>
+<script src="js/data/collectables.js?v=collect-20260915"></script>
+<script src="js/engine/collectables.js?v=collect-20260915"></script>
+<!-- TEMP: pier-is-gone region warp chip. Delete this line and js/engine/temp-calc-warp.js together. -->
+<script src="js/engine/temp-calc-warp.js?v=temp-warp-20260915"></script>
 <script src="js/data/side-quests.js"></script>
 <script src="js/engine/side-quests.js"></script>
 <script src="js/engine/evolution-choice.js"></script>
+<script src="js/engine/human-world-nav.js?v=connected-map-20260915"></script>
+<script src="js/engine/human-world.js?v=connected-map-20260915"></script>
+<script src="js/engine/kingdom.js?v=kingdom-collision-20260914"></script>
 <script src="js/main.js?v=curriculum4-20260905"></script>
 </body>
 </html>

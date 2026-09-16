@@ -552,6 +552,18 @@ button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visi
 .chip.region-chip:hover { background: #e2edf0; }
 .chip.region-chip:focus-visible { outline: 2px solid #4f6d78; outline-offset: 2px; }
 
+/* TEMP: pier-is-gone region warp chip. Delete this block together with
+   js/engine/temp-calc-warp.js. */
+.chip.temp-warp-chip {
+  cursor: pointer;
+  border-color: #b8742c;
+  color: #8a5318;
+  font-weight: 700;
+  border-style: dashed;
+}
+.chip.temp-warp-chip:hover { background: #fbeedc; }
+.chip.temp-warp-chip:focus-visible { outline: 2px solid #b8742c; outline-offset: 2px; }
+
 /* Destination list inside the ferry modal. */
 .ferry-list { display: grid; gap: 12px; margin: 18px 0 16px; }
 .ferry-dest {
@@ -820,3 +832,11 @@ button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visi
   border: 3px solid var(--gym-face-ring, #d2b37d);
 }
 @media (max-width: 620px) { .gym-greeting .leader-face { width: 104px; height: 104px; } }
+
+/* Creature sheets are deliberately low-resolution pixel art. Keep their hard
+   edges when party cards scale the 96px source above its native dimensions. */
+#s-party .card .top img[src*="assets/sprites/front/"],
+#s-party .card .top img[src*="assets/sprites/back/"],
+#s-party .card .top img[src*="assets/sprites/shiny/"] {
+  image-rendering: pixelated;
+}

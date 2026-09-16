@@ -11,6 +11,41 @@ Portraits are not covered there. After importing art, rebuild the contact sheets
 and look at them; tools/reframe-portraits.py holds the per-character framing
 corrections.
 
+# Your house has a purpose now
+
+Three pieces of furniture in **Your Home** (Bootstrap Town) do something. Walk up
+and press **E**.
+
+**The notebook on the study desk — your journal.** One page per in-world day,
+stamped with the real date. It counts the questions you answered and your
+accuracy, which chapters you practised, who you talked to and how often (with a
+bar chart, so "who did I spend the day with" has an answer), battles, catches,
+money in and out, where you went, and a short list of the day's headlines. Sixty
+days of pages are kept; earlier ones are one click away.
+
+**The chest — your collection.** Three categories, thirty items: *River Catch*,
+*Hollow & Meadow* and *Bootstrap Keepsakes*. A locked item shows where to look
+rather than a question mark, so the list doubles as a to-do list. The keepsakes
+are live today — each one marks a first, like your first badge, first catch or
+first crossing. Fishing and searching, which fill the other two, are designed
+but not yet built.
+
+**The aquarium and the terrarium** display *River Catch* and *Hollow & Meadow* as
+scenes rather than grids. They work from glyphs today; painted tokens and the
+props in the room art are the next pass.
+
+See [COLLECTABLES.md](COLLECTABLES.md) for the full design, the source model and
+the art brief. `node tools/check-house.cjs` proves all of it through the real
+hotspots.
+
+### Temporary: one-click crossing to the Converging Isles
+
+While the Riverside Pier is rebuilt, a dashed orange chip sits beside the
+StudyMon logo and sails you straight to the other region (and back). It is meant
+to be deleted: `js/engine/temp-calc-warp.js` says how, in three steps.
+
+---
+
 # Side Quests are live
 
 Thirty Pokemon-themed C programming labs are available from **Side Quests** in the bottom navigation. Ten easy, ten medium, ten hard. Each has a saved source workspace, lab brief, chapter guide, hints and a one-time reward. You write the C in StudyMon, press Run to try it, and press Submit to have it graded. Submitting compiles your program with Clang inside the app and runs it against every test for that lab; the reward is granted only when all of them pass. Nothing leaves your machine and no other tools are needed. Reward berries can be used from the Party screen.
@@ -245,6 +280,48 @@ Pokemon to select it, then use the panel or click an empty slot to move it. Nick
 open a proper dialog. The old Nickname button called `prompt()`, which browsers block,
 so it appeared to do nothing.
 
+The Pokemon Kingdom gives that same roster a life outside storage. Party and PC
+Pokemon wander a six-district, top-down pixel-art forest town, greet nearby friends
+and can be selected for a closer look. Kingdom Green, Lantern Square, Berry Market,
+Riverside Walk, Hearthside Lane and Moonbell Hill are joined by walkable paths and
+share one visual language. Every owned Pokemon is assigned to exactly one district,
+the population grows with the collection, and everyone changes district at the top
+of each real-world hour. The assignment is derived from the roster and clock, so it
+needs no save change. The town also follows Indianapolis Eastern Time through dawn,
+day, dusk and night. Rain combines layered falling streaks, ground-impact splashes,
+mist and a three-layer procedural audio bed with its own mute control. Twenty painted
+lanterns across four districts gain hand-placed, softly flickering light at night.
+Hand-authored walkable polygons and padded scenery colliders keep residents on open
+ground and off buildings, water, stalls, rocks, bridges, fountains, benches and lamp
+fixtures. Pokemon remain non-solid, so friends can still bunch up naturally. Each
+district also has an original, low-fatigue procedural score with its own tempo,
+meter, harmony and lead voice; moving between districts crossfades their themes.
+
+Bootstrap Town has its own original procedural theme, **Sunlit Steps**. Its calm
+16-bar melody, soft pizzicato walking pulse, warm sustained harmony, bass and
+occasional bell flourish share the inviting feel of a classic creature-adventure
+town without borrowing an existing game melody. The arrangement softens indoors
+and at night, continues cleanly between town scenes, and fades out when the player
+leaves Bootstrap Town. A labeled music toggle in the town HUD controls it.
+
+The human community now has a connected 18-scene foundation. The original square
+links to the Compiler Café district, Meadow Route, Riverside Pier, Stack Ridge,
+the Archive, Linden Research Grounds, Null Cavern settlement, the Upper Quarter,
+Cottage Row, Meadow Homesteads, Riverside Row, Hillcrest Terrace and Cavern
+Hollow, alongside the original interiors. Forty-five registered homes account for all 84 existing
+community members. Every visible home marker has a doorstep that both player and
+NPC navigation can reach; the nine nurses share the large Nurse House in Cottage
+Row. This pass deliberately adds locations and housing only, not the full 84-person
+schedule simulation.
+
+The in-game Town Map presents all fourteen outdoor districts as one continuous
+landscape and draws only connections that exist as bidirectional gameplay portals.
+Seventeen public buildings and work sites now have the same reachable, interactive
+approach contract as homes. Navigation tests flood-fill every player and NPC walk
+cell and require exact portal coordinates, preventing nearest-path snapping from
+hiding a blocked entrance. Riverside Pier now has continuous boardwalk access to
+the watermill, kiosk, ferryman hut, central dock, and every scene exit.
+
 Trainer portraits are shown whole on a shared baseline instead of being cropped by a
 fixed frame, and each partner Pokemon sits in its own corner badge rather than over the
 trainer. Card heights, route buttons and grid rows were levelled across every screen,
@@ -265,7 +342,7 @@ The interface uses offline system fonts, a green-and-cream field-journal theme, 
 
 # Full National Pokédex update
 
-The roster now imports all species returned by PokéAPI (1,025 at this update), using each species’ default form. Regional forms, Mega Evolutions and other alternate forms are not separate entries. Existing save IDs and all 774 study questions remain unchanged.
+The roster imports all species returned by PokéAPI (1,025 at this update), using each species’ default form, then adds the original Papyrunt → Codexal → Lexidrake StudyMon line as IDs 1026–1028. Regional forms, Mega Evolutions and other alternate forms are not separate entries. Existing save IDs and all 774 study questions remain unchanged.
 
 All species have local front, back, shiny and artwork image paths. Where PokéAPI lacks a back or shiny sprite, the regular front image is used as a fallback. Cries play only when an audio file was successfully downloaded.
 
@@ -294,9 +371,9 @@ You can also just double-click `index.html` — but some browsers refuse to save
 progress for pages opened straight off the disk, so the launcher is the safe
 route. The game tells you if that's happening.
 
-Everything runs offline. The full National Pokédex — all 1025 species, with their
-sprites (front, back, shiny and artwork), cries and stats — was pulled from
-[PokéAPI](https://pokeapi.co) once and lives in `assets/`.
+Everything runs offline. The full National Pokédex — all 1025 official species —
+was pulled from [PokéAPI](https://pokeapi.co) once and lives in `assets/`. Three
+original StudyMon extend that roster, bringing the playable total to 1028.
 
 ---
 
@@ -397,12 +474,14 @@ Keyboard: `1`–`4` or `A`–`D` to answer, `Enter` to continue.
 index.html            the game
 Play StudyMon.bat        launcher (starts a local server, opens the browser)
 css/style.css         all styling
-js/data/pokedex.js    1025 species: stats, types, moves, evolutions, catch
-                      rates                                        (generated)
+js/data/pokedex.js    1025 official species: stats, types, moves, evolutions,
+                      catch rates                                  (generated)
+js/data/fakemon.js    original StudyMon species and evolution data
 js/data/world.js      chapters, gyms, leaders, Elite Four, chapter notes
 js/data/questions/    the question bank: ch01-03.js etc, plus -b.js second
                       batches and topup.js — all merged at load time
-js/engine/            state, mons, quiz/SRS, battle, ui
+js/data/collectables.js  the collection catalog: categories, items, rarities
+js/engine/            state, mons, quiz/SRS, battle, ui, journal, collectables
 assets/               sprites (front/back/shiny/artwork) + cries
 tools/                the PokéAPI fetch + build scripts, and a fallback server
 ```

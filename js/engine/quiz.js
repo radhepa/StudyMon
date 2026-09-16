@@ -132,6 +132,8 @@ function recordAnswer(q, correct) {
     S.chapterStats[n][correct ? 'r' : 'w']++;
   }
 
+  if (typeof journalAnswer === 'function') journalAnswer(q, correct);
+
   // a run of five correct answers is worth pocket money
   if (correct && S.streak > 0 && S.streak % 5 === 0) {
     addMoney(40 + S.streak * 2);

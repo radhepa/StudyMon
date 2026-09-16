@@ -20,6 +20,8 @@ function toast(msg) {
 var CUR = 'title';
 function showScreen(name) {
   if(name !== 'quests' && typeof cancelCJob === 'function') cancelCJob();
+  if(name !== 'kingdom' && typeof kingdomStop === 'function') kingdomStop(true);
+  if(name !== 'human' && typeof humanWorldStop === 'function') humanWorldStop(true);
   if (CUR === 'battle' && name !== 'battle' && B && !B.over) {
     B.over=true; clearInterval(B.timer); saveGame();
   }
@@ -38,6 +40,8 @@ function renderTopbar() {
   $('#topbar').innerHTML =
     '<span class="logo">StudyMon</span>' +
     (typeof regionChip === 'function' ? regionChip() : '') +
+    /* TEMP: one-click warp while the pier is rebuilt - see js/engine/temp-calc-warp.js */
+    (typeof tempCalcWarpChip === 'function' ? tempCalcWarpChip() : '') +
     '<span class="chip">◆ <b>' + badgeCount() + '</b>/' + CHAPTERS.length + ' badges</span>' +
     '<span class="chip">₵ <b>' + money().toLocaleString() + '</b></span>' +
     '<span class="chip">● <b>' + (itemCount('great') + itemCount('ultra')) + '</b> good balls</span>' +
@@ -179,7 +183,12 @@ function hitAnim(sel) {
 
 /* ---- modal --------------------------------------------------------------- */
 
-function modal(html) { $('#modal .box').innerHTML = html; $('#modal').classList.add('on'); }
+function modal(html) {
+  var box = $('#modal .box');
+  box.classList.remove('human-town-map-box');
+  box.innerHTML = html;
+  $('#modal').classList.add('on');
+}
 function closeModal() { $('#modal').classList.remove('on'); }
 
 function showEvolve(e) {

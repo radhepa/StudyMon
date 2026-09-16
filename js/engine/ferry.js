@@ -85,6 +85,7 @@ function sailTo(id) {
 
   if (!S.visited) S.visited = {};
   S.visited[id] = true;
+  if (typeof collectFirstCrossing === 'function') collectFirstCrossing();
   TOWN_LOC = FERRY_PORT[id] || LOCATIONS[0].id;
   saveGame();
 

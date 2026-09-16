@@ -39,6 +39,13 @@ function ensureTown() {
 function locationOpen(l) { return badgeCount() >= (l.badges || 0); }
 
 function openTown(loc) {
+  /* Bootstrap Town now has a walkable living-world vertical slice. Keep this
+     function as the compatibility entry point used by old map/shop buttons;
+     explicit non-Bootstrap locations still open the legacy directory. */
+  if ((!loc || loc === 'town') && typeof openHumanWorld === 'function') {
+    openHumanWorld();
+    return;
+  }
   ensureTown(); ensureFriends();
   if (loc) {
     var want = locationById(loc);
@@ -184,6 +191,7 @@ function talkTo(id) {
   }
   var firstMeeting = !S.town.met[p.id];
   S.town.met[p.id] = true;
+  if (typeof journalTalk === 'function') journalTalk(p.id);
   var fr = friendship(p.id);
   if (!fr.met) { fr.met = true; changeFriendship(p.id, 20); syncFriendStory(); }
   else if (firstMeeting) changeFriendship(p.id, 10);

@@ -41,6 +41,7 @@ function startBattle(cfg) {
     caught: false
   };
   S.totals.battles++;
+  if (typeof journalBattle === 'function') journalBattle();
   markSeen(foe().id);
   saveGame();
   showScreen('battle');
@@ -582,6 +583,8 @@ function resolveCatch(correct) {
   if (roll.caught) {
     log('<span class="good">Gotcha! ' + monName(f).toUpperCase() + ' was caught!</span>');
     S.caught[f.id] = true; S.seen[f.id] = true; S.totals.caught++;
+    if (typeof journalCatch === 'function') journalCatch(f.id);
+    if (typeof collectFirstCatch === 'function') collectFirstCatch();
     if (S.party.length < 6) S.party.push(f); else S.box.push(f);
     B.over = true; B.caught = true;
     playCry(f.id);
@@ -606,16 +609,21 @@ function winBattle() {
   if (B.kind === 'npc') { finishNpcBattleResult(true); return; }
   B.over = true;
   S.totals.wins++;
+  if (typeof journalWin === 'function') journalWin();
   var msg = '', extra = '';
 
   if (B.kind === 'gym') {
     var was = !!S.badges[B.chapter.n];
     S.badges[B.chapter.n] = true;
+    if (!was && typeof journalBadge === 'function') journalBadge(B.chapter.badge);
+    if (!was && typeof collectFirstBadge === 'function') collectFirstBadge();
     giveItem('potion', 2); giveItem('great', 1); addMoney(battlePrize('gym'));
     msg = 'You defeated ' + B.leader + '!';
     extra = (was ? 'You already had the ' : 'You earned the ') + B.chapter.badge + '!';
   } else if (B.kind === 'elite') {
     S.elite[B.elite.id] = true;
+    if (((typeof isChampion === 'function') ? isChampion(B.elite) : B.elite.id === 'champ') &&
+        typeof collectChampion === 'function') collectChampion();
     giveItem('superpotion', 2); giveItem('ultra', 1); addMoney(battlePrize('elite'));
     msg = 'You defeated ' + B.elite.name + '!';
     extra = ((typeof isChampion === 'function') ? isChampion(B.elite) : B.elite.id === 'champ')
@@ -657,6 +665,7 @@ function finishNpcBattleResult(won) {
   B.over = true;
   var r = finishNpcBattle(won);
   if (won) S.totals.wins++;
+  if (won && typeof journalWin === 'function') journalWin();
   healParty();
   saveGame();
   var answered = B.correctThisBattle + B.wrongThisBattle;
@@ -668,6 +677,8 @@ function finishNpcBattleResult(won) {
       (r.first ? '' : ' (rematch rate)') + '</p>' : '') +
     '<p class="small">Your party has been healed.</p>' +
     '<div class="row" style="justify-content:center;margin-top:12px">' +
-    '<button class="primary" onclick="closeModal();openTown()">Back to the region</button>' +
+    '<button class="primary" onclick="closeModal();' +
+      (typeof humanWorldHasReturn === 'function' && humanWorldHasReturn() ? 'humanWorldReturn()' : 'openTown()') + '">Back to ' +
+      (typeof humanWorldHasReturn === 'function' && humanWorldHasReturn() ? 'Bootstrap Town' : 'the region') + '</button>' +
     '<button class="ghost" onclick="closeModal();showScreen(\'map\');renderMap()">To the map</button></div>');
 }

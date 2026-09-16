@@ -6,8 +6,8 @@ var DEXBY = {};
 
 function dexOf(id) { return DEXBY[id]; }
 
-function spriteUrl(id, kind) { return 'assets/sprites/' + (kind || 'front') + '/' + id + '.png'; }
-function artUrl(id) { return 'assets/sprites/art/' + id + '.png'; }
+function spriteUrl(id, kind) { return 'assets/sprites/' + (kind || 'front') + '/' + id + '.png' + (Number(id) >= 1026 ? '?v=full-line-grid-20260914' : ''); }
+function artUrl(id) { return 'assets/sprites/art/' + id + '.png' + (Number(id) >= 1026 ? '?v=full-line-grid-20260914' : ''); }
 
 var _audio = null;
 function playCry(id) {
@@ -40,7 +40,8 @@ function makeMon(id, level, opts) {
     id: id,
     lvl: level,
     xp: 0,
-    shiny: opts.shiny !== undefined ? opts.shiny : (Math.random() < SHINY_RATE),
+    shiny: d.shiny === false ? false :
+      (opts.shiny !== undefined ? opts.shiny : (Math.random() < SHINY_RATE)),
     nick: null,
     hp: 0
   };

@@ -273,7 +273,7 @@ function openFriend(id){
   h+='</ol></section>';
   $('#s-friends').innerHTML=h;
 }
-function talkFriend(id){var m=castMember(id);if(!m)return;var t=m.source,f=friendship(id);if(!f.met)return;var gain=0;if(!friendWait(f,'Talk')){gain=changeFriendship(id,15);f.lastTalk=S.clock;f.talks++;saveGame();}var line=m.companion?t.talk[Math.max(0,f.talks-1)%t.talk.length]:(t.tip||t.say);modal('<h2>'+esc(m.name)+'</h2><p class="scene-prose">'+esc(line)+'</p><p class="small">'+(gain?'Friendship +'+gain+'.':'Just a chat. Friendship can grow again after '+friendWait(f,'Talk')+' more questions.')+'</p><button class="primary" onclick="closeModal();openFriend(\''+id+'\')">See you around</button>');}
+function talkFriend(id){var m=castMember(id);if(!m)return;var t=m.source,f=friendship(id);if(!f.met)return;if(typeof journalTalk==='function')journalTalk(id);var gain=0;if(!friendWait(f,'Talk')){gain=changeFriendship(id,15);f.lastTalk=S.clock;f.talks++;saveGame();}var line=m.companion?t.talk[Math.max(0,f.talks-1)%t.talk.length]:(t.tip||t.say);modal('<h2>'+esc(m.name)+'</h2><p class="scene-prose">'+esc(line)+'</p><p class="small">'+(gain?'Friendship +'+gain+'.':'Just a chat. Friendship can grow again after '+friendWait(f,'Talk')+' more questions.')+'</p><button class="primary" onclick="closeModal();openFriend(\''+id+'\')">See you around</button>');}
 function chooseOuting(id){var m=castMember(id);if(!m||!m.companion)return;var t=m.source,f=friendship(id);if(friendWait(f,'Outing'))return;if(S.friendScene){renderFriendScene();return;}var h='<h2>Where to?</h2><p>'+t.name+' has some time this afternoon.</p><div class="outing-options">';t.outings.forEach(function(e,i){h+='<button onclick="closeModal();startFriendScene(\''+id+'\',\'outing\','+i+')">'+esc(e[0])+'<small>'+esc(e[1])+'</small></button>';});h+='</div><button class="ghost" onclick="closeModal()">Another time</button>';modal(h);}
 function startFriendScene(id,kind,index){
   var m=castMember(id);if(!m)return;var t=m.source;var f=friendship(id);if(!f.met)return;
@@ -387,7 +387,7 @@ function finishFriendBattle(won){
   if(!B||B.kind!=='trainer'||B.friendRewarded)return;B.friendRewarded=true;clearInterval(B.timer);B.over=true;
   var m=castMember(B.friendId); if(!m) return;
   var t=m.source,f=friendship(m.id),answered=B.correctThisBattle+B.wrongThisBattle;
-  f.battles++;if(won){f.wins++;S.totals.wins++;}var change=0;
+  f.battles++;if(won){f.wins++;S.totals.wins++;if(typeof journalWin==='function')journalWin();}var change=0;
   if(B.friendEligible&&answered>0){change=changeFriendship(t.id,won?25:15);f.lastBattle=S.clock;}
   healParty();saveGame();
   modal('<h2>'+esc(won?'You won!':'Good practice.')+'</h2><p class="scene-prose">'+esc((won?t.win:t.lose)||'Good match.')+'</p><p>'+B.correctThisBattle+'/'+answered+' questions correct.</p><p class="small">Both teams are healed. '+(change?'Friendship +'+change+'.':answered?'No friendship reward this time. Check the next reward on their page.':'Answer at least one question in a match to earn friendship.')+'</p><button class="primary" onclick="closeModal();openFriend(\''+t.id+'\')">Back to '+t.name+'</button>');

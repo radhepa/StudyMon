@@ -11,7 +11,7 @@ function check(n,ok,d){results.push({n,ok});console.log((ok?'PASS  ':'FAIL  ')+n
  const r=await p.evaluate(()=>{
   S=freshSave();bindProgress('c');
   const o={badSpecies:[],badTeams:[],badQuestions:[],badAce:[],badEncounters:[],badRewards:[],evoLoops:[],levelIssues:[]};
-  const valid=id=>Number.isInteger(id)&&id>=1&&id<=1025&&!!dexOf(id);
+  const valid=id=>Number.isInteger(id)&&id>=1&&!!dexOf(id);
 
   // encounters
   Object.keys(window.ENCOUNTERS||{}).forEach(sub=>{
@@ -71,7 +71,8 @@ function check(n,ok,d){results.push({n,ok});console.log((ok?'PASS  ':'FAIL  ')+n
   });
 
   // evolution chains terminate
-  for(let id=1;id<=1025;id++){
+  for(const entry of DEX){
+   const id=entry.id;
    let cur=id,steps=0;
    while(steps<12){
     const d=dexOf(cur);

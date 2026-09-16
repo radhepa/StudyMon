@@ -1,0 +1,626 @@
+/* The Kingdom is deliberately its own layer: the living sprites are ordinary
+   DOM controls over a top-down companion piece to the wild-battle forest. */
+#s-kingdom {
+  --kingdom-cream: #f7e7bd;
+  --kingdom-bark: #4e3423;
+  --kingdom-moss: #668f3a;
+}
+
+.kingdom-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 14px;
+}
+.kingdom-head h2 { margin-bottom: 3px; }
+.kingdom-head p { margin: 0; max-width: 620px; line-height: 1.55; }
+.kingdom-eyebrow {
+  margin-bottom: 3px;
+  color: #87643e;
+  font: 800 10px var(--read);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.kingdom-counts { display: flex; gap: 7px; flex-wrap: wrap; justify-content: flex-end; }
+.kingdom-counts span {
+  white-space: nowrap;
+  border: 2px solid #9a7446;
+  border-radius: 999px;
+  padding: 6px 9px;
+  background: #fff7df;
+  color: #59422c;
+  font: 700 11px var(--read);
+}
+
+.kingdom-frame {
+  position: relative;
+  border: 5px solid #523821;
+  border-radius: 15px;
+  padding: 5px;
+  background: linear-gradient(135deg, #ac824e, #6c492e);
+  box-shadow: 0 10px 30px #1a100a66, inset 0 0 0 2px #e8c780;
+}
+.kingdom-stage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  min-height: 290px;
+  overflow: hidden;
+  isolation: isolate;
+  border: 2px solid #34281b;
+  border-radius: 9px;
+  background-color: #69a83e;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  cursor: default;
+}
+
+.kingdom-town-map {
+  margin-bottom: 14px;
+  padding: 11px 13px 13px;
+  border-color: #745735;
+  background: linear-gradient(#f6e8c8, #ddc18d);
+}
+.kingdom-map-title {
+  display: flex;
+  align-items: baseline;
+  gap: 11px;
+  margin-bottom: 9px;
+  color: #583d27;
+}
+.kingdom-map-title b { font: 700 14px var(--read); }
+.kingdom-map-title span { color: #7a6245; font-size: 11px; }
+.kingdom-map-nodes {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 8px;
+}
+.kingdom-map-nodes::before {
+  content: '';
+  position: absolute;
+  left: 5%;
+  right: 5%;
+  top: 50%;
+  height: 5px;
+  border: solid #987343;
+  border-width: 2px 0;
+  background: #e8c876;
+  transform: translateY(-50%);
+}
+.kingdom-map-node {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+  padding: 7px 8px;
+  border: 2px solid #68452a;
+  border-radius: 9px;
+  background: #f8eccd;
+  color: #49331f;
+  box-shadow: 0 2px 0 #4d301e55;
+  font-family: var(--read);
+}
+.kingdom-map-node > span { font-size: 17px; }
+.kingdom-map-node b { min-width: 0; overflow: hidden; text-overflow: ellipsis; font-size: 11px; }
+.kingdom-map-node small {
+  display: grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #725033;
+  color: #fff1cf;
+  font: 800 9px var(--read);
+}
+.kingdom-map-node.current {
+  background: #ffe38a;
+  border-color: #8a581e;
+  outline: 2px solid #fff0a9;
+}
+
+.kingdom-location-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin: 0 3px 10px;
+}
+.kingdom-location-head > div { display: flex; align-items: center; gap: 10px; }
+.kingdom-location-icon { font-size: 28px; filter: drop-shadow(0 2px #23180d66); }
+.kingdom-location-head h3 { margin: 0; color: #6b4327; font-size: 13px; }
+.kingdom-location-head p { margin: 1px 0 0; color: #725b3e; font-size: 12px; }
+.kingdom-location-status {
+  flex: none;
+  display: flex !important;
+  align-items: flex-end !important;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 7px !important;
+}
+.kingdom-clock {
+  flex: none;
+  border: 2px solid #9c7847;
+  border-radius: 999px;
+  padding: 6px 10px;
+  background: #253e32;
+  color: #f5ddb0;
+  font: 700 10px var(--read);
+}
+.kingdom-atmosphere-controls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+.kingdom-local-time,
+.kingdom-weather-toggle,
+.kingdom-sound-toggle,
+.kingdom-music-toggle {
+  min-height: 30px;
+  border: 2px solid #725638;
+  border-radius: 999px;
+  padding: 5px 9px;
+  font: 700 10px var(--read);
+  white-space: nowrap;
+}
+.kingdom-local-time {
+  display: flex;
+  align-items: center;
+  background: #17243f;
+  color: #f5e8bd;
+  box-shadow: inset 0 0 11px #8ca6da22;
+}
+.kingdom-weather-toggle {
+  min-width: 92px;
+  background: #f8eccd;
+  color: #513a26;
+  text-align: center;
+}
+.kingdom-sound-toggle {
+  min-width: 96px;
+  background: #f8eccd;
+  color: #513a26;
+  text-align: center;
+}
+.kingdom-music-toggle {
+  min-width: 112px;
+  background: #f8eccd;
+  color: #513a26;
+  text-align: center;
+}
+.kingdom-weather-toggle[aria-pressed="true"],
+.kingdom-sound-toggle[aria-pressed="true"],
+.kingdom-music-toggle[aria-pressed="true"] {
+  border-color: #314b65;
+  background: #48677f;
+  color: #f2f7ff;
+}
+.kingdom-sound-toggle[aria-pressed="false"],
+.kingdom-music-toggle[aria-pressed="false"] {
+  border-color: #8b765d;
+  background: #d9ccb4;
+  color: #695a48;
+}
+.kingdom-stage::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 5000;
+  pointer-events: none;
+  box-shadow: inset 0 0 34px #14271999;
+}
+
+.kingdom-daylight,
+.kingdom-weather {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.kingdom-daylight {
+  z-index: 5200;
+  transition: background 1.2s ease, box-shadow 1.2s ease;
+}
+.kingdom-lanterns {
+  position: absolute;
+  inset: 0;
+  z-index: 5400;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1.8s ease;
+  mix-blend-mode: screen;
+}
+.kingdom-stage.phase-dawn .kingdom-lanterns { opacity: .2; }
+.kingdom-stage.phase-dusk .kingdom-lanterns { opacity: .58; }
+.kingdom-stage.phase-night .kingdom-lanterns { opacity: 1; }
+.kingdom-lanterns i {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--size);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle,
+    #fffbd8f2 0 3%,
+    #ffd86bbd 7%,
+    #ffac376e 19%,
+    #ff8a242d 38%,
+    transparent 70%);
+  filter: brightness(1);
+  animation: kingdom-lantern-breathe 3.7s ease-in-out var(--delay) infinite alternate;
+}
+@keyframes kingdom-lantern-breathe {
+  0%, 16% { opacity: .82; filter: brightness(.92); }
+  52% { opacity: 1; filter: brightness(1.12); }
+  68% { opacity: .9; filter: brightness(1); }
+  100% { opacity: .97; filter: brightness(1.08); }
+}
+.kingdom-stage.phase-day .kingdom-daylight { background: #fff6b307; }
+.kingdom-stage.phase-dawn .kingdom-daylight {
+  background: linear-gradient(#6650804d, #f5a35821 52%, #ffd9780d);
+  box-shadow: inset 0 0 70px #472a5d40;
+}
+.kingdom-stage.phase-dusk .kingdom-daylight {
+  background: linear-gradient(#322b665c, #dd714d35 55%, #1725414d);
+  box-shadow: inset 0 0 85px #18143d66;
+}
+.kingdom-stage.phase-night .kingdom-daylight {
+  background:
+    radial-gradient(circle at 82% 14%, #fffbd6 0 1px, transparent 2px),
+    radial-gradient(circle at 72% 9%, #fffbd6 0 1px, transparent 2px),
+    radial-gradient(circle at 62% 18%, #d8e5ff 0 1px, transparent 2px),
+    radial-gradient(circle at 40% 10%, #fffbd6 0 1px, transparent 2px),
+    radial-gradient(circle at 24% 17%, #d8e5ff 0 1px, transparent 2px),
+    linear-gradient(#07142fb8, #10254e94 58%, #09172ba3);
+  box-shadow: inset 0 0 110px #020817b8;
+}
+.kingdom-stage.phase-night .kingdom-mon img {
+  filter: brightness(.7) saturate(.78) drop-shadow(0 2px 1px #050914aa);
+}
+.kingdom-stage.phase-dusk .kingdom-mon img,
+.kingdom-stage.phase-dawn .kingdom-mon img {
+  filter: brightness(.88) saturate(.9) drop-shadow(0 2px 1px #17211277);
+}
+
+.kingdom-weather {
+  z-index: 5600;
+  display: none;
+  overflow: hidden;
+  background: linear-gradient(#243b562c, #4f66750f);
+  box-shadow: inset 0 0 80px #0d1f3336;
+}
+.kingdom-stage.weather-rain .kingdom-weather { display: block; }
+.kingdom-weather::before,
+.kingdom-weather::after {
+  content: '';
+  position: absolute;
+  left: -20%;
+  top: -100%;
+  width: 140%;
+  height: 220%;
+  opacity: .32;
+  background-image: repeating-linear-gradient(105deg, transparent 0 32px, #d8eeff91 33px 34px, transparent 35px 55px);
+  background-size: 68px 68px;
+  animation: kingdom-rain 1.28s linear infinite;
+}
+.kingdom-weather::after {
+  opacity: .14;
+  background-size: 101px 101px;
+  animation-duration: 1.94s;
+  animation-delay: -.82s;
+}
+.kingdom-rain-mist {
+  display: block;
+  position: absolute;
+  left: -14%;
+  right: -14%;
+  bottom: -16%;
+  height: 46%;
+  border-radius: 50%;
+  opacity: .22;
+  background:
+    radial-gradient(ellipse at 25% 55%, #d7ecf099 0, transparent 38%),
+    radial-gradient(ellipse at 72% 45%, #b9d5dc8c 0, transparent 42%);
+  filter: blur(14px);
+  animation: kingdom-rain-mist 13s ease-in-out infinite alternate;
+}
+.kingdom-rain-splashes {
+  position: absolute;
+  inset: 0;
+}
+.kingdom-rain-splashes i {
+  position: absolute;
+  left: var(--sx);
+  top: var(--sy);
+  width: calc(14px * var(--sscale));
+  height: calc(5px * var(--sscale));
+  border: 1px solid #d9f5ffb8;
+  border-radius: 50%;
+  opacity: 0;
+  box-shadow: 0 0 4px #b7e8ff70;
+  transform: translate(-50%, -50%) scale(.2);
+  animation: kingdom-rain-splash var(--sdur) ease-out var(--sdelay) infinite;
+}
+.kingdom-rain-splashes i::before,
+.kingdom-rain-splashes i::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 50%;
+  width: 1px;
+  height: calc(7px * var(--sscale));
+  background: linear-gradient(transparent, #e5f8ffc7);
+  transform-origin: 50% 100%;
+}
+.kingdom-rain-splashes i::before { transform: rotate(-28deg); }
+.kingdom-rain-splashes i::after { transform: rotate(28deg); }
+@keyframes kingdom-rain {
+  to { transform: translate3d(-7%, 62%, 0); }
+}
+@keyframes kingdom-rain-mist {
+  from { transform: translate3d(-3%, 0, 0) scale(1); opacity: .16; }
+  to { transform: translate3d(4%, -3%, 0) scale(1.08); opacity: .27; }
+}
+@keyframes kingdom-rain-splash {
+  0%, 72% { opacity: 0; transform: translate(-50%, -50%) scale(.2); }
+  76% { opacity: .62; transform: translate(-50%, -50%) scale(.45); }
+  88% { opacity: .36; transform: translate(-50%, -50%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(1.42); }
+}
+
+.kingdom-empty {
+  position: absolute;
+  left: 50%;
+  top: 58%;
+  transform: translate(-50%, -50%);
+  width: min(440px, calc(100% - 34px));
+  padding: 17px;
+  text-align: center;
+  border: 3px solid #64482e;
+  border-radius: 10px;
+  background: #fff0cde8;
+  color: #493420;
+  font-weight: 650;
+  box-shadow: 0 5px 0 #25180d55;
+}
+.kingdom-overflow {
+  position: absolute;
+  right: 12px;
+  bottom: 10px;
+  z-index: 4900;
+  border: 2px solid #543a25;
+  border-radius: 999px;
+  padding: 5px 9px;
+  background: #fff2cfe3;
+  color: #513a26;
+  font: 700 10px var(--read);
+}
+
+.kingdom-mon {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: clamp(44px, 8.2%, 76px);
+  aspect-ratio: 1;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  box-shadow: none;
+  transform-origin: 50% 90%;
+  will-change: transform;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.kingdom-mon:hover,
+.kingdom-mon:focus-visible {
+  background: #fff1a733;
+  outline: 3px solid #fff0a7;
+  outline-offset: 1px;
+  filter: drop-shadow(0 0 5px #fff3a8);
+}
+.kingdom-mon:active { transform: none; box-shadow: none; }
+.kingdom-mon::after {
+  content: '';
+  position: absolute;
+  left: 16%;
+  right: 16%;
+  bottom: 4%;
+  height: 16%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, #18331788 0%, transparent 72%);
+  z-index: -1;
+}
+.kingdom-mon img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 2px 1px #17211277);
+  transform: scaleX(var(--face, 1));
+  transition: transform .12s linear;
+  pointer-events: none;
+}
+.kingdom-mon.walking img { animation: kingdom-step .42s steps(2, end) infinite; }
+.kingdom-mon.greeting img { animation: kingdom-greet .42s ease-in-out 2; }
+.kingdom-party-mark {
+  position: absolute;
+  right: -1px;
+  top: -2px;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 19px;
+  height: 19px;
+  border: 2px solid #68431e;
+  border-radius: 50%;
+  background: #f3cc55;
+  color: #533513;
+  font: 11px/1 Georgia, serif;
+  box-shadow: 0 2px 0 #3d291955;
+}
+.kingdom-emote {
+  position: absolute;
+  left: 50%;
+  top: -12px;
+  z-index: 4;
+  transform: translateX(-50%);
+  min-width: 24px;
+  padding: 2px 5px;
+  border: 2px solid #513a26;
+  border-radius: 9px;
+  background: #fff9e8;
+  color: #7d3f37;
+  font: 700 14px/1.2 var(--read);
+  box-shadow: 0 2px 0 #37231666;
+  animation: kingdom-pop .2s ease-out;
+}
+
+@keyframes kingdom-step {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -3px; }
+}
+@keyframes kingdom-greet {
+  0%, 100% { translate: 0 0; rotate: 0deg; }
+  45% { translate: 0 -7px; rotate: -4deg; }
+  70% { rotate: 4deg; }
+}
+@keyframes kingdom-pop {
+  from { opacity: 0; transform: translate(-50%, 6px) scale(.7); }
+}
+
+.kingdom-bar {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  top: 12px;
+  z-index: 6000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  pointer-events: none;
+}
+.kingdom-glade,
+.kingdom-story {
+  border: 2px solid #543a25;
+  border-radius: 999px;
+  background: #fff2cfe8;
+  color: #513a26;
+  padding: 6px 10px;
+  box-shadow: 0 3px 0 #27170d55;
+  font: 700 11px/1.35 var(--read);
+  backdrop-filter: blur(2px);
+}
+.kingdom-story {
+  max-width: 55%;
+  margin-left: auto;
+  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kingdom-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 9px;
+  margin-top: 13px;
+}
+.kingdom-paths {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 12px 0 0;
+}
+.kingdom-paths b { color: #6b5033; font-size: 11px; }
+.kingdom-paths button { padding: 7px 10px; font-size: 9px; text-align: center; }
+.kingdom-controls button { min-width: 112px; text-align: center; }
+.kingdom-controls span { color: #654d34; font-size: 12px; }
+
+.kingdom-inspector {
+  min-height: 96px;
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: 86px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  border-color: #745735;
+  background:
+    radial-gradient(circle at 15% 20%, #fff9e9, transparent 32%),
+    linear-gradient(135deg, #f5e7c8, #dfc699);
+}
+.kingdom-inspector > img { width: 82px; height: 82px; object-fit: contain; }
+.kingdom-inspector h3 { font-size: 15px; margin-bottom: 5px; }
+.kingdom-inspector p { margin: 4px 0 0; line-height: 1.45; }
+.kingdom-inspector .kingdom-close { align-self: start; min-width: 40px; text-align: center; padding: 7px; }
+.kingdom-welcome { color: #6d573c; font-style: italic; }
+.kingdom-welcome-mark { font-size: 42px; text-align: center; }
+
+@media (max-width: 760px) {
+  #nav { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+  .kingdom-head { display: block; }
+  .kingdom-counts { justify-content: flex-start; margin-top: 10px; }
+  .kingdom-map-title { display: block; }
+  .kingdom-map-title span { display: block; margin-top: 2px; }
+  .kingdom-map-nodes { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .kingdom-map-nodes::before { display: none; }
+  .kingdom-map-node { grid-template-columns: auto minmax(0, 1fr); padding: 6px; }
+  .kingdom-map-node small { grid-column: 2; grid-row: 2; width: fit-content; height: auto; padding: 1px 5px; border-radius: 999px; }
+  .kingdom-location-head { align-items: flex-start; flex-direction: column; gap: 8px; }
+  .kingdom-location-head > div:first-child { width: 100%; }
+  .kingdom-location-head p { font-size: 11px; }
+  .kingdom-location-status {
+    width: 100%;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 5px !important;
+  }
+  .kingdom-atmosphere-controls { gap: 5px; }
+  .kingdom-clock { white-space: normal; max-width: 173px; text-align: center; }
+  .kingdom-local-time, .kingdom-weather-toggle, .kingdom-sound-toggle, .kingdom-music-toggle {
+    padding: 4px 7px;
+    font-size: 8px;
+    min-height: 27px;
+  }
+  .kingdom-weather-toggle { min-width: 77px; }
+  .kingdom-sound-toggle { min-width: 80px; }
+  .kingdom-music-toggle { min-width: 104px; }
+  .kingdom-stage { min-height: 330px; aspect-ratio: 4 / 5; background-size: auto 100%; }
+  .kingdom-lanterns i { left: var(--mx); width: var(--msize); }
+  .kingdom-rain-splashes i { left: var(--smx); }
+  .kingdom-mon { width: clamp(40px, 13%, 62px); }
+  .kingdom-bar { top: 8px; left: 8px; right: 8px; align-items: flex-start; }
+  .kingdom-story { max-width: 58%; font-size: 9px; white-space: normal; }
+  .kingdom-glade { font-size: 9px; }
+  .kingdom-inspector { grid-template-columns: 70px minmax(0, 1fr) auto; gap: 10px; padding: 12px; }
+  .kingdom-inspector > img { width: 68px; height: 68px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kingdom-mon,
+  .kingdom-mon img,
+  .kingdom-daylight,
+  .kingdom-lanterns,
+  .kingdom-lanterns i,
+  .kingdom-weather::before,
+  .kingdom-weather::after,
+  .kingdom-rain-mist,
+  .kingdom-rain-splashes i { animation: none !important; transition: none !important; }
+}

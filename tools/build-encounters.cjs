@@ -14,6 +14,7 @@
 const fs = require('fs');
 global.window = {};
 require('../js/data/pokedex.js');
+require('../js/data/fakemon.js');
 require('../js/data/world.js');
 require('../js/data/calc/calc-world.js');
 const { DEX, CHAPTERS, CALC_CHAPTERS } = global.window;
@@ -54,18 +55,18 @@ function buildRegion(chapters, label, seedBase) {
     const wantEvolved = p;               // 0 = all basics, 1 = mostly evolved
 
     let pool = DEX.filter(d =>
-      !d.legendary &&
+      !d.legendary && !d.custom &&
       d.types.some(t => c.teamTypes.indexOf(t) >= 0) &&
       d.bst >= lo && d.bst <= hi);
 
     // Widen if a type is thin at this band rather than shipping a short route.
     if (pool.length < PER_ROUTE * 2) {
-      pool = DEX.filter(d => !d.legendary &&
+      pool = DEX.filter(d => !d.legendary && !d.custom &&
         d.types.some(t => c.teamTypes.indexOf(t) >= 0) &&
         d.bst >= lo - 90 && d.bst <= hi + 90);
     }
     if (pool.length < PER_ROUTE) {
-      pool = DEX.filter(d => !d.legendary && d.bst >= lo - 60 && d.bst <= hi + 60);
+      pool = DEX.filter(d => !d.legendary && !d.custom && d.bst >= lo - 60 && d.bst <= hi + 60);
     }
 
     const score = d => {
@@ -97,6 +98,17 @@ function buildRegion(chapters, label, seedBase) {
 
 const c = buildRegion(CHAPTERS, 'C region', 1000);
 const k = buildRegion(CALC_CHAPTERS, 'Converging Isles', 5000);
+
+/* Hand-placed original species. Keep them out of the general generator above
+   so their homes stay intentional when the table is rebuilt. */
+function addFixedEncounter(region, route, entry) {
+  const table = region[route] || (region[route] = []);
+  if (table.some(row => row[0] === entry[0])) return;
+  const firstRare = table.findIndex(row => row[1] === 'rare');
+  table.splice(firstRare < 0 ? table.length : firstRare, 0, entry);
+}
+addFixedEncounter(k, 3, [1026, 'uncommon']);
+addFixedEncounter(k, 3, [1029, 'uncommon']);
 
 const every = new Set();
 [c, k].forEach(r => Object.values(r).forEach(t => t.forEach(x => every.add(x[0]))));

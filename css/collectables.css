@@ -1,0 +1,216 @@
+/* The chest, the aquarium and the terrarium. All of this renders inside
+   #modal .box, which the parchment skin already paints as aged paper. */
+
+.collect { text-align: left; }
+
+.collect-head { border-bottom: 2px solid #a78b6166; padding-bottom: 12px; margin-bottom: 18px; }
+.collect-eyebrow {
+  display: block;
+  font: 13px var(--read);
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: #8a6a44;
+  margin-bottom: 4px;
+}
+.collect h2 { margin: 0 0 4px; font-size: 32px; }
+.collect-sub { margin: 0 0 8px; color: #7b6043; font: italic 16px Georgia, serif; }
+.collect-line { margin: 0 0 6px; color: #55402c; font: 16px Georgia, serif; }
+.collect-where { margin: 0 0 12px; color: #7b6043; font: 14.5px var(--read); }
+.collect-note { margin: 14px 0 0; color: #7b6043; font: italic 15px Georgia, serif; }
+.collect-empty { color: #7b6043; font: italic 16px Georgia, serif; }
+.collect-pending {
+  margin: 0 0 14px;
+  padding: 9px 12px;
+  background: #f1e0bb;
+  border: 2px dashed #b8933f;
+  border-radius: 7px;
+  color: #6b4525;
+  font: 15px Georgia, serif;
+}
+
+.collect-meter, .cc-meter {
+  display: block;
+  height: 9px;
+  background: #e2cfa8;
+  border: 2px solid #a5814f;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.collect-meter i, .cc-meter i { display: block; height: 100%; background: #b8933f; }
+
+/* ---- category list ------------------------------------------------------- */
+.collect-cats { display: grid; gap: 11px; }
+.collect-cat {
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr);
+  gap: 13px;
+  align-items: center;
+  text-align: left;
+  padding: 13px 15px;
+  min-height: 0;
+}
+.collect-cat .cc-icon { font-size: 34px; line-height: 1; text-align: center; }
+.collect-cat .cc-body { display: grid; gap: 3px; min-width: 0; }
+.collect-cat b { font: 20px Georgia, serif; color: #4a2f20; }
+.collect-cat small { font: 14.5px Georgia, serif; color: #6b543a; line-height: 1.4; }
+.collect-cat .cc-count { font: 14px var(--read); color: #8a5a22; }
+.collect-cat .cc-where { font: 13px var(--read); color: #8a6a44; font-style: italic; }
+.collect-cat.done { border-color: #9a7a2e; box-shadow: inset 0 0 0 2px #ffe9b4, 0 3px 0 #6e482c77; }
+
+/* ---- the item grid ------------------------------------------------------- */
+.collect-block { margin: 0; }
+.collect-block h3 {
+  margin: 0 0 8px;
+  font: 22px var(--read);
+  color: #6b4525;
+  border-bottom: 1px solid #b59a6c66;
+  padding-bottom: 5px;
+}
+.collect-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
+  gap: 9px;
+  margin-top: 12px;
+}
+.collect-item {
+  position: relative;
+  display: grid;
+  gap: 3px;
+  justify-items: center;
+  text-align: center;
+  padding: 11px 7px 9px;
+  min-height: 0;
+}
+.collect-item .ci-token {
+  display: grid;
+  place-items: center;
+  width: 46px; height: 46px;
+  font-size: 27px;
+  line-height: 1;
+  border-radius: 50%;
+  background: #f0dfba;
+  box-shadow: inset 0 0 0 2px #c5a675;
+}
+.collect-item .ci-token img { width: 40px; height: 40px; object-fit: contain; }
+.collect-item b { font: 15px Georgia, serif; color: #4a2f20; line-height: 1.25; }
+.collect-item small { font: 12.5px var(--read); color: #7b6043; line-height: 1.35; }
+.collect-item .ci-n {
+  position: absolute; top: 5px; right: 7px;
+  font: 12px var(--read); color: #8a5a22;
+}
+/* A locked tile stays paper - it is a to-do list, not a broken tile - but goes
+   flatter and paler so a found one reads as the brighter thing on the shelf. */
+.collect-item.locked {
+  background: linear-gradient(#f4e8d0, #e6d6b6);
+  border-color: #a98f6b;
+  box-shadow: inset 0 0 0 2px #efe0c2, 0 2px 0 #6e482c44;
+}
+.collect-item.locked .ci-token { color: #b09572; background: #e7d6b2; }
+.collect-item.locked b { color: #9a8262; }
+.collect-item.locked small { color: #8a7355; font-style: italic; }
+
+/* Rarity reads off the token ring, so the grid stays one colour of paper. */
+.collect-item.cr-uncommon .ci-token, .cd-token.cr-uncommon { box-shadow: inset 0 0 0 3px #4f7d8c; }
+.collect-item.cr-rare .ci-token,     .cd-token.cr-rare     { box-shadow: inset 0 0 0 3px #8a5aa8; }
+.collect-item.cr-prize .ci-token,    .cd-token.cr-prize    { box-shadow: inset 0 0 0 3px #c08a2a, 0 0 9px #e3b45c88; }
+.collect-item.locked .ci-token { box-shadow: inset 0 0 0 2px #c5a675 !important; }
+
+.collect-jump { margin-top: 14px; }
+.collect-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+
+/* ---- one item ------------------------------------------------------------ */
+.collect-detail { text-align: center; }
+.collect-detail .collect-line, .collect-detail .collect-where { text-align: center; }
+.collect-detail .collect-actions { justify-content: center; }
+.cd-token {
+  display: grid; place-items: center;
+  width: 92px; height: 92px;
+  margin: 12px auto 6px;
+  font-size: 52px;
+  border-radius: 50%;
+  background: #f0dfba;
+  box-shadow: inset 0 0 0 3px #c5a675;
+}
+.cd-token img { width: 78px; height: 78px; object-fit: contain; }
+
+/* ---- the display cases ---------------------------------------------------
+   One component, two skins. The glass is a fixed-ratio box so residents can be
+   placed by percentage and the scene keeps its shape on a phone. */
+.case-glass {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  min-height: 190px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 5px solid #6f4a2c;
+  box-shadow: inset 0 0 0 3px #d2b37d, inset 0 8px 26px #00000022;
+}
+.case-tank .case-glass {
+  background:
+    linear-gradient(#bfe4ee, #7fbdd3 55%, #4f93ad),
+    #7fbdd3;
+}
+/* Gravel along the floor of the tank. */
+.case-tank .case-glass::after {
+  content: '';
+  position: absolute; left: 0; right: 0; bottom: 0; height: 14%;
+  background: repeating-linear-gradient(90deg, #a98d63 0 7px, #927a56 7px 14px);
+}
+.case-viv .case-glass {
+  background:
+    radial-gradient(ellipse at 50% 10%, #ffeec2aa, transparent 60%),
+    linear-gradient(#cfe0b4, #8fae74 60%, #5f7a4c);
+}
+.case-viv .case-glass::after {
+  content: '';
+  position: absolute; left: 0; right: 0; bottom: 0; height: 16%;
+  background: repeating-linear-gradient(90deg, #6d5638 0 9px, #5a462d 9px 18px);
+}
+
+.case-empty {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  margin: 0; padding: 0 24px;
+  text-align: center;
+  color: #2e4550;
+  font: italic 17px Georgia, serif;
+  text-shadow: 0 1px 0 #ffffff66;
+}
+.case-viv .case-empty { color: #2f4227; }
+
+.case-resident {
+  position: absolute;
+  display: grid; place-items: center;
+  width: 46px; height: 46px;
+  margin: -23px 0 0 -23px;
+  padding: 0;
+  min-height: 0;
+  font-size: 27px;
+  line-height: 1;
+  border: none;
+  border-radius: 50%;
+  background: #ffffff2e;
+  box-shadow: none;
+  filter: drop-shadow(0 2px 2px #00000033);
+  animation: case-drift 6s ease-in-out infinite;
+}
+.case-resident img { width: 42px; height: 42px; object-fit: contain; }
+.case-resident:hover:not(:disabled) { background: #ffffff55; box-shadow: none; filter: drop-shadow(0 2px 5px #00000055); }
+.case-resident:nth-child(even) { animation-duration: 8s; animation-delay: -2s; }
+.case-resident:nth-child(3n) { animation-duration: 7s; animation-delay: -4s; }
+
+@keyframes case-drift {
+  0%, 100% { transform: translate(0, 0); }
+  50%      { transform: translate(6px, -7px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .case-resident { animation: none; }
+}
+
+@media (max-width: 620px) {
+  .collect h2 { font-size: 26px; }
+  .collect-grid { grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); }
+  .collect-cat { grid-template-columns: 42px minmax(0, 1fr); gap: 10px; }
+  .collect-cat .cc-icon { font-size: 27px; }
+  .case-resident { width: 38px; height: 38px; margin: -19px 0 0 -19px; font-size: 22px; }
+}
