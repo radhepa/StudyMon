@@ -50,7 +50,7 @@ to be deleted: `js/engine/temp-calc-warp.js` says how, in three steps.
 
 Thirty Pokemon-themed C programming labs are available from **Side Quests** in the bottom navigation. Ten easy, ten medium, ten hard. Each has a saved source workspace, lab brief, chapter guide, hints and a one-time reward. You write the C in StudyMon, press Run to try it, and press Submit to have it graded. Submitting compiles your program with Clang inside the app and runs it against every test for that lab; the reward is granted only when all of them pass. Nothing leaves your machine and no other tools are needed. Reward berries can be used from the Party screen.
 
-See [the Side Quest handoff](HANDOFF-side-quests.md) and [lab catalog](output/Side%20Quest%20Curriculum.md).
+See [lab catalog](output/Side%20Quest%20Curriculum.md).
 
 ---
 
@@ -60,7 +60,7 @@ The Converging Isles now has **1,607 questions**, including **1,199 guided
 problems**. Every one of the 35 lessons has at least ten guided problems in its
 own gym or exam revision route. Guided problems reveal three progressively
 stronger hints and then a complete worked explanation, so the study loop does
-not depend on an external AI tutor.
+not depend on an outside tutor.
 
 All ten gyms and the exam-only revision routes now share the same tenfold rule:
 **85 explicit pencil-and-paper problem families each contain exactly 10
