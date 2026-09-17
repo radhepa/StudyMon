@@ -70,7 +70,7 @@ const fs = require('fs');
     const rows = KINGDOM_LOCATIONS.map(location => {
       const homeSafe = kingdomIsWalkable(location.nav.home[0], location.nav.home[1], location);
       const namedBorders = location.nav.blocks.length >= 7 &&
-        location.nav.blocks.every(block => block.name && (block.type === 'rect' || block.type === 'ellipse'));
+        location.nav.blocks.every(block => block.name && ['rect', 'ellipse', 'poly'].includes(block.type));
       let samplesSafe = true;
       let movementSafe = true;
       let movedSteps = 0;

@@ -17,21 +17,38 @@ var KINGDOM_LOCATIONS = [
     },
     walk: { x: 50, y: 63, rx: 35, ry: 21 },
     lanterns: [],
+    /* Feet positions. Grass, dirt, bushes, stepping stones and bridges are
+       ground; rocks, trunks, water and buildings are blocks. */
     nav: {
       home: [50, 60],
       areas: [
-        [[12, 34], [27, 25], [38, 27], [50, 34], [65, 27], [82, 27], [89, 43],
-          [87, 66], [77, 81], [61, 85], [37, 84], [18, 79], [10, 61]]
+        [[20, 13], [26, 13], [28, 20], [34, 20], [37, 23], [39, 29], [43, 33], [52, 33],
+          [58, 31], [61, 26], [63, 18], [66, 13], [69, 6], [71, 0], [78, 0], [80, 6],
+          [79, 32], [89, 33], [92, 38], [92, 51], [100, 52], [100, 59], [96, 62],
+          [93, 70], [88, 78], [84, 86], [81, 94], [80, 100], [69, 100], [63, 94],
+          [34, 94], [28, 88], [24, 80], [20, 72], [16, 65], [11, 60], [6, 58], [5, 50],
+          [6, 40], [0, 39], [0, 32], [8, 32], [15, 30], [19, 25]]
       ],
       blocks: [
-        { type: 'rect', name: 'waterfall pond', x1: 38, y1: 0, x2: 61, y2: 34 },
-        { type: 'rect', name: 'stream', x1: 0, y1: 61, x2: 25, y2: 100 },
-        { type: 'rect', name: 'rest shelter', x1: 78, y1: 9, x2: 93, y2: 31 },
-        { type: 'ellipse', name: 'west rocks', x: 17, y: 43, rx: 10, ry: 9 },
-        { type: 'ellipse', name: 'east rocks', x: 81, y: 44, rx: 10, ry: 8 },
-        { type: 'ellipse', name: 'southwest rock', x: 25, y: 69, rx: 5, ry: 6 },
-        { type: 'ellipse', name: 'south rock', x: 61, y: 71, rx: 5, ry: 5 },
-        { type: 'ellipse', name: 'southeast rock', x: 77, y: 63, rx: 6, ry: 5 }
+        { type: 'rect', name: 'rest shelter', x1: 79, y1: 9, x2: 93, y2: 30 },
+        { type: 'ellipse', name: 'west boulder', x: 10.5, y: 44, rx: 6, ry: 7 },
+        { type: 'ellipse', name: 'path rock', x: 29.5, y: 30.5, rx: 2.4, ry: 2.8 },
+        { type: 'ellipse', name: 'meadow rock', x: 25.8, y: 66.5, rx: 3, ry: 3.5 },
+        { type: 'ellipse', name: 'path pebble', x: 31.5, y: 80.8, rx: 1.8, ry: 1.8 },
+        { type: 'ellipse', name: 'south boulder', x: 46.5, y: 92, rx: 4.8, ry: 6 },
+        { type: 'ellipse', name: 'south rocks', x: 57.5, y: 93, rx: 3.8, ry: 5.5 },
+        { type: 'ellipse', name: 'meadow stone', x: 61.5, y: 69.5, rx: 2.6, ry: 2.6 },
+        { type: 'ellipse', name: 'path stone', x: 71.8, y: 81.5, rx: 1.8, ry: 2 },
+        { type: 'ellipse', name: 'southeast rocks', x: 83.5, y: 93, rx: 4.5, ry: 6 },
+        { type: 'ellipse', name: 'east pebbles', x: 81.5, y: 61, rx: 2.3, ry: 1.8 },
+        { type: 'ellipse', name: 'bush stone', x: 89, y: 60.5, rx: 2, ry: 1.6 },
+        { type: 'ellipse', name: 'path boulder', x: 76, y: 42, rx: 3, ry: 2.8 },
+        { type: 'ellipse', name: 'east path rock', x: 86.5, y: 42.5, rx: 2.8, ry: 2.3 },
+        { type: 'ellipse', name: 'east boulder', x: 97, y: 46, rx: 5, ry: 6 },
+        { type: 'poly', name: 'stream', points: [[0, 59], [10, 58], [14, 62], [17, 68],
+          [20, 74], [23, 80], [25, 86], [28, 88], [32, 94], [32, 100], [0, 100]] },
+        { type: 'poly', name: 'east tree', points: [[93, 66], [100, 62], [100, 100],
+          [88, 100], [86, 87], [92, 80]] }
       ]
     }
   },
@@ -55,19 +72,37 @@ var KINGDOM_LOCATIONS = [
     nav: {
       home: [50, 75],
       areas: [
-        [[7, 31], [25, 24], [39, 33], [61, 33], [76, 23], [94, 34], [93, 76],
-          [82, 87], [19, 87], [6, 77]]
+        [[0, 33], [12, 31], [14, 26], [24, 28], [33, 25], [40, 28], [56, 28], [60, 30],
+          [65, 27], [68, 21], [80, 22], [82, 32], [89, 33], [93, 37], [100, 37],
+          [100, 46], [92, 47], [80, 54], [74, 62], [72, 74], [76, 80], [84, 84],
+          [88, 91], [82, 95], [57, 95], [56, 100], [47, 100], [46, 95], [12, 94],
+          [12, 82], [9, 78], [8, 50], [3, 46], [0, 43]]
       ],
       blocks: [
-        { type: 'rect', name: 'west shops', x1: 0, y1: 0, x2: 34, y2: 30 },
-        { type: 'rect', name: 'east shops', x1: 69, y1: 0, x2: 100, y2: 30 },
-        { type: 'rect', name: 'lantern tree and noticeboard', x1: 40, y1: 0, x2: 61, y2: 37 },
-        { type: 'ellipse', name: 'fountain', x: 50, y: 50, rx: 10, ry: 13 },
-        { type: 'rect', name: 'west benches', x1: 27, y1: 26, x2: 40, y2: 43 },
-        { type: 'rect', name: 'east benches', x1: 61, y1: 26, x2: 74, y2: 43 },
-        { type: 'rect', name: 'southwest shop', x1: 0, y1: 51, x2: 23, y2: 80 },
-        { type: 'rect', name: 'southeast shop', x1: 78, y1: 51, x2: 100, y2: 83 },
-        { type: 'ellipse', name: 'fountain planters', x: 50, y: 55, rx: 20, ry: 12 }
+        { type: 'poly', name: 'west shop', points: [[13, 0], [38, 0], [38, 22], [33, 26],
+          [20, 27], [14, 25]] },
+        { type: 'poly', name: 'east shop', points: [[66, 0], [100, 0], [100, 30], [89, 30],
+          [88, 32], [82, 32], [81, 26], [78, 22], [70, 22], [66, 16]] },
+        { type: 'rect', name: 'lantern tree', x1: 40, y1: 0, x2: 62, y2: 28 },
+        { type: 'rect', name: 'noticeboard', x1: 57, y1: 13, x2: 66, y2: 30 },
+        { type: 'ellipse', name: 'mossy rock', x: 47.5, y: 31.5, rx: 3.5, ry: 3.5 },
+        { type: 'poly', name: 'west bench and lantern', points: [[31, 24], [40, 28], [42, 31],
+          [42, 38], [37, 42], [37, 46], [32, 46], [31, 36]] },
+        { type: 'poly', name: 'east bench and lantern', points: [[60, 29], [66, 24], [70, 24],
+          [72, 36], [73, 45], [69, 46], [66, 41], [60, 37]] },
+        { type: 'ellipse', name: 'fountain and planters', x: 50, y: 49.5, rx: 12.5, ry: 9.5 },
+        { type: 'rect', name: 'west fence', x1: 31, y1: 54, x2: 39, y2: 63 },
+        { type: 'rect', name: 'east fence', x1: 62, y1: 54, x2: 70, y2: 63 },
+        { type: 'rect', name: 'west planter', x1: 37.5, y1: 62, x2: 43.5, y2: 69 },
+        { type: 'rect', name: 'east planter', x1: 58.5, y1: 62, x2: 63.5, y2: 69 },
+        { type: 'poly', name: 'southwest shop', points: [[7, 52], [18, 45], [26, 52], [26, 72],
+          [24, 79], [13, 79], [8, 74]] },
+        { type: 'poly', name: 'cafe', points: [[74, 63], [80, 55], [92, 47], [100, 47],
+          [100, 100], [88, 100], [88, 90], [82, 82], [77, 79], [74, 74]] },
+        { type: 'ellipse', name: 'east rock', x: 92, y: 32.5, rx: 3.5, ry: 3.5 },
+        { type: 'ellipse', name: 'southwest rock', x: 34, y: 87, rx: 4.5, ry: 5 },
+        { type: 'ellipse', name: 'south rock', x: 67.5, y: 84, rx: 4, ry: 4.5 },
+        { type: 'ellipse', name: 'southeast rock', x: 74, y: 95, rx: 5, ry: 5 }
       ]
     }
   },
@@ -89,18 +124,40 @@ var KINGDOM_LOCATIONS = [
     nav: {
       home: [50, 68],
       areas: [
-        [[9, 42], [21, 29], [39, 30], [61, 29], [80, 28], [92, 44], [91, 75],
-          [77, 85], [22, 85], [8, 76]]
+        [[19, 4], [25, 4], [25, 28], [76, 28], [76, 0], [86, 0], [87, 15],
+          [88, 20], [95, 31], [100, 33], [100, 45], [96, 48], [92, 56], [90, 68],
+          [86, 71], [84, 76], [80, 84], [78, 92], [78, 100], [62, 100], [60, 94],
+          [30, 94], [20, 93], [8, 90], [8, 82], [5, 62], [8, 55], [5, 46], [0, 45],
+          [0, 34], [8, 33], [12, 30], [15, 25], [17, 20]]
+      ],
+      bridges: [
+        [[83, 72], [87, 70], [93, 74], [99, 79], [98, 86], [94, 87], [88, 82], [83, 77]]
       ],
       blocks: [
-        { type: 'rect', name: 'upper west stalls', x1: 12, y1: 0, x2: 38, y2: 30 },
-        { type: 'rect', name: 'upper middle stalls', x1: 40, y1: 0, x2: 62, y2: 28 },
-        { type: 'rect', name: 'upper east stalls', x1: 64, y1: 0, x2: 83, y2: 30 },
-        { type: 'ellipse', name: 'rock garden', x: 50, y: 31, rx: 11, ry: 10 },
-        { type: 'rect', name: 'west berry stall', x1: 12, y1: 29, x2: 34, y2: 52 },
-        { type: 'rect', name: 'east cafe', x1: 64, y1: 29, x2: 91, y2: 61 },
-        { type: 'rect', name: 'southwest shelter', x1: 0, y1: 57, x2: 24, y2: 84 },
-        { type: 'rect', name: 'southeast bridge', x1: 82, y1: 65, x2: 100, y2: 88 }
+        { type: 'rect', name: 'upper west stall', x1: 25, y1: 8, x2: 39, y2: 30 },
+        { type: 'rect', name: 'upper middle stalls', x1: 39, y1: 5, x2: 65, y2: 27 },
+        { type: 'poly', name: 'upper east stall', points: [[65, 10], [78.5, 10], [78.5, 24],
+          [80.5, 25], [80.5, 30], [65, 30]] },
+        { type: 'rect', name: 'path lantern', x1: 17.5, y1: 17, x2: 21, y2: 30 },
+        { type: 'ellipse', name: 'rock garden', x: 51, y: 31.5, rx: 7.5, ry: 5.5 },
+        { type: 'rect', name: 'lantern and signpost', x1: 87.5, y1: 20, x2: 96, y2: 34 },
+        { type: 'ellipse', name: 'east boulder', x: 98, y: 22, rx: 4, ry: 8 },
+        { type: 'rect', name: 'west berry stall', x1: 13.5, y1: 33, x2: 30, y2: 55 },
+        { type: 'ellipse', name: 'stall rock', x: 32.5, y: 44, rx: 1.8, ry: 2.5 },
+        { type: 'poly', name: 'cafe and tables', points: [[60, 36], [64, 31], [80, 30], [86, 33],
+          [88, 40], [88, 60], [83, 60], [78, 58], [70, 58], [66, 60], [60, 58]] },
+        { type: 'poly', name: 'southwest shelter', points: [[6, 64], [15, 58], [19, 59], [22, 70],
+          [22, 79], [18, 80], [6, 80]] },
+        { type: 'ellipse', name: 'southwest rocks', x: 15, y: 88, rx: 5, ry: 5 },
+        { type: 'ellipse', name: 'south rock', x: 23.5, y: 97, rx: 3.5, ry: 4 },
+        { type: 'ellipse', name: 'south boulder', x: 43.5, y: 91, rx: 4, ry: 5 },
+        { type: 'ellipse', name: 'south stone', x: 50, y: 98, rx: 3, ry: 3 },
+        { type: 'ellipse', name: 'bridge rock', x: 84.5, y: 80.5, rx: 2.5, ry: 2.5 },
+        { type: 'ellipse', name: 'pond rock', x: 82, y: 90, rx: 3.5, ry: 3.5 },
+        { type: 'poly', name: 'stream and bank rocks', points: [[100, 44], [95, 50], [93, 58],
+          [91, 66], [93, 73], [100, 76]] },
+        { type: 'poly', name: 'pond', points: [[80, 84], [86, 83], [92, 86], [96, 88],
+          [100, 88], [100, 100], [80, 100]] }
       ]
     }
   },
@@ -113,25 +170,41 @@ var KINGDOM_LOCATIONS = [
     gates: {
       market: [[36, 42], [28, 40], [20, 35], [12, 31], [5, 28], [-6, 26]],
       green: [[89, 52], [93, 44], [93, 34], [91, 24], [89, 14], [87, 6], [86, -4]],
-      hill: [[80, 76], [88, 72], [95, 68], [106, 66]]
+      hill: [[80, 78], [88, 78], [95, 78], [106, 78]]
     },
     walk: { x: 56, y: 66, rx: 32, ry: 18 },
     lanterns: [],
     nav: {
       home: [51, 69],
       areas: [
-        [[9, 39], [27, 31], [42, 36], [62, 35], [81, 34], [93, 48], [92, 76],
-          [79, 87], [20, 87], [7, 78]]
+        [[25, 40], [30, 39], [38, 39], [46, 38], [56, 38], [66, 40], [76, 42], [84, 42],
+          [86, 40], [85, 32], [84, 18], [86, 12], [90, 12], [93, 24], [94, 36], [100, 40],
+          [100, 50], [96, 50], [89, 58], [100, 72], [100, 80], [94, 80], [90, 88],
+          [88, 100], [80, 100], [78, 94], [60, 95], [30, 95], [26, 100], [15, 100],
+          [14, 92], [17, 86], [22, 82], [22, 74], [24, 68], [24, 60], [26, 52],
+          [27, 46]],
+        /* West landing past the footbridge. */
+        [[0, 23], [9, 22], [15, 26], [13, 30], [7, 32], [0, 32]]
+      ],
+      bridges: [
+        [[11, 27], [16, 27], [26, 35], [28, 40], [24, 43], [20, 42], [9, 35]],
+        [[75, 43], [80, 39], [85, 40], [86, 44], [82, 49], [76, 48]]
       ],
       blocks: [
-        { type: 'rect', name: 'riverbank', x1: 0, y1: 0, x2: 100, y2: 35 },
-        { type: 'rect', name: 'west footbridge', x1: 0, y1: 25, x2: 27, y2: 45 },
-        { type: 'rect', name: 'water wheel workshop', x1: 58, y1: 0, x2: 86, y2: 30 },
-        { type: 'rect', name: 'east dock', x1: 73, y1: 28, x2: 97, y2: 49 },
-        { type: 'ellipse', name: 'west rocks', x: 29, y: 46, rx: 8, ry: 7 },
-        { type: 'ellipse', name: 'north rocks', x: 70, y: 48, rx: 7, ry: 7 },
-        { type: 'ellipse', name: 'east rocks', x: 84, y: 62, rx: 7, ry: 8 },
-        { type: 'ellipse', name: 'southwest rocks', x: 15, y: 72, rx: 7, ry: 8 }
+        { type: 'rect', name: 'water wheel workshop', x1: 58, y1: 0, x2: 86.5, y2: 33 },
+        { type: 'ellipse', name: 'shore rock', x: 61, y: 40, rx: 3.5, ry: 3 },
+        { type: 'ellipse', name: 'shore boulder', x: 71.5, y: 40.5, rx: 4, ry: 4 },
+        { type: 'ellipse', name: 'dock stone', x: 77.5, y: 49.5, rx: 2, ry: 1.5 },
+        { type: 'rect', name: 'path fence', x1: 85.5, y1: 29, x2: 90, y2: 39 },
+        { type: 'poly', name: 'east fence and tree', points: [[92, 51], [97, 49], [100, 49],
+          [100, 72], [96, 72], [93, 66], [89, 64], [89, 59]] },
+        { type: 'ellipse', name: 'meadow rock', x: 74.5, y: 61, rx: 3.5, ry: 3.5 },
+        { type: 'ellipse', name: 'east rock', x: 86, y: 72.5, rx: 3, ry: 3 },
+        { type: 'ellipse', name: 'path pebble', x: 86, y: 84, rx: 2, ry: 1.5 },
+        { type: 'ellipse', name: 'south rock', x: 68, y: 87, rx: 3, ry: 3 },
+        { type: 'ellipse', name: 'south boulder', x: 51, y: 96, rx: 4.5, ry: 5 },
+        { type: 'ellipse', name: 'southwest rock', x: 25.5, y: 91.5, rx: 3, ry: 4 },
+        { type: 'rect', name: 'west fence', x1: 17.5, y1: 74, x2: 22.5, y2: 83 }
       ]
     }
   },
@@ -143,7 +216,7 @@ var KINGDOM_LOCATIONS = [
     map: { x: 84, y: 22 },
     gates: {
       square: [[30, 44], [22, 48], [14, 54], [7, 59], [-6, 61]],
-      hill: [[66, 62], [69, 72], [74, 82], [81, 88], [86, 95], [87, 108]]
+      hill: [[66, 62], [68, 72], [72, 82], [79, 88], [85, 95], [87, 108]]
     },
     walk: { x: 52, y: 62, rx: 34, ry: 19 },
     lanterns: [
@@ -152,18 +225,33 @@ var KINGDOM_LOCATIONS = [
     nav: {
       home: [48, 67],
       areas: [
-        [[9, 39], [23, 27], [42, 29], [52, 36], [72, 28], [91, 40], [93, 65],
-          [80, 84], [58, 86], [28, 85], [9, 75]]
+        [[10, 8], [36, 8], [44, 0], [51, 0], [50, 4], [82, 0], [84, 5], [91, 5], [92, 28],
+          [92, 40], [100, 44], [100, 78], [92, 88], [90, 100], [80, 100], [70, 95],
+          [40, 95], [30, 92], [26, 86], [22, 79], [18, 70], [16, 62], [16, 56],
+          [19, 50], [16, 42], [14, 37], [10, 30]],
+        /* West landing past the lane bridge. */
+        [[0, 53], [7, 53], [9, 57], [8, 65], [0, 66]]
+      ],
+      bridges: [
+        [[6, 55], [13, 48], [18, 50], [20, 54], [14, 60], [9, 62]]
       ],
       blocks: [
-        { type: 'rect', name: 'west cottage', x1: 7, y1: 2, x2: 35, y2: 33 },
-        { type: 'rect', name: 'north cottage', x1: 57, y1: 0, x2: 85, y2: 29 },
-        { type: 'ellipse', name: 'shared firepit', x: 62, y: 35, rx: 10, ry: 9 },
-        { type: 'rect', name: 'south cottage', x1: 72, y1: 49, x2: 100, y2: 85 },
-        { type: 'rect', name: 'river and rocky bank', x1: 0, y1: 35, x2: 26, y2: 100 },
-        { type: 'rect', name: 'lane bridge', x1: 0, y1: 38, x2: 23, y2: 69 },
-        { type: 'rect', name: 'east signpost', x1: 84, y1: 21, x2: 97, y2: 39 },
-        { type: 'ellipse', name: 'south boulders', x: 64, y: 85, rx: 9, ry: 8 }
+        { type: 'poly', name: 'west cottage', points: [[10, 8], [36, 8], [46, 12], [46, 24],
+          [42, 33], [37, 33], [31, 35], [14, 37], [10, 32]] },
+        { type: 'poly', name: 'north cottage', points: [[50, 4], [82, 0], [82, 22], [76, 24],
+          [62, 22], [62, 29], [51, 29]] },
+        { type: 'rect', name: 'signpost', x1: 75.5, y1: 16, x2: 84.5, y2: 33 },
+        { type: 'ellipse', name: 'shared firepit', x: 63, y: 31.5, rx: 5.5, ry: 4.5 },
+        { type: 'ellipse', name: 'west stump', x: 58.5, y: 32.5, rx: 2, ry: 2.5 },
+        { type: 'ellipse', name: 'north stump', x: 69, y: 29.5, rx: 2, ry: 2.5 },
+        { type: 'ellipse', name: 'east stump', x: 68, y: 35.5, rx: 1.8, ry: 2.3 },
+        { type: 'rect', name: 'lantern post', x1: 87.5, y1: 27, x2: 91.5, y2: 37 },
+        { type: 'poly', name: 'south cottage', points: [[71, 58], [76, 55], [80, 50], [92, 47],
+          [100, 44], [100, 85], [92, 88], [84, 88], [80, 85], [78, 82], [71, 82]] },
+        { type: 'poly', name: 'creek rocks', points: [[14, 60], [21, 58], [26, 65], [31, 71],
+          [34, 78], [38, 83], [43, 87], [47, 89], [47, 100], [14, 100]] },
+        { type: 'ellipse', name: 'meadow rock', x: 63.5, y: 84.5, rx: 3.5, ry: 3.5 },
+        { type: 'ellipse', name: 'south rock', x: 74, y: 94, rx: 3.5, ry: 4 }
       ]
     }
   },
@@ -185,20 +273,36 @@ var KINGDOM_LOCATIONS = [
     nav: {
       home: [51, 63],
       areas: [
-        [[8, 39], [27, 29], [43, 36], [61, 31], [83, 35], [94, 52], [88, 76],
-          [72, 85], [40, 86], [14, 79], [6, 57]]
+        /* Lower meadow and paths. */
+        [[0, 22], [8, 22], [12, 15], [14, 8], [19, 8], [19, 36], [22, 42], [24, 44],
+          [40, 45], [46, 43], [50, 47], [60, 48], [66, 50], [72, 47], [88, 47],
+          [92, 50], [100, 50], [100, 58], [97, 60], [94, 70], [92, 78], [88, 84],
+          [86, 92], [52, 93], [52, 100], [44, 100], [44, 93], [34, 92], [30, 94],
+          [18, 88], [14, 80], [10, 68], [8, 48], [5, 40], [0, 36]],
+        /* Bell terrace above the rock wall, reached only by the two stairways. */
+        [[42, 14], [45, 12], [50, 13], [56, 12], [68, 6], [73, 10], [82, 20], [86, 26], [84, 32],
+          [80, 33], [73, 31], [60, 31], [46, 30], [41, 29], [40, 20]],
+        [[40, 28], [46, 28], [46, 44], [40, 44]],
+        [[72, 29], [79, 29], [81, 48], [75, 48], [72, 40]]
       ],
       blocks: [
-        { type: 'rect', name: 'upper pond', x1: 20, y1: 0, x2: 45, y2: 35 },
-        { type: 'rect', name: 'bell pavilion', x1: 54, y1: 0, x2: 75, y2: 26 },
-        { type: 'rect', name: 'raised garden terrace', x1: 20, y1: 0, x2: 92, y2: 43 },
-        { type: 'rect', name: 'west terrace stairs', x1: 38, y1: 25, x2: 55, y2: 44 },
-        { type: 'rect', name: 'east terrace stairs', x1: 69, y1: 24, x2: 87, y2: 46 },
-        { type: 'rect', name: 'west lantern rocks', x1: 17, y1: 62, x2: 33, y2: 81 },
-        { type: 'rect', name: 'east lantern rocks', x1: 82, y1: 34, x2: 97, y2: 54 },
-        { type: 'ellipse', name: 'southwest rocks', x: 20, y: 86, rx: 10, ry: 10 },
-        { type: 'ellipse', name: 'south rocks', x: 58, y: 86, rx: 8, ry: 8 },
-        { type: 'ellipse', name: 'southeast rocks', x: 83, y: 81, rx: 9, ry: 9 }
+        { type: 'poly', name: 'pond and waterfall', points: [[19, 12], [24, 0], [40, 0],
+          [40, 40], [34, 42], [27, 43], [22, 41], [19, 36]] },
+        { type: 'rect', name: 'pond lantern', x1: 19.5, y1: 2, x2: 24, y2: 21 },
+        { type: 'rect', name: 'bell pavilion', x1: 56, y1: 0, x2: 71, y2: 23 },
+        { type: 'ellipse', name: 'west flowerbed', x: 53.5, y: 20, rx: 5, ry: 7 },
+        { type: 'ellipse', name: 'east flowerbed', x: 69.5, y: 24.5, rx: 6.5, ry: 6 },
+        { type: 'rect', name: 'terrace fence', x1: 72.5, y1: 11, x2: 81, y2: 23.5 },
+        { type: 'rect', name: 'terrace lantern', x1: 45.5, y1: 4, x2: 49, y2: 23 },
+        { type: 'rect', name: 'east lantern', x1: 86, y1: 38, x2: 90, y2: 50 },
+        { type: 'ellipse', name: 'east boulder', x: 97, y: 46, rx: 4, ry: 6 },
+        { type: 'ellipse', name: 'meadow rocks', x: 84, y: 61, rx: 4.5, ry: 4.5 },
+        { type: 'rect', name: 'west lantern', x1: 21.5, y1: 64, x2: 26, y2: 82 },
+        { type: 'ellipse', name: 'southwest rock', x: 21, y: 82, rx: 3.5, ry: 5 },
+        { type: 'ellipse', name: 'south rock', x: 27, y: 90, rx: 3.5, ry: 5 },
+        { type: 'ellipse', name: 'south boulder', x: 43.5, y: 92, rx: 4, ry: 4.5 },
+        { type: 'ellipse', name: 'south rocks', x: 58.5, y: 93, rx: 4, ry: 5 },
+        { type: 'ellipse', name: 'southeast rocks', x: 83, y: 95, rx: 4, ry: 5 }
       ]
     }
   }
@@ -339,6 +443,7 @@ function kingdomInsideBlock(x, y, block) {
   if (block.type === 'rect') {
     return x >= block.x1 && x <= block.x2 && y >= block.y1 && y <= block.y2;
   }
+  if (block.type === 'poly') return kingdomPointInPolygon(x, y, block.points);
   if (block.type === 'ellipse') {
     var dx = (x - block.x) / block.rx;
     var dy = (y - block.y) / block.ry;
@@ -349,6 +454,11 @@ function kingdomInsideBlock(x, y, block) {
 
 function kingdomIsWalkable(x, y, location) {
   if (!location || !location.nav) return false;
+  /* Bridge decks cross water and bank rocks, so they win over blocks. */
+  var onBridge = (location.nav.bridges || []).some(function (polygon) {
+    return kingdomPointInPolygon(x, y, polygon);
+  });
+  if (onBridge) return true;
   var inArea = location.nav.areas.some(function (polygon) {
     return kingdomPointInPolygon(x, y, polygon);
   });
@@ -360,15 +470,25 @@ function kingdomIsWalkable(x, y, location) {
 
 function kingdomPoint(rand, location) {
   var areas = location.nav.areas;
-  for (var attempt = 0; attempt < 120; attempt++) {
-    var polygon = areas[Math.floor(rand() * areas.length)];
-    var minX = 100, maxX = 0, minY = 100, maxY = 0;
+  /* Pick by bounding-box size, so small pieces like stairways get few visitors. */
+  var boxes = areas.map(function (polygon) {
+    var box = { minX: 100, maxX: 0, minY: 100, maxY: 0 };
     polygon.forEach(function (point) {
-      minX = Math.min(minX, point[0]); maxX = Math.max(maxX, point[0]);
-      minY = Math.min(minY, point[1]); maxY = Math.max(maxY, point[1]);
+      box.minX = Math.min(box.minX, point[0]); box.maxX = Math.max(box.maxX, point[0]);
+      box.minY = Math.min(box.minY, point[1]); box.maxY = Math.max(box.maxY, point[1]);
     });
-    var x = minX + rand() * (maxX - minX);
-    var y = minY + rand() * (maxY - minY);
+    box.size = (box.maxX - box.minX) * (box.maxY - box.minY);
+    return box;
+  });
+  var total = boxes.reduce(function (sum, box) { return sum + box.size; }, 0);
+  for (var attempt = 0; attempt < 120; attempt++) {
+    var pick = rand() * total, box = boxes[0];
+    for (var i = 0; i < boxes.length; i++) {
+      box = boxes[i];
+      if ((pick -= box.size) < 0) break;
+    }
+    var x = box.minX + rand() * (box.maxX - box.minX);
+    var y = box.minY + rand() * (box.maxY - box.minY);
     if (kingdomIsWalkable(x, y, location)) return { x: x, y: y };
   }
   return { x: location.nav.home[0], y: location.nav.home[1] };
