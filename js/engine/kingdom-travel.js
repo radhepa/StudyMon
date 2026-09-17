@@ -224,7 +224,10 @@ function kingdomTownRoute(from, to, rand) {
   return path;
 }
 
-function kingdomPlanTrip(key, from, to, start, rand) {
+/* `startPoint` is where the Pokemon is standing when it sets off; the leave
+   leg is walked from there (instead of the district's home spot), so the
+   schedule matches what the player saw. */
+function kingdomPlanTrip(key, from, to, start, rand, startPoint) {
   if (!to) {
     var others = KINGDOM_LOCATIONS.filter(function (loc) { return loc.id !== from; });
     to = others[Math.floor(rand() * others.length)].id;
@@ -241,8 +244,11 @@ function kingdomPlanTrip(key, from, to, start, rand) {
   for (var i = 0; i < path.length; i++) {
     var here = path[i], prev = path[i - 1] || null, next = path[i + 1] || null;
     var kind = !prev ? 'leave' : next ? 'cross' : 'arrive';
-    push({ kind: kind, loc: here, from: prev, to: next },
-      kingdomLineLength(kingdomSceneRoute(here, prev, next)));
+    var leg = { kind: kind, loc: here, from: prev, to: next };
+    if (kind === 'leave' && startPoint) {
+      leg.at = [Math.round(startPoint[0] * 100) / 100, Math.round(startPoint[1] * 100) / 100];
+    }
+    push(leg, kingdomLineLength(kingdomSceneRoute(here, prev, next, leg.at)));
     if (next) {
       var road = { kind: 'road', loc: null, from: here, to: next, start: t };
       road.end = t = t + Math.round(KINGDOM_ROAD_MS * (.8 + rand() * .6));
@@ -288,18 +294,27 @@ function kingdomTravelAdvance(key, st, now) {
     if (st.trip) st.loc = st.trip.to;
     st.trip = null;
     st.spot = null;
+    st.at = null;
     st.until = now + Math.round(kingdomStayMs(key, kingdomTravelRand(key, st.n++)) * .5);
     KINGDOM_TRAVEL_DIRTY = true;
   }
   for (var guard = 0; now >= st.until && guard < 4000; guard++) {
     var rand = kingdomTravelRand(key, st.n++);
     if (st.trip) {
+      /* Keep a spot noted after it walked in (see kingdomRememberSpots). */
+      if (!(st.at && st.at.t >= st.trip.end)) st.at = null;
       st.loc = st.trip.to;
       st.until = st.trip.end + kingdomStayMs(key, rand);
       st.trip = null;
     } else {
-      st.trip = kingdomPlanTrip(key, st.loc, null, st.until, rand);
+      /* Leave from where it was last seen standing. If it is on screen right
+         now, it sets off now, so it never jumps ahead along its path. */
+      var at = st.at;
+      var live = !!at && Math.abs(now - at.t) < 3000;
+      st.trip = kingdomPlanTrip(key, st.loc, null, live ? Math.max(st.until, now) : st.until, rand,
+        at ? [at.x, at.y] : null);
       st.until = st.trip.end;
+      st.at = null;
     }
     st.spot = null;
     KINGDOM_TRAVEL_DIRTY = true;
@@ -346,6 +361,7 @@ function kingdomTravelSettle(entry, locationId, spot) {
   st.loc = locationId;
   st.trip = null;
   st.spot = spot ? { x: Math.round(spot.x * 100) / 100, y: Math.round(spot.y * 100) / 100 } : null;
+  st.at = null;
   st.until = now + kingdomStayMs(key, kingdomTravelRand(key, st.n++));
   store.mons[key] = st;
   KINGDOM_TRAVEL_DIRTY = true;
@@ -354,14 +370,16 @@ function kingdomTravelSettle(entry, locationId, spot) {
 }
 
 /* "Move to": the Pokemon walks there along the paths instead of vanishing. */
-function kingdomTravelSend(entry, locationId) {
+function kingdomTravelSend(entry, locationId, startPoint) {
   var key = kingdomPlacementKey(entry);
   var now = Date.now();
   var st = kingdomTravelState(entry, now);
   if (st.trip || st.loc === locationId) return null;
-  st.trip = kingdomPlanTrip(key, st.loc, locationId, now, kingdomTravelRand(key, st.n++));
+  if (!startPoint && st.at) startPoint = [st.at.x, st.at.y];
+  st.trip = kingdomPlanTrip(key, st.loc, locationId, now, kingdomTravelRand(key, st.n++), startPoint);
   st.until = st.trip.end;
   st.spot = null;
+  st.at = null;
   KINGDOM_TRAVEL_DIRTY = true;
   kingdomTravelSave();
   return st;
@@ -445,22 +463,35 @@ function kingdomDrawMapWalkers(census, now) {
     var a = kingdomLocation(where.leg.from).map, b = kingdomLocation(where.leg.to).map;
     var p = Math.max(0, Math.min(1, (now + 1000 - where.leg.start) / Math.max(1, where.leg.end - where.leg.start)));
     var el = layer.querySelector('[data-walker="' + key + '"]');
+    /* Positions glide over 1s between updates. A walker only glides out of a
+       district button when it has just set off; one that is new to this
+       screen, or has not been updated for a while, is placed where it is. */
+    var snap = !el || now - Number(el.getAttribute('data-seen')) > 2500;
     if (!el) {
       el = document.createElement('img');
       el.setAttribute('data-walker', key);
       el.alt = '';
       el.draggable = false;
-      el.src = monSprite(entry.mon, entry.mon.shiny ? 'shiny' : 'front');
-      el.style.left = a.x + '%';
-      el.style.top = a.y + '%';
+      el.src = kingdomSprite(entry.mon);
       layer.appendChild(el);
-      void el.offsetWidth;
+      if (now - where.leg.start < 1500) {
+        el.style.left = (a.x + (b.x - a.x) * .14) + '%';
+        el.style.top = (a.y + (b.y - a.y) * .14) + '%';
+        void el.offsetWidth;
+        snap = false;
+      }
     }
+    el.setAttribute('data-seen', String(now));
     el.classList.toggle('face-left', b.x < a.x);
     /* Keep walkers on the visible stretch of road between the two buttons. */
+    if (snap) el.style.transition = 'none';
     p = .14 + p * .72;
     el.style.left = (a.x + (b.x - a.x) * p).toFixed(2) + '%';
     el.style.top = (a.y + (b.y - a.y) * p).toFixed(2) + '%';
+    if (snap) {
+      void el.offsetWidth;
+      el.style.transition = '';
+    }
     el.title = monName(entry.mon) + ' → ' + kingdomLocation(where.leg.to).name;
     seen[key] = true;
   });

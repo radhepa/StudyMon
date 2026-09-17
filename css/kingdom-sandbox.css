@@ -1,0 +1,125 @@
+/* Kingdom Sandbox layout: the Kingdom on the left, a Pokedex rail on the right. */
+
+#sandbox {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 22px;
+  max-width: 1560px;
+  margin: 0 auto;
+  padding: 20px 22px 40px;
+  align-items: start;
+}
+#sandbox-main { min-width: 0; }
+#s-kingdom { animation: none; }
+
+.sandbox-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
+  margin-bottom: 14px;
+  padding: 8px 14px;
+  border: 2px dashed #9b7146;
+  border-radius: 8px;
+  background: #f4e4c1;
+  color: #6b4525;
+  font: 14px var(--read);
+}
+.sandbox-banner b { font-size: 16px; color: #4a2f20; }
+
+#sandbox-dex {
+  position: sticky;
+  top: 20px;
+  height: calc(100vh - 40px);
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  gap: 12px;
+  overflow: hidden;
+}
+.sbx-head h2 { margin: 0 0 4px; font-size: 28px; }
+.sbx-head p { margin: 0; font-size: 13.5px; line-height: 1.45; color: #70583c; }
+
+.sbx-controls { display: grid; gap: 8px; }
+.sbx-controls input[type="search"],
+.sbx-controls select,
+.sbx-num input {
+  width: 100%;
+  min-width: 0;
+  padding: 8px 10px;
+  background: #fff4dc;
+  color: #4e3622;
+  border: 2px solid #98713f;
+  border-radius: 6px;
+  font: 14px var(--read);
+}
+.sbx-row { display: flex; gap: 8px; align-items: center; }
+.sbx-row select { flex: 1; }
+.sbx-num { display: flex; align-items: center; gap: 6px; font: 600 13px var(--read); color: #6b4525; }
+.sbx-num input { width: 70px; }
+.sbx-checks { flex-wrap: wrap; gap: 4px 14px; font: 13px var(--read); color: #55402c; }
+.sbx-checks label { display: flex; align-items: center; gap: 5px; cursor: pointer; }
+
+.sbx-list {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  margin: 0 -6px;
+  padding: 2px 6px;
+  border-top: 2px solid #b3936066;
+  border-bottom: 2px solid #b3936066;
+}
+.sbx-mon {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  column-gap: 8px;
+  align-items: center;
+  padding: 4px 6px;
+  border-radius: 7px;
+  user-select: none;
+  touch-action: pan-y;
+  cursor: url("../assets/ui/kingdom-hand-open.svg") 16 16, grab;
+}
+.sbx-mon:hover { background: #ecd9b0; }
+.sbx-mon:active { cursor: url("../assets/ui/kingdom-hand-grab.svg") 16 16, grabbing; }
+.sbx-mon img {
+  grid-row: 1 / 3;
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+  pointer-events: none;
+}
+.sbx-name { font: 600 14.5px var(--read); color: #40271b; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sbx-name small { margin-right: 6px; font-weight: 400; color: #8a6a44; }
+.sbx-types .tp { font-size: 9px; padding: 3px 6px; margin-right: 3px; color: #fff; }
+.sbx-none { color: #7b6043; font-style: italic; text-align: center; margin-top: 30px; }
+
+.sbx-release {
+  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  place-items: center;
+  padding: 30px;
+  text-align: center;
+  border: 4px dashed #ad5a50;
+  border-radius: 10px;
+  background: #f8edcfe6;
+  color: #8b3f2d;
+  font: 600 18px var(--read);
+  pointer-events: none;
+}
+html.kingdom-carrying #sandbox-dex .sbx-release { display: grid; opacity: .55; }
+html.kingdom-carrying #sandbox-dex.release-hover .sbx-release { opacity: 1; background: #f4d8caf0; }
+
+.sbx-foot { display: flex; align-items: center; gap: 8px; }
+.sbx-foot span { flex: 1; font: 600 13px var(--read); color: #6b4525; }
+.sbx-foot button { min-height: 36px; padding: 6px 10px; font-size: 13px; }
+
+.sbx-remove { margin-top: 10px; min-height: 36px; padding: 6px 12px; font-size: 13px; color: #8b3f2d; }
+
+@media (max-width: 900px) {
+  #sandbox { grid-template-columns: 1fr; padding: 14px 16px 30px; }
+  #sandbox-dex { position: relative; top: 0; height: 70vh; }
+}

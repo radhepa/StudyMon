@@ -149,6 +149,20 @@ const BASE = process.argv[2] || 'http://127.0.0.1:8793';
     return a && { x: a.x, y: a.y, opacity: a.el.style.opacity, story: document.getElementById('kingdom-story').textContent };
   });
   if (!leaving) throw new Error('Pikachu vanished instead of walking');
+
+  /* Switching districts mid-walk must not move anyone: the walker stays on its
+     path and the settled Pokemon keep the spots they wandered to. */
+  const kept = await page.evaluate(() => {
+    const snap = () => Object.fromEntries(KINGDOM_ACTORS.map(a => [a.key, [a.x, a.y]]));
+    const before = snap();
+    kingdomGo('square');
+    kingdomGo('green');
+    const after = snap();
+    const moved = Object.keys(before).filter(k => !after[k] ||
+      Math.hypot(after[k][0] - before[k][0], after[k][1] - before[k][1]) > 1.5);
+    return { moved, count: Object.keys(before).length };
+  });
+  if (kept.moved.length) throw new Error('Switching districts moved Pokemon: ' + JSON.stringify(kept));
   const leave = legEnd('leave');
   await page.waitForTimeout(Math.max(0, leave[2] - Date.now()) + 2500);
   const gone = await page.evaluate(() => ({
@@ -161,7 +175,29 @@ const BASE = process.argv[2] || 'http://127.0.0.1:8793';
 
   const cross = start.legs.find(l => l[0] === 'cross' || l[0] === 'arrive');
   const crossLoc = start.path[1];
-  await page.evaluate(id => kingdomGo(id), crossLoc);
+  /* Changing district keeps the town map: the walker on the road is the same
+     element, in the same place, not redrawn back at the district it left. */
+  const roadKept = await page.evaluate(async id => {
+    const wait = ms => new Promise(r => setTimeout(r, ms));
+    const el = document.querySelector('#kingdom-map-walkers img');
+    const xs = [];
+    for (let i = 0; i < 16; i++) {
+      if (i === 5) kingdomGo('square');
+      if (i === 10) kingdomGo(id);
+      const r = el.getBoundingClientRect();
+      xs.push([r.x, r.y]);
+      await wait(100);
+    }
+    const steps = xs.slice(1).map((p, i) => Math.hypot(p[0] - xs[i][0], p[1] - xs[i][1]));
+    const typical = steps.slice().sort((a, b) => a - b)[Math.floor(steps.length / 2)];
+    return {
+      same: el.isConnected && document.querySelector('#kingdom-map-walkers img') === el,
+      /* It must keep gliding at its usual pace: no pause and no jump. */
+      smooth: typical > .2 && steps.every(s => s > typical * .3 && s < typical * 3),
+      steps: steps.map(s => +s.toFixed(2))
+    };
+  }, crossLoc);
+  if (!roadKept.same || !roadKept.smooth) throw new Error('Road walker was disturbed by a district change: ' + JSON.stringify(roadKept));
   await page.waitForTimeout(Math.max(0, cross[1] - Date.now()) + (cross[2] - cross[1]) * .35);
   const crossing = await page.evaluate(() => {
     const a = KINGDOM_ACTORS.find(x => x.entry.mon.id === 25);

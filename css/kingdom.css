@@ -806,3 +806,7 @@ html.kingdom-carrying body { user-select: none; }
 @media (prefers-reduced-motion: reduce) {
   .kingdom-map-walkers img { animation: none; transition: none; }
 }
+
+/* Wrappers that let a district change swap the header and district view
+   while the town map stays untouched; they take no part in the layout. */
+.kingdom-box { display: contents; }

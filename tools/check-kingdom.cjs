@@ -187,7 +187,7 @@ const fs = require('fs');
         expectedLanterns: loc.lanterns.length,
         splashes: document.querySelectorAll('.kingdom-rain-splashes i').length,
         music: KINGDOM_MUSIC_AUDIO && KINGDOM_MUSIC_AUDIO.active && KINGDOM_MUSIC_AUDIO.active.id,
-        background: document.getElementById('kingdom-stage').style.backgroundImage,
+        background: document.getElementById('kingdom-stage').getAttribute('data-scene'),
         paths: document.querySelectorAll('.kingdom-paths button').length
       });
     }

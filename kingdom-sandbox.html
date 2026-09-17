@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kingdom Sandbox</title>
+<link rel="icon" type="image/png" href="assets/ui/studymon-icon.png">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/polish.css">
+<link rel="stylesheet" href="css/parchment.css">
+<link rel="stylesheet" href="css/ui.css">
+<link rel="stylesheet" href="css/kingdom.css">
+<link rel="stylesheet" href="css/kingdom-sandbox.css">
+</head>
+<body class="sandbox-body">
+
+<!-- Testing ground for the Pokemon Kingdom. It runs the real Kingdom code
+     (js/engine/kingdom*.js) against a throwaway roster, stored under its own
+     studymon.sandbox.* keys, so the game save is never read or written. -->
+<div id="sandbox">
+  <main id="sandbox-main">
+    <div class="sandbox-banner">
+      <b>Kingdom Sandbox</b>
+      <span>Testing only. Nothing here touches your save.</span>
+    </div>
+    <section id="s-kingdom" class="screen on"></section>
+  </main>
+
+  <aside id="sandbox-dex" class="panel" aria-label="Pokédex">
+    <div class="sbx-head">
+      <h2>Pokédex</h2>
+      <p>Drag a Pokémon into the Kingdom, or click one to drop it somewhere in this district.</p>
+    </div>
+    <div class="sbx-controls">
+      <input id="sbx-search" type="search" placeholder="Search name or #number" autocomplete="off" aria-label="Search the Pokédex">
+      <div class="sbx-row">
+        <select id="sbx-type" aria-label="Filter by type"><option value="">All types</option></select>
+        <label class="sbx-num">Lv <input id="sbx-level" type="number" min="1" max="100" value="20"></label>
+      </div>
+      <div class="sbx-row sbx-checks">
+        <label><input id="sbx-shiny" type="checkbox"> Shiny</label>
+        <label><input id="sbx-party" type="checkbox"> Party ★</label>
+        <label title="When on, residents wander off to other districts like in the game"><input id="sbx-travel" type="checkbox"> Let them travel</label>
+      </div>
+    </div>
+    <div id="sbx-list" class="sbx-list" role="list"></div>
+    <div class="sbx-release" aria-hidden="true">Let go here to remove it from the Kingdom</div>
+    <div class="sbx-foot">
+      <span id="sbx-count">0 in the Kingdom</span>
+      <button type="button" id="sbx-trips" title="Every resident sets off for another district now">Start trips</button>
+      <button type="button" id="sbx-clear">Clear all</button>
+    </div>
+  </aside>
+</div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script src="js/data/pokedex.js"></script>
+<script src="js/data/fakemon.js"></script>
+<script src="js/data/sprite-seat.js"></script>
+<script>var S = null;</script>
+<script src="js/engine/mons.js"></script>
+<script src="js/engine/ui.js"></script>
+<script src="js/engine/kingdom.js"></script>
+<script src="js/engine/kingdom-travel.js"></script>
+<script src="js/sandbox/kingdom-sandbox.js"></script>
+</body>
+</html>
