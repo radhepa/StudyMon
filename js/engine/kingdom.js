@@ -1,7 +1,6 @@
-/* Pokemon Kingdom: one connected town whose residents change district hourly.
-   This layer never mutates the save; Party + PC remain the source of truth.
-   Pokemon the player carries to a new spot are remembered separately, and only
-   until the next hourly parade (see KINGDOM_PLACEMENT_KEY). */
+/* Pokemon Kingdom: one connected town whose residents come and go on their own,
+   walking the paths between districts (see kingdom-travel.js). This layer never
+   mutates the save; Party + PC remain the source of truth. */
 
 var KINGDOM_LOCATIONS = [
   {
@@ -9,6 +8,13 @@ var KINGDOM_LOCATIONS = [
     image: 'assets/ui/kingdom-meadow.png',
     description: 'The wild meadow at the town gate, where forest paths meet the water.',
     neighbors: ['square', 'riverside'],
+    /* Town-map position, and each path out: the first point is open ground,
+       the last is past the picture's edge. */
+    map: { x: 45, y: 58 },
+    gates: {
+      square: [[66, 36], [70, 27], [73, 18], [76, 9], [78, -4]],
+      riverside: [[22, 57], [19, 49], [19, 42], [14, 37], [6, 36], [-6, 35]]
+    },
     walk: { x: 50, y: 63, rx: 35, ry: 21 },
     lanterns: [],
     nav: {
@@ -34,6 +40,12 @@ var KINGDOM_LOCATIONS = [
     image: 'assets/ui/kingdom-lantern-square.png',
     description: 'The warm town center, gathered around an old lantern tree and fountain.',
     neighbors: ['green', 'market', 'hearth'],
+    map: { x: 45, y: 20 },
+    gates: {
+      green: [[50, 80], [50, 90], [49, 97], [49, 108]],
+      market: [[14, 38], [8, 36], [2, 35], [-6, 35]],
+      hearth: [[86, 40], [94, 40], [100, 40], [106, 40]]
+    },
     walk: { x: 50, y: 70, rx: 33, ry: 15 },
     lanterns: [
       { x: 21.9, y: 19.1 }, { x: 40.5, y: 13.8 }, { x: 43.5, y: 18.9 },
@@ -64,6 +76,11 @@ var KINGDOM_LOCATIONS = [
     image: 'assets/ui/kingdom-berry-market.png',
     description: 'A cheerful ring of berry stalls, shaded tables, and little resting nooks.',
     neighbors: ['square', 'riverside'],
+    map: { x: 14, y: 22 },
+    gates: {
+      square: [[57, 40], [60, 33], [64, 29.5], [72, 29], [79, 28], [81, 20], [81, 9], [82, -4]],
+      riverside: [[62, 76], [68, 84], [71, 92], [72, 108]]
+    },
     walk: { x: 50, y: 61, rx: 32, ry: 19 },
     lanterns: [
       { x: 41.3, y: 10.2 }, { x: 59.0, y: 10.2 },
@@ -92,6 +109,12 @@ var KINGDOM_LOCATIONS = [
     image: 'assets/ui/kingdom-riverside-walk.png',
     description: 'The river promenade, footbridge, and moss-roof water-wheel workshop.',
     neighbors: ['green', 'market', 'hill'],
+    map: { x: 22, y: 80 },
+    gates: {
+      market: [[36, 42], [28, 40], [20, 35], [12, 31], [5, 28], [-6, 26]],
+      green: [[89, 52], [93, 44], [93, 34], [91, 24], [89, 14], [87, 6], [86, -4]],
+      hill: [[80, 76], [88, 72], [95, 68], [106, 66]]
+    },
     walk: { x: 56, y: 66, rx: 32, ry: 18 },
     lanterns: [],
     nav: {
@@ -117,6 +140,11 @@ var KINGDOM_LOCATIONS = [
     image: 'assets/ui/kingdom-hearthside-lane.png',
     description: 'The cottage lane, with garden fences, warm chimneys, and a shared firepit.',
     neighbors: ['square', 'hill'],
+    map: { x: 84, y: 22 },
+    gates: {
+      square: [[30, 44], [22, 48], [14, 54], [7, 59], [-6, 61]],
+      hill: [[66, 62], [69, 72], [74, 82], [81, 88], [86, 95], [87, 108]]
+    },
     walk: { x: 52, y: 62, rx: 34, ry: 19 },
     lanterns: [
       { x: 28.0, y: 22.8 }, { x: 90.8, y: 29.4 }, { x: 88.8, y: 77.0 }
@@ -144,6 +172,11 @@ var KINGDOM_LOCATIONS = [
     image: 'assets/ui/kingdom-moonbell-hill.png',
     description: 'A quiet garden terrace above town, watched over by the little bell pavilion.',
     neighbors: ['hearth', 'riverside'],
+    map: { x: 72, y: 80 },
+    gates: {
+      riverside: [[24, 55], [16, 48], [13, 40], [9, 33], [4, 28], [-6, 26]],
+      hearth: [[76, 52], [84, 51], [92, 54], [97, 56], [106, 57]]
+    },
     walk: { x: 52, y: 62, rx: 34, ry: 19 },
     lanterns: [
       { x: 23.6, y: 8.4 }, { x: 50.2, y: 9.7 },
@@ -227,13 +260,12 @@ var KINGDOM_MUSIC_TRACKS = {
 var KINGDOM_LOCATION = 'green';
 var KINGDOM_VISIBLE_LIMIT = 42;
 var KINGDOM_ACTORS = [];
-var KINGDOM_ASSIGNMENTS = null;
+var KINGDOM_CENSUS = null;
+var KINGDOM_SYNC_TIMER = 0;
 var KINGDOM_RAF = 0;
 var KINGDOM_CLOCK_TIMER = 0;
-var KINGDOM_HOUR_TIMER = 0;
 var KINGDOM_LAST = 0;
 var KINGDOM_SOCIAL_AT = 0;
-var KINGDOM_RENDERED_HOUR = null;
 var KINGDOM_TIME_ZONE = 'America/Indiana/Indianapolis';
 var KINGDOM_WEATHER = 'clear';
 var KINGDOM_RAIN_SOUND = true;
@@ -242,7 +274,6 @@ var KINGDOM_RAIN_AUDIO_TOKEN = 0;
 var KINGDOM_MUSIC_ON = true;
 var KINGDOM_MUSIC_AUDIO = null;
 var KINGDOM_MUSIC_TOKEN = 0;
-var KINGDOM_PLACEMENT_KEY = 'studymon.kingdom.placements.v1';
 var KINGDOM_HOLD_MS = 1000;
 var KINGDOM_HOVER_MS = 350;
 var KINGDOM_GRAB = null;
@@ -266,13 +297,8 @@ function kingdomLocation(id) {
   return KINGDOM_LOCATIONS[0];
 }
 
-function kingdomHourKey(now) {
-  return Math.floor((now === undefined ? Date.now() : now) / 3600000);
-}
-
 function kingdomHash(entry) {
-  /* Stable for this roster ordering. Rank, then rotate one district each hour:
-     every Pokemon therefore moves and no Pokemon can be assigned twice. */
+  /* Stable for this roster ordering; spreads newcomers across the districts. */
   var n = entry.mon.id * 2654435761 + entry.index * 7919 +
     (entry.where === 'party' ? 101 : 100003) + entry.mon.lvl * 97;
   n = Math.imul(n ^ n >>> 16, 2246822507);
@@ -280,56 +306,14 @@ function kingdomHash(entry) {
   return (n ^ n >>> 16) >>> 0;
 }
 
-function kingdomAssignments(hourKey) {
-  var groups = {};
-  KINGDOM_LOCATIONS.forEach(function (loc) { groups[loc.id] = []; });
-  var ranked = kingdomRoster().map(function (entry) {
-    return { entry: entry, order: kingdomHash(entry) };
-  }).sort(function (a, b) {
-    return a.order - b.order || a.entry.key.localeCompare(b.entry.key);
-  });
-  var shift = ((hourKey % KINGDOM_LOCATIONS.length) + KINGDOM_LOCATIONS.length) % KINGDOM_LOCATIONS.length;
-  var spots = kingdomLoadPlacements(hourKey);
-  ranked.forEach(function (row, rank) {
-    var location = KINGDOM_LOCATIONS[(rank + shift) % KINGDOM_LOCATIONS.length];
-    var spot = spots[kingdomPlacementKey(row.entry)];
-    if (spot && groups[spot.loc]) {
-      location = kingdomLocation(spot.loc);
-      row.entry.spot = spot;
-    }
-    row.entry.location = location.id;
-    groups[location.id].push(row.entry);
-  });
-  return groups;
-}
-
 /* Party/PC slots have no unique id, so the species guards against a slot that
-   was reshuffled since the Pokemon was carried. */
+   was reshuffled since the itinerary was made. */
 function kingdomPlacementKey(entry) {
   return entry.where + '-' + entry.index + '-' + entry.mon.id;
 }
 
-function kingdomLoadPlacements(hourKey) {
-  try {
-    var saved = JSON.parse(localStorage.getItem(KINGDOM_PLACEMENT_KEY) || 'null');
-    if (saved && saved.hour === hourKey && saved.spots) return saved.spots;
-  } catch (error) { }
-  return {};
-}
-
-function kingdomSavePlacement(entry, locationId, x, y) {
-  var hourKey = kingdomHourKey();
-  var spots = kingdomLoadPlacements(hourKey);
-  var spot = { loc: locationId, x: Math.round(x * 100) / 100, y: Math.round(y * 100) / 100 };
-  spots[kingdomPlacementKey(entry)] = spot;
-  try {
-    localStorage.setItem(KINGDOM_PLACEMENT_KEY, JSON.stringify({ hour: hourKey, spots: spots }));
-  } catch (error) { }
-  return spot;
-}
-
-function kingdomSeed(entry, position, hourKey) {
-  var n = kingdomHash(entry) + position * 7919 + hourKey * 31;
+function kingdomSeed(entry, position, salt) {
+  var n = kingdomHash(entry) + position * 7919 + salt * 31;
   return function () {
     n |= 0;
     n = n + 0x6D2B79F5 | 0;
@@ -423,9 +407,11 @@ function kingdomTryStep(actor, nextX, nextY) {
 }
 
 function kingdomClockText(now) {
-  var left = 3600000 - (now % 3600000);
-  var minutes = Math.max(1, Math.ceil(left / 60000));
-  return 'Residents move again in ' + minutes + (minutes === 1 ? ' minute' : ' minutes');
+  var census = KINGDOM_CENSUS;
+  if (!census || census.nextDeparture === Infinity) return 'The town is settling in';
+  var left = census.nextDeparture - now;
+  if (left < 60000) return 'Someone is about to set off';
+  return 'Next Pokémon sets off in ' + kingdomDurationText(left);
 }
 
 function kingdomEasternTime(now) {
@@ -508,59 +494,40 @@ function kingdomWeatherHtml(location) {
   return h + '</div></div>';
 }
 
-function kingdomMapHtml(assignments) {
-  var h = '<div class="kingdom-town-map panel"><div class="kingdom-map-title">' +
-    '<b>Pokémon Town</b><span>Every path belongs to the same forest village.</span></div>' +
-    '<div class="kingdom-map-nodes">';
-  KINGDOM_LOCATIONS.forEach(function (loc) {
-    h += '<button class="kingdom-map-node' + (loc.id === KINGDOM_LOCATION ? ' current' : '') +
-      '" data-kingdom-loc="' + loc.id + '" onclick="kingdomGo(\'' + loc.id + '\')"><span>' + loc.icon + '</span>' +
-      '<b>' + esc(loc.short) + '</b><small>' + assignments[loc.id].length + '</small></button>';
-  });
-  return h + '</div></div>';
-}
-
-function renderKingdom(hourChanged) {
+function renderKingdom() {
   var root = $('#s-kingdom');
   if (!root || !S) return;
   kingdomStop();
 
   var now = Date.now();
-  var hourKey = kingdomHourKey(now);
   var location = kingdomLocation(KINGDOM_LOCATION);
   KINGDOM_LOCATION = location.id;
-  KINGDOM_ASSIGNMENTS = kingdomAssignments(hourKey);
+  var census = KINGDOM_CENSUS = kingdomTownCensus(now);
   var roster = kingdomRoster();
-  kingdomDropCarriedFromAssignments();
-  /* Pokemon the player set down here are never hidden by the visible limit. */
-  var residents = KINGDOM_ASSIGNMENTS[location.id].filter(function (entry) { return entry.spot; })
-    .concat(KINGDOM_ASSIGNMENTS[location.id].filter(function (entry) { return !entry.spot; }));
-  var visible = residents.slice(0, KINGDOM_VISIBLE_LIMIT);
-  KINGDOM_RENDERED_HOUR = hourKey;
+  var here = census.groups[location.id].length;
 
   var h =
     '<div class="panel kingdom-head"><div><div class="kingdom-eyebrow">A living forest town</div>' +
-      '<h2>Pokémon Kingdom</h2><p>Every Pokémon has one place in town. At the top of each hour, ' +
-      'everyone follows the paths to a new district.</p></div>' +
+      '<h2>Pokémon Kingdom</h2><p>Your Pokémon live their own lives here. Each one settles in for a while - ' +
+      'a few minutes or a few days - then follows the paths somewhere new.</p></div>' +
       '<div class="kingdom-counts"><span>★ ' + roster.length + ' residents</span>' +
       '<span>Party ' + S.party.length + '</span><span>PC ' + S.box.length + '</span></div></div>' +
-    kingdomMapHtml(KINGDOM_ASSIGNMENTS) +
+    kingdomTownMapHtml(census) +
     '<section class="kingdom-location-head"><div><span class="kingdom-location-icon">' + location.icon + '</span>' +
       '<div><h3>' + esc(location.name) + '</h3><p>' + esc(location.description) + '</p></div></div>' +
       '<div class="kingdom-location-status"><span id="kingdom-clock" class="kingdom-clock">' +
       kingdomClockText(now) + '</span>' + kingdomAtmosphereHtml(now) + '</div></section>' +
     '<div class="kingdom-frame"><div id="kingdom-stage" class="kingdom-stage loc-' + location.id +
-      '" tabindex="-1" role="region" aria-label="' + esc(location.name) + ', with ' + residents.length +
+      '" tabindex="-1" role="region" aria-label="' + esc(location.name) + ', with ' + here +
       ' Pokémon residents">' +
       '<div class="kingdom-bar"><span id="kingdom-glade" class="kingdom-glade">' + location.icon + ' ' +
-      residents.length + ' here</span><span id="kingdom-story" class="kingdom-story" aria-live="polite">' +
-      (hourChanged ? 'The hourly parade has arrived!' : 'This corner of town is peaceful.') + '</span></div>' +
+      here + ' here</span><span id="kingdom-story" class="kingdom-story" aria-live="polite">' +
+      'This corner of town is peaceful.</span></div>' +
       '<div id="kingdom-daylight" class="kingdom-daylight" aria-hidden="true"></div>' +
       kingdomLanternHtml(location) +
       kingdomWeatherHtml(location) +
-      (!residents.length ? '<div class="kingdom-empty">This part of town is quiet for the hour. Follow a path to visit your Pokémon.</div>' : '') +
-      (residents.length > visible.length ? '<div class="kingdom-overflow">+' + (residents.length - visible.length) +
-        ' more exploring nearby</div>' : '') + '</div></div>' +
+      '<div class="kingdom-empty" hidden>Nobody is here right now. Wait a while, or follow a path to visit your Pokémon.</div>' +
+      '<div class="kingdom-overflow" hidden></div></div></div>' +
     '<div class="kingdom-paths"><b>Paths from here</b>';
   location.neighbors.forEach(function (id) {
     var neighbor = kingdomLocation(id);
@@ -568,8 +535,8 @@ function renderKingdom(hourChanged) {
   });
   h += '</div><div id="kingdom-inspector" class="panel kingdom-inspector kingdom-welcome">' +
     '<span aria-hidden="true" class="kingdom-welcome-mark">❧</span><div><h3>Life around town</h3>' +
-    '<p>Your party wears a gold star. Tap a Pokémon to say hello, or hold the hand on one for a moment ' +
-    'to pick it up and carry it to another part of town.</p></div></div>';
+    '<p>Your party wears a gold star. Watch the paths - Pokémon wander in and out on their own. ' +
+    'Tap one to say hello, or hold the hand on it for a moment to pick it up and carry it somewhere.</p></div></div>';
   root.innerHTML = h;
   $('#kingdom-stage').style.backgroundImage = 'url("' + location.image + '")';
   kingdomBindHand($('#kingdom-stage'));
@@ -577,35 +544,177 @@ function renderKingdom(hourChanged) {
   if (KINGDOM_WEATHER === 'rain' && KINGDOM_RAIN_SOUND) kingdomStartRainAudio();
   if (KINGDOM_MUSIC_ON) kingdomStartMusic(location.id);
 
-  visible.forEach(function (entry, i) { kingdomAddActor(entry, i, location, hourKey); });
-  KINGDOM_LAST = performance.now();
-  KINGDOM_SOCIAL_AT = KINGDOM_LAST + 1500;
-  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (reduceMotion) {
-    KINGDOM_ACTORS.forEach(function (actor) { actor.el.classList.remove('walking'); });
-  } else if (visible.length) {
-    KINGDOM_RAF = requestAnimationFrame(kingdomTick);
-  }
+  kingdomSync(true);
+  KINGDOM_SOCIAL_AT = performance.now() + 1500;
+  kingdomEnsureTick();
+  KINGDOM_SYNC_TIMER = setInterval(kingdomSync, 1000);
   KINGDOM_CLOCK_TIMER = setInterval(kingdomUpdateClock, 10000);
-  KINGDOM_HOUR_TIMER = setTimeout(kingdomHourlyMove, 3600000 - (now % 3600000) + 50);
 }
 
-function kingdomAddActor(entry, position, location, hourKey) {
+function kingdomReduceMotion() {
+  return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+}
+
+function kingdomEnsureTick() {
+  if (KINGDOM_RAF) return;
+  KINGDOM_LAST = performance.now();
+  KINGDOM_RAF = requestAnimationFrame(kingdomTick);
+}
+
+/* Once a second: replay everyone's itinerary and make this district's picture
+   match it - leavers head for their path, newcomers walk in from the edge. */
+function kingdomSync(initial) {
+  if (CUR !== 'kingdom' || !document.getElementById('kingdom-stage')) { kingdomStop(true); return; }
+  initial = initial === true;
+  var now = Date.now();
+  var census = KINGDOM_CENSUS = kingdomTownCensus(now);
+  var location = kingdomLocation(KINGDOM_LOCATION);
+  var byKey = {};
+  KINGDOM_ACTORS.forEach(function (actor) { byKey[actor.key] = actor; });
+  var rows = census.groups[location.id];
+  /* Travellers and Pokemon the player set down are never hidden by the limit. */
+  var special = function (entry) { return !!entry.spot || entry.whereNow.kind !== 'stay'; };
+  rows = rows.filter(special).concat(rows.filter(function (entry) { return !special(entry); }));
+  var wanted = {};
+  var hidden = 0;
+  rows.forEach(function (entry) {
+    var key = kingdomPlacementKey(entry);
+    var where = entry.whereNow;
+    wanted[key] = true;
+    var actor = byKey[key];
+    if (actor) {
+      actor.entry = entry;
+      if (where.kind === 'leave' && !actor.trip) {
+        kingdomStartTrip(actor, where, false);
+        kingdomAnnounceTrip(actor, where);
+      }
+      return;
+    }
+    if (KINGDOM_ACTORS.length >= KINGDOM_VISIBLE_LIMIT) { hidden++; return; }
+    actor = kingdomAddActor(entry, KINGDOM_ACTORS.length, location, now);
+    if (where.kind !== 'stay') {
+      kingdomStartTrip(actor, where, true);
+      if (!initial && where.kind !== 'leave') kingdomAnnounceTrip(actor, where);
+    }
+  });
+  KINGDOM_ACTORS.slice().forEach(function (actor) {
+    if (!wanted[actor.key] && !actor.trip) kingdomFadeOut(actor);
+  });
+
+  $$('.kingdom-map-node').forEach(function (node) {
+    var small = node.querySelector('small');
+    var group = census.groups[node.getAttribute('data-kingdom-loc')];
+    if (small && group) small.textContent = group.length;
+  });
+  var glade = $('#kingdom-glade');
+  if (glade) glade.textContent = location.icon + ' ' + census.groups[location.id].length + ' here';
+  var empty = $('.kingdom-empty');
+  if (empty) empty.hidden = KINGDOM_ACTORS.length > 0 || !!KINGDOM_CARRY;
+  var overflow = $('.kingdom-overflow');
+  if (overflow) {
+    overflow.hidden = !hidden;
+    overflow.textContent = '+' + hidden + ' more exploring nearby';
+  }
+  var clock = $('#kingdom-clock');
+  if (clock) clock.textContent = kingdomClockText(now);
+  kingdomDrawMapWalkers(census, now);
+  kingdomRefreshInspector();
+}
+
+/* Sets an actor walking one leg. Actors that were already on screen when they
+   decided to leave start from where they stand, on their own clock. */
+function kingdomStartTrip(actor, where, spawned) {
+  var leg = where.leg;
+  var speed = kingdomTemperament(actor.key).speed;
+  var trip = { kind: leg.kind, from: leg.from, to: leg.to, leg: leg };
+  if (leg.kind === 'leave' && !spawned) {
+    trip.points = kingdomSceneRoute(leg.loc, null, leg.to, [actor.x, actor.y]);
+    trip.t0 = Date.now();
+    trip.t1 = trip.t0 + Math.round(kingdomLineLength(trip.points) / speed * 1000);
+  } else {
+    trip.points = kingdomSceneRoute(leg.loc, leg.from, leg.to);
+    trip.t0 = leg.start;
+    trip.t1 = leg.end;
+  }
+  actor.trip = trip;
+  actor.pauseUntil = 0;
+  actor.el.classList.add('walking', 'traveling');
+  kingdomTripStep(actor, Date.now());
+}
+
+function kingdomAnnounceTrip(actor, where) {
+  var name = monName(actor.entry.mon);
+  var trip = actor.entry.state && actor.entry.state.trip;
+  var dest = trip ? kingdomLocation(trip.to).name : '';
+  if (where.kind === 'leave') {
+    var via = trip && trip.path.length > 2 ? ', by way of ' + kingdomLocation(trip.path[1]).name : '';
+    kingdomSay(name + ' is heading off to ' + dest + via + '.', 'news');
+  } else if (where.kind === 'cross') {
+    kingdomSay(name + ' is passing through on the way to ' + dest + '.', 'news');
+  } else if (where.kind === 'arrive') {
+    kingdomSay(name + ' is coming up the path from ' + kingdomLocation(where.leg.from).name + '!', 'news');
+  }
+}
+
+/* Moves a traveller to where its schedule says it should be. Returns false
+   once the leg is over. */
+function kingdomTripStep(actor, now) {
+  var trip = actor.trip;
+  var f = (now - trip.t0) / Math.max(1, trip.t1 - trip.t0);
+  if (f >= 1) return false;
+  var pos = kingdomPointAlong(trip.points, f);
+  actor.x = pos.x;
+  actor.y = pos.y;
+  if (Math.abs(pos.dx) > .05) actor.el.style.setProperty('--face', pos.dx < 0 ? '-1' : '1');
+  var fade = 1;
+  if (trip.kind !== 'leave') fade = Math.min(fade, pos.walked / 6);
+  if (trip.kind !== 'arrive') fade = Math.min(fade, pos.left / 6);
+  actor.el.style.opacity = Math.max(0, Math.min(1, fade)).toFixed(2);
+  kingdomPaint(actor);
+  return true;
+}
+
+function kingdomFinishTrip(actor) {
+  var trip = actor.trip;
+  if (trip.kind === 'arrive') {
+    var end = trip.points[trip.points.length - 1];
+    actor.trip = null;
+    actor.x = end[0];
+    actor.y = end[1];
+    actor.el.style.opacity = '';
+    actor.el.classList.remove('traveling');
+    actor.target = kingdomPoint(actor.rand, actor.location);
+    actor.nextTurn = performance.now() + 4000;
+    actor.pauseUntil = performance.now() + 900;
+    kingdomSay(monName(actor.entry.mon) + ' has arrived in ' + actor.location.name + '.', 'news');
+    kingdomPaint(actor);
+    return;
+  }
+  kingdomRemoveActor(actor);
+}
+
+function kingdomFadeOut(actor) {
+  kingdomRemoveActor(actor, true);
+  actor.el.classList.add('vanishing');
+  setTimeout(function () { if (actor.el.parentNode) actor.el.remove(); }, 700);
+}
+
+function kingdomAddActor(entry, position, location, salt) {
   var stage = $('#kingdom-stage');
-  var rand = kingdomSeed(entry, position, hourKey);
+  var rand = kingdomSeed(entry, position, salt % 100003);
   var point = entry.spot && entry.spot.loc === location.id ?
     { x: entry.spot.x, y: entry.spot.y } : kingdomPoint(rand, location);
   var button = document.createElement('button');
   button.className = 'kingdom-mon walking';
   button.type = 'button';
   button.setAttribute('aria-label', monName(entry.mon) + ', level ' + entry.mon.lvl +
-    (entry.where === 'party' ? ', in your party' : ', from the PC') + ', visiting ' + location.name);
+    (entry.where === 'party' ? ', in your party' : ', from the PC') + ', in ' + location.name);
   button.innerHTML = '<img src="' + monSprite(entry.mon, entry.mon.shiny ? 'shiny' : 'front') +
     '" alt="" draggable="false">' +
     (entry.where === 'party' ? '<span class="kingdom-party-mark" title="In your party">★</span>' : '');
   var actor = {
-    entry: entry, el: button, rand: rand, location: location,
-    x: point.x, y: point.y, target: kingdomPoint(rand, location),
+    entry: entry, key: kingdomPlacementKey(entry), el: button, rand: rand, location: location,
+    x: point.x, y: point.y, target: kingdomPoint(rand, location), trip: null,
     speed: 2.7 + rand() * 2.6, pauseUntil: 0, nextTurn: 0
   };
   button.onclick = function () { kingdomInspect(actor); };
@@ -622,9 +731,18 @@ function kingdomTick(now) {
   }
   var dt = Math.min(.05, Math.max(0, (now - KINGDOM_LAST) / 1000));
   KINGDOM_LAST = now;
-  for (var i = 0; i < KINGDOM_ACTORS.length; i++) {
-    var a = KINGDOM_ACTORS[i];
-    if (now < a.pauseUntil) {
+  var clock = Date.now();
+  var still = kingdomReduceMotion();
+  var held = KINGDOM_GRAB && KINGDOM_GRAB.actor;
+  var actors = KINGDOM_ACTORS.slice();
+  for (var i = 0; i < actors.length; i++) {
+    var a = actors[i];
+    if (a === held) continue;
+    if (a.trip) {
+      if (!kingdomTripStep(a, clock)) kingdomFinishTrip(a);
+      continue;
+    }
+    if (still || now < a.pauseUntil) {
       a.el.classList.remove('walking');
       kingdomPaint(a);
       continue;
@@ -641,13 +759,19 @@ function kingdomTick(now) {
       if (moved && Math.abs(dx) > .15) {
         a.el.style.setProperty('--face', dx < 0 ? '-1' : '1');
       } else if (!moved) {
+        /* A newcomer can end its walk just off the open ground at a path
+           mouth; step it back onto the ground. */
+        if (!kingdomIsWalkable(a.x, a.y, a.location)) {
+          var back = kingdomNearestWalkable(a.x, a.y, a.location);
+          if (back) { a.x = back.x; a.y = back.y; }
+        }
         a.target = kingdomPoint(a.rand, a.location);
         a.nextTurn = now + 1600 + a.rand() * 2200;
       }
     }
     kingdomPaint(a);
   }
-  if (now >= KINGDOM_SOCIAL_AT) {
+  if (now >= KINGDOM_SOCIAL_AT && !still) {
     kingdomFindFriends(now);
     KINGDOM_SOCIAL_AT = now + 1500;
   }
@@ -667,11 +791,11 @@ function kingdomFindFriends(now) {
   var start = Math.floor(Math.random() * KINGDOM_ACTORS.length);
   for (var offset = 0; offset < KINGDOM_ACTORS.length; offset++) {
     var a = KINGDOM_ACTORS[(start + offset) % KINGDOM_ACTORS.length];
-    if (now < a.pauseUntil) continue;
+    if (now < a.pauseUntil || a.trip) continue;
     var best = null, bestD = 999;
     for (var j = 0; j < KINGDOM_ACTORS.length; j++) {
       var b = KINGDOM_ACTORS[j];
-      if (a === b || now < b.pauseUntil) continue;
+      if (a === b || now < b.pauseUntil || b.trip) continue;
       var dx = a.x - b.x, dy = a.y - b.y;
       var d = dx * dx + dy * dy;
       if (d < bestD) { bestD = d; best = b; }
@@ -703,31 +827,64 @@ function kingdomSocial(a, b, now) {
       actor.el.classList.remove('greeting');
     }, 1700);
   });
-  kingdomSay(monName(a.entry.mon) + ' and ' + monName(b.entry.mon) + moment.line);
+  kingdomSay(monName(a.entry.mon) + ' and ' + monName(b.entry.mon) + moment.line, 'chatter');
+}
+
+/* What a Pokemon is up to, in words, for the inspector. */
+function kingdomTravelLine(actor) {
+  var st = actor.entry.state;
+  var now = Date.now();
+  if (!st) return 'Spending time in ' + actor.location.name + '.';
+  if (st.trip) {
+    var via = st.trip.path.slice(1, -1).map(function (id) { return kingdomLocation(id).name; });
+    return 'Walking to ' + kingdomLocation(st.trip.to).name +
+      (via.length ? ' by way of ' + via.join(' and ') : '') +
+      ' - about ' + kingdomDurationText(st.trip.end - now) + ' to go.';
+  }
+  return 'Settled in ' + actor.location.name + '. Feels like wandering off in about ' +
+    kingdomDurationText(st.until - now) + '.';
 }
 
 function kingdomInspect(actor) {
   KINGDOM_INSPECTED = actor;
   KINGDOM_ACTORS.forEach(function (a) { a.el.classList.toggle('selected', a === actor); });
-  actor.pauseUntil = performance.now() + 3200;
-  actor.el.classList.remove('walking');
+  if (!actor.trip) {
+    actor.pauseUntil = performance.now() + 3200;
+    actor.el.classList.remove('walking');
+  }
   actor.el.classList.add('greeting');
   setTimeout(function () { if (actor.el) actor.el.classList.remove('greeting'); }, 850);
   playCry(actor.entry.mon.id);
   var m = actor.entry.mon, d = dexOf(m.id);
   var home = actor.entry.where === 'party' ? 'Traveling in your party' : 'Living in the PC';
+  var travelling = !!(actor.entry.state && actor.entry.state.trip);
   $('#kingdom-inspector').className = 'panel kingdom-inspector';
   $('#kingdom-inspector').innerHTML =
     '<img src="' + monSprite(m, m.shiny ? 'shiny' : 'front') + '" alt="">' +
     '<div><h3>' + esc(monName(m)) + (m.shiny ? ' ✦' : '') + '</h3><div>' + typePills(d.types) + '</div>' +
-    '<p>Level ' + m.lvl + ' · ' + esc(d.genus) + ' · ' + home + '<br>Spending this hour in ' +
-    esc(actor.location.name) + '.</p>' + kingdomMoveButtonsHtml(actor) + '</div>' +
+    '<p>Level ' + m.lvl + ' · ' + esc(d.genus) + ' · ' + home + '<br><span id="kingdom-inspect-status">' +
+    esc(kingdomTravelLine(actor)) + '</span></p><div id="kingdom-inspect-moves" data-travelling="' +
+    travelling + '">' + kingdomMoveButtonsHtml(actor, travelling) + '</div></div>' +
     '<button class="kingdom-close" onclick="kingdomClearInspect()" aria-label="Close Pokémon details">×</button>';
-  kingdomSay(monName(m) + ' came over to say hello!');
+  kingdomSay(monName(m) + (actor.trip ? ' waved on its way past!' : ' came over to say hello!'));
 }
 
-function kingdomMoveButtonsHtml(actor) {
-  var h = '<div class="kingdom-move-row"><span>Move to</span>';
+function kingdomRefreshInspector() {
+  var actor = KINGDOM_INSPECTED;
+  var status = $('#kingdom-inspect-status');
+  if (!actor || !status) return;
+  status.textContent = kingdomTravelLine(actor);
+  var moves = $('#kingdom-inspect-moves');
+  var travelling = !!(actor.entry.state && actor.entry.state.trip);
+  if (moves && moves.getAttribute('data-travelling') !== String(travelling)) {
+    moves.setAttribute('data-travelling', String(travelling));
+    moves.innerHTML = kingdomMoveButtonsHtml(actor, travelling);
+  }
+}
+
+function kingdomMoveButtonsHtml(actor, travelling) {
+  if (travelling) return '';
+  var h = '<div class="kingdom-move-row"><span>Walk to</span>';
   KINGDOM_LOCATIONS.forEach(function (loc) {
     if (loc.id === actor.location.id) return;
     h += '<button type="button" onclick="kingdomMoveInspected(\'' + loc.id + '\')">' +
@@ -736,50 +893,26 @@ function kingdomMoveButtonsHtml(actor) {
   return h + '</div>';
 }
 
-/* Button alternative to carrying, for keyboards and anyone who can't hold a press. */
+/* Button alternative to carrying: the Pokemon sets off on foot, right now. */
 function kingdomMoveInspected(locationId) {
   var actor = KINGDOM_INSPECTED;
-  if (!actor || KINGDOM_ACTORS.indexOf(actor) < 0 || KINGDOM_CARRY) return;
+  if (!actor || KINGDOM_ACTORS.indexOf(actor) < 0 || KINGDOM_CARRY || actor.trip) return;
   var target = kingdomLocation(locationId);
-  var point = kingdomPoint(Math.random, target);
-  kingdomSavePlacement(actor.entry, target.id, point.x, point.y);
-  kingdomRemoveActor(actor);
-  kingdomClearInspect();
-  kingdomRefreshCounts();
-  kingdomSay(monName(actor.entry.mon) + ' set off for ' + target.name + '.');
-  toast(monName(actor.entry.mon) + ' moved to ' + target.name + ' until the next parade.');
+  if (!kingdomTravelSend(actor.entry, target.id)) return;
+  actor.pauseUntil = 0;
+  kingdomSync();
+  toast(monName(actor.entry.mon) + ' is walking to ' + target.name + '.');
 }
 
-function kingdomRemoveActor(actor) {
+function kingdomRemoveActor(actor, keepElement) {
   var i = KINGDOM_ACTORS.indexOf(actor);
   if (i >= 0) KINGDOM_ACTORS.splice(i, 1);
-  if (actor.el && actor.el.parentNode) actor.el.remove();
-  if (KINGDOM_INSPECTED === actor) KINGDOM_INSPECTED = null;
-}
-
-/* The Pokemon in the hand belongs to no district until it is set down. */
-function kingdomDropCarriedFromAssignments() {
-  if (!KINGDOM_CARRY) return;
-  Object.keys(KINGDOM_ASSIGNMENTS).forEach(function (id) {
-    KINGDOM_ASSIGNMENTS[id] = KINGDOM_ASSIGNMENTS[id].filter(function (entry) {
-      return kingdomPlacementKey(entry) !== KINGDOM_CARRY.key;
-    });
-  });
+  if (!keepElement && actor.el && actor.el.parentNode) actor.el.remove();
+  if (KINGDOM_INSPECTED === actor) kingdomClearInspect();
 }
 
 function kingdomRefreshCounts() {
-  KINGDOM_ASSIGNMENTS = kingdomAssignments(kingdomHourKey());
-  kingdomDropCarriedFromAssignments();
-  $$('.kingdom-map-node').forEach(function (node) {
-    var small = node.querySelector('small');
-    var rows = KINGDOM_ASSIGNMENTS[node.getAttribute('data-kingdom-loc')];
-    if (small && rows) small.textContent = rows.length;
-  });
-  var location = kingdomLocation(KINGDOM_LOCATION);
-  var glade = $('#kingdom-glade');
-  if (glade) glade.textContent = location.icon + ' ' + KINGDOM_ASSIGNMENTS[location.id].length + ' here';
-  var empty = $('.kingdom-empty');
-  if (empty && KINGDOM_ACTORS.length) empty.remove();
+  if (document.getElementById('kingdom-stage')) kingdomSync();
 }
 
 function kingdomClearInspect() {
@@ -792,31 +925,29 @@ function kingdomClearInspect() {
     '<div><h3>Back to exploring</h3><p>Choose another Pokémon whenever you want to visit.</p></div>';
 }
 
-function kingdomSay(message) {
+/* Comings and goings are the news; idle chatter waits a few seconds behind them. */
+var KINGDOM_NEWS_UNTIL = 0;
+function kingdomSay(message, kind) {
   var story = $('#kingdom-story');
-  if (story) story.textContent = message;
+  if (!story) return;
+  var now = performance.now();
+  if (kind === 'chatter' && now < KINGDOM_NEWS_UNTIL) return;
+  if (kind === 'news') KINGDOM_NEWS_UNTIL = now + 4500;
+  story.textContent = message;
 }
 
 function kingdomGo(id) {
   var location = kingdomLocation(id);
   if (!location || location.id === KINGDOM_LOCATION) return;
   KINGDOM_LOCATION = location.id;
-  renderKingdom(false);
+  renderKingdom();
   var stage = $('#kingdom-stage');
   if (stage) stage.focus({ preventScroll: true });
 }
 
 function kingdomUpdateClock() {
   if (CUR !== 'kingdom') { kingdomStop(true); return; }
-  var now = Date.now();
-  if (kingdomHourKey(now) !== KINGDOM_RENDERED_HOUR && !KINGDOM_CARRY && !KINGDOM_GRAB) {
-    renderKingdom(true);
-    toast('The hourly town parade is on the move!');
-    return;
-  }
-  var clock = $('#kingdom-clock');
-  if (clock) clock.textContent = kingdomClockText(now);
-  kingdomApplyAtmosphere(now);
+  kingdomApplyAtmosphere(Date.now());
 }
 
 function kingdomApplyAtmosphere(now) {
@@ -1163,17 +1294,6 @@ function kingdomToggleMusic() {
   }
 }
 
-function kingdomHourlyMove() {
-  if (CUR !== 'kingdom') { kingdomStop(true); return; }
-  if (KINGDOM_CARRY || KINGDOM_GRAB) {
-    /* Never pull the town out from under a Pokemon in the player's hand. */
-    KINGDOM_HOUR_TIMER = setTimeout(kingdomHourlyMove, 1000);
-    return;
-  }
-  renderKingdom(true);
-  toast('The hourly town parade is on the move!');
-}
-
 /* ---- The grabbing hand ---------------------------------------------------
    Hold on a Pokemon for KINGDOM_HOLD_MS to pick it up. It then hangs from the
    hand wherever the pointer goes; hovering a district on the town map or a
@@ -1394,26 +1514,22 @@ function kingdomTryDrop(cx, cy) {
     kingdomSay('There is no room for ' + name + ' there. Try an open path.');
     return false;
   }
-  var spot = kingdomSavePlacement(carry.entry, location.id, point.x, point.y);
+  kingdomTravelSettle(carry.entry, location.id, point);
   kingdomEndCarry();
-  kingdomPlaceActor(carry.entry, spot, location);
+  kingdomPlaceActor(carry.entry, { loc: location.id, x: point.x, y: point.y }, location);
   kingdomSay(name + ' settled into ' + location.name + '.');
   return true;
 }
 
 function kingdomPlaceActor(entry, spot, location) {
   entry.spot = spot;
-  var actor = kingdomAddActor(entry, KINGDOM_ACTORS.length, location, kingdomHourKey());
+  var actor = kingdomAddActor(entry, KINGDOM_ACTORS.length, location, Date.now());
   actor.pauseUntil = performance.now() + 1400;
   actor.el.classList.remove('walking');
   actor.el.classList.add('dropped');
   setTimeout(function () { actor.el.classList.remove('dropped'); }, 600);
   kingdomRefreshCounts();
-  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (!KINGDOM_RAF && !reduceMotion) {
-    KINGDOM_LAST = performance.now();
-    KINGDOM_RAF = requestAnimationFrame(kingdomTick);
-  }
+  kingdomEnsureTick();
 }
 
 function kingdomEndCarry() {
@@ -1432,6 +1548,7 @@ function kingdomReturnCarried() {
   var carry = KINGDOM_CARRY;
   if (!carry) return;
   var name = monName(carry.entry.mon);
+  kingdomTravelSettle(carry.entry, carry.from.loc, carry.from);
   kingdomEndCarry();
   if (carry.from.loc === KINGDOM_LOCATION && CUR === 'kingdom' && $('#kingdom-stage')) {
     kingdomPlaceActor(carry.entry, { loc: carry.from.loc, x: carry.from.x, y: carry.from.y },
@@ -1451,10 +1568,10 @@ function kingdomStop(stopAudio) {
   if (stopAudio && KINGDOM_CARRY) kingdomReturnCarried();
   if (KINGDOM_RAF) cancelAnimationFrame(KINGDOM_RAF);
   if (KINGDOM_CLOCK_TIMER) clearInterval(KINGDOM_CLOCK_TIMER);
-  if (KINGDOM_HOUR_TIMER) clearTimeout(KINGDOM_HOUR_TIMER);
+  if (KINGDOM_SYNC_TIMER) clearInterval(KINGDOM_SYNC_TIMER);
   KINGDOM_RAF = 0;
   KINGDOM_CLOCK_TIMER = 0;
-  KINGDOM_HOUR_TIMER = 0;
+  KINGDOM_SYNC_TIMER = 0;
   KINGDOM_ACTORS = [];
   if (stopAudio) {
     kingdomStopRainAudio(true);

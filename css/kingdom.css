@@ -73,39 +73,80 @@
 }
 .kingdom-map-title b { font: 700 14px var(--read); }
 .kingdom-map-title span { color: #7a6245; font-size: 11px; }
-.kingdom-map-nodes {
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 8px;
+.kingdom-road-count {
+  margin-left: auto;
+  color: #6b4a22;
+  font: 700 11px var(--read);
+  font-style: normal;
+  white-space: nowrap;
 }
-.kingdom-map-nodes::before {
-  content: '';
+/* The town map: districts pinned where they sit in town, joined by the same
+   paths the residents walk. */
+.kingdom-map-board {
+  position: relative;
+  height: 178px;
+  margin: 2px 4px 4px;
+}
+.kingdom-map-roads {
   position: absolute;
-  left: 5%;
-  right: 5%;
-  top: 50%;
-  height: 5px;
-  border: solid #987343;
-  border-width: 2px 0;
-  background: #e8c876;
-  transform: translateY(-50%);
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.kingdom-map-roads line {
+  stroke: #987343;
+  stroke-width: 9px;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+.kingdom-map-walkers {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+.kingdom-map-walkers img {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  transform: translate(-50%, -80%);
+  filter: drop-shadow(0 1px 0 #fff6d8) drop-shadow(0 2px 1px #4d301e88);
+  transition: left 1s linear, top 1s linear;
+  animation: kingdom-map-hop .5s steps(2, end) infinite;
+}
+.kingdom-map-walkers img.face-left { scale: -1 1; }
+@keyframes kingdom-map-hop {
+  50% { margin-top: -2px; }
 }
 .kingdom-map-node {
-  position: relative;
-  z-index: 1;
+  position: absolute;
+  z-index: 3;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   gap: 5px;
   min-width: 0;
-  padding: 7px 8px;
+  max-width: 30%;
+  padding: 5px 7px;
   border: 2px solid #68452a;
   border-radius: 9px;
   background: #f8eccd;
   color: #49331f;
   box-shadow: 0 2px 0 #4d301e55;
   font-family: var(--read);
+  translate: -50% -50%;
+  white-space: nowrap;
+}
+/* The game-wide button skin moves buttons with `transform` on hover and press.
+   These nodes are centred with `translate`, so pin the skin's transform off -
+   otherwise hover shoves a node out from under the cursor and it shakes. */
+#s-kingdom .kingdom-map-node,
+#s-kingdom .kingdom-map-node:hover:not(:disabled),
+#s-kingdom .kingdom-map-node:active:not(:disabled) {
+  transform: none;
 }
 .kingdom-map-node > span { font-size: 17px; }
 .kingdom-map-node b { min-width: 0; overflow: hidden; text-overflow: ellipsis; font-size: 11px; }
@@ -577,10 +618,13 @@
   .kingdom-counts { justify-content: flex-start; margin-top: 10px; }
   .kingdom-map-title { display: block; }
   .kingdom-map-title span { display: block; margin-top: 2px; }
-  .kingdom-map-nodes { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .kingdom-map-nodes::before { display: none; }
-  .kingdom-map-node { grid-template-columns: auto minmax(0, 1fr); padding: 6px; }
+  .kingdom-road-count { display: block; margin-top: 2px; }
+  .kingdom-map-board { height: 210px; margin: 2px 0 0; }
+  .kingdom-map-node { grid-template-columns: auto auto; gap: 1px 4px; padding: 4px 6px; max-width: none; }
+  .kingdom-map-node b { font-size: 10px; }
+  .kingdom-map-node > span { grid-row: span 2; font-size: 15px; }
   .kingdom-map-node small { grid-column: 2; grid-row: 2; width: fit-content; height: auto; padding: 1px 5px; border-radius: 999px; }
+  .kingdom-map-walkers img { width: 24px; height: 24px; }
   .kingdom-location-head { align-items: flex-start; flex-direction: column; gap: 8px; }
   .kingdom-location-head > div:first-child { width: 100%; }
   .kingdom-location-head p { font-size: 11px; }
@@ -695,10 +739,10 @@ html.kingdom-carrying body { user-select: none; }
 
 .kingdom-map-node.carry-hover,
 .kingdom-paths button.carry-hover {
-  position: relative;
   overflow: hidden;
   outline: 3px solid #ffd84d;
 }
+.kingdom-paths button.carry-hover { position: relative; }
 .kingdom-map-node.carry-hover::after,
 .kingdom-paths button.carry-hover::after {
   content: '';
@@ -750,4 +794,15 @@ html.kingdom-carrying body { user-select: none; }
   .kingdom-mon.holding img,
   .kingdom-mon.dropped img,
   .kingdom-carry img { animation: none !important; }
+}
+
+/* Walking in from, or off along, a path. */
+.kingdom-mon.traveling { transition: opacity .2s linear; }
+.kingdom-mon.vanishing {
+  pointer-events: none;
+  opacity: 0 !important;
+  transition: opacity .6s ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .kingdom-map-walkers img { animation: none; transition: none; }
 }

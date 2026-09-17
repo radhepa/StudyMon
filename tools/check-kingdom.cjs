@@ -1,4 +1,5 @@
 const { chromium } = require('./playwright.cjs');
+const BASE = process.argv[2] || 'http://127.0.0.1:8780';
 const fs = require('fs');
 
 (async () => {
@@ -10,7 +11,7 @@ const fs = require('fs');
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
   const errors = [];
   page.on('pageerror', e => errors.push(e.message));
-  await page.goto('http://127.0.0.1:8780');
+  await page.goto(BASE);
 
   await page.evaluate(() => {
     installSubjects();
@@ -39,27 +40,25 @@ const fs = require('fs');
   if (scoreAudit.count !== 6 || scoreAudit.names !== 6 || scoreAudit.voices !== 6 || !scoreAudit.validLoops) {
     throw new Error('Each district needs a distinct, valid, calm music loop');
   }
-  const assignment = await page.evaluate(() => {
-    const hour = kingdomHourKey();
-    const now = kingdomAssignments(hour);
-    const next = kingdomAssignments(hour + 1);
-    const flatten = groups => Object.keys(groups).flatMap(id =>
-      groups[id].map(entry => ({ key: entry.key, location: id })));
-    const a = flatten(now), b = flatten(next);
-    const nextByKey = Object.fromEntries(b.map(row => [row.key, row.location]));
-    const counts = Object.values(now).map(rows => rows.length);
-    return {
-      total: a.length,
-      unique: new Set(a.map(row => row.key)).size,
-      allMove: a.every(row => nextByKey[row.key] && nextByKey[row.key] !== row.location),
-      balanced: Math.max(...counts) - Math.min(...counts) <= 1
-    };
+  const census = await page.evaluate(() => {
+    const c = kingdomTownCensus(Date.now());
+    const keys = Object.values(c.groups).flat().concat(c.road).map(kingdomPlacementKey);
+    return { total: keys.length, unique: new Set(keys).size };
   });
-  if (assignment.total !== 38 || assignment.unique !== 38) {
-    throw new Error('A Pokemon was missing or assigned to multiple districts');
+  if (census.total !== 38 || census.unique !== 38) {
+    throw new Error('A Pokemon was missing or placed in multiple districts');
   }
-  if (!assignment.allMove) throw new Error('Not every Pokemon changes district next hour');
-  if (!assignment.balanced) throw new Error('The town population is not balanced');
+  /* Freeze the town so every district view below can be counted exactly. */
+  const freezeTown = () => page.evaluate(() => {
+    kingdomRoster().forEach(entry => {
+      const st = kingdomTravelState(entry, Date.now());
+      if (st.trip) st.loc = st.trip.to;
+      st.trip = null;
+      st.until = Date.now() + 86400000;
+    });
+    renderKingdom();
+  });
+  await freezeTown();
 
   const collisionAudit = await page.evaluate(() => {
     let seed = 0x51a7c0de;
@@ -130,12 +129,11 @@ const fs = require('fs');
       bubbles: true, cancelable: true, clientX: x, clientY: y,
       pointerId: 7, pointerType: 'mouse', button: 0, isPrimary: true
     }));
-    localStorage.removeItem(KINGDOM_PLACEMENT_KEY);
     kingdomGo('square');
     kingdomGo('green');
     const stage = document.getElementById('kingdom-stage');
     stage.scrollIntoView({ block: 'center' });
-    const actor = KINGDOM_ACTORS[0];
+    const actor = KINGDOM_ACTORS.find(a => !a.trip);
     actor.pauseUntil = Infinity;
     const key = kingdomPlacementKey(actor.entry);
     const box = actor.el.getBoundingClientRect();
@@ -159,9 +157,12 @@ const fs = require('fs');
     const placed = KINGDOM_ACTORS.find(a => kingdomPlacementKey(a.entry) === key);
     renderKingdom();
     const kept = KINGDOM_ACTORS.some(a => kingdomPlacementKey(a.entry) === key);
-    const total = Object.values(kingdomAssignments(kingdomHourKey())).reduce((n, rows) => n + rows.length, 0);
-    const expires = !Object.values(kingdomAssignments(kingdomHourKey() + 1)).flat().some(e => e.spot);
-    localStorage.removeItem(KINGDOM_PLACEMENT_KEY);
+    const c = kingdomTownCensus(Date.now());
+    const total = Object.values(c.groups).reduce((n, rows) => n + rows.length, 0) + c.road.length;
+    const st = KINGDOM_TRAVEL.mons[key];
+    /* A set-down Pokemon starts a fresh stay there, and forgets the spot once it moves on. */
+    const expires = st.loc === 'market' && !!st.spot && !st.trip &&
+      kingdomTravelAdvance(key, JSON.parse(JSON.stringify(st)), st.until).spot === null;
     kingdomGo('green');
     return { cursor, early, picked, clings, placed: !!placed && !KINGDOM_CARRY &&
       kingdomIsWalkable(placed.x, placed.y, location), kept, total, expires };
@@ -173,6 +174,7 @@ const fs = require('fs');
     throw new Error('Carrying a Pokemon to another district failed: ' + JSON.stringify(grabAudit));
   }
 
+  await freezeTown();
   const districtAudit = await page.evaluate(() => {
     const rows = [];
     for (const loc of KINGDOM_LOCATIONS) {
@@ -276,7 +278,7 @@ const fs = require('fs');
 
   const cleanup = await page.evaluate(() => {
     showScreen('map');
-    return { raf: KINGDOM_RAF, clock: KINGDOM_CLOCK_TIMER, hour: KINGDOM_HOUR_TIMER };
+    return { raf: KINGDOM_RAF, clock: KINGDOM_CLOCK_TIMER, hour: KINGDOM_SYNC_TIMER };
   });
   if (cleanup.raf || cleanup.clock || cleanup.hour) throw new Error('Kingdom animation kept running after leaving');
   await page.waitForTimeout(180);
