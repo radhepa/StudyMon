@@ -76,7 +76,7 @@ function check(n,ok,d){results.push({n,ok,d});console.log((ok?'PASS  ':'FAIL  ')
   t('save round trip',()=>{
     S.money=1234;S.badges={3:true};
     saveGame();
-    const raw=localStorage.getItem('cmon.save.v1');
+    const raw=localStorage.getItem(SAVE_KEY);
     S=null; loadGame(); bindProgress(activeSubject());
     out.roundTrip={money:S.money,badge3:!!S.badges[3],rawBytes:raw?raw.length:0};
   });

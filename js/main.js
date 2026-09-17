@@ -72,8 +72,8 @@ document.addEventListener('DOMContentLoaded', function () {
   // so say so up front rather than after an hour of play.
   var storageOk = true;
   try {
-    localStorage.setItem('cmon.probe', '1');
-    localStorage.removeItem('cmon.probe');
+    localStorage.setItem('studymon.probe', '1');
+    localStorage.removeItem('studymon.probe');
   } catch (e) { storageOk = false; }
   if (!storageOk) {
     var warn = document.createElement('div');

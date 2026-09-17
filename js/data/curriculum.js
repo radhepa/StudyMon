@@ -26,7 +26,7 @@ function questionChapter(q) { return q.chapter || CURRICULUM_MAP[Number(q.id.mat
 /* Run before freshSave defaults are merged so an old save cannot be marked new. */
 function migrateCurriculumSave(s) {
   if(s.curriculumVersion===4)return false;
-  try {if(!localStorage.getItem('cmon.save.before-curriculum4.v1'))localStorage.setItem('cmon.save.before-curriculum4.v1',JSON.stringify(s));}catch(e){}
+  try {if(!localStorage.getItem(SAVE_CURRICULUM_BACKUP_KEY))localStorage.setItem(SAVE_CURRICULUM_BACKUP_KEY,JSON.stringify(s));}catch(e){}
   var previous=s.badges||{}, stats=s.chapterStats||{};
   s.legacyCurriculum={badges:Object.assign({},previous),chapterStats:JSON.parse(JSON.stringify(stats))};
   s.badges={};s.chapterStats={};

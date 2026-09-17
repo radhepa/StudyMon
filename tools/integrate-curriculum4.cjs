@@ -1,4 +1,4 @@
-const fs=require('fs'),root='C:/Users/minal/Cmon/';
+const fs=require('fs'),root='C:/Users/minal/StudyMon/';
 function edit(p,fn){let s=fs.readFileSync(root+p,'utf8').replace(/\r\n/g,'\n');fs.writeFileSync(root+p,fn(s));}
 edit('index.html',s=>{
  if(!s.includes('js/data/curriculum.js'))s=s.replace(/(<script src="js\/engine\/state\.js[^\n]+)/,'<script src="js/data/curriculum.js?v=curriculum4"></script>\n<script src="js/data/questions/edition4.js?v=curriculum4"></script>\n<script src="js/data/curriculum-notes.js?v=curriculum4"></script>\n$1');

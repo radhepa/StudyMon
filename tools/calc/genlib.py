@@ -157,7 +157,7 @@ def shuffled_options(rng, correct, wrong):
 
 def rng_for(qid):
     """A generator seeded by id, so regenerating produces identical output."""
-    return random.Random('cmon-calc-' + qid)
+    return random.Random('studymon-calc-' + qid)
 
 
 def accepted(*forms):

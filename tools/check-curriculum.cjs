@@ -1,4 +1,4 @@
-const fs=require('fs'),vm=require('vm'),assert=require('assert');const root='C:/Users/minal/Cmon/';
+const fs=require('fs'),vm=require('vm'),assert=require('assert');const root='C:/Users/minal/StudyMon/';
 const scripts=[...fs.readFileSync(root+'index.html','utf8').matchAll(/<script src="([^"?]+)[^"]*"/g)].map(m=>m[1]);
 const ctx={window:null,console,localStorage:{getItem:()=>null,setItem:()=>{}}};ctx.window=ctx;vm.createContext(ctx);
 for(const f of scripts)if(f!=='js/main.js')vm.runInContext(fs.readFileSync(root+f,'utf8'),ctx,{filename:f});

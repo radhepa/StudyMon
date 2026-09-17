@@ -1,8 +1,11 @@
 /* Save state + persistence. One localStorage key, plus JSON export/import
    so a save can be moved between machines or backed up. */
 
-var SAVE_KEY = 'cmon.save.v1';
-var SAVE_SCHEMA_BACKUP_KEY = 'cmon.save.v1.backup.pre-schema-1';
+var SAVE_KEY = 'studymon.save.v1';
+var SAVE_SCHEMA_BACKUP_KEY = 'studymon.save.v1.backup.pre-schema-1';
+var SAVE_CURRICULUM_BACKUP_KEY = 'studymon.save.before-curriculum4.v1';
+/* The game's first name. Saves made under it are moved to the new keys once. */
+var LEGACY_STORE_PREFIX = 'cmon.';
 var CURRENT_SAVE_SCHEMA = 3;
 
 var S = null;   // the live save object
@@ -200,7 +203,20 @@ function saveGame() {
   catch (e) { console.warn('save failed', e); }
 }
 
+function adoptLegacySaveKeys() {
+  [SAVE_KEY, SAVE_SCHEMA_BACKUP_KEY, SAVE_CURRICULUM_BACKUP_KEY].forEach(function (key) {
+    try {
+      var old = LEGACY_STORE_PREFIX + key.slice(key.indexOf('.') + 1);
+      var raw = localStorage.getItem(old);
+      if (raw === null) return;
+      if (localStorage.getItem(key) === null) localStorage.setItem(key, raw);
+      if (localStorage.getItem(key) !== null) localStorage.removeItem(old);
+    } catch (e) { }
+  });
+}
+
 function loadGame() {
+  adoptLegacySaveKeys();
   try {
     var raw = localStorage.getItem(SAVE_KEY);
     if (!raw) return false;
@@ -216,6 +232,7 @@ function loadGame() {
 }
 
 function hasSave() {
+  adoptLegacySaveKeys();
   try { return !!localStorage.getItem(SAVE_KEY); } catch (e) { return false; }
 }
 
@@ -228,7 +245,7 @@ function exportSave() {
   var blob = new Blob([JSON.stringify(S, null, 2)], { type: 'application/json' });
   var a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = 'cmon-save-' + new Date().toISOString().slice(0, 10) + '.json';
+  a.download = 'studymon-save-' + new Date().toISOString().slice(0, 10) + '.json';
   document.body.appendChild(a); a.click();
   setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 500);
 }
