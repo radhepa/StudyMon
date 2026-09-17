@@ -353,6 +353,7 @@ function humanMusicMix() {
 
 function humanStartMusic() {
   if (!HUMAN_MUSIC_ON) return;
+  if (typeof radioMusicPlaying === 'function' && radioMusicPlaying()) return;
   var music = humanCreateMusicAudio();
   if (!music) return;
   if (music.active) {

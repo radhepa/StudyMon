@@ -39,6 +39,7 @@ function renderTopbar() {
   var due = dueCount();
   $('#topbar').innerHTML =
     '<span class="logo">StudyMon</span>' +
+    (typeof radioChip === 'function' ? radioChip() : '') +
     (typeof regionChip === 'function' ? regionChip() : '') +
     /* TEMP: one-click warp while the pier is rebuilt - see js/engine/temp-calc-warp.js */
     (typeof tempCalcWarpChip === 'function' ? tempCalcWarpChip() : '') +

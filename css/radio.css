@@ -1,0 +1,96 @@
+/* StudyMon Radio: the top-bar chip and its floating panel. */
+
+#topbar .radio-chip {
+  cursor: pointer; min-height: 0; font: inherit; font-size: 15px;
+  display: inline-flex; align-items: center; gap: 6px; max-width: 320px;
+  color: #3b291d; padding: 9px 13px; border: 2px solid #99764e; border-radius: 20px;
+  background: linear-gradient(#fff8e7, #ead2a7);
+  box-shadow: inset 0 0 0 2px #f5e6c7, 0 2px 0 #73523955; text-shadow: none;
+}
+#topbar .radio-chip:hover { filter: brightness(1.04); }
+#topbar .radio-chip[aria-expanded="true"] { border-color: #5d7a3a; box-shadow: inset 0 0 0 2px #e4efc9, 0 2px 0 #73523955; }
+#topbar .radio-chip.live { border-color: #3f6f8f; }
+.radio-chip-now {
+  font-size: 12px; color: #2f5a74; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  max-width: 200px; padding-left: 6px; border-left: 1px solid #99764e88;
+}
+.radio-chip.live .radio-chip-now::before { content: ''; display: inline-block; width: 7px; height: 7px; margin-right: 5px;
+  border-radius: 50%; background: #3f8f5c; vertical-align: 1px; animation: radio-pulse 1.6s ease-in-out infinite; }
+@keyframes radio-pulse { 50% { opacity: .35; } }
+@media (prefers-reduced-motion: reduce) { .radio-chip.live .radio-chip-now::before { animation: none; } }
+
+#radio-panel {
+  position: fixed; z-index: 95; overflow-y: auto; overscroll-behavior: contain;
+  color: #3b291d; font-family: var(--read); line-height: 1.45;
+  background: linear-gradient(#fffaf0, #f3e3c2);
+  border: 3px solid #795331; border-radius: 12px; padding: 14px 16px 16px;
+  box-shadow: inset 0 0 0 2px #f5e6c7, 0 14px 34px #3b291d55;
+}
+#radio-panel[hidden] { display: none; }
+#radio-panel button { min-height: 38px; padding: 6px 12px; font-size: 14px; }
+
+.radio-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 4px; }
+.radio-head h2 { margin: 0; font: 900 21px 'Arial Black', 'Trebuchet MS', sans-serif; color: #5b3b22; letter-spacing: -.5px; }
+#radio-panel .radio-close { min-height: 34px; width: 36px; padding: 0; font-size: 22px; line-height: 1; }
+
+.radio-sec { border-top: 2px dashed #b7976a; padding-top: 12px; margin-top: 12px; }
+.radio-sec h3 { margin: 0 0 8px; font: 700 16px Georgia, serif; color: #5b3b22; }
+.radio-sec-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.radio-sec-head h3 { margin: 0; }
+
+.radio-now { display: flex; flex-direction: column; background: #fff6e2; border: 2px solid #d9bf92; border-radius: 8px; padding: 8px 11px; }
+.radio-now-label { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: #8a6a45; }
+.radio-now b { font: 700 18px Georgia, serif; }
+.radio-artist { font-size: 12px; color: #7b6045; }
+
+.radio-transport { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 10px 0 4px; }
+#radio-panel .radio-play { min-width: 100px; }
+.radio-mode { display: inline-flex; margin-left: auto; }
+#radio-panel .radio-mode button { border-radius: 0; font-size: 12px; padding: 4px 9px; min-height: 34px; }
+#radio-panel .radio-mode button:first-child { border-radius: 7px 0 0 7px; }
+#radio-panel .radio-mode button:last-child { border-radius: 0 7px 7px 0; border-left-width: 0; }
+#radio-panel button[aria-pressed="true"] { background: linear-gradient(#e6efcf, #bfd29a); border-color: #5d7a3a; color: #2d4217; }
+
+.radio-slider { display: grid; grid-template-columns: 92px minmax(0, 1fr) 44px; align-items: center; gap: 8px; margin: 6px 0; font-size: 14px; }
+.radio-slider input { width: 100%; accent-color: #b0692d; min-height: 28px; margin: 0; }
+.radio-slider output { text-align: right; font-variant-numeric: tabular-nums; color: #6b5036; font-size: 13px; }
+
+.radio-songs { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 4px; }
+#radio-panel .radio-songs button {
+  width: 100%; text-align: left; display: flex; justify-content: space-between; align-items: baseline; gap: 8px;
+  background: #fff8ea; border: 1px solid #dcc59f; box-shadow: none; border-radius: 6px; min-height: 36px; color: #3b291d;
+}
+#radio-panel .radio-songs button:hover { background: #fff1d2; }
+#radio-panel .radio-songs button.current { background: #f6dfa9; border-color: #b0692d; font-weight: 700; }
+.radio-song-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.radio-songs .radio-artist { flex-shrink: 0; }
+
+.radio-help { margin-top: 10px; font-size: 13px; }
+.radio-help summary { cursor: pointer; color: #7a4e25; font-weight: 600; }
+.radio-help p { margin: 6px 0; }
+.radio-help code, .radio-help pre { font-family: var(--mono); font-size: 12px; background: #fff6e2; border: 1px solid #dcc59f; border-radius: 4px; }
+.radio-help code { padding: 0 4px; }
+.radio-help pre { padding: 6px 8px; margin: 6px 0; white-space: pre-wrap; word-break: break-word; }
+
+#radio-panel .radio-switch { min-width: 64px; }
+
+.radio-presets { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px; }
+#radio-panel .radio-presets button {
+  display: flex; align-items: center; gap: 7px; text-align: left; font-size: 13px; line-height: 1.2;
+  padding: 6px 9px; min-height: 40px; background: #fff8ea; border: 1px solid #dcc59f; box-shadow: none; color: #3b291d;
+}
+#radio-panel .radio-presets button[aria-pressed="true"] { background: #f6dfa9; border: 2px solid #b0692d; color: #3b291d; }
+#radio-panel .radio-presets button.live { background: linear-gradient(#dcebf3, #b9d3e2); border-color: #3f6f8f; }
+.radio-presets button span:first-child { font-size: 17px; }
+
+.radio-blurb { font-size: 13px; margin: 8px 0 4px; color: #5b4330; }
+.radio-mixer { background: #fff6e2; border: 2px solid #d9bf92; border-radius: 8px; padding: 4px 10px; }
+.radio-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+
+@media (max-width: 620px) {
+  #topbar .radio-chip { font-size: 13px; padding: 7px 10px; }
+  .radio-chip-now { max-width: 120px; }
+  .radio-slider { grid-template-columns: 78px minmax(0, 1fr) 40px; }
+  .radio-presets { grid-template-columns: minmax(0, 1fr); }
+  .radio-mode { margin-left: 0; }
+}

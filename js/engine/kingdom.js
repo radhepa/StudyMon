@@ -973,6 +973,7 @@ function kingdomFadeMusicActive(active, seconds) {
 
 function kingdomStartMusic(locationId) {
   if (!KINGDOM_MUSIC_ON) return;
+  if (typeof radioMusicPlaying === 'function' && radioMusicPlaying()) return;
   var track = KINGDOM_MUSIC_TRACKS[locationId];
   var music = track && kingdomCreateMusicAudio();
   if (!music) return;
