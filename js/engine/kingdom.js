@@ -1,5 +1,7 @@
 /* Pokemon Kingdom: one connected town whose residents change district hourly.
-   This layer never mutates the save; Party + PC remain the source of truth. */
+   This layer never mutates the save; Party + PC remain the source of truth.
+   Pokemon the player carries to a new spot are remembered separately, and only
+   until the next hourly parade (see KINGDOM_PLACEMENT_KEY). */
 
 var KINGDOM_LOCATIONS = [
   {
@@ -240,6 +242,13 @@ var KINGDOM_RAIN_AUDIO_TOKEN = 0;
 var KINGDOM_MUSIC_ON = true;
 var KINGDOM_MUSIC_AUDIO = null;
 var KINGDOM_MUSIC_TOKEN = 0;
+var KINGDOM_PLACEMENT_KEY = 'studymon.kingdom.placements.v1';
+var KINGDOM_HOLD_MS = 1000;
+var KINGDOM_HOVER_MS = 350;
+var KINGDOM_GRAB = null;
+var KINGDOM_CARRY = null;
+var KINGDOM_INSPECTED = null;
+var KINGDOM_SWALLOW_CLICK_UNTIL = 0;
 
 function kingdomRoster() {
   if (!S) return [];
@@ -280,12 +289,43 @@ function kingdomAssignments(hourKey) {
     return a.order - b.order || a.entry.key.localeCompare(b.entry.key);
   });
   var shift = ((hourKey % KINGDOM_LOCATIONS.length) + KINGDOM_LOCATIONS.length) % KINGDOM_LOCATIONS.length;
+  var spots = kingdomLoadPlacements(hourKey);
   ranked.forEach(function (row, rank) {
     var location = KINGDOM_LOCATIONS[(rank + shift) % KINGDOM_LOCATIONS.length];
+    var spot = spots[kingdomPlacementKey(row.entry)];
+    if (spot && groups[spot.loc]) {
+      location = kingdomLocation(spot.loc);
+      row.entry.spot = spot;
+    }
     row.entry.location = location.id;
     groups[location.id].push(row.entry);
   });
   return groups;
+}
+
+/* Party/PC slots have no unique id, so the species guards against a slot that
+   was reshuffled since the Pokemon was carried. */
+function kingdomPlacementKey(entry) {
+  return entry.where + '-' + entry.index + '-' + entry.mon.id;
+}
+
+function kingdomLoadPlacements(hourKey) {
+  try {
+    var saved = JSON.parse(localStorage.getItem(KINGDOM_PLACEMENT_KEY) || 'null');
+    if (saved && saved.hour === hourKey && saved.spots) return saved.spots;
+  } catch (error) { }
+  return {};
+}
+
+function kingdomSavePlacement(entry, locationId, x, y) {
+  var hourKey = kingdomHourKey();
+  var spots = kingdomLoadPlacements(hourKey);
+  var spot = { loc: locationId, x: Math.round(x * 100) / 100, y: Math.round(y * 100) / 100 };
+  spots[kingdomPlacementKey(entry)] = spot;
+  try {
+    localStorage.setItem(KINGDOM_PLACEMENT_KEY, JSON.stringify({ hour: hourKey, spots: spots }));
+  } catch (error) { }
+  return spot;
 }
 
 function kingdomSeed(entry, position, hourKey) {
@@ -348,6 +388,18 @@ function kingdomPoint(rand, location) {
     if (kingdomIsWalkable(x, y, location)) return { x: x, y: y };
   }
   return { x: location.nav.home[0], y: location.nav.home[1] };
+}
+
+function kingdomNearestWalkable(x, y, location) {
+  if (kingdomIsWalkable(x, y, location)) return { x: x, y: y };
+  for (var r = .75; r <= 12; r += .75) {
+    for (var a = 0; a < 20; a++) {
+      var angle = a / 20 * Math.PI * 2;
+      var px = x + Math.cos(angle) * r, py = y + Math.sin(angle) * r;
+      if (kingdomIsWalkable(px, py, location)) return { x: px, y: py };
+    }
+  }
+  return null;
 }
 
 function kingdomTryStep(actor, nextX, nextY) {
@@ -462,7 +514,7 @@ function kingdomMapHtml(assignments) {
     '<div class="kingdom-map-nodes">';
   KINGDOM_LOCATIONS.forEach(function (loc) {
     h += '<button class="kingdom-map-node' + (loc.id === KINGDOM_LOCATION ? ' current' : '') +
-      '" onclick="kingdomGo(\'' + loc.id + '\')"><span>' + loc.icon + '</span>' +
+      '" data-kingdom-loc="' + loc.id + '" onclick="kingdomGo(\'' + loc.id + '\')"><span>' + loc.icon + '</span>' +
       '<b>' + esc(loc.short) + '</b><small>' + assignments[loc.id].length + '</small></button>';
   });
   return h + '</div></div>';
@@ -479,7 +531,10 @@ function renderKingdom(hourChanged) {
   KINGDOM_LOCATION = location.id;
   KINGDOM_ASSIGNMENTS = kingdomAssignments(hourKey);
   var roster = kingdomRoster();
-  var residents = KINGDOM_ASSIGNMENTS[location.id];
+  kingdomDropCarriedFromAssignments();
+  /* Pokemon the player set down here are never hidden by the visible limit. */
+  var residents = KINGDOM_ASSIGNMENTS[location.id].filter(function (entry) { return entry.spot; })
+    .concat(KINGDOM_ASSIGNMENTS[location.id].filter(function (entry) { return !entry.spot; }));
   var visible = residents.slice(0, KINGDOM_VISIBLE_LIMIT);
   KINGDOM_RENDERED_HOUR = hourKey;
 
@@ -497,7 +552,7 @@ function renderKingdom(hourChanged) {
     '<div class="kingdom-frame"><div id="kingdom-stage" class="kingdom-stage loc-' + location.id +
       '" tabindex="-1" role="region" aria-label="' + esc(location.name) + ', with ' + residents.length +
       ' Pokémon residents">' +
-      '<div class="kingdom-bar"><span class="kingdom-glade">' + location.icon + ' ' +
+      '<div class="kingdom-bar"><span id="kingdom-glade" class="kingdom-glade">' + location.icon + ' ' +
       residents.length + ' here</span><span id="kingdom-story" class="kingdom-story" aria-live="polite">' +
       (hourChanged ? 'The hourly parade has arrived!' : 'This corner of town is peaceful.') + '</span></div>' +
       '<div id="kingdom-daylight" class="kingdom-daylight" aria-hidden="true"></div>' +
@@ -509,13 +564,15 @@ function renderKingdom(hourChanged) {
     '<div class="kingdom-paths"><b>Paths from here</b>';
   location.neighbors.forEach(function (id) {
     var neighbor = kingdomLocation(id);
-    h += '<button onclick="kingdomGo(\'' + id + '\')">' + neighbor.icon + ' Walk to ' + esc(neighbor.short) + '</button>';
+    h += '<button data-kingdom-loc="' + id + '" onclick="kingdomGo(\'' + id + '\')">' + neighbor.icon + ' Walk to ' + esc(neighbor.short) + '</button>';
   });
   h += '</div><div id="kingdom-inspector" class="panel kingdom-inspector kingdom-welcome">' +
     '<span aria-hidden="true" class="kingdom-welcome-mark">❧</span><div><h3>Life around town</h3>' +
-    '<p>Your party wears a gold star. Choose a Pokémon to say hello, or use the connected paths to explore.</p></div></div>';
+    '<p>Your party wears a gold star. Tap a Pokémon to say hello, or hold the hand on one for a moment ' +
+    'to pick it up and carry it to another part of town.</p></div></div>';
   root.innerHTML = h;
   $('#kingdom-stage').style.backgroundImage = 'url("' + location.image + '")';
+  kingdomBindHand($('#kingdom-stage'));
   kingdomApplyAtmosphere(now);
   if (KINGDOM_WEATHER === 'rain' && KINGDOM_RAIN_SOUND) kingdomStartRainAudio();
   if (KINGDOM_MUSIC_ON) kingdomStartMusic(location.id);
@@ -536,7 +593,8 @@ function renderKingdom(hourChanged) {
 function kingdomAddActor(entry, position, location, hourKey) {
   var stage = $('#kingdom-stage');
   var rand = kingdomSeed(entry, position, hourKey);
-  var point = kingdomPoint(rand, location);
+  var point = entry.spot && entry.spot.loc === location.id ?
+    { x: entry.spot.x, y: entry.spot.y } : kingdomPoint(rand, location);
   var button = document.createElement('button');
   button.className = 'kingdom-mon walking';
   button.type = 'button';
@@ -554,6 +612,7 @@ function kingdomAddActor(entry, position, location, hourKey) {
   stage.appendChild(button);
   KINGDOM_ACTORS.push(actor);
   kingdomPaint(actor);
+  return actor;
 }
 
 function kingdomTick(now) {
@@ -648,6 +707,7 @@ function kingdomSocial(a, b, now) {
 }
 
 function kingdomInspect(actor) {
+  KINGDOM_INSPECTED = actor;
   KINGDOM_ACTORS.forEach(function (a) { a.el.classList.toggle('selected', a === actor); });
   actor.pauseUntil = performance.now() + 3200;
   actor.el.classList.remove('walking');
@@ -661,12 +721,69 @@ function kingdomInspect(actor) {
     '<img src="' + monSprite(m, m.shiny ? 'shiny' : 'front') + '" alt="">' +
     '<div><h3>' + esc(monName(m)) + (m.shiny ? ' ✦' : '') + '</h3><div>' + typePills(d.types) + '</div>' +
     '<p>Level ' + m.lvl + ' · ' + esc(d.genus) + ' · ' + home + '<br>Spending this hour in ' +
-    esc(actor.location.name) + '.</p></div>' +
+    esc(actor.location.name) + '.</p>' + kingdomMoveButtonsHtml(actor) + '</div>' +
     '<button class="kingdom-close" onclick="kingdomClearInspect()" aria-label="Close Pokémon details">×</button>';
   kingdomSay(monName(m) + ' came over to say hello!');
 }
 
+function kingdomMoveButtonsHtml(actor) {
+  var h = '<div class="kingdom-move-row"><span>Move to</span>';
+  KINGDOM_LOCATIONS.forEach(function (loc) {
+    if (loc.id === actor.location.id) return;
+    h += '<button type="button" onclick="kingdomMoveInspected(\'' + loc.id + '\')">' +
+      loc.icon + ' ' + esc(loc.short) + '</button>';
+  });
+  return h + '</div>';
+}
+
+/* Button alternative to carrying, for keyboards and anyone who can't hold a press. */
+function kingdomMoveInspected(locationId) {
+  var actor = KINGDOM_INSPECTED;
+  if (!actor || KINGDOM_ACTORS.indexOf(actor) < 0 || KINGDOM_CARRY) return;
+  var target = kingdomLocation(locationId);
+  var point = kingdomPoint(Math.random, target);
+  kingdomSavePlacement(actor.entry, target.id, point.x, point.y);
+  kingdomRemoveActor(actor);
+  kingdomClearInspect();
+  kingdomRefreshCounts();
+  kingdomSay(monName(actor.entry.mon) + ' set off for ' + target.name + '.');
+  toast(monName(actor.entry.mon) + ' moved to ' + target.name + ' until the next parade.');
+}
+
+function kingdomRemoveActor(actor) {
+  var i = KINGDOM_ACTORS.indexOf(actor);
+  if (i >= 0) KINGDOM_ACTORS.splice(i, 1);
+  if (actor.el && actor.el.parentNode) actor.el.remove();
+  if (KINGDOM_INSPECTED === actor) KINGDOM_INSPECTED = null;
+}
+
+/* The Pokemon in the hand belongs to no district until it is set down. */
+function kingdomDropCarriedFromAssignments() {
+  if (!KINGDOM_CARRY) return;
+  Object.keys(KINGDOM_ASSIGNMENTS).forEach(function (id) {
+    KINGDOM_ASSIGNMENTS[id] = KINGDOM_ASSIGNMENTS[id].filter(function (entry) {
+      return kingdomPlacementKey(entry) !== KINGDOM_CARRY.key;
+    });
+  });
+}
+
+function kingdomRefreshCounts() {
+  KINGDOM_ASSIGNMENTS = kingdomAssignments(kingdomHourKey());
+  kingdomDropCarriedFromAssignments();
+  $$('.kingdom-map-node').forEach(function (node) {
+    var small = node.querySelector('small');
+    var rows = KINGDOM_ASSIGNMENTS[node.getAttribute('data-kingdom-loc')];
+    if (small && rows) small.textContent = rows.length;
+  });
+  var location = kingdomLocation(KINGDOM_LOCATION);
+  var glade = $('#kingdom-glade');
+  if (glade) glade.textContent = location.icon + ' ' + KINGDOM_ASSIGNMENTS[location.id].length + ' here';
+  var empty = $('.kingdom-empty');
+  if (empty && KINGDOM_ACTORS.length) empty.remove();
+}
+
 function kingdomClearInspect() {
+  KINGDOM_INSPECTED = null;
   KINGDOM_ACTORS.forEach(function (a) { a.el.classList.remove('selected'); });
   var box = $('#kingdom-inspector');
   if (!box) return;
@@ -692,7 +809,7 @@ function kingdomGo(id) {
 function kingdomUpdateClock() {
   if (CUR !== 'kingdom') { kingdomStop(true); return; }
   var now = Date.now();
-  if (kingdomHourKey(now) !== KINGDOM_RENDERED_HOUR) {
+  if (kingdomHourKey(now) !== KINGDOM_RENDERED_HOUR && !KINGDOM_CARRY && !KINGDOM_GRAB) {
     renderKingdom(true);
     toast('The hourly town parade is on the move!');
     return;
@@ -1048,11 +1165,290 @@ function kingdomToggleMusic() {
 
 function kingdomHourlyMove() {
   if (CUR !== 'kingdom') { kingdomStop(true); return; }
+  if (KINGDOM_CARRY || KINGDOM_GRAB) {
+    /* Never pull the town out from under a Pokemon in the player's hand. */
+    KINGDOM_HOUR_TIMER = setTimeout(kingdomHourlyMove, 1000);
+    return;
+  }
   renderKingdom(true);
   toast('The hourly town parade is on the move!');
 }
 
+/* ---- The grabbing hand ---------------------------------------------------
+   Hold on a Pokemon for KINGDOM_HOLD_MS to pick it up. It then hangs from the
+   hand wherever the pointer goes; hovering a district on the town map or a
+   path button walks there. Letting go inside the town sets it down; letting
+   go anywhere else does nothing - it clings on until it is placed in town. */
+
+function kingdomBindHand(stage) {
+  if (!stage) return;
+  stage.addEventListener('pointerdown', kingdomStagePointerDown);
+  stage.addEventListener('contextmenu', function (ev) { ev.preventDefault(); });
+  if (kingdomBindHand.bound) return;
+  kingdomBindHand.bound = true;
+  window.addEventListener('pointermove', kingdomPointerMove);
+  window.addEventListener('pointerup', kingdomPointerUp);
+  window.addEventListener('pointercancel', function () {
+    kingdomSetHandClosed(false);
+    if (KINGDOM_GRAB) kingdomCancelHold(true);
+  });
+  window.addEventListener('keydown', function (ev) {
+    if (ev.key === 'Escape' && KINGDOM_CARRY) { ev.preventDefault(); kingdomReturnCarried(); }
+  });
+  /* While carrying, the only clicks that do anything are district changes. */
+  window.addEventListener('click', function (ev) {
+    var swallow = performance.now() < KINGDOM_SWALLOW_CLICK_UNTIL;
+    if (!KINGDOM_CARRY && !swallow) return;
+    var loc = ev.target.closest && ev.target.closest('[data-kingdom-loc]');
+    if (loc && !swallow) return;
+    ev.preventDefault();
+    ev.stopPropagation();
+  }, true);
+}
+
+function kingdomSetHandClosed(closed) {
+  var stage = $('#kingdom-stage');
+  if (stage) stage.classList.toggle('hand-closed', closed);
+}
+
+function kingdomActorFor(el) {
+  for (var i = 0; i < KINGDOM_ACTORS.length; i++) {
+    if (KINGDOM_ACTORS[i].el === el) return KINGDOM_ACTORS[i];
+  }
+  return null;
+}
+
+function kingdomStagePointerDown(ev) {
+  if (ev.pointerType === 'mouse' && ev.button !== 0) return;
+  kingdomSetHandClosed(true);
+  if (KINGDOM_CARRY) { ev.preventDefault(); return; }
+  var monEl = ev.target.closest('.kingdom-mon');
+  var actor = monEl && kingdomActorFor(monEl);
+  if (actor) kingdomBeginHold(actor, ev);
+}
+
+function kingdomBeginHold(actor, ev) {
+  kingdomCancelHold(true);
+  actor.pauseUntil = Infinity;
+  actor.el.classList.remove('walking');
+  actor.el.classList.add('holding');
+  actor.el.style.setProperty('--hold', '0');
+  var grab = KINGDOM_GRAB = {
+    actor: actor, pointerId: ev.pointerId, startedAt: performance.now(),
+    x: ev.clientX, y: ev.clientY, raf: 0, timer: 0
+  };
+  /* The timer owns the pickup; animation frames only draw the ring. */
+  grab.timer = setTimeout(function () {
+    if (KINGDOM_GRAB === grab) kingdomPickUp();
+  }, KINGDOM_HOLD_MS);
+  var step = function () {
+    if (KINGDOM_GRAB !== grab) return;
+    var progress = Math.min(1, Math.max(0, (performance.now() - grab.startedAt) / KINGDOM_HOLD_MS));
+    actor.el.style.setProperty('--hold', progress.toFixed(3));
+    grab.raf = requestAnimationFrame(step);
+  };
+  grab.raf = requestAnimationFrame(step);
+}
+
+function kingdomCancelHold(quiet) {
+  var grab = KINGDOM_GRAB;
+  if (!grab) return;
+  KINGDOM_GRAB = null;
+  cancelAnimationFrame(grab.raf);
+  clearTimeout(grab.timer);
+  var actor = grab.actor;
+  actor.el.classList.remove('holding');
+  actor.el.style.removeProperty('--hold');
+  actor.pauseUntil = performance.now() + 700;
+  var held = performance.now() - grab.startedAt;
+  /* A long press that was let go early is not also a tap. */
+  if (held > 450) {
+    KINGDOM_SWALLOW_CLICK_UNTIL = performance.now() + 350;
+    if (!quiet) kingdomSay('Keep holding ' + monName(actor.entry.mon) + ' a little longer to pick it up.');
+  }
+}
+
+function kingdomPickUp() {
+  var grab = KINGDOM_GRAB;
+  if (!grab) return;
+  KINGDOM_GRAB = null;
+  cancelAnimationFrame(grab.raf);
+  clearTimeout(grab.timer);
+  var actor = grab.actor;
+  var size = Math.max(48, actor.el.getBoundingClientRect().width);
+  var m = actor.entry.mon;
+  kingdomRemoveActor(actor);
+  var el = document.createElement('div');
+  el.className = 'kingdom-carry';
+  el.setAttribute('aria-hidden', 'true');
+  el.style.setProperty('--size', Math.round(size) + 'px');
+  el.innerHTML = '<img src="' + monSprite(m, m.shiny ? 'shiny' : 'front') + '" alt="" draggable="false">' +
+    (actor.entry.where === 'party' ? '<span class="kingdom-party-mark">★</span>' : '');
+  document.body.appendChild(el);
+  KINGDOM_CARRY = {
+    entry: actor.entry, key: kingdomPlacementKey(actor.entry), el: el,
+    from: { loc: actor.location.id, x: actor.x, y: actor.y },
+    size: size, x: grab.x, y: grab.y, hoverId: null, hoverAt: 0, timer: 0
+  };
+  document.documentElement.classList.add('kingdom-carrying');
+  kingdomMoveCarry(grab.x, grab.y);
+  KINGDOM_CARRY.timer = setInterval(kingdomCarryTick, 40);
+  kingdomRefreshCounts();
+  playCry(m.id);
+  kingdomSay('You picked up ' + monName(m) + '! Hover a district to travel, then let go in town.');
+}
+
+/* The hand grips the top of the sprite, so it is aimed by its feet - the same
+   anchor kingdomPaint uses (78% down a sprite that hangs from 20% above the hand). */
+function kingdomFeetPoint(cx, cy) {
+  var stage = $('#kingdom-stage');
+  if (!stage || !KINGDOM_CARRY) return null;
+  var r = stage.getBoundingClientRect();
+  var fy = cy + KINGDOM_CARRY.size * .58;
+  /* Hit-test rather than trust the rectangle: the fixed nav bar can cover
+     the bottom of the town. The carried sprite ignores pointer events. */
+  var under = document.elementFromPoint(cx, cy);
+  return {
+    inside: !!under && stage.contains(under),
+    x: Math.max(0, Math.min(100, (cx - r.left) / r.width * 100)),
+    y: Math.max(0, Math.min(100, (fy - r.top) / r.height * 100))
+  };
+}
+
+function kingdomMoveCarry(cx, cy) {
+  var carry = KINGDOM_CARRY;
+  if (!carry) return;
+  carry.x = cx;
+  carry.y = cy;
+  carry.el.style.left = cx + 'px';
+  carry.el.style.top = cy + 'px';
+  var feet = kingdomFeetPoint(cx, cy);
+  var inside = !!(feet && feet.inside);
+  var canDrop = inside && !!kingdomNearestWalkable(feet.x, feet.y, kingdomLocation(KINGDOM_LOCATION));
+  carry.el.classList.toggle('outside', !inside);
+  carry.el.classList.toggle('can-drop', canDrop);
+
+  var under = document.elementFromPoint(cx, cy);
+  var target = under && under.closest && under.closest('[data-kingdom-loc]');
+  var id = target ? target.getAttribute('data-kingdom-loc') : null;
+  if (id === KINGDOM_LOCATION) id = null;
+  if (id !== carry.hoverId) {
+    $$('.carry-hover').forEach(function (node) { node.classList.remove('carry-hover'); });
+    carry.hoverId = id;
+    carry.hoverAt = performance.now();
+    if (id) target.classList.add('carry-hover');
+  } else if (id && performance.now() - carry.hoverAt >= KINGDOM_HOVER_MS) {
+    carry.hoverId = null;
+    kingdomGo(id);
+    kingdomSay('Carrying ' + monName(carry.entry.mon) + ' into ' + kingdomLocation(id).name +
+      '. Let go in town to set it down.');
+  }
+}
+
+/* Runs while carrying so the district hover finishes and the page scrolls at
+   the screen edges even when the pointer rests. */
+function kingdomCarryTick() {
+  var carry = KINGDOM_CARRY;
+  if (!carry) return;
+  var edge = 48;
+  if (carry.y < edge) window.scrollBy(0, -Math.ceil((edge - carry.y) / 3));
+  else if (carry.y > innerHeight - edge) window.scrollBy(0, Math.ceil((carry.y - innerHeight + edge) / 3));
+  kingdomMoveCarry(carry.x, carry.y);
+}
+
+function kingdomPointerMove(ev) {
+  var grab = KINGDOM_GRAB;
+  if (grab && ev.pointerId === grab.pointerId) {
+    grab.x = ev.clientX;
+    grab.y = ev.clientY;
+    var r = grab.actor.el.getBoundingClientRect();
+    var slack = 12;
+    if (ev.clientX < r.left - slack || ev.clientX > r.right + slack ||
+        ev.clientY < r.top - slack || ev.clientY > r.bottom + slack) {
+      kingdomCancelHold(false);
+    }
+  }
+  if (KINGDOM_CARRY) kingdomMoveCarry(ev.clientX, ev.clientY);
+}
+
+function kingdomPointerUp(ev) {
+  kingdomSetHandClosed(false);
+  if (KINGDOM_GRAB) kingdomCancelHold(false);
+  else if (KINGDOM_CARRY) kingdomTryDrop(ev.clientX, ev.clientY);
+}
+
+function kingdomTryDrop(cx, cy) {
+  var carry = KINGDOM_CARRY;
+  var name = monName(carry.entry.mon);
+  var feet = kingdomFeetPoint(cx, cy);
+  if (!feet || !feet.inside) {
+    carry.el.classList.remove('clinging');
+    void carry.el.offsetWidth;
+    carry.el.classList.add('clinging');
+    kingdomSay(name + ' is holding on tight! Set it down somewhere in town.');
+    return false;
+  }
+  var location = kingdomLocation(KINGDOM_LOCATION);
+  var point = kingdomNearestWalkable(feet.x, feet.y, location);
+  if (!point) {
+    kingdomSay('There is no room for ' + name + ' there. Try an open path.');
+    return false;
+  }
+  var spot = kingdomSavePlacement(carry.entry, location.id, point.x, point.y);
+  kingdomEndCarry();
+  kingdomPlaceActor(carry.entry, spot, location);
+  kingdomSay(name + ' settled into ' + location.name + '.');
+  return true;
+}
+
+function kingdomPlaceActor(entry, spot, location) {
+  entry.spot = spot;
+  var actor = kingdomAddActor(entry, KINGDOM_ACTORS.length, location, kingdomHourKey());
+  actor.pauseUntil = performance.now() + 1400;
+  actor.el.classList.remove('walking');
+  actor.el.classList.add('dropped');
+  setTimeout(function () { actor.el.classList.remove('dropped'); }, 600);
+  kingdomRefreshCounts();
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!KINGDOM_RAF && !reduceMotion) {
+    KINGDOM_LAST = performance.now();
+    KINGDOM_RAF = requestAnimationFrame(kingdomTick);
+  }
+}
+
+function kingdomEndCarry() {
+  var carry = KINGDOM_CARRY;
+  if (!carry) return;
+  KINGDOM_CARRY = null;
+  clearInterval(carry.timer);
+  if (carry.el.parentNode) carry.el.remove();
+  $$('.carry-hover').forEach(function (node) { node.classList.remove('carry-hover'); });
+  document.documentElement.classList.remove('kingdom-carrying');
+  KINGDOM_SWALLOW_CLICK_UNTIL = performance.now() + 350;
+}
+
+/* Escape puts the Pokemon back where it was picked up - still in town. */
+function kingdomReturnCarried() {
+  var carry = KINGDOM_CARRY;
+  if (!carry) return;
+  var name = monName(carry.entry.mon);
+  kingdomEndCarry();
+  if (carry.from.loc === KINGDOM_LOCATION && CUR === 'kingdom' && $('#kingdom-stage')) {
+    kingdomPlaceActor(carry.entry, { loc: carry.from.loc, x: carry.from.x, y: carry.from.y },
+      kingdomLocation(carry.from.loc));
+  } else if ($('#kingdom-stage')) {
+    kingdomRefreshCounts();
+  }
+  kingdomSay(name + ' hurried back to ' + kingdomLocation(carry.from.loc).name + '.');
+}
+
 function kingdomStop(stopAudio) {
+  if (KINGDOM_GRAB) {
+    cancelAnimationFrame(KINGDOM_GRAB.raf);
+    clearTimeout(KINGDOM_GRAB.timer);
+    KINGDOM_GRAB = null;
+  }
+  if (stopAudio && KINGDOM_CARRY) kingdomReturnCarried();
   if (KINGDOM_RAF) cancelAnimationFrame(KINGDOM_RAF);
   if (KINGDOM_CLOCK_TIMER) clearInterval(KINGDOM_CLOCK_TIMER);
   if (KINGDOM_HOUR_TIMER) clearTimeout(KINGDOM_HOUR_TIMER);

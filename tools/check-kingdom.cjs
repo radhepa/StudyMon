@@ -124,6 +124,55 @@ const fs = require('fs');
     throw new Error('Resident inspector did not open');
   }
 
+  const grabAudit = await page.evaluate(async () => {
+    const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
+    const fire = (el, type, x, y) => el.dispatchEvent(new PointerEvent(type, {
+      bubbles: true, cancelable: true, clientX: x, clientY: y,
+      pointerId: 7, pointerType: 'mouse', button: 0, isPrimary: true
+    }));
+    localStorage.removeItem(KINGDOM_PLACEMENT_KEY);
+    kingdomGo('square');
+    kingdomGo('green');
+    const stage = document.getElementById('kingdom-stage');
+    stage.scrollIntoView({ block: 'center' });
+    const actor = KINGDOM_ACTORS[0];
+    actor.pauseUntil = Infinity;
+    const key = kingdomPlacementKey(actor.entry);
+    const box = actor.el.getBoundingClientRect();
+    const cursor = getComputedStyle(stage).cursor;
+    fire(actor.el, 'pointerdown', box.left + box.width / 2, box.top + box.height / 2);
+    await wait(500);
+    const early = !!KINGDOM_CARRY;
+    await wait(700);
+    const picked = !!KINGDOM_CARRY && !KINGDOM_ACTORS.includes(actor);
+    KINGDOM_CARRY.x = innerWidth / 2;
+    KINGDOM_CARRY.y = innerHeight / 2;
+    fire(document.body, 'pointerup', 5, 5);
+    const clings = !!KINGDOM_CARRY;
+    kingdomGo('market');
+    const rect = document.getElementById('kingdom-stage').getBoundingClientRect();
+    const location = kingdomLocation('market');
+    const x = rect.left + rect.width * location.nav.home[0] / 100;
+    const y = rect.top + rect.height * location.nav.home[1] / 100 - KINGDOM_CARRY.size * .58;
+    fire(document.body, 'pointermove', x, y);
+    fire(document.getElementById('kingdom-stage'), 'pointerup', x, y);
+    const placed = KINGDOM_ACTORS.find(a => kingdomPlacementKey(a.entry) === key);
+    renderKingdom();
+    const kept = KINGDOM_ACTORS.some(a => kingdomPlacementKey(a.entry) === key);
+    const total = Object.values(kingdomAssignments(kingdomHourKey())).reduce((n, rows) => n + rows.length, 0);
+    const expires = !Object.values(kingdomAssignments(kingdomHourKey() + 1)).flat().some(e => e.spot);
+    localStorage.removeItem(KINGDOM_PLACEMENT_KEY);
+    kingdomGo('green');
+    return { cursor, early, picked, clings, placed: !!placed && !KINGDOM_CARRY &&
+      kingdomIsWalkable(placed.x, placed.y, location), kept, total, expires };
+  });
+  if (!grabAudit.cursor.includes('kingdom-hand-open') || grabAudit.early || !grabAudit.picked) {
+    throw new Error('The hand did not pick a Pokemon up after a 1 second hold: ' + JSON.stringify(grabAudit));
+  }
+  if (!grabAudit.clings || !grabAudit.placed || !grabAudit.kept || grabAudit.total !== 38 || !grabAudit.expires) {
+    throw new Error('Carrying a Pokemon to another district failed: ' + JSON.stringify(grabAudit));
+  }
+
   const districtAudit = await page.evaluate(() => {
     const rows = [];
     for (const loc of KINGDOM_LOCATIONS) {
