@@ -16,46 +16,42 @@
 
 var RADIO_STORE_KEY = 'studymon.radio.v1';
 
-/* Layer levels are 0-100. `drops.kind` picks the sound of individual drops:
-   patter, tin, window, leaf or crackle. `thunder.every` is the gap range in
-   seconds and `thunder.distance` runs from 0 (overhead) to 1 (far away).
-   `muffle` low-passes the whole ambience, as if heard from indoors. */
+/* Layer levels are 0-100. `drops.rate` is raindrops per second, `thunder.every`
+   is the gap range in seconds and `thunder.distance` runs from 0 (overhead) to
+   1 (far away). `muffle` low-passes the whole ambience, as if heard from indoors.
+   A preset with rain and drops at 0 is thunder on its own. */
 var RADIO_AMBIENCES = [
   { id: 'drizzle', name: 'Light Drizzle', icon: '🌦', blurb: 'A fine, quiet mist of rain. Good for reading.',
-    rain: { level: 38, lp: 7000, hp: 900, gust: .12 }, drops: { level: 30, kind: 'patter', rate: 9 },
+    rain: { level: 38, lp: 7000, hp: 900, gust: .12 }, drops: { level: 30, rate: 9 },
     wind: { level: 10, lp: 380 }, thunder: { level: 0, every: [40, 80], distance: .8 } },
   { id: 'steady', name: 'Steady Rain', icon: '🌧', blurb: 'Even, medium rain that never changes pace.',
-    rain: { level: 60, lp: 5200, hp: 400, gust: .16 }, drops: { level: 38, kind: 'patter', rate: 22 },
+    rain: { level: 60, lp: 5200, hp: 400, gust: .16 }, drops: { level: 38, rate: 22 },
     wind: { level: 18, lp: 420 }, thunder: { level: 0, every: [35, 70], distance: .75 } },
+  { id: 'night_rain', name: 'Soft Night Rain', icon: '🌙', blurb: 'Gentle rain heard through a closed window. Deep and calm.',
+    rain: { level: 64, lp: 5200, hp: 200, gust: .14 }, drops: { level: 30, rate: 18 },
+    wind: { level: 14, lp: 360 }, thunder: { level: 0, every: [35, 70], distance: .8 }, muffle: 1600 },
   { id: 'downpour', name: 'Heavy Downpour', icon: '💧', blurb: 'A thick wall of rain with gusts rolling through.',
-    rain: { level: 82, lp: 4200, hp: 180, gust: .3 }, drops: { level: 46, kind: 'patter', rate: 48 },
+    rain: { level: 82, lp: 4200, hp: 180, gust: .3 }, drops: { level: 46, rate: 48 },
     wind: { level: 42, lp: 520 }, thunder: { level: 0, every: [30, 60], distance: .7 } },
-  { id: 'tin_roof', name: 'Rain on a Tin Roof', icon: '🏚', blurb: 'Bright pings on a metal roof over a soft hiss.',
-    rain: { level: 40, lp: 5600, hp: 600, gust: .1 }, drops: { level: 58, kind: 'tin', rate: 26 },
-    wind: { level: 12, lp: 400 }, thunder: { level: 0, every: [35, 70], distance: .75 } },
-  { id: 'window', name: 'Rain on the Window', icon: '🪟', blurb: 'Taps against the glass, the street muffled outside.',
-    rain: { level: 42, lp: 2600, hp: 250, gust: .14 }, drops: { level: 55, kind: 'window', rate: 14 },
-    wind: { level: 16, lp: 360 }, thunder: { level: 0, every: [35, 70], distance: .8 } },
-  { id: 'forest', name: 'Forest Rain', icon: '🌲', blurb: 'Rain in the canopy and fat drops falling from leaves.',
-    rain: { level: 48, lp: 3800, hp: 300, gust: .22 }, drops: { level: 50, kind: 'leaf', rate: 7 },
-    wind: { level: 26, lp: 460 }, thunder: { level: 0, every: [35, 70], distance: .8 } },
+  { id: 'gusty', name: 'Windswept Rain', icon: '🌬', blurb: 'Rain driven in waves by a strong, steady wind.',
+    rain: { level: 66, lp: 4800, hp: 250, gust: .45 }, drops: { level: 34, rate: 30 },
+    wind: { level: 62, lp: 650 }, thunder: { level: 0, every: [30, 60], distance: .7 } },
   { id: 'distant_storm', name: 'Distant Thunderstorm', icon: '🌩', blurb: 'Steady rain with thunder rolling far off.',
-    rain: { level: 55, lp: 5000, hp: 350, gust: .16 }, drops: { level: 34, kind: 'patter', rate: 20 },
+    rain: { level: 55, lp: 5000, hp: 350, gust: .16 }, drops: { level: 34, rate: 20 },
     wind: { level: 22, lp: 420 }, thunder: { level: 55, every: [18, 38], distance: .85 } },
   { id: 'close_storm', name: 'Thunderstorm Overhead', icon: '⛈', blurb: 'Hard rain and sharp cracks right above you.',
-    rain: { level: 74, lp: 4600, hp: 220, gust: .26 }, drops: { level: 44, kind: 'patter', rate: 40 },
+    rain: { level: 74, lp: 4600, hp: 220, gust: .26 }, drops: { level: 44, rate: 40 },
     wind: { level: 36, lp: 500 }, thunder: { level: 72, every: [12, 28], distance: .2 } },
   { id: 'monsoon', name: 'Rolling Monsoon', icon: '🌀', blurb: 'Torrential rain, strong wind and near-constant rumbling.',
-    rain: { level: 90, lp: 3900, hp: 150, gust: .38 }, drops: { level: 50, kind: 'patter', rate: 60 },
+    rain: { level: 90, lp: 3900, hp: 150, gust: .38 }, drops: { level: 50, rate: 60 },
     wind: { level: 60, lp: 600 }, thunder: { level: 64, every: [7, 16], distance: .5 } },
-  { id: 'cabin', name: 'Cabin Storm by the Fire', icon: '🔥', blurb: 'A storm outside the walls and a fire crackling within.',
-    rain: { level: 62, lp: 5000, hp: 200, gust: .2 }, drops: { level: 40, kind: 'crackle', rate: 5 },
-    wind: { level: 34, lp: 440 }, thunder: { level: 50, every: [20, 42], distance: .6 }, muffle: 1100 }
+  { id: 'thunder_far', name: 'Far Thunder Only', icon: '☁', blurb: 'No rain, just low thunder rumbling across the distance.',
+    rain: { level: 0, lp: 5000, hp: 350, gust: .16 }, drops: { level: 0, rate: 20 },
+    wind: { level: 18, lp: 380 }, thunder: { level: 80, every: [10, 24], distance: .85 } },
+  { id: 'thunder_near', name: 'Close Thunder Only', icon: '⚡', blurb: 'No rain, just big nearby claps and long rolling echoes.',
+    rain: { level: 0, lp: 5000, hp: 350, gust: .16 }, drops: { level: 0, rate: 20 },
+    wind: { level: 20, lp: 420 }, thunder: { level: 75, every: [10, 22], distance: .3 } }
 ];
-
-var RADIO_DROP_LABELS = {
-  patter: 'Raindrops', tin: 'Roof pings', window: 'Window taps', leaf: 'Leaf drips', crackle: 'Fire crackle'
-};
 
 var RADIO = {
   audio: null,
@@ -172,7 +168,24 @@ function radioAudio() {
     compressor.ratio.value = 3;
     compressor.attack.value = .02;
     compressor.release.value = .5;
-    compressor.connect(context.destination);
+    // A fast limiter after the compressor keeps stacked thunder from clipping.
+    var limiter = context.createDynamicsCompressor();
+    limiter.threshold.value = -4;
+    limiter.knee.value = 0;
+    limiter.ratio.value = 20;
+    limiter.attack.value = .002;
+    limiter.release.value = .25;
+    // Then a soft clipper: untouched below 0.7, bending smoothly to never pass 1.
+    var clipper = context.createWaveShaper();
+    var shape = new Float32Array(2049);
+    for (var i = 0; i < shape.length; i++) {
+      var x = i / 1024 - 1, mag = Math.abs(x);
+      shape[i] = Math.sign(x) * (mag <= .7 ? mag : .7 + .3 * Math.tanh((mag - .7) / .3));
+    }
+    clipper.curve = shape;
+    compressor.connect(limiter);
+    limiter.connect(clipper);
+    clipper.connect(context.destination);
 
     var musicBus = context.createGain();
     var musicTone = context.createBiquadFilter();
@@ -546,7 +559,7 @@ function radioBuildAmbience(preset) {
   master.gain.linearRampToValueAtTime(radioLevel(mix.volume, RADIO_LAYER_SCALE.volume), context.currentTime + 1.8);
   var tone = context.createBiquadFilter();
   tone.type = 'lowpass';
-  tone.frequency.value = preset.muffle || 16000;
+  tone.frequency.value = Math.min(preset.muffle || 16000, context.sampleRate / 2 - 100);
   tone.Q.value = .5;
   master.connect(tone);
   tone.connect(audio.out);
@@ -609,9 +622,7 @@ function radioAmbienceTick(amb) {
   if (amb.nextDrop < now) amb.nextDrop = now + .02;
   while (amb.nextDrop < horizon) {
     radioDrop(amb, amb.nextDrop);
-    // Crackle arrives in little bursts; everything else is evenly random.
     var gap = -Math.log(1 - Math.random()) / rate;
-    if (preset.drops.kind === 'crackle' && Math.random() < .55) gap = .012 + Math.random() * .05;
     amb.nextDrop += gap;
   }
   if (now >= amb.nextThunder) {
@@ -648,47 +659,10 @@ function radioNoiseBurst(amb, time, duration, filterType, frequency, q, volume, 
   source.start(time, Math.random() * 5, duration + .02);
 }
 
-function radioPing(amb, time, frequency, endFrequency, duration, volume, wave, destination) {
-  var context = amb.context;
-  var osc = context.createOscillator();
-  var envelope = context.createGain();
-  osc.type = wave || 'sine';
-  osc.frequency.setValueAtTime(frequency, time);
-  if (endFrequency) osc.frequency.exponentialRampToValueAtTime(endFrequency, time + duration * .6);
-  envelope.gain.setValueAtTime(.0001, time);
-  envelope.gain.linearRampToValueAtTime(volume, time + .003);
-  envelope.gain.exponentialRampToValueAtTime(.0001, time + duration);
-  osc.connect(envelope);
-  envelope.connect(destination);
-  osc.start(time);
-  osc.stop(time + duration + .03);
-}
-
 function radioDrop(amb, time) {
-  var kind = amb.preset.drops.kind;
-  var context = amb.context;
-  var out = radioPanner(context, amb.gains.drops, .85);
+  var out = radioPanner(amb.context, amb.gains.drops, .85);
   var loud = .45 + Math.random() * .55;
-  if (kind === 'tin') {
-    var pitch = 1700 + Math.random() * 2400;
-    radioPing(amb, time, pitch, 0, .07 + Math.random() * .12, .09 * loud, 'sine', out);
-    radioPing(amb, time, pitch * 1.47, 0, .05 + Math.random() * .06, .04 * loud, 'triangle', out);
-    radioNoiseBurst(amb, time, .012, 'highpass', 3500, .7, .22 * loud, out);
-  } else if (kind === 'window') {
-    radioNoiseBurst(amb, time, .02 + Math.random() * .02, 'bandpass', 2600 + Math.random() * 2200, 1.4, .5 * loud, out);
-    radioPing(amb, time, 900 + Math.random() * 600, 0, .03, .05 * loud, 'sine', out);
-    // Now and then a rivulet runs down the glass.
-    if (Math.random() < .08) radioNoiseBurst(amb, time + .03, .35 + Math.random() * .4, 'bandpass', 1800 + Math.random() * 900, 6, .12, out);
-  } else if (kind === 'leaf') {
-    var start = 700 + Math.random() * 700;
-    radioPing(amb, time, start, start * .45, .09 + Math.random() * .08, .12 * loud, 'sine', out);
-    radioNoiseBurst(amb, time, .03, 'bandpass', 1400 + Math.random() * 1500, 1, .28 * loud, out);
-  } else if (kind === 'crackle') {
-    radioNoiseBurst(amb, time, .004 + Math.random() * .012, 'bandpass', 1500 + Math.random() * 3500, .9, (1.6 + Math.random() * 2.6) * loud, out);
-    if (Math.random() < .06) radioNoiseBurst(amb, time, .08, 'lowpass', 500, .7, 1.4, out);
-  } else {
-    radioNoiseBurst(amb, time, .012 + Math.random() * .03, 'bandpass', 1300 + Math.random() * 4200, 1.1, .5 * loud, out);
-  }
+  radioNoiseBurst(amb, time, .012 + Math.random() * .03, 'bandpass', 1300 + Math.random() * 4200, 1.1, .5 * loud, out);
 }
 
 /* A thunder clap is a long brown-noise rumble whose low-pass cutoff falls as it
@@ -723,7 +697,7 @@ function radioThunder(amb, time, distance) {
       var d = (x - swell.at) / swell.width;
       return sum + swell.size * Math.exp(-d * d);
     }, 0);
-    curve[i] = Math.max(.0001, body * (.55 + roll * .6) * (1.1 - distance * .35));
+    curve[i] = Math.max(.0001, Math.min(1, body * (.55 + roll * .6)) * (1.1 - distance * .35));
   }
   envelope.gain.setValueAtTime(.0001, time);
   envelope.gain.setValueCurveAtTime(curve, time + .001, duration);
@@ -735,8 +709,8 @@ function radioThunder(amb, time, distance) {
   source.stop(time + duration + .1);
 
   if (distance < .5) {
-    radioNoiseBurst(amb, time, .25 + Math.random() * .2, 'highpass', 900, .5, (.5 - distance) * 1.6, dest);
-    radioNoiseBurst(amb, time + .05, .6, 'lowpass', 2500, .6, (.5 - distance) * .9, dest);
+    radioNoiseBurst(amb, time, .25 + Math.random() * .2, 'highpass', 900, .5, (.5 - distance) * 1.1, dest);
+    radioNoiseBurst(amb, time + .05, .6, 'lowpass', 2500, .6, (.5 - distance) * .6, dest);
   }
 }
 
@@ -921,7 +895,7 @@ function radioPanelHTML() {
       '<div class="radio-mixer">' +
         radioSlider('radio-amb-volume', 'Overall', mix.volume, 'radioSetAmbienceLevel(\'volume\',this.value)') +
         radioSlider('radio-amb-rain', 'Rain', mix.rain, 'radioSetAmbienceLevel(\'rain\',this.value)') +
-        radioSlider('radio-amb-drops', RADIO_DROP_LABELS[preset.drops.kind] || 'Drops', mix.drops, 'radioSetAmbienceLevel(\'drops\',this.value)') +
+        radioSlider('radio-amb-drops', 'Raindrops', mix.drops, 'radioSetAmbienceLevel(\'drops\',this.value)') +
         radioSlider('radio-amb-wind', 'Wind', mix.wind, 'radioSetAmbienceLevel(\'wind\',this.value)') +
         radioSlider('radio-amb-thunder', 'Thunder', mix.thunder, 'radioSetAmbienceLevel(\'thunder\',this.value)') +
       '</div>' +
