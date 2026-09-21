@@ -46,6 +46,7 @@ const SUITES=[
   ['persistence',       'tools/check-persistence.cjs'],
   ['calculus region',   'tools/check-calc-region.cjs'],
   ['calculus problems', 'tools/check-calc-problems.cjs'],
+  ['calculus review',   'tools/check-calc-review.cjs'],
   ['autograder',        'tools/check-autograder.cjs'],
   ['runtime edges',     'tools/check-runtime-edges.cjs'],
   ['Pokemon Kingdom',   'tools/check-kingdom.cjs'],

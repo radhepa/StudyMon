@@ -377,8 +377,8 @@ function renderMap() {
         '">Lv ~' + bossExpectedLevel(e) + '</span>' +
       '<br><i>"' + esc(e.intro) + '"</i>' +
       (e.only && e.only.length
-        ? '<br><span class="route-only">Only place you are asked about lesson' +
-          (e.only.length > 1 ? 's ' : ' ') + e.only.join(', ') + '</span>'
+        ? '<br><span class="route-only">Covers lesson' +
+          (e.only.length > 1 ? 's ' : ' ') + e.only.join(', ') + ', which no quiz asks about</span>'
         : '') +
       '<br><span style="opacity:.75">Questions from ' +
         (e.lessons ? 'lessons ' + e.lessons[0] + '–' + e.lessons[e.lessons.length - 1]
@@ -400,7 +400,7 @@ function goWild(n) {
   if (!partyAlive()) { toast('Everyone has fainted. Visit the Poké Center.'); return; }
   var c = chapterByNumber(n);
   clearLog();
-  startBattle({ kind: 'wild', chapters: [n], foes: [wildFor(c)], title: c.route, chapter: c });
+  startBattle({ kind: 'wild', chapters: [n], guestLessons: wildGuestLessons(n), foes: [wildFor(c)], title: c.route, chapter: c });
 }
 
 function goGym(n) {
@@ -485,8 +485,10 @@ function openRouteInfo(n) {
   if (routeBox) routeBox.scrollTop = 0;
 }
 
+/* Everything a wild battle on route n can ask: its own quiz plus any exam-only
+   lessons parked on it. */
 function routeQuestions(n) {
-  return (QBANK[n] || []).slice().sort(function (a, b) {
+  return questionsFor([n], wildGuestLessons(n)).sort(function (a, b) {
     return (Number(a.lesson || 0) - Number(b.lesson || 0)) ||
       (Number(a.t || 0) - Number(b.t || 0)) || String(a.id).localeCompare(String(b.id));
   });
@@ -499,10 +501,12 @@ function questionWasEncountered(q) {
 function routeQuestionBaseHtml(n) {
   var questions = routeQuestions(n);
   var met = questions.filter(questionWasEncountered);
+  var hidden = questions.filter(function (q) { return isHidden(q.id); }).length;
   var pct = questions.length ? Math.round(met.length / questions.length * 100) : 0;
   var h = '<section class="question-base"><div class="question-base-head"><div>' +
     '<span class="friend-role">Question base</span>' +
-    '<h3>' + met.length + '/' + questions.length + ' questions encountered</h3></div>' +
+    '<h3>' + met.length + '/' + questions.length + ' questions encountered' +
+    (hidden ? ' · ' + hidden + ' hidden' : '') + '</h3></div>' +
     '<button class="ghost" onclick="openQuestionBase(' + n + ')">See all questions</button></div>' +
     '<div class="question-progress" role="progressbar" aria-label="Questions encountered" aria-valuemin="0" ' +
     'aria-valuemax="' + questions.length + '" aria-valuenow="' + met.length + '"><span style="width:' + pct + '%"></span></div>';
@@ -541,7 +545,8 @@ function openQuestionBase(n) {
     h += '<article class="question-entry ' + (metQuestion ? 'encountered' : 'unseen') + '">' +
       '<div class="question-entry-meta"><span class="qtag">' + esc(q.tag || 'Question') + '</span>' +
       '<span>Tier ' + q.t + (q.lesson ? ' · Lesson ' + q.lesson : '') + '</span>' +
-      '<span class="question-status">' + (metQuestion ? 'Encountered' + (attempts ? ' · ' + attempts + ' attempt' + (attempts === 1 ? '' : 's') : '') : 'Not encountered') + '</span></div>' +
+      '<span class="question-status">' + (isHidden(q.id) ? 'Hidden · right ' + reviewPlan().retireAfter + ' in a row' + (attempts ? ' · ' + attempts + ' attempts' : '')
+        : metQuestion ? 'Encountered' + (attempts ? ' · ' + attempts + ' attempt' + (attempts === 1 ? '' : 's') : '') : 'Not encountered') + '</span></div>' +
       '<div class="question-entry-text"><b>' + (i + 1) + '.</b> ' + esc(q.q) + '</div>' +
       (q.code ? '<pre class="qcode">' + esc(q.code) + '</pre>' : '') + '</article>';
   });
@@ -665,7 +670,7 @@ function renderStudy() {
   } else {
     h += '<details class="panel curriculum-source"><summary>Where these chapters come from</summary><p>' +
       esc(def.book) + '. ' + esc(def.blurb) + '</p><p>Chapters here are quizzes, not textbook chapters. ' +
-      'The four numbered above ten are the lessons no quiz covers - the only place they are tested is an exam.</p></details>';
+      'The four numbered above ten are the lessons no quiz covers - the exams test them, and they also turn up while you hunt on a nearby route.</p></details>';
   }
 
   h += '<div class="row tight" style="margin-bottom:14px">';
@@ -736,13 +741,13 @@ function mockExam(count) {
   // spread evenly over the chapters, then fill the remainder at random
   var perCh = Math.floor(count / CHAPTERS.length);
   for (var i = 0; i < CHAPTERS.length; i++) {
-    var bank = (QBANK[CHAPTERS[i].n] || []).filter(function (q) { return !q.selfCheck; });
+    var bank = (QBANK[CHAPTERS[i].n] || []).filter(function (q) { return !q.selfCheck && !isHidden(q.id); });
     for (var k = 0; k < perCh && bank.length; k++) {
       var q = bank.splice(Math.floor(Math.random() * bank.length), 1)[0];
       if (!used[q.id]) { used[q.id] = 1; picked.push(q); }
     }
   }
-  var all = allQuestions().filter(function (q) { return !used[q.id] && !q.selfCheck; });
+  var all = allQuestions().filter(function (q) { return !used[q.id] && !q.selfCheck && !isHidden(q.id); });
   while (picked.length < count && all.length) {
     var q2 = all.splice(Math.floor(Math.random() * all.length), 1)[0];
     used[q2.id] = 1; picked.push(q2);
@@ -760,7 +765,7 @@ function mockExam(count) {
 
 function drillReview() {
   var due = [];
-  for (var id in S.srs) if (S.srs[id].due <= S.clock) due.push(id);
+  for (var id in S.srs) if (isDue(id)) due.push(id);
   if (!due.length) { toast('Nothing is due for review. Go battle!'); return; }
   drill('review');
 }
@@ -782,7 +787,7 @@ function nextDrill() {
     var due = [];
     var all = allQuestions();
     for (var i = 0; i < all.length; i++) {
-      if (S.srs[all[i].id] && S.srs[all[i].id].due <= S.clock && !D.asked[all[i].id]) due.push(all[i]);
+      if (isDue(all[i].id) && !D.asked[all[i].id]) due.push(all[i]);
     }
     if (!due.length) { endDrill(); return; }
     D.q = due[Math.floor(Math.random() * due.length)];
@@ -903,6 +908,7 @@ function drillAnswer(choice, isFill) {
     w.innerHTML = '<b>' + (correct ? 'Correct!' : 'Not quite.') + '</b>' +
       (correct ? '' : '<div style="margin-bottom:6px"><strong>Answer:</strong> ' + esc(ansTxt) + '</div>') + esc(q.why);
     if (q.selfCheck) w.innerHTML = '<b>' + (correct ? 'Marked correct.' : 'Queued for review.') + '</b>';
+    w.innerHTML += retiredNoteHtml(q);
     card.appendChild(w);
   }
   showAllHints();
@@ -919,7 +925,8 @@ function endDrill() {
   var pct = D.n ? Math.round(D.right / D.n * 100) : 0;
   if (D.exam) { showExamReport(pct); return; }
   modal('<h2>Session over</h2><p style="font-size:16px">' + D.right + ' of ' + D.n + ' correct (' + pct + '%)</p>' +
-    '<p class="muted">Everything you got wrong is queued for review and will come back soon.</p>' +
+    '<p class="muted">Everything you got wrong is queued for review and will come back ' +
+      (reviewPlan() ? 'in about ' + reviewPlan().wrong + ' questions.' : 'soon.') + '</p>' +
     '<button class="primary" onclick="closeModal();showScreen(\'map\');renderMap()">Back to the map</button>');
   D = null;
 }
@@ -1021,7 +1028,10 @@ function renderStats() {
   var due = dueCount();
   h += '<div class="panel dark" style="margin-top:14px"><h3 style="color:var(--accent)">Review queue</h3>' +
     '<p class="small">' + due + ' question' + (due === 1 ? '' : 's') + ' due right now. ' +
-    'Wrong answers come back almost immediately; right answers get pushed further away each time.</p>' +
+    (reviewPlan()
+      ? 'A wrong answer comes back after about ' + reviewPlan().wrong + ' questions and a right one after about ' +
+        reviewPlan().right + '. Right ' + reviewPlan().retireAfter + ' times in a row and it is hidden.'
+      : 'Wrong answers come back almost immediately; right answers get pushed further away each time.') + '</p>' +
     '<div class="row" style="margin-top:10px">' +
     '<button class="primary" onclick="drillReview()" ' + (due ? '' : 'disabled') + '>⟳ Review ' + due + ' now</button>' +
     '</div></div>';

@@ -9,7 +9,8 @@
    The structure pays for itself. Five lessons (10, 11, 20, 27 and 35) appear on
    no quiz at all; the only place the course ever tests them is an exam. That
    makes the bosses mandatory content rather than optional review, and it is why
-   each exam owns a revision route of its own. */
+   each exam owns a revision route of its own. They are also parked on a nearby
+   route (see wildGuests below) so wild battles serve them too. */
 
 window.CALC_LESSONS = {
   1:  'Vectors in the plane',
@@ -395,16 +396,31 @@ window.CALC_SUBJECT = {
   book: 'MA 16200 - Calculus II Field Manual',
   blurb: 'Ten quizzes, three evening exams, one final. The gyms are the quizzes.',
   mapIntro: 'Ten gyms, one per quiz on the real syllabus. Three evening exams stand ' +
-    'between them at the points the course sits them, and each one is the only place ' +
-    'you are ever asked about the lessons no quiz covers. You cannot walk past an exam ' +
-    'you have not sat. The Final is last.',
+    'between them at the points the course sits them, and each one tests the lessons ' +
+    'no quiz covers. You cannot walk past an exam you have not sat. The Final is last.',
   CHAPTERS: window.CALC_CHAPTERS,
   QBANK: null,                 // filled by calc-questions.js
   GYM_DIALOGUE: window.CALC_GYM_DIALOGUE,
   ELITE: window.CALC_ELITE,
   LOCATIONS: window.CALC_LOCATIONS,
   EXAM_CHAPTERS: window.CALC_EXAM_CHAPTERS,
-  TOWNSFOLK: null              // filled by calc-townsfolk.js
+  TOWNSFOLK: null,             // filled by calc-townsfolk.js
+
+  /* Review is built for exposure rather than for drilling one answer until it
+     sticks: a question that was answered is left alone for a good while, so what
+     comes back has to be recalled and not just remembered from a minute ago.
+     Gaps are counted in answered questions, not minutes.
+       right / wrong  about how many questions until it returns
+       jitter         how far either can wander, as a fraction (0.25 = +/-25%)
+       dueChance      how often a due question is taken over a never-seen one
+       retireAfter    right answers in a row that hide a question for good;
+                      unhideQuestions() is the only way back */
+  review: { right: 50, wrong: 25, jitter: 0.25, dueChance: 0.95, retireAfter: 3 },
+
+  /* The lessons no quiz covers have no route, so a wild battle would never
+     reach them. Each is parked on the route whose topic it continues, and the
+     exams still ask about all of them. route number -> lesson numbers. */
+  wildGuests: { 3: [10], 4: [11], 6: [20], 9: [27], 10: [35] }
 };
 
 /* Which gym, if any, covers a given lesson. Five lessons answer null on

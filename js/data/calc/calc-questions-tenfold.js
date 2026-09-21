@@ -365,11 +365,14 @@ family({ chapter:7, lesson:23, slug:'limit-comparison', name:'Limit comparison t
     hints:['Use the leading powers to select b_n.','The numerator has degree 1 and denominator degree 3, so the net behavior is 1/n^2.','Divide by 1/n^2 and take the leading-coefficient ratio.'] };
 });
 family({ chapter:8, lesson:24, slug:'alternating-classification', name:'Alternating-series convergence', section:'10.6' }, function (i) {
-  var p=i%2===0?1:(i%4)+2,kind=p===1?'Conditionally convergent':'Absolutely convergent';
-  return { q:'Classify sum from n = 1 to infinity of (-1)^(n+1)/n^'+p+'.', correct:kind,
+  // Ten different exponents, five at or below 1 (conditional) and five above it
+  // (absolute), so no two variations are the same problem.
+  var P=[['1',1],['2',2],['1/2',1/2],['3',3],['2/3',2/3],['3/2',3/2],['3/4',3/4],['4',4],['1/3',1/3],['5/2',5/2]];
+  var ps=P[i][0],pv=P[i][1],pe=ps.indexOf('/')>=0?'('+ps+')':ps,kind=pv<=1?'Conditionally convergent':'Absolutely convergent';
+  return { q:'Classify sum from n = 1 to infinity of (-1)^(n+1)/n^'+pe+'.', correct:kind,
     wrong:[kind==='Conditionally convergent'?'Absolutely convergent':'Conditionally convergent','Divergent because it alternates','Divergent by the nth-term test'],
-    why:'The alternating series converges because 1/n^'+p+' decreases to 0. Its absolute-value series is a p-series with p = '+p+', which '+(p>1?'converges':'diverges')+'. Therefore the convergence is '+kind.toLowerCase()+'.',
-    hints:['First apply the Alternating Series Test to the magnitudes.','Then test the absolute-value series separately.','The absolute-value series is a p-series with p = '+p+'.'] };
+    why:'The alternating series converges because 1/n^'+pe+' decreases to 0. Its absolute-value series is a p-series with p = '+ps+', which '+(pv>1?'converges':'diverges')+'. Therefore the convergence is '+kind.toLowerCase()+'.',
+    hints:['First apply the Alternating Series Test to the magnitudes.','Then test the absolute-value series separately.','The absolute-value series is a p-series with p = '+ps+'.'] };
 });
 family({ chapter:8, lesson:24, slug:'alternating-error', name:'Alternating-series error bounds', section:'10.6' }, function (i) {
   var p=(i%2)+1,m=i+3,N=m-1;

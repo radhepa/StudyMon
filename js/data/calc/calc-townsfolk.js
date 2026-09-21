@@ -146,7 +146,7 @@ window.CALC_TOWNSFOLK = [
     say: 'Everyone who comes through that door is either about to sit one or has just sat one. Rest either way.' },
   { id: 'c-invigilator', name: 'Kestrel', cls: 'Referee', loc: 'hall', kind: 'talk', badges: 9,
     say: 'Three evening papers and a Final. You do not get past the second gym block until the first is behind you.',
-    tip: 'Lessons 10, 11, 20, 27 and 35 appear on no quiz. The exams are the only place anyone asks you about them.' },
+    tip: 'Lessons 10, 11, 20, 27 and 35 appear on no quiz. The exams are where the course tests them, so they turn up on the routes too: 10 on Route 3, 11 on Route 4, 20 on Route 6, 27 on Route 9, 35 on Route 10.' },
   { id: 'c-thane', name: 'Thane', cls: 'Ace Trainer', loc: 'hall', kind: 'trainer', ch: 10, team: [671, 282], pay: 280,
     badges: 9,
     say: 'Angle first, then reach. And count the petals before you integrate over them.',

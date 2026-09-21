@@ -22,6 +22,7 @@ function startBattle(cfg) {
     friendEligible: !!cfg.friendEligible,
     friendRewarded: false,
     chapters: cfg.chapters,
+    guestLessons: cfg.guestLessons || null,
     foes: cfg.foes,
     foeIx: 0,
     you: you,
@@ -109,7 +110,7 @@ function chooseMove(i) {
 
 function askQuestion(tier) {
   B.turnResolving = false;
-  var got = pickQuestion(B.chapters, tier, B.asked);
+  var got = pickQuestion(B.chapters, tier, B.asked, B.guestLessons);
   B.qAnswered = false;
   B.q = got.q;
   B.qReview = got.review;
@@ -219,7 +220,7 @@ function answer(choice, isFill) {
   var ansTxt = q.k === 'fill' ? q.a[0] : q.c[q.a];
   w.innerHTML = '<b>' + head + '</b>' +
     (correct || q.selfCheck ? '' : '<div style="margin-bottom:6px"><strong>Answer:</strong> ' + esc(ansTxt) + '</div>') +
-    (q.selfCheck ? '' : esc(q.why));
+    (q.selfCheck ? '' : esc(q.why)) + retiredNoteHtml(q);
   card.appendChild(w);
   // a hint you did not need is still worth reading once the answer is in
   showAllHints();
@@ -589,7 +590,7 @@ function tryCatch(ballKey) {
 function askQuestionForCatch() {
   B.qAnswered = false;
   B.turnResolving = false;
-  var got = pickQuestion(B.chapters, 2, B.asked);
+  var got = pickQuestion(B.chapters, 2, B.asked, B.guestLessons);
   B.q = got.q; B.qReview = got.review; B.asked[got.q.id] = true;
   renderQuestion();
   var card = $('#quiz .qcard');

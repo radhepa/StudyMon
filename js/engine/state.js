@@ -36,7 +36,7 @@ function freshSave() {
     money: 500,
     items: { great: 0, ultra: 0, potion: 3, superpotion: 0 },
     town: { beaten: {}, gifts: {}, met: {}, receipts: {} },
-    srs: {},             // qid -> { box: 1..5, due: <answer clock>, r: 0, w: 0 }
+    srs: {},             // qid -> { box: 1..5, due: <answer clock>, r: 0, w: 0 }; a subject with a review plan adds run (right in a row) and hidden
     clock: 0,            // increments on every answered question; drives SRS due dates
     chapterStats: {},    // ch -> { r, w }
     totals: { r: 0, w: 0, battles: 0, wins: 0, caught: 0 },

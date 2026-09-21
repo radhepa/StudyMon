@@ -124,7 +124,7 @@ function check(n,ok,d){results.push({n,ok,d});console.log((ok?'PASS  ':'FAIL  ')
     ['c','calc'].forEach(sub=>{switchSubject(sub);
       CHAPTERS.forEach(c=>{try{openRouteInfo(c.n);openQuestionBase(c.n);closeModal();}catch(e){bad.push(sub+'/'+c.n+': '+e.message);}});});
     switchSubject('calc');
-    const c=CHAPTERS[2],pool=QBANK[c.n]||[];
+    const c=CHAPTERS[2],pool=routeQuestions(c.n);   // the route's own quiz plus any lesson parked on it
     S.srs[pool[0].id]={box:1,due:0,r:1,w:0};
     S.srs[pool[1].id]={box:1,due:0,r:0,w:1};
     openRouteInfo(c.n);

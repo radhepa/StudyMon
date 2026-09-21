@@ -449,6 +449,17 @@ These are the parts that actually move an exam grade:
   you miss drops to box 1 and comes back in two questions; one you keep getting
   right climbs to box 5 and won't reappear for a hundred. It works across battles,
   drills and exams alike. The topbar shows how many are due.
+  The Converging Isles (Calculus II) run on their own schedule, built for
+  exposure over drilling: a right answer comes back after about 50 answered
+  questions and a wrong one after about 25, never on an exact count, and unseen
+  questions are picked by problem type so you meet many kinds of problem instead
+  of ten copies of one. A question answered right three times in a row is hidden
+  from every battle, drill and exam. To bring hidden questions back, run
+  `unhideQuestions()` in the browser console while you are sailing the Isles
+  (`unhideQuestions('all')` for everything, or pass a chapter number or a
+  question id). The lessons no quiz covers are also served on the route beside
+  them (10 on Route 3, 11 on Route 4, 20 on Route 6, 27 on Route 9, 35 on
+  Route 10), so every question in the Calculus II bank can come up in a Wild Battle.
 - **Review Center** — drill only what's due, no battle.
 - **Drill a chapter** — from the Notes screen, pure Q&A on one chapter.
 - **Mock Exam** — 25 or 50 questions shuffled across all fifteen chapters, timed,
