@@ -34,7 +34,8 @@ window.ENCOUNTERS = {
   7: [[269,"common"],[2,"common"],[502,"common"],[752,"common"],[457,"common"],[99,"uncommon"],[545,"uncommon"],[454,"uncommon"],[199,"uncommon"],[419,"rare"],[748,"rare"],[34,"rare"]],
   8: [[168,"common"],[510,"common"],[49,"common"],[920,"common"],[332,"common"],[560,"uncommon"],[110,"uncommon"],[89,"uncommon"],[73,"uncommon"],[970,"rare"],[3,"rare"],[727,"rare"]],
   9: [[528,"common"],[122,"common"],[956,"common"],[687,"common"],[97,"common"],[576,"uncommon"],[579,"uncommon"],[344,"uncommon"],[858,"uncommon"],[475,"rare"],[121,"rare"],[103,"rare"]],
-  10: [[358,"common"],[678,"common"],[547,"common"],[606,"common"],[80,"common"],[65,"uncommon"],[282,"uncommon"],[981,"uncommon"],[196,"uncommon"],[936,"rare"],[468,"rare"],[376,"rare"]]
+  10: [[358,"common"],[678,"common"],[547,"common"],[606,"common"],[80,"common"],[65,"uncommon"],[282,"uncommon"],[981,"uncommon"],[196,"uncommon"],[936,"rare"],[468,"rare"],[376,"rare"]],
+  91: [[833,"common"],[686,"common"],[60,"common"],[90,"common"],[7,"common"],[158,"uncommon"],[728,"uncommon"],[86,"uncommon"],[98,"uncommon"],[570,"rare"],[771,"rare"],[222,"rare"]]
  }
 };
 window.RARITY_WEIGHT = { common: 10, uncommon: 4, rare: 1 };

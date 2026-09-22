@@ -63,7 +63,7 @@ function check(n, ok, d) { results.push({ n, ok }); say((ok ? 'PASS  ' : 'FAIL  
       guidedCounts: Array.from({ length: 35 }, (_, i) => (guidedByLesson[i + 1] || []).length)
     };
   });
-  check('the expanded problems load into the calculus bank', r.probs === 357 && r.total === 1607, r.probs + ' legacy problems of ' + r.total + ' total');
+  check('the expanded problems load into the calculus bank', r.probs === 357 && r.total === 1695, r.probs + ' legacy problems of ' + r.total + ' total');
   check('all Quiz 3+ Field Manual prompts are accounted for', r.fieldManual && r.fieldManual.total === 204 &&
     r.fieldManual.preserved + r.fieldManual.added === 204 && r.fieldManual.added === 150,
     JSON.stringify(r.fieldManual));
@@ -175,7 +175,7 @@ function check(n, ok, d) { results.push({ n, ok }); say((ok ? 'PASS  ' : 'FAIL  
     }));
   }
   check('the four-digit Bank seen counter stays centered on desktop and mobile',
-    bankLayouts.every(x => x.text === '38/1607' && !x.overflow && x.centerDelta < 1), JSON.stringify(bankLayouts));
+    bankLayouts.every(x => x.text === '38/1695' && !x.overflow && x.centerDelta < 1), JSON.stringify(bankLayouts));
 
   // a full gym battle still runs with the new questions in the pool
   r = await p.evaluate(async () => {

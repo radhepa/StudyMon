@@ -343,7 +343,7 @@ window.CALC_GYM_DIALOGUE = {
    them - but everything that looks a chapter up by number has to be able to find
    them, or the first exam question from lesson 10 takes the battle screen down. */
 window.CALC_EXAM_CHAPTERS = [
-  { n: 91, examOnly: true, exam: 'x1', lessons: [10, 11], type: 'water',
+  { n: 91, examOnly: true, exam: 'x1', lessons: [10, 11], type: 'water', teamTypes: ['water', 'dark'],
     title: 'Pumping, dams and integration by parts',
     route: 'Revision Route I - The Long Reservoir',
     blurb: 'The two Unit I lessons that appear on no quiz.',
@@ -355,7 +355,7 @@ window.CALC_EXAM_CHAPTERS = [
       '∫ln x dx has no obvious dv, so take dv = dx. Then v = x and the answer is x ln x − x + C.',
       'Applying parts twice to ∫eˣ sin x dx brings the original integral back with a coefficient. Move it to the left side and divide - recognising the loop is the whole trick.'
     ] },
-  { n: 92, examOnly: true, exam: 'x2', lessons: [20], type: 'normal',
+  { n: 92, examOnly: true, exam: 'x2', lessons: [20], type: 'normal', teamTypes: ['dark', 'ghost'],
     title: 'Sequences: limits, monotonicity and boundedness',
     route: 'Revision Route II - The Technique Yard',
     blurb: 'The Unit II lesson that appears on no quiz.',
@@ -365,7 +365,7 @@ window.CALC_EXAM_CHAPTERS = [
       'To find the limit of a sequence given by a formula, treat n as a continuous variable, which makes the usual limit tools available.',
       'Convergence forces boundedness, but not monotonicity: (−1)ⁿ/n converges to 0 while flipping direction every step.'
     ] },
-  { n: 93, examOnly: true, exam: 'x3', lessons: [27], type: 'psychic',
+  { n: 93, examOnly: true, exam: 'x3', lessons: [27], type: 'psychic', teamTypes: ['psychic', 'poison'],
     title: 'Approximating functions with polynomials I',
     route: 'Revision Route III - The Sounding Line',
     blurb: 'The Unit III lesson that appears on no quiz.',
@@ -375,7 +375,7 @@ window.CALC_EXAM_CHAPTERS = [
       'The error carries a factor of (x − a)ⁿ⁺¹, so accuracy falls off with distance from the centre.',
       'Two levers improve an approximation: raise the degree, or move the centre closer to the point you care about.'
     ] },
-  { n: 94, examOnly: true, exam: 'final', lessons: [35], type: 'fairy',
+  { n: 94, examOnly: true, exam: 'final', lessons: [35], type: 'fairy', teamTypes: ['psychic', 'dragon'],
     title: 'Area and arc length in polar coordinates',
     route: 'Revision Route IV - Everything, In Any Order',
     blurb: 'The Unit IV lesson that appears on no quiz, and the last thing the Final asks.',

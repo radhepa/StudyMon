@@ -99,6 +99,30 @@ function chapterTitle(n) {
   return c ? c.title : 'Chapter ' + n;
 }
 
+/* The exam-only chapter that belongs to a boss, if it has one and if that
+   chapter has its own encounter table - a boss earns a "Revision route" wild
+   battle only once there is actually somewhere to hunt for it. */
+function examChapterFor(e) {
+  var extra = (subjectDef() || {}).EXAM_CHAPTERS || [];
+  for (var i = 0; i < extra.length; i++) {
+    if (extra[i].exam === e.id && (typeof routeSpecies !== 'function' || routeSpecies(extra[i]).length)) {
+      return extra[i];
+    }
+  }
+  return null;
+}
+
+/* What a revision route's wild battle (and its Route info preview) should
+   draw questions from: the whole exam's chapter list, not just the one
+   exam-only chapter - the exam itself covers the gyms before it too, so the
+   practice route should preview all of it. Falls back to the chapter's own
+   number for anything that is not actually an exam-only chapter. */
+function examWildChapters(c) {
+  if (!c || !c.examOnly) return [c && c.n];
+  var e = (ELITE || []).filter(function (x) { return x.id === c.exam; })[0];
+  return e ? e.chapters : [c.n];
+}
+
 /* Gyms plus exam-only chapters - everything the Notes screen can show. */
 function studiableChapters() {
   return CHAPTERS.concat((subjectDef() || {}).EXAM_CHAPTERS || []);

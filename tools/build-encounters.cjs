@@ -17,7 +17,7 @@ require('../js/data/pokedex.js');
 require('../js/data/fakemon.js');
 require('../js/data/world.js');
 require('../js/data/calc/calc-world.js');
-const { DEX, CHAPTERS, CALC_CHAPTERS } = global.window;
+const { DEX, CHAPTERS, CALC_CHAPTERS, CALC_EXAM_CHAPTERS } = global.window;
 
 const byId = {};
 DEX.forEach(d => { byId[d.id] = d; });
@@ -42,11 +42,16 @@ const RARITY = [
 ];
 const PER_ROUTE = RARITY.reduce((a, r) => a + r.n, 0);
 
-function buildRegion(chapters, label, seedBase) {
-  const used = {};
+/* `position(c, i, chapters)` picks the 0..1 strength band a chapter sits at.
+   Defaults to the chapter's own place in the list, which is right for a
+   region's ordinary gyms; a revision route isn't in that list at all, so
+   callers that add one pass an explicit position instead. */
+function buildRegion(chapters, label, seedBase, position, used) {
+  used = used || {};
   const out = {};
+  position = position || ((c, i, list) => (list.length > 1 ? i / (list.length - 1) : 0));
   chapters.forEach((c, i) => {
-    const p = chapters.length > 1 ? i / (chapters.length - 1) : 0;
+    const p = position(c, i, chapters);
     const rnd = seeded(seedBase + c.n * 7919);
 
     // Route position sets the strength band and how evolved things are.
@@ -97,7 +102,19 @@ function buildRegion(chapters, label, seedBase) {
 }
 
 const c = buildRegion(CHAPTERS, 'C region', 1000);
-const k = buildRegion(CALC_CHAPTERS, 'Converging Isles', 5000);
+const kUsed = {};
+const k = buildRegion(CALC_CHAPTERS, 'Converging Isles', 5000, null, kUsed);
+
+/* Elara Slate's revision route (chapter 91, Evening Exam I) gets its own
+   encounter table too, so "Route info" and the exam's wild battle work the
+   same way an ordinary gym route does. It has no place in CALC_CHAPTERS's
+   own list, so its strength band is pinned explicitly: the exam sits right
+   after gym 3 of 10, the same schedule position as route 4. It shares the
+   Isles' `used` set so its species do not repeat a gym route's. */
+const elaraChapter = (CALC_EXAM_CHAPTERS || []).filter(x => x.exam === 'x1')[0];
+if (elaraChapter) {
+  Object.assign(k, buildRegion([elaraChapter], 'Revision Route I', 5000, () => 3 / 9, kUsed));
+}
 
 /* Hand-placed original species. Keep them out of the general generator above
    so their homes stay intentional when the table is rebuilt. */

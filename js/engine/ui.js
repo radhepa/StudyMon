@@ -356,6 +356,7 @@ function renderMap() {
 
     var e = stop.e;
     var beat = bossBeaten(e), open = bossOpen(e), champ = isChampion(e);
+    var examCh = examChapterFor(e);
 
     /* The C region still wants its "Victory Road" heading before the block of
        five. The Isles do not - an exam is just the next thing on the calendar. */
@@ -384,8 +385,13 @@ function renderMap() {
         (e.lessons ? 'lessons ' + e.lessons[0] + '–' + e.lessons[e.lessons.length - 1]
                    : 'chapters ' + e.chapters.join(', ')) +
       (open ? '' : ' · needs ' + bossAfter(e) + ' badges, you have ' + badgeCount()) +
-      '</span></div></div>' +
-      '<div class="acts"><button class="' + (open && !beat ? 'primary' : '') + '" ' + (open ? '' : 'disabled') +
+      '</span>' +
+      (examCh ? '<br><span style="opacity:.75">' + esc(e.route) + ' is open for practice - no badges needed</span>' : '') +
+      '</div></div>' +
+      '<div class="acts">' +
+      (examCh ? '<button class="ghost" onclick="goWildExam(\'' + e.id + '\')">Revision route</button>' +
+        '<button class="ghost" onclick="openRouteInfo(' + examCh.n + ')">Route info</button>' : '') +
+      '<button class="' + (open && !beat ? 'primary' : '') + '" ' + (open ? '' : 'disabled') +
       ' onclick="goElite(\'' + e.id + '\')">' + (beat ? 'Rematch' : 'Challenge') + '</button></div></div>';
   });
 
@@ -401,6 +407,19 @@ function goWild(n) {
   var c = chapterByNumber(n);
   clearLog();
   startBattle({ kind: 'wild', chapters: [n], guestLessons: wildGuestLessons(n), foes: [wildFor(c)], title: c.route, chapter: c });
+}
+
+/* A boss's revision route, wild-battle style: no badges required (the point
+   is to practise BEFORE sitting the exam), one opponent drawn from that exam
+   chapter's own encounter table, and questions from every chapter the exam
+   itself draws on - so it is a real preview of what the exam will ask. */
+function goWildExam(id) {
+  var e = (ELITE || []).filter(function (x) { return x.id === id; })[0];
+  var examCh = e && examChapterFor(e);
+  if (!examCh) return;
+  if (!partyAlive()) { toast('Everyone has fainted. Visit the Poké Center.'); return; }
+  clearLog();
+  startBattle({ kind: 'wild', chapters: e.chapters, foes: [wildFor(examCh)], title: e.route, chapter: examCh });
 }
 
 function goGym(n) {
@@ -478,7 +497,8 @@ function openRouteInfo(n) {
       'Legendaries do not appear on this list - they roam, from five badges onward.</p>';
   }
   h += routeQuestionBaseHtml(c.n);
-  h += '<div class="row"><button class="primary" onclick="closeModal();goWild(' + c.n + ')">Hunt here</button>' +
+  h += '<div class="row"><button class="primary" onclick="closeModal();' +
+    (c.examOnly ? 'goWildExam(\'' + c.exam + '\')' : 'goWild(' + c.n + ')') + '">Hunt here</button>' +
     '<button onclick="closeModal()">Close</button></div>';
   modal(h);
   var routeBox = $('#modal .box');
@@ -486,9 +506,14 @@ function openRouteInfo(n) {
 }
 
 /* Everything a wild battle on route n can ask: its own quiz plus any exam-only
-   lessons parked on it. */
+   lessons parked on it. A revision route (an exam-only chapter) instead pulls
+   every chapter its exam draws on, matching what its "Revision route" wild
+   battle actually asks - the whole exam's syllabus, not just its own sliver. */
 function routeQuestions(n) {
-  return questionsFor([n], wildGuestLessons(n)).sort(function (a, b) {
+  var c = chapterByNumber(n);
+  var chapters = (c && c.examOnly) ? examWildChapters(c) : [n];
+  var guests = (c && c.examOnly) ? null : wildGuestLessons(n);
+  return questionsFor(chapters, guests).sort(function (a, b) {
     return (Number(a.lesson || 0) - Number(b.lesson || 0)) ||
       (Number(a.t || 0) - Number(b.t || 0)) || String(a.id).localeCompare(String(b.id));
   });
