@@ -120,21 +120,48 @@ function isDue(qid) {
 var RECENT_FAMILIES = [];
 var RECENT_FAMILY_SPAN = 8;
 
+/* Same idea, one level up: lessons asked lately, so a battle whose pool spans
+   several lessons (a revision route draws on a whole exam's worth) does not
+   settle on whichever lesson happens to carry the most families. Quiz 2's
+   own generator gave "Areas and Slices" (lessons 5-6) far more families than
+   anywhere else, so picking a family uniformly across the whole pool handed
+   that one topic roughly a quarter of every fresh draw - this is what fixes
+   that. A short span: most pools here span only a handful of lessons, and a
+   single gym route usually covers just one or two, where this should fall
+   through to "every lesson present" and get out of the way. */
+var RECENT_LESSONS = [];
+var RECENT_LESSON_SPAN = 3;
+
 function familyOf(q) { return q.family || q.id; }
 
 function noteAsked(pick) {
   RECENT_FAMILIES.push(familyOf(pick.q));
   if (RECENT_FAMILIES.length > RECENT_FAMILY_SPAN) RECENT_FAMILIES.shift();
+  if (pick.q.lesson !== undefined) {
+    RECENT_LESSONS.push(pick.q.lesson);
+    if (RECENT_LESSONS.length > RECENT_LESSON_SPAN) RECENT_LESSONS.shift();
+  }
   return pick;
 }
 
-/* Choose a never-seen question by problem type first, then by variation. Picking
-   straight from the list would hand a ten-variation family ten times the
-   chance of a one-off question, and the point is to meet many kinds of problem,
-   not many copies of a few. */
+/* Choose a never-seen question lesson first, then problem type, then variation.
+   Picking a family straight from the whole pool would hand a lesson with many
+   small families (or one ten-variation family) far more than its fair share -
+   the point is to meet every topic the battle covers, not settle on whichever
+   one the question bank happens to carry the most of. */
 function freshByFamily(fresh) {
-  var groups = {}, keys = [];
+  var lessonGroups = {}, lessonKeys = [];
   fresh.forEach(function (q) {
+    var l = q.lesson === undefined ? '?' : q.lesson;
+    if (!lessonGroups[l]) { lessonGroups[l] = []; lessonKeys.push(l); }
+    lessonGroups[l].push(q);
+  });
+  var freshLessons = lessonKeys.filter(function (l) { return RECENT_LESSONS.indexOf(l) < 0; });
+  var lessonPool = lessonGroups[(freshLessons.length ? freshLessons : lessonKeys)[
+    Math.floor(Math.random() * (freshLessons.length ? freshLessons.length : lessonKeys.length))]];
+
+  var groups = {}, keys = [];
+  lessonPool.forEach(function (q) {
     var k = familyOf(q);
     if (!groups[k]) { groups[k] = []; keys.push(k); }
     groups[k].push(q);
