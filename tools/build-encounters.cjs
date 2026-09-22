@@ -45,9 +45,16 @@ const PER_ROUTE = RARITY.reduce((a, r) => a + r.n, 0);
 /* `position(c, i, chapters)` picks the 0..1 strength band a chapter sits at.
    Defaults to the chapter's own place in the list, which is right for a
    region's ordinary gyms; a revision route isn't in that list at all, so
-   callers that add one pass an explicit position instead. */
-function buildRegion(chapters, label, seedBase, position, used) {
+   callers that add one pass an explicit position instead.
+
+   `rarity` defaults to the module-wide RARITY bands, but a route standing in
+   for several chapters' worth of questions can pass a bigger one - the ratio
+   of common:uncommon:rare stays whatever the caller gives it, only the count
+   in each band changes, so the pacing still feels like every other route. */
+function buildRegion(chapters, label, seedBase, position, used, rarity) {
   used = used || {};
+  rarity = rarity || RARITY;
+  const perRoute = rarity.reduce((a, r) => a + r.n, 0);
   const out = {};
   position = position || ((c, i, list) => (list.length > 1 ? i / (list.length - 1) : 0));
   chapters.forEach((c, i) => {
@@ -65,12 +72,22 @@ function buildRegion(chapters, label, seedBase, position, used) {
       d.bst >= lo && d.bst <= hi);
 
     // Widen if a type is thin at this band rather than shipping a short route.
-    if (pool.length < PER_ROUTE * 2) {
+    if (pool.length < perRoute * 2) {
       pool = DEX.filter(d => !d.legendary && !d.custom &&
         d.types.some(t => c.teamTypes.indexOf(t) >= 0) &&
         d.bst >= lo - 90 && d.bst <= hi + 90);
     }
-    if (pool.length < PER_ROUTE) {
+    if (pool.length < perRoute) {
+      pool = DEX.filter(d => !d.legendary && !d.custom && d.bst >= lo - 60 && d.bst <= hi + 60);
+    }
+    // Still thin at 4x a normal route's size and up - a single type/BST band
+    // cannot supply that many, so widen once more before dropping the type
+    // filter entirely (the very last resort, unchanged from before).
+    if (pool.length < perRoute) {
+      pool = DEX.filter(d => !d.legendary && !d.custom &&
+        d.types.some(t => c.teamTypes.indexOf(t) >= 0) && d.bst >= lo - 180 && d.bst <= hi + 180);
+    }
+    if (pool.length < perRoute) {
       pool = DEX.filter(d => !d.legendary && !d.custom && d.bst >= lo - 60 && d.bst <= hi + 60);
     }
 
@@ -81,12 +98,12 @@ function buildRegion(chapters, label, seedBase, position, used) {
       return fit * 2 + fresh + rnd() * 1.6;
     };
 
-    const picks = pool.slice().sort((a, b) => score(b) - score(a)).slice(0, PER_ROUTE);
+    const picks = pool.slice().sort((a, b) => score(b) - score(a)).slice(0, perRoute);
     picks.sort((a, b) => a.bst - b.bst);
 
     const table = [];
     let k = 0;
-    RARITY.forEach(band => {
+    rarity.forEach(band => {
       for (let j = 0; j < band.n && k < picks.length; j++, k++) {
         used[picks[k].id] = true;
         table.push([picks[k].id, band.key]);
@@ -110,10 +127,17 @@ const k = buildRegion(CALC_CHAPTERS, 'Converging Isles', 5000, null, kUsed);
    same way an ordinary gym route does. It has no place in CALC_CHAPTERS's
    own list, so its strength band is pinned explicitly: the exam sits right
    after gym 3 of 10, the same schedule position as route 4. It shares the
-   Isles' `used` set so its species do not repeat a gym route's. */
+   Isles' `used` set so its species do not repeat a gym route's.
+
+   The route draws its questions from the whole exam - chapters 1, 2, 3 and
+   91 together, about 4-5x what a single gym route holds - so a dozen species
+   would feel thin next to that much content. Scaling every band up 4x keeps
+   the same common:uncommon:rare feel while giving a hunt that matches the
+   route's actual size. */
+const REVISION_RARITY = RARITY.map(function (band) { return { key: band.key, n: band.n * 4, weight: band.weight }; });
 const elaraChapter = (CALC_EXAM_CHAPTERS || []).filter(x => x.exam === 'x1')[0];
 if (elaraChapter) {
-  Object.assign(k, buildRegion([elaraChapter], 'Revision Route I', 5000, () => 3 / 9, kUsed));
+  Object.assign(k, buildRegion([elaraChapter], 'Revision Route I', 5000, () => 3 / 9, kUsed, REVISION_RARITY));
 }
 
 /* Hand-placed original species. Keep them out of the general generator above
