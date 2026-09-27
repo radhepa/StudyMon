@@ -1,5 +1,5 @@
 {
-  "generated": "2026-09-06T07:36:04.746Z",
+  "generated": "2026-09-27T21:26:26.281Z",
   "note": "Generated from verified reference implementations. Reviewed before use; regenerate with tools/build-expected-outputs.cjs.",
   "cases": {
     "c-lab-01-case-1": {
@@ -677,6 +677,590 @@
     "c-lab-30-case-7": {
       "stdout": "1\n1\n1\n1\nREVENUE 0\nLIVE 0\n",
       "hash": "4fabf24e9146ffe9"
+    },
+    "c-lab-31-case-1": {
+      "stdout": "Step 1: editor\nStep 2: preprocessor\nStep 3: translator\nStep 4: linker\nStep 5: loader\nMemory: 64 KB = 65536 bytes = 524288 bits\nAddresses: 0 to 65535\nWords: 16384\n",
+      "hash": "962a65426293b419"
+    },
+    "c-lab-31-case-2": {
+      "stdout": "Step 1: editor\nStep 2: preprocessor\nStep 3: translator\nStep 4: linker\nStep 5: loader\nMemory: 1 KB = 1024 bytes = 8192 bits\nAddresses: 0 to 1023\nWords: 1024\n",
+      "hash": "bc0224a35149895a"
+    },
+    "c-lab-31-case-3": {
+      "stdout": "Step 1: editor\nStep 2: preprocessor\nStep 3: translator\nStep 4: linker\nStep 5: loader\nMemory: 4096 KB = 4194304 bytes = 33554432 bits\nAddresses: 0 to 4194303\nWords: 524288\n",
+      "hash": "98615085ecd56d7e"
+    },
+    "c-lab-31-case-4": {
+      "stdout": "Step 1: editor\nStep 2: preprocessor\nStep 3: translator\nStep 4: linker\nStep 5: loader\nMemory: 3 KB = 3072 bytes = 24576 bits\nAddresses: 0 to 3071\nWords: 1536\n",
+      "hash": "381a94b8bb155339"
+    },
+    "c-lab-31-case-5": {
+      "stdout": "ERROR\n",
+      "hash": "6b5740d8b404fdbc"
+    },
+    "c-lab-31-case-6": {
+      "stdout": "ERROR\n",
+      "hash": "9ec2c0d80065ca49"
+    },
+    "c-lab-31-case-7": {
+      "stdout": "ERROR\n",
+      "hash": "7429cba5a60306af"
+    },
+    "c-lab-31-case-8": {
+      "stdout": "ERROR\n",
+      "hash": "f5b8e3c01d5d6774"
+    },
+    "c-lab-31-case-9": {
+      "stdout": "ERROR\n",
+      "hash": "c883f2d81ae825ed"
+    },
+    "c-lab-32-case-1": {
+      "stdout": "[    42]\n[42    ]\n[000042]\n[3.14]\n[     3.142]\n[A] code 65\n42%\n",
+      "hash": "933d15de5e9efee4"
+    },
+    "c-lab-32-case-2": {
+      "stdout": "[    42]\n[42    ]\n[000042]\n[3.14]\n[     3.142]\n[A] code 65\n42%\n",
+      "hash": "d30247809bf254bc"
+    },
+    "c-lab-32-case-3": {
+      "stdout": "[    -7]\n[-7    ]\n[-00007]\n[-0.50]\n[    -0.500]\n[q] code 113\n-7%\n",
+      "hash": "c02c29c2ebbeab04"
+    },
+    "c-lab-32-case-4": {
+      "stdout": "[     0]\n[0     ]\n[000000]\n[0.00]\n[     0.000]\n[0] code 48\n0%\n",
+      "hash": "333b69535909487f"
+    },
+    "c-lab-32-case-5": {
+      "stdout": "[123456789]\n[123456789]\n[123456789]\n[1234.50]\n[  1234.500]\n[z] code 122\n123456789%\n",
+      "hash": "3b992b12127d17e3"
+    },
+    "c-lab-32-case-6": {
+      "stdout": "[     5]\n[5     ]\n[000005]\n[2.67]\n[     2.675]\n[#] code 35\n5%\n",
+      "hash": "460b395d9e0e02a4"
+    },
+    "c-lab-32-case-7": {
+      "stdout": "ERROR\n",
+      "hash": "953b2ef0a3e22ef2"
+    },
+    "c-lab-32-case-8": {
+      "stdout": "ERROR\n",
+      "hash": "677e72176c78b50e"
+    },
+    "c-lab-33-case-1": {
+      "stdout": "sizes: char 1 short 2 int 4 long long 8 float 4 double 8\nlimits: INT_MAX 2147483647 INT_MIN -2147483648\nsum: 12\nhalf: 3 3.5\nwrap: 4\nfloat: 16777216\n",
+      "hash": "a8cd39e17fc19422"
+    },
+    "c-lab-33-case-2": {
+      "stdout": "sizes: char 1 short 2 int 4 long long 8 float 4 double 8\nlimits: INT_MAX 2147483647 INT_MIN -2147483648\nsum: 2147483647\nhalf: 1073741823 1073741823.5\nwrap: 0\nfloat: 0\n",
+      "hash": "f5d667f1287250d8"
+    },
+    "c-lab-33-case-3": {
+      "stdout": "sizes: char 1 short 2 int 4 long long 8 float 4 double 8\nlimits: INT_MAX 2147483647 INT_MIN -2147483648\nsum: OVERFLOW\nhalf: 1073741823 1073741823.5\nwrap: 0\nfloat: 100000000\n",
+      "hash": "e30b5380b4aaa655"
+    },
+    "c-lab-33-case-4": {
+      "stdout": "sizes: char 1 short 2 int 4 long long 8 float 4 double 8\nlimits: INT_MAX 2147483647 INT_MIN -2147483648\nsum: OVERFLOW\nhalf: 536870912 536870912.0\nwrap: 104\nfloat: 16777220\n",
+      "hash": "ef467ad8721eecbc"
+    },
+    "c-lab-33-case-5": {
+      "stdout": "sizes: char 1 short 2 int 4 long long 8 float 4 double 8\nlimits: INT_MAX 2147483647 INT_MIN -2147483648\nsum: 2147483647\nhalf: 536870911 536870911.5\nwrap: 0\nfloat: 33554436\n",
+      "hash": "c9ee2c708ed4d7bc"
+    },
+    "c-lab-33-case-6": {
+      "stdout": "ERROR\n",
+      "hash": "1cd5133e0d7c77e0"
+    },
+    "c-lab-33-case-7": {
+      "stdout": "ERROR\n",
+      "hash": "28b3b7fe359e1c76"
+    },
+    "c-lab-33-case-8": {
+      "stdout": "ERROR\n",
+      "hash": "a0da4d9be07568a0"
+    },
+    "c-lab-33-case-9": {
+      "stdout": "ERROR\n",
+      "hash": "831cfe8b5574569f"
+    },
+    "c-lab-34-case-1": {
+      "stdout": "Khoor, Zruog 42!\nupper 2 lower 8 digits 2 spaces 2 other 2\ndigit sum: 6\n",
+      "hash": "951389847ac135e3"
+    },
+    "c-lab-34-case-2": {
+      "stdout": "zab WXY\nupper 3 lower 3 digits 0 spaces 1 other 0\ndigit sum: 0\n",
+      "hash": "608ec7f6085a80b4"
+    },
+    "c-lab-34-case-3": {
+      "stdout": "No change 123\nupper 1 lower 7 digits 3 spaces 2 other 0\ndigit sum: 6\n",
+      "hash": "7a637b239def0dff"
+    },
+    "c-lab-34-case-4": {
+      "stdout": "mM9 \nupper 1 lower 1 digits 1 spaces 1 other 0\ndigit sum: 9\n",
+      "hash": "1904e5e1db19fb11"
+    },
+    "c-lab-34-case-5": {
+      "stdout": "\nupper 0 lower 0 digits 0 spaces 0 other 0\ndigit sum: 0\n",
+      "hash": "fa9a61b097ba691b"
+    },
+    "c-lab-34-case-6": {
+      "stdout": "ERROR\n",
+      "hash": "944a572ff775f303"
+    },
+    "c-lab-34-case-7": {
+      "stdout": "ERROR\n",
+      "hash": "2ca25f031a44c208"
+    },
+    "c-lab-34-case-8": {
+      "stdout": "Ubc\tifsf\nupper 1 lower 6 digits 0 spaces 0 other 1\ndigit sum: 0\n",
+      "hash": "c923b47586e5b18c"
+    },
+    "c-lab-34-case-9": {
+      "stdout": "Tpelk 0 & 9\nupper 1 lower 4 digits 2 spaces 3 other 1\ndigit sum: 9\n",
+      "hash": "cd318fb88f84d0af"
+    },
+    "c-lab-35-case-1": {
+      "stdout": "week 1 day 1\nwater NO\nfeed NO\ntime 0 days 00:00\n",
+      "hash": "54e9841f3650b5a6"
+    },
+    "c-lab-35-case-2": {
+      "stdout": "week 1 day 7\nwater NO\nfeed NO\ntime 0 days 00:59\n",
+      "hash": "2b999788a4fffe63"
+    },
+    "c-lab-35-case-3": {
+      "stdout": "week 2 day 1\nwater NO\nfeed NO\ntime 0 days 01:00\n",
+      "hash": "c81bdf619ca6ed5e"
+    },
+    "c-lab-35-case-4": {
+      "stdout": "week 3 day 1\nwater YES\nfeed YES\ntime 0 days 23:59\n",
+      "hash": "fc52eced3f85e4b8"
+    },
+    "c-lab-35-case-5": {
+      "stdout": "week 5 day 2\nwater YES\nfeed YES\ntime 1 days 00:00\n",
+      "hash": "dd4800f86e97ce9b"
+    },
+    "c-lab-35-case-6": {
+      "stdout": "week 14286 day 5\nwater NO\nfeed YES\ntime 694 days 10:40\n",
+      "hash": "e8e081047cb1f449"
+    },
+    "c-lab-35-case-7": {
+      "stdout": "ERROR\n",
+      "hash": "915e06cc9fc6a5f5"
+    },
+    "c-lab-35-case-8": {
+      "stdout": "ERROR\n",
+      "hash": "da31f42c2d373905"
+    },
+    "c-lab-35-case-9": {
+      "stdout": "ERROR\n",
+      "hash": "0f0edff8174fb3b5"
+    },
+    "c-lab-36-case-1": {
+      "stdout": "is_odd(7) = 1\nis_odd(-3) = 1\nis_odd(-4) = 0\nis_odd(0) = 0\nis_odd(-1) = 1\n",
+      "hash": "1c44cfa39d70bea6"
+    },
+    "c-lab-36-case-2": {
+      "stdout": "is_odd(2147483647) = 1\nis_odd(-2147483648) = 0\nis_odd(1) = 1\nis_odd(-2147483647) = 1\n",
+      "hash": "d1ecd506dc56f74d"
+    },
+    "c-lab-36-case-3": {
+      "stdout": "wrap_index(0, 5) = 0\nwrap_index(7, 5) = 2\nwrap_index(-1, 5) = 4\nwrap_index(-6, 5) = 4\nwrap_index(-5, 5) = 0\nwrap_index(12, 1) = 0\n",
+      "hash": "3b4622b4fffb12a5"
+    },
+    "c-lab-36-case-4": {
+      "stdout": "wrap_index(-2147483648, 1000) = 352\nwrap_index(2147483647, 1000) = 647\nwrap_index(-2147483648, 1) = 0\n",
+      "hash": "2d8bcef33baa2ae2"
+    },
+    "c-lab-36-case-5": {
+      "stdout": "7, 2 -> C: 3 r 1 | floor: 3 r 1\n-7, 2 -> C: -3 r -1 | floor: -4 r 1\n7, -2 -> C: -3 r 1 | floor: -4 r -1\n-7, -2 -> C: 3 r -1 | floor: 3 r -1\n6, 3 -> C: 2 r 0 | floor: 2 r 0\n-6, 3 -> C: -2 r 0 | floor: -2 r 0\n0, 5 -> C: 0 r 0 | floor: 0 r 0\n-1, 1000 -> C: 0 r -1 | floor: -1 r 999\n",
+      "hash": "68a06bf911d63068"
+    },
+    "c-lab-36-case-6": {
+      "stdout": "-2147483648, 3 -> C: -715827882 r -2 | floor: -715827883 r 1\n2147483647, -1 -> C: -2147483647 r 0 | floor: -2147483647 r 0\n-2147483648, 1 -> C: -2147483648 r 0 | floor: -2147483648 r 0\n1, -1000 -> C: 0 r 1 | floor: -1 r -999\n",
+      "hash": "68018ccc7422af35"
+    },
+    "c-lab-36-case-7": {
+      "stdout": "-15, 4 -> C: -3 r -3 | floor: -4 r 1\nwrap_index(-15, 4) = 1\nis_odd(-15) = 1\n15, -4 -> C: -3 r 3 | floor: -4 r -1\n",
+      "hash": "fbf934bd8490bb65"
+    },
+    "c-lab-37-case-1": {
+      "stdout": "take 5\ntake 6\ntake 7\nnext: 8\n",
+      "hash": "63995f0048f67cda"
+    },
+    "c-lab-37-case-2": {
+      "stdout": "skip 6\nskip 7\nskip 8\nnext: 8\n",
+      "hash": "7cfbdcfb247364a5"
+    },
+    "c-lab-37-case-3": {
+      "stdout": "take 10\nskip 12\ntake 12\ntake 12\nnext: 13\n",
+      "hash": "fab42aef2d50b724"
+    },
+    "c-lab-37-case-4": {
+      "stdout": "ERROR\ntake 0\nnext: 1\n",
+      "hash": "19e803ae72d0d708"
+    },
+    "c-lab-37-case-5": {
+      "stdout": "next: 9999\n",
+      "hash": "8417c62eb393fd77"
+    },
+    "c-lab-37-case-6": {
+      "stdout": "take 3\nERROR\nERROR\nskip 5\nnext: 5\n",
+      "hash": "fda5b3394cf8cf9e"
+    },
+    "c-lab-37-case-7": {
+      "stdout": "ERROR\n",
+      "hash": "c31ce1caa2a98522"
+    },
+    "c-lab-37-case-8": {
+      "stdout": "take 5\nskip 7\nnext: 7\n",
+      "hash": "43c95ce277a92321"
+    },
+    "c-lab-38-case-1": {
+      "stdout": "R 10, index 1\nR 20, index 2\nK 40, index 3\nR 40, index 4\nU 5, counter 6\nB 7, counter 7\n",
+      "hash": "ec18522956b1d3f5"
+    },
+    "c-lab-38-case-2": {
+      "stdout": "K 100, index 9\nR 100, index 10\nR blocked\n",
+      "hash": "5cc72df0a6018bf7"
+    },
+    "c-lab-38-case-3": {
+      "stdout": "K 7, index 0\nK -7, index 1\nU -1, counter 0\nB 1, counter 1\nL -5, a -1, b -1\nL -4, a 0, b -2\n",
+      "hash": "34ee4e8d159f93c1"
+    },
+    "c-lab-38-case-4": {
+      "stdout": "L 14, a 4, b 8\nL 15, a 5, b 7\nL 16, a 6, b 6\nU 100, counter 101\nU 101, counter 102\nB 103, counter 103\nB 104, counter 104\nR 5, index 5\n",
+      "hash": "26082ccd3cfab8a2"
+    },
+    "c-lab-38-case-5": {
+      "stdout": "K blocked\nR 9, index 10\nL 9, a 11, b -11\nB 1, counter 1\n",
+      "hash": "39b3db08fb65281b"
+    },
+    "c-lab-38-case-6": {
+      "stdout": "K 0, index 0\nK 1, index 1\nK 2, index 2\nK 3, index 3\nK 4, index 4\nK 5, index 5\nK 6, index 6\nK 7, index 7\nK 8, index 8\nK 9, index 9\n",
+      "hash": "85e2699997813d21"
+    },
+    "c-lab-39-case-1": {
+      "stdout": "average: 1.67\ncelsius: 100\npercent: 20\nr1: 2\nr2: 2\n",
+      "hash": "af7fc0ca53a15cfd"
+    },
+    "c-lab-39-case-2": {
+      "stdout": "average: 33.33\ncelsius: 0\npercent: 50\nr1: 2\nr2: 2\n",
+      "hash": "b342cff81cce61ec"
+    },
+    "c-lab-39-case-3": {
+      "stdout": "average: -1.33\ncelsius: -17\npercent: 25\nr1: -2\nr2: -2\n",
+      "hash": "eb0228951ed66baf"
+    },
+    "c-lab-39-case-4": {
+      "stdout": "average: 0.00\ncelsius: -40\npercent: none\nr1: 10\nr2: 3\n",
+      "hash": "d1137390869665e4"
+    },
+    "c-lab-39-case-5": {
+      "stdout": "average: 10000.00\ncelsius: 537\npercent: 33\nr1: 8\nr2: 1\n",
+      "hash": "099f8d5aef5c962a"
+    },
+    "c-lab-39-case-6": {
+      "stdout": "average: 7.00\ncelsius: 0\npercent: 33\nr1: 0\nr2: 0\n",
+      "hash": "26949e392f4a308e"
+    },
+    "c-lab-39-case-7": {
+      "stdout": "average: 4.00\ncelsius: -573\npercent: 25\nr1: 6\nr2: 6\n",
+      "hash": "3d35c052ac21cc8c"
+    },
+    "c-lab-39-case-8": {
+      "stdout": "ERROR\n",
+      "hash": "8886c004b90be906"
+    },
+    "c-lab-39-case-9": {
+      "stdout": "ERROR\n",
+      "hash": "82e8c176cb252f2d"
+    },
+    "c-lab-40-case-1": {
+      "stdout": "base 44\ndamage 61\ncritical NO\nshare 40.7\nnext 62\n",
+      "hash": "76007a4ad6810be1"
+    },
+    "c-lab-40-case-2": {
+      "stdout": "base 4\ndamage 12\ncritical YES\nshare 60.0\nnext 13\n",
+      "hash": "c697df4d5c4157a0"
+    },
+    "c-lab-40-case-3": {
+      "stdout": "base 209792\ndamage 0\ncritical NO\nshare 0.0\nnext 209793\n",
+      "hash": "81f0256f5c98b098"
+    },
+    "c-lab-40-case-4": {
+      "stdout": "base 2\ndamage 1\ncritical NO\nshare 100.0\nnext 3\n",
+      "hash": "f799df08add02959"
+    },
+    "c-lab-40-case-5": {
+      "stdout": "base 41\ndamage 61\ncritical NO\nshare 100.0\nnext 62\n",
+      "hash": "44fb293f81e27da0"
+    },
+    "c-lab-40-case-6": {
+      "stdout": "base 104\ndamage 68\ncritical YES\nshare 13.6\nnext 105\n",
+      "hash": "fc2662a86adbd6f4"
+    },
+    "c-lab-40-case-7": {
+      "stdout": "base 209792\ndamage 1258752\ncritical NO\nshare 12588.8\nnext 1258753\n",
+      "hash": "4acf6e37b7b28da1"
+    },
+    "c-lab-40-case-8": {
+      "stdout": "ERROR\n",
+      "hash": "db0b545f2d38174d"
+    },
+    "c-lab-40-case-9": {
+      "stdout": "ERROR\n",
+      "hash": "776fa8e90537e2d9"
+    },
+    "c-lab-40-case-10": {
+      "stdout": "ERROR\n",
+      "hash": "b75e18327c19a071"
+    },
+    "c-lab-40-case-11": {
+      "stdout": "ERROR\n",
+      "hash": "49360724f1d8fe10"
+    },
+    "c-lab-40-case-12": {
+      "stdout": "ERROR\n",
+      "hash": "145ed80b22feb45a"
+    },
+    "c-lab-41-case-1": {
+      "stdout": "ridge: YES\nlake: YES\nferry: NO\ncave: YES\ntruth: 1 1 0\n",
+      "hash": "2ca0c715f9ecf509"
+    },
+    "c-lab-41-case-2": {
+      "stdout": "ridge: NO\nlake: YES\nferry: NO\ncave: YES\ntruth: 1 1 0\n",
+      "hash": "d1517da6c3db434e"
+    },
+    "c-lab-41-case-3": {
+      "stdout": "ridge: YES\nlake: NO\nferry: YES\ncave: NO\ntruth: 0 0 0\n",
+      "hash": "aa0e543c34b077c9"
+    },
+    "c-lab-41-case-4": {
+      "stdout": "ridge: YES\nlake: YES\nferry: NO\ncave: YES\ntruth: 0 0 0\n",
+      "hash": "2cead602243b99d8"
+    },
+    "c-lab-41-case-5": {
+      "stdout": "ridge: YES\nlake: NO\nferry: YES\ncave: YES\ntruth: 1 0 0\n",
+      "hash": "69b1fdf2caa81ac2"
+    },
+    "c-lab-41-case-6": {
+      "stdout": "ridge: YES\nlake: NO\nferry: NO\ncave: NO\ntruth: 0 1 1\n",
+      "hash": "fb1f88f7d14646a5"
+    },
+    "c-lab-41-case-7": {
+      "stdout": "ridge: NO\nlake: YES\nferry: NO\ncave: YES\ntruth: 1 1 0\n",
+      "hash": "e7c5c475867e10da"
+    },
+    "c-lab-41-case-8": {
+      "stdout": "ERROR\n",
+      "hash": "b5d5b287fda14d08"
+    },
+    "c-lab-41-case-9": {
+      "stdout": "ERROR\n",
+      "hash": "25239f321e092cff"
+    },
+    "c-lab-41-case-10": {
+      "stdout": "ERROR\n",
+      "hash": "6a2332a4a360e505"
+    },
+    "c-lab-42-case-1": {
+      "stdout": "E 3 7 -> 1 | registered(7)\nE 2 7 -> 0 | no checks\nE 3 8 -> 0 | registered(8)\nE 5 -1 -> 1 | registered(-1)\nE 0 0 -> 0 | no checks\nE 10 9 -> 1 | registered(9)\n",
+      "hash": "03f5812286adb3f4"
+    },
+    "c-lab-42-case-2": {
+      "stdout": "N 5 3 -> 1 | no checks\nN 10 3 -> 0 | cleared(3)\nN 10 4 -> 1 | cleared(4)\nN 9 4 -> 1 | no checks\nN 50 6 -> 0 | cleared(6)\n",
+      "hash": "3d4fac067fc92f15"
+    },
+    "c-lab-42-case-3": {
+      "stdout": "F 100 2 -> 1 | no checks\nF 99 2 -> 0 | no checks\nF 500 0 -> 0 | no checks\nF -200 -2 -> 0 | no checks\nF 0 5 -> 0 | no checks\nF 150 3 -> 1 | no checks\n",
+      "hash": "bca7dd4e55334941"
+    },
+    "c-lab-42-case-4": {
+      "stdout": "G 7 1 -> 1 | registered(7)\nG 7 0 -> 0 | registered(7) cleared(7)\nG 9 0 -> 1 | registered(9) cleared(9)\nG 8 1 -> 0 | registered(8)\nG 3 5 -> 1 | registered(3)\nG -3 0 -> 1 | registered(-3) cleared(-3)\n",
+      "hash": "7f73e65d6f5b923c"
+    },
+    "c-lab-42-case-5": {
+      "stdout": "I 0 0 -> 1 | no checks\nI 0 5 -> 1 | no checks\nI 5 0 -> 0 | no checks\nI -2 7 -> 1 | no checks\nX 0 0 -> 1 | no checks\nX 3 0 -> 1 | no checks\nX 3 -4 -> 0 | no checks\nX 0 9 -> 1 | no checks\n",
+      "hash": "4394a3b56c18c2c5"
+    },
+    "c-lab-42-case-6": {
+      "stdout": "F 2147483647 1 -> 1 | no checks\nF -2147483648 1 -> 0 | no checks\nE 3 2147483647 -> 1 | registered(2147483647)\nN 10 -9 -> 0 | cleared(-9)\nG 0 0 -> 0 | registered(0)\n",
+      "hash": "4276505cb2f4f7ef"
+    },
+    "c-lab-43-case-1": {
+      "stdout": "x truthy: 1\nfalsy count: 0\nin order: 1\nC reads x < y < z as: 1\nx == y == z: 0\nany: 1\nall: 1\nx > y: 0\n",
+      "hash": "f891b452a8a004c5"
+    },
+    "c-lab-43-case-2": {
+      "stdout": "x truthy: 1\nfalsy count: 0\nin order: 0\nC reads x < y < z as: 1\nx == y == z: 0\nany: 1\nall: 1\nx > y: 1\n",
+      "hash": "b4dd29207ab716cf"
+    },
+    "c-lab-43-case-3": {
+      "stdout": "x truthy: 0\nfalsy count: 3\nin order: 0\nC reads x < y < z as: 0\nx == y == z: 0\nany: 0\nall: 0\nx > y: 0\n",
+      "hash": "4e835aad07202585"
+    },
+    "c-lab-43-case-4": {
+      "stdout": "x truthy: 1\nfalsy count: 0\nin order: 0\nC reads x < y < z as: 1\nx == y == z: 1\nany: 1\nall: 1\nx > y: 0\n",
+      "hash": "113b1927e29c877e"
+    },
+    "c-lab-43-case-5": {
+      "stdout": "x truthy: 1\nfalsy count: 0\nin order: 0\nC reads x < y < z as: 1\nx == y == z: 0\nany: 1\nall: 1\nx > y: 0\n",
+      "hash": "9706b75af8936226"
+    },
+    "c-lab-43-case-6": {
+      "stdout": "x truthy: 1\nfalsy count: 1\nin order: 1\nC reads x < y < z as: 1\nx == y == z: 0\nany: 1\nall: 0\nx > y: 0\n",
+      "hash": "01804b668bef7dea"
+    },
+    "c-lab-43-case-7": {
+      "stdout": "x truthy: 1\nfalsy count: 1\nin order: 0\nC reads x < y < z as: 0\nx == y == z: 1\nany: 1\nall: 0\nx > y: 1\n",
+      "hash": "ab29c79ab9007c1b"
+    },
+    "c-lab-43-case-8": {
+      "stdout": "ERROR\n",
+      "hash": "355a21ebace1be20"
+    },
+    "c-lab-44-case-1": {
+      "stdout": "grade_points(100) = 4\ngrade_points(90) = 4\ngrade_points(89) = 3\ngrade_points(80) = 3\ngrade_points(79) = 2\ngrade_points(70) = 2\ngrade_points(69) = 1\ngrade_points(60) = 1\ngrade_points(59) = 0\ngrade_points(0) = 0\n",
+      "hash": "d494e7b23f274042"
+    },
+    "c-lab-44-case-2": {
+      "stdout": "larger(3, 9) = 9\nlarger(9, 3) = 9\nlarger(-4, -4) = -4\nlarger(-2147483648, 2147483647) = 2147483647\nlarger(2147483647, -2147483648) = 2147483647\nlarger(0, -1) = 0\n",
+      "hash": "93a4a909a92a9431"
+    },
+    "c-lab-44-case-3": {
+      "stdout": "sign_of(42) = 1\nsign_of(-42) = -1\nsign_of(0) = 0\nsign_of(2147483647) = 1\nsign_of(-2147483648) = -1\n",
+      "hash": "49bc0f892d609ffb"
+    },
+    "c-lab-44-case-4": {
+      "stdout": "shipping_cents(1) = 300\nshipping_cents(500) = 300\nshipping_cents(501) = 700\nshipping_cents(2000) = 700\nshipping_cents(2001) = 1500\nshipping_cents(100000) = 1500\nshipping_cents(1999) = 700\n",
+      "hash": "23a88c8b2cae47c2"
+    },
+    "c-lab-44-case-5": {
+      "stdout": "parity_name(0) = even\nparity_name(7) = odd\nparity_name(-3) = odd\nparity_name(-4) = even\nparity_name(2147483647) = odd\nparity_name(-2147483648) = even\n",
+      "hash": "1e9064334131b605"
+    },
+    "c-lab-44-case-6": {
+      "stdout": "days_in_month(1, 0) = 31\ndays_in_month(2, 0) = 28\ndays_in_month(2, 1) = 29\ndays_in_month(4, 1) = 30\ndays_in_month(12, 0) = 31\ndays_in_month(9, 0) = 30\ndays_in_month(11, 1) = 30\ndays_in_month(7, 0) = 31\n",
+      "hash": "1ac53b16c5636acd"
+    },
+    "c-lab-45-case-1": {
+      "stdout": "square(7) = 49\nsquare(-7) = 49\nsquare(0) = 0\nsquare(46340) = 2147395600\nsquare(1) = 1\n",
+      "hash": "e9368b2960adb4b2"
+    },
+    "c-lab-45-case-2": {
+      "stdout": "percent_of(1, 3) = 33.3\npercent_of(2, 3) = 66.7\npercent_of(5, 5) = 100.0\npercent_of(0, 7) = 0.0\npercent_of(7, 8) = 87.5\npercent_of(-1, 4) = -25.0\n",
+      "hash": "e0288c33a6d0f648"
+    },
+    "c-lab-45-case-3": {
+      "stdout": "nearest(2.40) = 2\nnearest(2.50) = 3\nnearest(-2.50) = -3\nnearest(-2.40) = -2\nnearest(0.00) = 0\nnearest(999999999.50) = 1000000000\nnearest(-0.50) = -1\nnearest(7.00) = 7\n",
+      "hash": "314a6924ff3fc1f2"
+    },
+    "c-lab-45-case-4": {
+      "stdout": "repeat_char('*', 5): *****\nrepeat_char('#', 1): #\nrepeat_char('x', 0): \nrepeat_char('=', 12): ============\n",
+      "hash": "fa6f670359a27da1"
+    },
+    "c-lab-45-case-5": {
+      "stdout": "fourth_power(2) = 16\nfourth_power(-3) = 81\nfourth_power(0) = 0\nfourth_power(215) = 2136750625\n",
+      "hash": "61e052fd557f49ac"
+    },
+    "c-lab-45-case-6": {
+      "stdout": "nearest(0.49) = 0\nnearest(-0.51) = -1\npercent_of(50, 200) = 25.0\nfourth_power(1) = 1\nsquare(-46340) = 2147395600\n",
+      "hash": "8d5d43d2a7429b8c"
+    },
+    "c-lab-46-case-1": {
+      "stdout": "is_leap(2000) = 1\nis_leap(1900) = 0\nis_leap(2024) = 1\nis_leap(2023) = 0\nis_leap(2100) = 0\nis_leap(2400) = 1\nis_leap(4) = 1\nis_leap(1) = 0\n",
+      "hash": "6dae24d92035dc29"
+    },
+    "c-lab-46-case-2": {
+      "stdout": "days_in_month(2, 2024) = 29\ndays_in_month(2, 2023) = 28\ndays_in_month(2, 1900) = 28\ndays_in_month(2, 2000) = 29\ndays_in_month(4, 2023) = 30\ndays_in_month(12, 1) = 31\ndays_in_month(0, 2023) = 0\ndays_in_month(13, 2023) = 0\n",
+      "hash": "798e89903a3a6ee4"
+    },
+    "c-lab-46-case-3": {
+      "stdout": "is_valid_date(29, 2, 2023) = 0\nis_valid_date(29, 2, 2024) = 1\nis_valid_date(31, 4, 2023) = 0\nis_valid_date(30, 4, 2023) = 1\nis_valid_date(0, 1, 2023) = 0\nis_valid_date(1, 1, 0) = 0\nis_valid_date(31, 12, 9999) = 1\nis_valid_date(1, 1, 10000) = 0\nis_valid_date(32, 1, 2023) = 0\n",
+      "hash": "3ffbf6b05256eb1f"
+    },
+    "c-lab-46-case-4": {
+      "stdout": "day_of_year(1, 1, 2023) = 1\nday_of_year(31, 12, 2023) = 365\nday_of_year(31, 12, 2024) = 366\nday_of_year(1, 3, 2024) = 61\nday_of_year(1, 3, 2023) = 60\nday_of_year(29, 2, 2023) = -1\nday_of_year(15, 6, 2000) = 167\nday_of_year(29, 2, 1900) = -1\n",
+      "hash": "2557ea5b5c8194ed"
+    },
+    "c-lab-46-case-5": {
+      "stdout": "days_left_in_year(31, 12, 2023) = 0\ndays_left_in_year(1, 1, 2024) = 365\ndays_left_in_year(1, 1, 2023) = 364\ndays_left_in_year(29, 2, 2024) = 306\ndays_left_in_year(30, 2, 2024) = -1\ndays_left_in_year(1, 13, 2023) = -1\n",
+      "hash": "fd2b234ae8f6ddb4"
+    },
+    "c-lab-46-case-6": {
+      "stdout": "is_valid_date(-1, 5, 2023) = 0\nday_of_year(31, 1, 2023) = 31\ndays_left_in_year(28, 2, 1900) = 306\ndays_in_month(-3, 2023) = 0\nis_leap(400) = 1\n",
+      "hash": "b5c1a1fbbb670d6b"
+    },
+    "c-lab-47-case-1": {
+      "stdout": "swap -> 2 1\nswap -> 7 -3\nswap -> 4 4\nswap -> 2147483647 -2147483648\n",
+      "hash": "c0a59aaca63b92cc"
+    },
+    "c-lab-47-case-2": {
+      "stdout": "self swap -> 5\nself swap -> -9\nself swap -> 2147483647\n",
+      "hash": "4da53dc22fb0c531"
+    },
+    "c-lab-47-case-3": {
+      "stdout": "sorted -> 1 2 3\nsorted -> 1 2 3\nsorted -> 1 2 3\nsorted -> 1 2 2\nsorted -> -5 -5 0\nsorted -> -2147483648 0 2147483647\nsorted -> 1 2 3\nsorted -> 1 2 3\n",
+      "hash": "e9d5f89c5c62d269"
+    },
+    "c-lab-47-case-4": {
+      "stdout": "3661 s -> 1 h 1 m 1 s\n359999 s -> 99 h 59 m 59 s\n0 s -> 0 h 0 m 0 s\n59 s -> 0 h 0 m 59 s\n3600 s -> 1 h 0 m 0 s\n86399 s -> 23 h 59 m 59 s\n",
+      "hash": "694e67d4676b07d8"
+    },
+    "c-lab-47-case-5": {
+      "stdout": "larger is the second -> 5 109\nlarger is the first -> 109 5\nlarger is the first -> 107 7\nlarger is the first -> 99 -2\nlarger is the second -> -2147483648 2147483647\n",
+      "hash": "0f761cfa3503091f"
+    },
+    "c-lab-48-case-1": {
+      "stdout": "find 3 in [0, 8) -> index 1\nfind 9 in [0, 8) -> index 2\nfind 9 in [3, 8) -> index 5\nfind 42 in [0, 8) -> index 8\nfind 9 in [2, 2) -> index 2\ncount [0, 8) -> 8\ncount [3, 3) -> 0\ncount [2, 6) -> 4\n",
+      "hash": "8deb9cfd8b5163c7"
+    },
+    "c-lab-48-case-2": {
+      "stdout": "max [0, 8) -> index 2\nmax [3, 8) -> index 5\nmax [6, 8) -> index 7\nmax [4, 4) -> index 4\nmax [2, 3) -> index 2\nmax [0, 2) -> index 0\n",
+      "hash": "be9bc1eb319773da"
+    },
+    "c-lab-48-case-3": {
+      "stdout": "reverse [0, 7) -> 7 6 5 4 3 2 1\nreverse [0, 6) -> 2 3 4 5 6 7 1\nreverse [2, 5) -> 2 3 6 5 4 7 1\nreverse [3, 3) -> 2 3 6 5 4 7 1\nreverse [6, 7) -> 2 3 6 5 4 7 1\n",
+      "hash": "2cc8f545b89636a3"
+    },
+    "c-lab-48-case-4": {
+      "stdout": "stride 1 over [0, 10) -> 55\nstride 2 over [0, 10) -> 25\nstride 3 over [1, 10) -> 15\nstride 5 over [0, 10) -> 7\nstride 2 over [0, 0) -> 0\nstride 5 over [9, 10) -> 10\n",
+      "hash": "9f9759611c111dc8"
+    },
+    "c-lab-48-case-5": {
+      "stdout": "max [0, 5) -> index 4\nfind -3 in [1, 5) -> index 3\nreverse [1, 4) -> -4 -3 -9 -2 -1\nmax [0, 5) -> index 4\nstride 2 over [0, 5) -> -14\n",
+      "hash": "a53f3e4424840e99"
+    },
+    "c-lab-48-case-6": {
+      "stdout": "find 42 in [0, 1) -> index 0\nmax [0, 1) -> index 0\nreverse [0, 1) -> 42\ncount [0, 1) -> 1\n",
+      "hash": "f93adcceba66c500"
+    },
+    "c-lab-49-case-1": {
+      "stdout": "start_session(42) -> seeded with 42 | rand calls 0, srand calls 1\nroll_die(6) -> 1 | rand calls 1, srand calls 0\nroll_die(6) -> 6 | rand calls 1, srand calls 0\nroll_die(6) -> 1 | rand calls 1, srand calls 0\nroll_die(6) -> 6 | rand calls 1, srand calls 0\nroll_die(6) -> 2 | rand calls 1, srand calls 0\nroll_die(1) -> 1 | rand calls 1, srand calls 0\n",
+      "hash": "3c92a0494a34ba7e"
+    },
+    "c-lab-49-case-2": {
+      "stdout": "roll_range(1, 6) -> 1 | rand calls 1, srand calls 0\nroll_range(10, 20) -> 17 | rand calls 1, srand calls 0\nroll_range(-1000, 1000) -> -980 | rand calls 1, srand calls 0\nroll_range(5, 5) -> 5 | rand calls 1, srand calls 0\nroll_range(0, 9) -> 9 | rand calls 1, srand calls 0\n",
+      "hash": "af6c08a60ef83234"
+    },
+    "c-lab-49-case-3": {
+      "stdout": "coin_flip() -> 0 | rand calls 1, srand calls 0\ncoin_flip() -> 1 | rand calls 1, srand calls 0\ncoin_flip() -> 0 | rand calls 1, srand calls 0\ncoin_flip() -> 1 | rand calls 1, srand calls 0\ncoin_flip() -> 1 | rand calls 1, srand calls 0\n",
+      "hash": "6e473e6a5b7a1b1f"
+    },
+    "c-lab-49-case-4": {
+      "stdout": "count_hits(10, 50) -> 7 | rand calls 10, srand calls 0\ncount_hits(0, 50) -> 0 | rand calls 0, srand calls 0\n",
+      "hash": "d6544f45e98e4597"
+    },
+    "c-lab-49-case-5": {
+      "stdout": "start_session(7) -> seeded with 7 | rand calls 0, srand calls 1\ncount_hits(4, 0) -> 0 | rand calls 4, srand calls 0\ncount_hits(4, 100) -> 4 | rand calls 4, srand calls 0\ncount_hits(4, 3) -> 0 | rand calls 4, srand calls 0\n",
+      "hash": "8571770cc7766400"
+    },
+    "c-lab-49-case-6": {
+      "stdout": "roll_range(-1000, 1000) -> -558 | rand calls 1, srand calls 0\nroll_die(100) -> 47 | rand calls 1, srand calls 0\ncoin_flip() -> 1 | rand calls 1, srand calls 0\n",
+      "hash": "78770a755f0d6186"
+    },
+    "c-lab-49-case-7": {
+      "stdout": "roll_die(10) -> 10 | rand calls 1, srand calls 0\nroll_die(10) -> 1 | rand calls 1, srand calls 0\nstart_session(5) -> seeded with 5 | rand calls 0, srand calls 1\n",
+      "hash": "8c283964c69ad493"
     }
   }
 }

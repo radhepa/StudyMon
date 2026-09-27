@@ -1,4 +1,5 @@
-/* Static validation of the 30 autograded C labs.
+/* Static validation of the 49 autograded C labs (30 originals plus the 19
+   midterm review labs, c-lab-31 to c-lab-49).
 
    Structure only. Whether an expected output is CORRECT is settled by
    tools/build-expected-outputs.cjs plus review, and whether grading works is
@@ -10,9 +11,11 @@ vm.runInContext(fs.readFileSync('js/data/side-quests.js', 'utf8'), c);
 const qs = c.SIDE_QUESTS;
 const refs = JSON.parse(fs.readFileSync('tools/quest-reference-fixtures.json', 'utf8'));
 
-assert.equal(qs.length, 30, '30 labs');
-assert.equal(new Set(qs.map(q => q.id)).size, 30, 'stable unique ids');
-assert.equal(new Set(qs.map(q => q.recommendedOrder)).size, 30, 'unique ordering');
+assert.equal(qs.length, 49, '49 labs');
+assert.equal(new Set(qs.map(q => q.id)).size, 49, 'stable unique ids');
+assert.equal(new Set(qs.map(q => q.recommendedOrder)).size, 49, 'unique ordering');
+assert.deepEqual(qs.filter(q => q.collection === 'midterm-review').map(q => q.id),
+  Array.from({ length: 19 }, (_, i) => 'c-lab-' + (31 + i)), 'midterm review set is c-lab-31 to c-lab-49');
 
 let cases = 0;
 for (const q of qs) {
@@ -48,8 +51,9 @@ for (const q of qs) {
       where + test.id + ' has no verified expected output');
   });
 }
-assert.equal(cases, 169, 'expected case total');
-for (const d of ['easy', 'medium', 'hard']) assert.equal(qs.filter(q => q.difficulty === d).length, 10, d + ' count');
+assert.equal(cases, 315, 'expected case total');
+const perDifficulty = { easy: 18, medium: 15, hard: 16 };
+for (const d of ['easy', 'medium', 'hard']) assert.equal(qs.filter(q => q.difficulty === d).length, perDifficulty[d], d + ' count');
 
 // The stored expectations must still match the contracts that produced them.
 const fixture = JSON.parse(fs.readFileSync('tools/quest-expected-outputs.json', 'utf8')).cases;
@@ -64,4 +68,4 @@ for (const q of qs) for (const test of q.grading.tests) {
 }
 assert.equal(stale, 0, stale + ' expectations are stale or drifted; re-run tools/build-expected-outputs.cjs');
 
-console.log('PASS: 30 autograded labs, ' + cases + ' cases, every case carrying a verified expected output that still matches its contract.');
+console.log('PASS: ' + qs.length + ' autograded labs, ' + cases + ' cases, every case carrying a verified expected output that still matches its contract.');

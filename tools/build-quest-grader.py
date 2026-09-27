@@ -10,6 +10,7 @@ INC='#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <lim
 def case(inp='',files=None):return {'input':inp,'files':files or {}}
 def main(n,contract,ref,inputs):D[n]=dict(contract=contract,reference=INC+ref,starter='#include <stdio.h>\n\nint main(void)\n{\n    /* Write your implementation here. */\n    return 0;\n}\n',harness='',cases=[case(x) if isinstance(x,str) else x for x in inputs])
 def lib(n,contract,types,prototypes,ref,driver,inputs,tracked=False):D[n]=dict(contract=contract,reference=INC+types+'\n'+ref,starter=INC+types+'\n'+prototypes+'\n/* Implement the functions above. The game supplies main(). */\n',harness=INC+(TRACK if tracked else '')+'\n#include "quest.c"\n'+(UNTRACK if tracked else '')+driver,cases=[case(x) if isinstance(x,str) else x for x in inputs])
+def custom(n,contract,starter,ref,harness,inputs):D[n]=dict(contract=contract,reference=ref,starter=starter,harness=harness,cases=[case(x) if isinstance(x,str) else x for x in inputs])
 TRACK=r'''
 static void *allocations[256];
 static int fail_next=0;
@@ -84,7 +85,15 @@ int shop_sell(Shop *s,const char *n,unsigned count){int i=shop_find(s,n);if(i<0|
 int shop_save(const Shop *s,const char *path){FILE *f=fopen(path,"w");if(!f)return 0;int ok=fprintf(f,"%lu\n",s->revenue)>=0;for(size_t i=0;i<s->count;i++)if(fprintf(f,"%s,%u,%u\n",s->data[i].name,s->data[i].stock,s->data[i].price)<0)ok=0;if(fclose(f))ok=0;return ok;}
 int shop_load(Shop *s,const char *path){FILE *f=fopen(path,"r");if(!f)return 0;Shop tmp;if(!shop_init(&tmp)){fclose(f);return 0;}char line[256],tail;int ok=fgets(line,sizeof line,f)&&sscanf(line,"%lu %c",&tmp.revenue,&tail)==1;while(ok&&fgets(line,sizeof line,f)){char name[21];unsigned stock,price;if(sscanf(line,"%20[A-Za-z],%u,%u %c",name,&stock,&price,&tail)!=3||!shop_add(&tmp,name,stock,price))ok=0;}if(ferror(f))ok=0;fclose(f);if(!ok){shop_destroy(&tmp);return 0;}shop_destroy(s);*s=tmp;return 1;}
 ''',r'''int main(void){track_ready();Shop s={0};if(!shop_init(&s))return 1;int n;if(scanf("%d",&n)!=1)return 1;for(int i=0;i<n;i++){char c,name[21];unsigned a,b;if(scanf(" %c",&c)!=1)return 1;if(c=='F'){fail_next=1;continue;}if(c=='S'||c=='L'){printf("%d\n",c=='S'?shop_save(&s,"shop.txt"):shop_load(&s,"shop.txt"));continue;}if(scanf("%20s",name)!=1)return 1;if(c=='G'){int k=shop_find(&s,name);if(k<0)puts("MISSING");else printf("%u %u\n",s.data[k].stock,s.data[k].price);continue;}if(scanf("%u",&a)!=1)return 1;if(c=='A'){if(scanf("%u",&b)!=1)return 1;printf("%d\n",shop_add(&s,name,a,b));}else printf("%d\n",c=='R'?shop_restock(&s,name,a):shop_sell(&s,name,a));}printf("REVENUE %lu\n",s.revenue);shop_destroy(&s);printf("LIVE %d\n",live_blocks());return 0;}''',['5 A Potion 3 200 B Potion 2 G Potion B Potion 2 G Potion','6 A A 999 100 A A 1 2 R A 1 B Missing 1 S L','6 A A 1 2 A B 1 3 F A C 1 4 G A G C',case('4 L G A B A 1 G A',{'shop.txt':'4294967295\nA,2,1\n'}),case('3 A Keep 2 3 L G Keep',{'shop.txt':'0\nBad,5,1\nBad,2,1\n'}),case('3 A Keep 2 3 L G Keep',{'shop.txt':'oops\n'}),'4 A A 2 3 S B A 1 L'],True)
-assert set(D)==set(range(1,31)),set(range(1,31))-set(D)
+# Labs 31-49 (midterm review) live in their own module; see its docstring.
+import sys
+sys.path.insert(0,str(ROOT/'tools'))
+import quest_midterm_labs as MIDTERM
+MIDTERM.register(main,lib,custom,INC)
+LAST=max(MIDTERM.META)
+assert set(D)==set(range(1,LAST+1)),set(range(1,LAST+1))-set(D)
+have={int(q['id'][-2:]) for q in qs}
+qs+=[MIDTERM.base_record(n) for n in sorted(MIDTERM.META) if n not in have]
 for q in qs:
  n=int(q['id'][-2:]);d=D[n]
  q.update(schemaVersion=4,contentStatus='autograded',implementationContract=d['contract'],prompt=d['contract'],starterCode=d['starter'],inputPolicy='Exact output is required: case, spaces, numbers and final newlines must match. No extra prompts or labels. Every test starts in a fresh sandbox. C11 compilation uses -Wall -Wextra -Werror -pedantic-errors. Standard library files are in-memory only. Run uses the test driver for function labs. Submit must pass every test. Runtime limits: 3 seconds per test, 64 MB program memory, 16 KB output. Compiler preparation may take longer.',learningObjectives=[d['contract']])
@@ -92,10 +101,10 @@ for q in qs:
  q['rewardPolicy']['grantOn']='autograded-completion'
  q['grading']={'version':1,'mode':'functions' if d['harness'] else 'program','harness':d['harness'],'tests':[dict(id=q['id']+'-case-'+str(i+1),label='Case '+str(i+1),**t) for i,t in enumerate(d['cases'])]}
  for k in ['fixture','testAdvice','example','acceptance','deliverables','rubric','hintsPolicy','optionalExtension']:q.pop(k,None)
- q['hints']=[q['hints'][0],'Implement the exact contract above. For function labs, keep the starter types and signatures; the game supplies main().','Use Run with the sample input, then test boundaries. Submit compares every output byte; extra spaces or missing newlines fail.']
-(ROOT/'js/data/side-quests.js').write_text('// Thirty C11 labs with exact executable autograder contracts.\nwindow.SIDE_QUESTS = '+json.dumps(qs,ensure_ascii=False,indent=2)+';\n',encoding='utf-8')
+ if n<=30: q['hints']=[q['hints'][0],'Implement the exact contract above. For function labs, keep the starter types and signatures; the game supplies main().','Use Run with the sample input, then test boundaries. Submit compares every output byte; extra spaces or missing newlines fail.']
+(ROOT/'js/data/side-quests.js').write_text('// C11 Side Quest labs with exact executable autograder contracts.\nwindow.SIDE_QUESTS = '+json.dumps(qs,ensure_ascii=False,indent=2)+';\n',encoding='utf-8')
 (ROOT/'tools/quest-reference-fixtures.json').write_text(json.dumps({f'c-lab-{n:02}':d['reference'] for n,d in D.items()},indent=2),encoding='utf-8')
-print('Built 30 strict contracts with '+str(sum(len(d['cases']) for d in D.values()))+' executable cases.')
+print('Built '+str(len(D))+' strict contracts with '+str(sum(len(d['cases']) for d in D.values()))+' executable cases.')
 # Re-injecting verified expected outputs is part of building, not a separate step
 # somebody has to remember. Expectations whose contract changed are dropped by
 # the apply step, so a rebuilt lab is ungradeable until it is re-verified with

@@ -108,7 +108,7 @@ function check(n,ok,d){results.push({n,ok,d});console.log((ok?'PASS  ':'FAIL  ')
     openSideQuests();
     const ids=SIDE_QUESTS.map(q=>q.id);
     ids.forEach(id=>{openSideQuest(id);});
-    out.questsOpened=ids.length;
+    out.questsOpened=ids.length;out.questsPublished=SIDE_QUESTS.filter(q=>q.published).length;
     openSideQuests();
   });
 
@@ -154,7 +154,7 @@ function check(n,ok,d){results.push({n,ok,d});console.log((ok?'PASS  ':'FAIL  ')
  check('regions keep separate badges', r.calcBadgesSeparate===true&&r.cBadgeKept===true&&r.calcBadgeKept===true,
        JSON.stringify({sep:r.calcBadgesSeparate,c:r.cBadgeKept,calc:r.calcBadgeKept}));
  check('every location renders', (r.badLocations||[]).length===0, (r.badLocations||[]).slice(0,3).join(' | '));
- check('every side quest opens', r.questsOpened===30, String(r.questsOpened));
+ check('every side quest opens', r.questsOpened===49&&r.questsOpened===r.questsPublished, String(r.questsOpened));
  check('route info opens for every chapter', (r.badRouteInfo||[]).length===0, (r.badRouteInfo||[]).slice(0,3).join(' | '));
  check('route info tracks and catalogs encountered questions', r.questionBase && r.questionBase.tally==='2/'+r.questionBase.total+' questions encountered' &&
        r.questionBase.previews===2 && r.questionBase.entries===r.questionBase.total && r.questionBase.encountered===2,

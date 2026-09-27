@@ -37,6 +37,6 @@ quests.forEach(q => {
   });
 });
 
-fs.writeFileSync(DATA, '// Thirty C11 labs with exact executable autograder contracts.\nwindow.SIDE_QUESTS = ' + JSON.stringify(quests, null, 2) + ';\n');
+fs.writeFileSync(DATA, '// C11 Side Quest labs with exact executable autograder contracts.\nwindow.SIDE_QUESTS = ' + JSON.stringify(quests, null, 2) + ';\n');
 console.log('applied ' + applied + ' expected outputs; stale ' + stale + '; missing ' + missing);
 if (problems.length) { problems.forEach(p => console.log('  ' + p)); process.exitCode = 1; }

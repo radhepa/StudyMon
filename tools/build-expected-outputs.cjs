@@ -11,7 +11,8 @@ const fs = require('fs');
 const crypto = require('crypto');
 const { chromium } = require('./playwright.cjs');
 
-const URL = 'http://127.0.0.1:8780/';
+// Another chat often holds 8780; pass a base URL to use a different local server.
+const URL = process.argv[2] || 'http://127.0.0.1:8780/';
 const OUT = 'tools/quest-expected-outputs.json';
 
 function hashCase(harness, source, test) {
