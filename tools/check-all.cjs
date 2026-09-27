@@ -48,6 +48,8 @@ const SUITES=[
   ['calculus problems', 'tools/check-calc-problems.cjs'],
   ['calculus review',   'tools/check-calc-review.cjs'],
   ['autograder',        'tools/check-autograder.cjs'],
+  ['midterm lab cross-check', 'tools/check-midterm-labs.cjs'],
+  ['lab cutscenes',     'tools/check-lab-scenes.cjs'],
   ['runtime edges',     'tools/check-runtime-edges.cjs'],
   ['Pokemon Kingdom',   'tools/check-kingdom.cjs'],
   ['Bootstrap data',    'tools/check-human-world.cjs'],

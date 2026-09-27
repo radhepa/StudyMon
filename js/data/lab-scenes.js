@@ -684,7 +684,7 @@ window.LAB_SCENES = {
       { who: 'roan', text: "Passes are just numbers. Five counts as true, minus one counts as true. But 'exactly one of these' compares truth values, so turn the pass into a proper 0 or 1 first. Five and one both mean yes, but five isn't equal to one." }
     ] },
     close: { title: 'Write the Variables Down', place: 'Ridge trailhead gate', beats: [
-      { who: 'roan', text: "Ridge, lake, ferry, cave. Eight badges and a pass of five: ferry NO, because both were true, not exactly one. The last clerk would have waved them through." },
+      { who: 'roan', text: "Ridge, lake, ferry, cave. Nine badges and a pass of five: ferry NO, because both were true, not exactly one. The last clerk would have waved them through." },
       { who: 'roan', text: "When a trace gets long, write the variables down. Your head is not a whiteboard. You did. I saw the scratch paper." },
       { who: 'roan', reward: true, text: "₵1,400 from the ranger post and two Ultra Balls. The ridge Pokémon are tough to catch. Don't waste them on anything that's already asleep." }
     ] }

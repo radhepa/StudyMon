@@ -62,7 +62,7 @@ furniture in the `home` scene. You walk up and press **E**.
 
 ---
 
-## 3. The three categories
+## 3. The categories
 
 Three is the starting set. The system takes any number; see §8 for the ones
 queued up next.
@@ -116,10 +116,30 @@ This is the category that is wired up today, so the chest is never empty.
 | Wren's Stamped Receipt | common | buying anything at the Mart | ✅ |
 | Pressed Linden Leaf | uncommon | the Linden grounds in autumn light | phase 2 |
 | Pier Rope Knot | uncommon | time with the pier crew | phase 2 |
-| Cracked Compiler Pin | uncommon | finishing a quest-board job | phase 2 |
+| Cracked Compiler Pin | uncommon | finishing a quest-board job | ✅ |
 | Stamped Ferry Ticket | rare | sailing between regions | ✅ |
 | Lamplighter's Taper | rare | befriending the Hollow lamplighter | phase 2 |
 | **Champion's Laurel** | **prize** | beating the Champion | ✅ |
+
+### Lab Bench Keepsakes → the chest (6 items) — **live**
+
+Added with the midterm review labs (c-lab-31 to c-lab-49). Each harder lab's giver
+hands one over in the lab's closing scene; the quest record names it in
+`rewards.keepsake`, and `grantQuestKeepsakes()` in `js/engine/side-quests.js` calls
+`collectFind` once the claim itself has saved. The board re-runs that pass, which
+repairs a failed write and gives older saves anything they are owed.
+
+| Item | Rarity | Source |
+|---|---|---|
+| Rollover Odometer | uncommon | Ida Overflow, One More Thing in the Bag (c-lab-33) |
+| Address Pearl | uncommon | Perl, Down, Grab, Up (c-lab-47) |
+| Unsequenced Die | rare | Uma Bee, Stepping Stones (c-lab-38) |
+| Precedence Table Plaque | rare | ANSI, The League Damage Formula (c-lab-40) |
+| Leap Day Stamp | rare | Vell, The Archive Calendar (c-lab-46) |
+| **Midterm Review Ribbon** | **prize** | every midterm review lab finished |
+
+The Cracked Compiler Pin (Bootstrap Keepsakes) comes from the same pass: the first
+finished quest-board job hands it over.
 
 ### Rarity
 
@@ -372,7 +392,7 @@ proves, through the real hotspots rather than by calling the openers:
 - every piece of house furniture stands on walkable floor and is the nearest
   interactive thing to its own standing spot;
 - the desk offers both the journal and the study notes;
-- the chest opens on three categories and counts the whole catalogue;
+- the chest opens on four categories and counts the whole catalogue;
 - a locked shelf hides names but never hints;
 - each display case shows exactly what has been found, says so when empty, and
   keeps every resident inside the glass;
