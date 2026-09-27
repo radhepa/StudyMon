@@ -21,9 +21,37 @@ MIDTERM_SET = 'midterm-review'
 # first time it runs; contracts, starters, harnesses and tests come from
 # register() below.
 # ---------------------------------------------------------------------------
-EASY_REWARD = {'money': 600, 'berries': [{'id': 'oran', 'count': 3}], 'pokemon': None}
-MEDIUM_REWARD = {'money': 1400, 'berries': [{'id': 'sitrus', 'count': 2}], 'pokemon': None}
-HARD_REWARD = {'money': 3000, 'berries': [{'id': 'sitrus', 'count': 4}], 'pokemon': None}
+def reward(money, items=(), pokemon=None, keepsake=None):
+  r = {'money': money, 'berries': [{'id': i, 'count': n} for i, n in items], 'pokemon': pokemon}
+  if keepsake:
+    r['keepsake'] = keepsake  # a js/data/collectables.js item in the 'labbench' category
+  return r
+
+# Easy labs pay small: coins plus a few common items. Medium and hard labs pay
+# something tied to the topic, the giver or the scene; the two hardest labs are
+# the only ones that hand over a shiny. Every reward is revealed in the lab's
+# closing scene (js/data/lab-scenes.js), which names exactly these items.
+REWARDS = {
+  31: reward(600, [('potion', 2)]),
+  32: reward(600, [('oran', 3)]),
+  33: reward(1400, [('sitrus', 2), ('oran', 1)], keepsake='rollover-odometer'),  # Ida always packs one more
+  34: reward(600, [('oran', 3)]),
+  35: reward(600, [('oran', 3)]),
+  36: reward(3000, [('sitrus', 2)], {'id': 363, 'level': 22}),                        # Spheal, Fee II's signature
+  37: reward(600, [('teaTin', 1)]),
+  38: reward(3000, [], {'id': 607, 'level': 20}, keepsake='unsequenced-die'),         # Litwick, from Uma Bee
+  39: reward(600, [('great', 2)]),
+  40: reward(3000, [], {'id': 599, 'level': 22}, keepsake='precedence-plaque'),       # Klink: gears turn in one order
+  41: reward(1400, [('ultra', 2)]),
+  42: reward(3000, [], {'id': 479, 'level': 25, 'shiny': True}),                      # shiny Rotom: short circuit
+  43: reward(600, [('oran', 3)]),
+  44: reward(1400, [('prismStone', 1)]),                                              # choose a branch without branching
+  45: reward(600, [('potion', 2)]),
+  46: reward(3000, [], {'id': 177, 'level': 20}, keepsake='leap-day-stamp'),          # Natu sees past and future
+  47: reward(1400, [], keepsake='address-pearl'),
+  48: reward(3000, [], {'id': 299, 'level': 25, 'shiny': True}),                      # shiny Nosepass: it points
+  49: reward(1400, [], {'id': 327, 'level': 18}),                                     # Spinda: every one random
+}
 
 META = {
   31: dict(title='The Build Line', topics=['intro to computers', 'compilation pipeline', 'memory'], giver='Theo',
@@ -184,7 +212,7 @@ ORDER = [31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 43, 41, 42, 44, 45, 46, 47, 48,
 for i, n in enumerate(ORDER):
   META[n]['order'] = 31 + i
 for n, m in META.items():
-  m['rewards'] = dict(EASY_REWARD if m['difficulty'] == 'easy' else MEDIUM_REWARD if m['difficulty'] == 'medium' else HARD_REWARD)
+  m['rewards'] = REWARDS[n]
 
 
 def base_record(n):
@@ -205,7 +233,7 @@ def base_record(n):
     'implementationContract': '', 'learningObjectives': m['objectives'],
     'language': {'standard': 'C11', 'extensions': False, 'buildFlags': ['-std=c11', '-Wall', '-Wextra', '-Wpedantic']},
     'validation': {'mode': 'autograder', 'publicationReady': True},
-    'rewardPolicy': {'status': 'ready', 'eligibleTypes': ['money', 'berries', 'rarePokemon'], 'grantOn': 'autograded-completion',
+    'rewardPolicy': {'status': 'ready', 'eligibleTypes': ['money', 'berries', 'rarePokemon'] + (['keepsake'] if m['rewards'].get('keepsake') else []), 'grantOn': 'autograded-completion',
                      'oncePerQuest': True, 'requiresImplementedInventory': True},
     'giver': m['giver'], 'story': m['story'], 'steps': m['steps'], 'hints': list(m['hints']),
     'inputPolicy': '', 'grading': {}

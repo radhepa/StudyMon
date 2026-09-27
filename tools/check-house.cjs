@@ -111,7 +111,7 @@ const { chromium } = require('./playwright.cjs');
     /* Opening the chest is what puts the enrolment slip in your hands. */
     slip: collectHas('enrolment-slip')
   }));
-  ok('the chest opens straight onto its categories', chest.cats === 3, chest.cats);
+  ok('the chest opens straight onto its categories', chest.cats === 4, chest.cats);
   ok('every catalogued item belongs to a real category',
      COLLECT_CATEGORY_CHECK(chest), chest.categories);
   ok('the chest counts the whole catalogue',
@@ -223,6 +223,6 @@ const { chromium } = require('./playwright.cjs');
 /* Every item points at a category that exists, and every category is reachable
    from the chest. Kept out of the browser so the failure message is readable. */
 function COLLECT_CATEGORY_CHECK(chest) {
-  return chest.categories.length === 3 &&
-    ['river', 'critters', 'keepsakes'].every(id => chest.categories.indexOf(id) >= 0);
+  return chest.categories.length === 4 &&
+    ['river', 'critters', 'keepsakes', 'labbench'].every(id => chest.categories.indexOf(id) >= 0);
 }

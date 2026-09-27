@@ -4436,8 +4436,8 @@ window.SIDE_QUESTS = [
       "money": 600,
       "berries": [
         {
-          "id": "oran",
-          "count": 3
+          "id": "potion",
+          "count": 2
         }
       ],
       "pokemon": null
@@ -4761,9 +4761,14 @@ window.SIDE_QUESTS = [
         {
           "id": "sitrus",
           "count": 2
+        },
+        {
+          "id": "oran",
+          "count": 1
         }
       ],
-      "pokemon": null
+      "pokemon": null,
+      "keepsake": "rollover-odometer"
     },
     "difficulty": "medium",
     "estimatedMinutes": {
@@ -4817,7 +4822,8 @@ window.SIDE_QUESTS = [
       "eligibleTypes": [
         "money",
         "berries",
-        "rarePokemon"
+        "rarePokemon",
+        "keepsake"
       ],
       "grantOn": "autograded-completion",
       "oncePerQuest": true,
@@ -5255,10 +5261,13 @@ window.SIDE_QUESTS = [
       "berries": [
         {
           "id": "sitrus",
-          "count": 4
+          "count": 2
         }
       ],
-      "pokemon": null
+      "pokemon": {
+        "id": 363,
+        "level": 22
+      }
     },
     "difficulty": "hard",
     "estimatedMinutes": {
@@ -5327,7 +5336,7 @@ window.SIDE_QUESTS = [
     ],
     "hints": [
       "In C, -7 / 2 is -3 and -7 % 2 is -1. That is why n % 2 == 1 is false for -3.",
-      "For a positive size, position % size is between -(size - 1) and size - 1. When it is negative, adding size once fixes it. Never loop: position can be INT_MIN.",
+      "For a positive size, position % size is between -(size - 1) and size - 1. When it is negative, adding size once fixes it. A loop that keeps adding size also works, but from INT_MIN it can run two billion times.",
       "Floored and truncated results differ only when the remainder is not 0 and a and b have different signs. Then the quotient is one lower and the remainder moves by b."
     ],
     "inputPolicy": "Exact output is required: case, spaces, numbers and final newlines must match. No extra prompts or labels. Every test starts in a fresh sandbox. C11 compilation uses -Wall -Wextra -Werror -pedantic-errors. Standard library files are in-memory only. Run uses the test driver for function labs. Submit must pass every test. Runtime limits: 3 seconds per test, 64 MB program memory, 16 KB output. Compiler preparation may take longer.",
@@ -5405,8 +5414,8 @@ window.SIDE_QUESTS = [
       "money": 600,
       "berries": [
         {
-          "id": "oran",
-          "count": 3
+          "id": "teaTin",
+          "count": 1
         }
       ],
       "pokemon": null
@@ -5560,13 +5569,12 @@ window.SIDE_QUESTS = [
     "tests": [],
     "rewards": {
       "money": 3000,
-      "berries": [
-        {
-          "id": "sitrus",
-          "count": 4
-        }
-      ],
-      "pokemon": null
+      "berries": [],
+      "pokemon": {
+        "id": 607,
+        "level": 20
+      },
+      "keepsake": "unsequenced-die"
     },
     "difficulty": "hard",
     "estimatedMinutes": {
@@ -5621,7 +5629,8 @@ window.SIDE_QUESTS = [
       "eligibleTypes": [
         "money",
         "berries",
-        "rarePokemon"
+        "rarePokemon",
+        "keepsake"
       ],
       "grantOn": "autograded-completion",
       "oncePerQuest": true,
@@ -5707,8 +5716,8 @@ window.SIDE_QUESTS = [
       "money": 600,
       "berries": [
         {
-          "id": "oran",
-          "count": 3
+          "id": "great",
+          "count": 2
         }
       ],
       "pokemon": null
@@ -5870,13 +5879,12 @@ window.SIDE_QUESTS = [
     "tests": [],
     "rewards": {
       "money": 3000,
-      "berries": [
-        {
-          "id": "sitrus",
-          "count": 4
-        }
-      ],
-      "pokemon": null
+      "berries": [],
+      "pokemon": {
+        "id": 599,
+        "level": 22
+      },
+      "keepsake": "precedence-plaque"
     },
     "difficulty": "hard",
     "estimatedMinutes": {
@@ -5930,7 +5938,8 @@ window.SIDE_QUESTS = [
       "eligibleTypes": [
         "money",
         "berries",
-        "rarePokemon"
+        "rarePokemon",
+        "keepsake"
       ],
       "grantOn": "autograded-completion",
       "oncePerQuest": true,
@@ -6058,7 +6067,7 @@ window.SIDE_QUESTS = [
       "money": 1400,
       "berries": [
         {
-          "id": "sitrus",
+          "id": "ultra",
           "count": 2
         }
       ],
@@ -6227,13 +6236,12 @@ window.SIDE_QUESTS = [
     "tests": [],
     "rewards": {
       "money": 3000,
-      "berries": [
-        {
-          "id": "sitrus",
-          "count": 4
-        }
-      ],
-      "pokemon": null
+      "berries": [],
+      "pokemon": {
+        "id": 479,
+        "level": 25,
+        "shiny": true
+      }
     },
     "difficulty": "hard",
     "estimatedMinutes": {
@@ -6530,8 +6538,8 @@ window.SIDE_QUESTS = [
       "money": 1400,
       "berries": [
         {
-          "id": "sitrus",
-          "count": 2
+          "id": "prismStone",
+          "count": 1
         }
       ],
       "pokemon": null
@@ -6676,8 +6684,8 @@ window.SIDE_QUESTS = [
       "money": 600,
       "berries": [
         {
-          "id": "oran",
-          "count": 3
+          "id": "potion",
+          "count": 2
         }
       ],
       "pokemon": null
@@ -6818,13 +6826,12 @@ window.SIDE_QUESTS = [
     "tests": [],
     "rewards": {
       "money": 3000,
-      "berries": [
-        {
-          "id": "sitrus",
-          "count": 4
-        }
-      ],
-      "pokemon": null
+      "berries": [],
+      "pokemon": {
+        "id": 177,
+        "level": 20
+      },
+      "keepsake": "leap-day-stamp"
     },
     "difficulty": "hard",
     "estimatedMinutes": {
@@ -6878,7 +6885,8 @@ window.SIDE_QUESTS = [
       "eligibleTypes": [
         "money",
         "berries",
-        "rarePokemon"
+        "rarePokemon",
+        "keepsake"
       ],
       "grantOn": "autograded-completion",
       "oncePerQuest": true,
@@ -6963,13 +6971,9 @@ window.SIDE_QUESTS = [
     "tests": [],
     "rewards": {
       "money": 1400,
-      "berries": [
-        {
-          "id": "sitrus",
-          "count": 2
-        }
-      ],
-      "pokemon": null
+      "berries": [],
+      "pokemon": null,
+      "keepsake": "address-pearl"
     },
     "difficulty": "medium",
     "estimatedMinutes": {
@@ -7022,7 +7026,8 @@ window.SIDE_QUESTS = [
       "eligibleTypes": [
         "money",
         "berries",
-        "rarePokemon"
+        "rarePokemon",
+        "keepsake"
       ],
       "grantOn": "autograded-completion",
       "oncePerQuest": true,
@@ -7099,13 +7104,12 @@ window.SIDE_QUESTS = [
     "tests": [],
     "rewards": {
       "money": 3000,
-      "berries": [
-        {
-          "id": "sitrus",
-          "count": 4
-        }
-      ],
-      "pokemon": null
+      "berries": [],
+      "pokemon": {
+        "id": 299,
+        "level": 25,
+        "shiny": true
+      }
     },
     "difficulty": "hard",
     "estimatedMinutes": {
@@ -7243,13 +7247,11 @@ window.SIDE_QUESTS = [
     "tests": [],
     "rewards": {
       "money": 1400,
-      "berries": [
-        {
-          "id": "sitrus",
-          "count": 2
-        }
-      ],
-      "pokemon": null
+      "berries": [],
+      "pokemon": {
+        "id": 327,
+        "level": 18
+      }
     },
     "difficulty": "medium",
     "estimatedMinutes": {

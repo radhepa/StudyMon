@@ -99,7 +99,9 @@ body.lab-scene-open #nav { opacity: 0; pointer-events: none; }
 .lab-reward-icon { grid-row: 1 / span 2; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: #f6e2a6; font: 800 18px var(--read); color: #7b4b12; }
 .lab-reward-mon { grid-column: 1 / -1; grid-template-columns: 76px minmax(0, 1fr) !important; }
 .lab-reward-mon img { grid-row: 1 / span 2; width: 76px; height: 76px; object-fit: contain; image-rendering: auto; filter: drop-shadow(0 4px 4px #0003); }
-.lab-reward-mon.shiny { border-color: #e2a93b; background: radial-gradient(circle at 16% 50%, #fff3c4, #fffdf6 55%); }
+.lab-reward-mon.shiny { border-color: #e2a93b; background: radial-gradient(circle at 16% 50%, #fff3c4, #fffdf6 55%); grid-template-columns: 96px minmax(0, 1fr) !important; }
+/* Shinies use the 96px pixel sprite (the painted art has no shiny variant), drawn crisp and a little larger. */
+.lab-reward-mon.shiny img { width: 112px; height: 112px; margin: -14px -8px -14px -16px; image-rendering: pixelated; }
 .lab-reward-mon.shiny b::after { content: ' ✦'; color: #d4952b; }
 .lab-reward-mon.shiny img { animation: lab-shiny 1.6s ease-in-out infinite; }
 @keyframes lab-shiny { 50% { filter: drop-shadow(0 0 10px #ffd35a) drop-shadow(0 4px 4px #0003); } }

@@ -58,6 +58,17 @@ window.COLLECT_CATEGORIES = [
     how: 'These arrive on their own. Every one marks a first: a first badge, ' +
          'a first catch, the first time you sailed.',
     live: true
+  },
+  {
+    id: 'labbench',
+    name: 'Lab Bench Keepsakes',
+    icon: '🧪',
+    display: 'chest',
+    where: 'The Side Quest board',
+    blurb: 'Small things people pressed into your hands when a hard job came right.',
+    how: 'Finish the harder midterm review labs. Each giver hands theirs over in ' +
+         'the closing scene, and the ribbon comes when every midterm lab is done.',
+    live: true
   }
 ];
 
@@ -177,5 +188,31 @@ window.COLLECT_ITEMS = [
     found: 'Befriend the Cavern Hollow lamplighter.' },
   { id: 'champion-laurel', cat: 'keepsakes', name: 'Champion’s Laurel', rarity: 'prize', icon: '🏆',
     blurb: 'Heavier than it looks, and it looks heavy.',
-    found: 'Beat the Champion.' }
+    found: 'Beat the Champion.' },
+
+  /* ---- Lab Bench Keepsakes - the chest, from the midterm review labs ---- */
+  { id: 'rollover-odometer', cat: 'labbench', name: 'Rollover Odometer', rarity: 'uncommon', icon: '🔢',
+    blurb: 'Off Ida Overflow’s old bike. It clicks from 99999 back round to 00000, ' +
+           'which is exactly what an unsigned number is allowed to do.',
+    found: 'Finish Ida Overflow’s lab, One More Thing in the Bag.' },
+  { id: 'address-pearl', cat: 'labbench', name: 'Address Pearl', rarity: 'uncommon', icon: '🦪',
+    blurb: 'Perl’s pearl, with the spot on the seabed where it was found scratched ' +
+           'inside the shell. The address, not just the value.',
+    found: 'Finish Perl’s lab, Down, Grab, Up.' },
+  { id: 'unsequenced-die', cat: 'labbench', name: 'Unsequenced Die', rarity: 'rare', icon: '🎲',
+    blurb: 'Carved by Uma Bee. The faces are in no sensible order and there are ' +
+           'two fives. That is the point.',
+    found: 'Finish Tilda’s lab, Stepping Stones.' },
+  { id: 'precedence-plaque', cat: 'labbench', name: 'Precedence Table Plaque', rarity: 'rare', icon: '📜',
+    blurb: 'Brass, from the wall of the Champion’s hall: unary first, then * / %, ' +
+           'then + -, and on down to the comma. ANSI had a replacement cast.',
+    found: 'Finish ANSI’s lab, The League Damage Formula.' },
+  { id: 'leap-day-stamp', cat: 'labbench', name: 'Leap Day Stamp', rarity: 'rare', icon: '📅',
+    blurb: 'The archive’s rarest stamp, used on the twenty-ninth of February, except ' +
+           'in 1900, 2100 and every other year people forget the rule for.',
+    found: 'Finish Vell’s lab, The Archive Calendar.' },
+  { id: 'midterm-ribbon', cat: 'labbench', name: 'Midterm Review Ribbon', rarity: 'prize', icon: '🎖',
+    blurb: 'Nineteen jobs, nineteen people who needed them done. The ribbon is ' +
+           'plain on purpose. The work was the fancy part.',
+    found: 'Finish every job in the midterm review set.' }
 ];

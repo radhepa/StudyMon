@@ -92,8 +92,8 @@ import quest_midterm_labs as MIDTERM
 MIDTERM.register(main,lib,custom,INC)
 LAST=max(MIDTERM.META)
 assert set(D)==set(range(1,LAST+1)),set(range(1,LAST+1))-set(D)
-have={int(q['id'][-2:]) for q in qs}
-qs+=[MIDTERM.base_record(n) for n in sorted(MIDTERM.META) if n not in have]
+# The midterm records are rebuilt from their module on every run, so it stays their one source of truth.
+qs=[q for q in qs if int(q['id'][-2:]) not in MIDTERM.META]+[MIDTERM.base_record(n) for n in sorted(MIDTERM.META)]
 for q in qs:
  n=int(q['id'][-2:]);d=D[n]
  q.update(schemaVersion=4,contentStatus='autograded',implementationContract=d['contract'],prompt=d['contract'],starterCode=d['starter'],inputPolicy='Exact output is required: case, spaces, numbers and final newlines must match. No extra prompts or labels. Every test starts in a fresh sandbox. C11 compilation uses -Wall -Wextra -Werror -pedantic-errors. Standard library files are in-memory only. Run uses the test driver for function labs. Submit must pass every test. Runtime limits: 3 seconds per test, 64 MB program memory, 16 KB output. Compiler preparation may take longer.',learningObjectives=[d['contract']])

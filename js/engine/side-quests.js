@@ -45,10 +45,11 @@ function saveSideQuestDraft(id,source) {
 function questTouch(p){if(p.status==='not-started'){p.status='in-progress';p.startedAt=Date.now();}}
 function questStatus(p){return p.rewardClaimed&&p.status==='completed'?'Completed':p.status==='completed'?'Completed':p.status==='needs-revision'?'Review needed':p.status==='in-progress'?'In progress':'Not started';}
 function questChapterName(n){var def=subjectDef('c');var c=def && def.CHAPTERS.find(function(x){return x.n===n;});return c?c.title:'Chapter '+n;}
-function questRewardText(q){var r=q.rewards,parts=['₵ '+r.money.toLocaleString()];r.berries.forEach(function(b){var item=itemById(b.id);parts.push(b.count+' '+(item?item.name:b.id));});if(r.pokemon)parts.push(titleCase(dexOf(r.pokemon.id).name)+' Lv '+r.pokemon.level);return parts.join(' · ');}
+function questRewardText(q){var r=q.rewards,parts=['₵ '+r.money.toLocaleString()];r.berries.forEach(function(b){var item=itemById(b.id);parts.push(b.count+' '+(item?item.name:b.id));});if(r.keepsake){var k=typeof collectItem==='function'?collectItem(r.keepsake):null;parts.push(k?k.name:r.keepsake);}if(r.pokemon)parts.push((r.pokemon.shiny?'Shiny ':'')+titleCase(dexOf(r.pokemon.id).name)+' Lv '+r.pokemon.level);return parts.join(' · ');}
 function questEntryCard(){return '<section class="panel sq-entry"><div><span class="eyebrow">C PROGRAMMING</span><h3>Side Quests</h3><p>Put the chapter into practice. Forty-nine programming jobs, from a quick receipt to a working field journal, including a nineteen-job midterm review set.</p></div><button class="primary" onclick="openSideQuests()">Visit the quest board</button></section>';}
 function openSideQuests(){cancelCJob();QUEST_ID=null;showScreen('quests');renderSideQuests();}
 function renderSideQuests(){
+  grantQuestKeepsakes(false);
   var qs=SIDE_QUESTS.filter(function(q){return q.published;}).slice().sort(function(a,b){return a.recommendedOrder-b.recommendedOrder;});
   var complete=qs.filter(function(q){return sideQuestProgress(q.id).status==='completed';}).length;
   var active=qs.filter(function(q){var s=sideQuestProgress(q.id).status;return s==='in-progress'||s==='needs-revision';});
@@ -75,11 +76,29 @@ function claimSideQuestReward(id){
   ensureBag();if(typeof stashProgress==='function')stashProgress();var before=JSON.stringify(S),r=q.rewards,where=null;
   try {
     addMoney(r.money);r.berries.forEach(function(b){if(!itemById(b.id)||!giveItem(b.id,b.count))throw new Error('invalid item reward '+b.id);});
-    if(r.pokemon){var m=makeMon(r.pokemon.id,r.pokemon.level,{shiny:false});where=S.party.length<6?'party':'box';S[where].push(m);S.seen[m.id]=true;S.caught[m.id]=true;S.totals.caught=(S.totals.caught||0)+1;}
-    p.rewardClaimed=true;p.rewardReceipt={at:Date.now(),money:r.money,berries:JSON.parse(JSON.stringify(r.berries)),pokemon:r.pokemon,deliveredTo:where};
+    if(r.pokemon){var m=makeMon(r.pokemon.id,r.pokemon.level,{shiny:!!r.pokemon.shiny});where=S.party.length<6?'party':'box';S[where].push(m);S.seen[m.id]=true;S.caught[m.id]=true;S.totals.caught=(S.totals.caught||0)+1;}
+    p.rewardClaimed=true;p.rewardReceipt={at:Date.now(),money:r.money,berries:JSON.parse(JSON.stringify(r.berries)),pokemon:r.pokemon,keepsake:r.keepsake||null,deliveredTo:where};
     if(typeof stashProgress==='function')stashProgress();localStorage.setItem(SAVE_KEY,JSON.stringify(S));
   }catch(e){S=JSON.parse(before);bindProgress(activeSubject());toast('Reward could not be saved. Keep this page open and submit again to retry.');return false;}
+  p.rewardReceipt.keepsakes=grantQuestKeepsakes(true);questPersist();
   renderTopbar();if(CUR==='quests'&&QUEST_ID===id)renderSideQuest();if(!(typeof labSceneAfterClaim==='function'&&labSceneAfterClaim(id)))toast('All tests passed. Reward collected.'+(where?' Your Pokémon joined '+(where==='box'?'a storage box.':'your party.'):' Berries are in your Bag.'));return true;
+}
+/* Keepsakes live in S.collection, and only collectFind may write there, so they
+   are handed over after the claim itself has saved. Running this again for every
+   claimed quest is safe: anything already in the collection is skipped. That
+   also repairs a save whose keepsake write failed, and gives older saves the
+   Cracked Compiler Pin for jobs finished before it was wired up. */
+function grantQuestKeepsakes(quiet){
+  if(typeof collectFind!=='function'||typeof collectHas!=='function'||!S.sideQuests||!S.sideQuests.records)return [];
+  var records=S.sideQuests.records,fresh=[];
+  var claimed=function(q){return !!(records[q.id]&&records[q.id].rewardClaimed);};
+  var give=function(id){if(id&&!collectHas(id)&&collectFind(id,{quiet:quiet}))fresh.push(id);};
+  var done=SIDE_QUESTS.filter(claimed);
+  if(done.length)give('cracked-compiler-pin');
+  done.forEach(function(q){give(q.rewards.keepsake);});
+  var midterm=SIDE_QUESTS.filter(function(q){return q.published&&q.collection==='midterm-review';});
+  if(midterm.length&&midterm.every(claimed))give('midterm-ribbon');
+  return fresh;
 }
 function openSideQuest(id){if(!questById(id))return;cancelCJob();QUEST_ID=id;showScreen('quests');var p=sideQuestProgress(id),q=questById(id);if(!p.draft){p.draft=q.starterCode;questPersist();}renderSideQuest();}
 function questOpenNotes(n){cancelCJob();if(activeSubject()!=='c')switchSubject('c');goStudy(n);}

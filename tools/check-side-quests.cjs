@@ -10,6 +10,8 @@ const c = {}; c.window = c; vm.createContext(c);
 vm.runInContext(fs.readFileSync('js/data/side-quests.js', 'utf8'), c);
 const qs = c.SIDE_QUESTS;
 const refs = JSON.parse(fs.readFileSync('tools/quest-reference-fixtures.json', 'utf8'));
+vm.runInContext(fs.readFileSync('js/data/collectables.js', 'utf8'), c);
+const keepsakes = c.COLLECT_ITEMS.filter(i => i.cat === 'labbench').map(i => i.id);
 
 assert.equal(qs.length, 49, '49 labs');
 assert.equal(new Set(qs.map(q => q.id)).size, 49, 'stable unique ids');
@@ -27,8 +29,11 @@ for (const q of qs) {
   assert(q.published, where + 'published');
   assert.equal(q.validation.mode, 'autograder', where + 'graded by the autograder');
   assert(q.starterCode.length && q.hints.length === 3, where + 'starter and hints');
-  const itemRewards=['oran','sitrus','revive','circuitToken','rareCandy','prismStone'];
+  const itemRewards=['oran','sitrus','revive','circuitToken','rareCandy','prismStone','potion','great','ultra','teaTin'];
   assert(q.rewards.money > 0 && q.rewards.berries.every(b => itemRewards.includes(b.id) && b.count > 0), where + 'rewards');
+  // Keepsakes are Lab Bench collectables; shinies are kept for the hard labs.
+  if (q.rewards.keepsake) assert(keepsakes.includes(q.rewards.keepsake), where + 'keepsake is a Lab Bench collectable');
+  if (q.rewards.pokemon && q.rewards.pokemon.shiny) assert.equal(q.difficulty, 'hard', where + 'shiny rewards only for hard labs');
   assert(!JSON.stringify(q).includes('—'), where + 'no em dashes in copy');
   const t = q.estimatedMinutes;
   assert(t.min <= t.max, where + 'time estimate');

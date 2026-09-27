@@ -6,7 +6,7 @@ const { chromium } = require('./playwright.cjs');
 const URL = process.argv[2] || 'http://127.0.0.1:8780/';
 const refs = JSON.parse(fs.readFileSync('tools/quest-reference-fixtures.json', 'utf8'));
 // Labs whose scenes are still being written; empty once every lab has both.
-const PENDING = Array.from({ length: 19 }, (_, i) => 'c-lab-' + (31 + i));
+const PENDING = [];
 
 const results = [];
 function check(name, ok, detail) { results.push({ name, ok: !!ok }); console.log((ok ? 'PASS  ' : 'FAIL  ') + name + (detail !== undefined ? '  [' + detail + ']' : '')); }
@@ -135,7 +135,48 @@ function check(name, ok, detail) { results.push({ name, ok: !!ok }); console.log
     });
     check('seen scenes survive a save, and junk state normalises', persist.kept && persist.fixed && persist.fixed2, JSON.stringify(persist));
 
-    // 8. Phone layout
+    // 8. Part 3 rewards: shinies, keepsakes, the first-job pin and the midterm ribbon
+    await fresh();
+    const rewards = await page.evaluate(() => {
+      const finish = id => { const q = questById(id), p = sideQuestProgress(id); p.status = 'completed'; p.completedAt = Date.now();
+        p.submission = { questId: q.id, method: 'autograder', graderVersion: q.grading.version, source: 'x', passed: q.grading.tests.length, total: q.grading.tests.length, at: Date.now() };
+        openSideQuest(id); const ok = claimSideQuestReward(id); const r = LAB_SCENE ? LAB_SCENE.scene.beats.findIndex(b => b.reward) : -1;
+        while (LAB_SCENE && LAB_SCENE.index < r) advanceLabScene(); const card = document.querySelector('.lab-reward'); const out = { ok, card: card ? card.textContent : '', img: card && card.querySelector('.lab-reward-mon img') ? card.querySelector('.lab-reward-mon img').getAttribute('src') : '' };
+        while (LAB_SCENE) advanceLabScene(); return out; };
+      const out = {};
+      const pinBefore = collectHas('cracked-compiler-pin');
+      const shiny = finish('c-lab-42'); const rotom = S.party.concat(S.box).find(m => m.id === 479);
+      out.shiny = { ok: shiny.ok, isShiny: !!(rotom && rotom.shiny), lvl: rotom && rotom.lvl, card: /Shiny Rotom/.test(shiny.card), sprite: /shiny\/479\.png/.test(shiny.img) };
+      out.pin = { before: pinBefore, after: collectHas('cracked-compiler-pin'), onCard: /Cracked Compiler Pin/.test(shiny.card) };
+      const odo = finish('c-lab-33');
+      out.keepsake = { has: collectHas('rollover-odometer'), receipt: sideQuestProgress('c-lab-33').rewardReceipt.keepsake, card: /Rollover Odometer/.test(odo.card), oneMore: /1 × Oran Berry/.test(odo.card), text: questRewardText(questById('c-lab-33')) };
+      const again = claimSideQuestReward('c-lab-33'); out.twice = again === false && collectRecord('rollover-odometer').n === 1;
+      out.shinyText = questRewardText(questById('c-lab-48'));
+      const midterm = SIDE_QUESTS.filter(q => q.collection === 'midterm-review').map(q => q.id);
+      midterm.filter(id => !sideQuestProgress(id).rewardClaimed).slice(0, -1).forEach(finish);
+      out.ribbonEarly = collectHas('midterm-ribbon');
+      const last = midterm.find(id => !sideQuestProgress(id).rewardClaimed); const lastCard = finish(last);
+      out.ribbon = { has: collectHas('midterm-ribbon'), onCard: /Midterm Review Ribbon/.test(lastCard.card), last };
+      const labbench = COLLECT_ITEMS.filter(i => i.cat === 'labbench').map(i => i.id);
+      out.labbench = labbench.every(id => collectHas(id));
+      return out;
+    });
+    check('a shiny reward arrives shiny, at its level, and the card says so', rewards.shiny.ok && rewards.shiny.isShiny && rewards.shiny.lvl === 25 && rewards.shiny.card && rewards.shiny.sprite, JSON.stringify(rewards.shiny));
+    check('the first finished job hands over the Cracked Compiler Pin in the scene', !rewards.pin.before && rewards.pin.after && rewards.pin.onCard, JSON.stringify(rewards.pin));
+    check('a bespoke keepsake goes into the chest, onto the receipt and onto the card', rewards.keepsake.has && rewards.keepsake.receipt === 'rollover-odometer' && rewards.keepsake.card && rewards.keepsake.oneMore && /Rollover Odometer/.test(rewards.keepsake.text), JSON.stringify(rewards.keepsake));
+    check('a keepsake cannot be claimed twice', rewards.twice, String(rewards.twice));
+    check('the board lists shiny rewards as shiny', /Shiny Nosepass Lv 25/.test(rewards.shinyText), rewards.shinyText);
+    check('the Midterm Review Ribbon arrives with the nineteenth midterm lab, not before', !rewards.ribbonEarly && rewards.ribbon.has && rewards.ribbon.onCard && rewards.labbench, JSON.stringify(rewards.ribbon));
+
+    await fresh();
+    const repair = await page.evaluate(() => {
+      const p = sideQuestProgress('c-lab-47'); p.status = 'completed'; p.rewardClaimed = true; p.rewardReceipt = { at: 1, money: 1400, berries: [], pokemon: null, deliveredTo: null };
+      const before = [collectHas('address-pearl'), collectHas('cracked-compiler-pin')]; openSideQuests();
+      return { before, after: [collectHas('address-pearl'), collectHas('cracked-compiler-pin')], money: S.money };
+    });
+    check('older saves are repaired: claimed jobs get their keepsakes and the pin, and nothing else', !repair.before[0] && !repair.before[1] && repair.after[0] && repair.after[1], JSON.stringify(repair));
+
+    // 9. Phone layout
     await page.setViewportSize({ width: 390, height: 844 });
     await fresh();
     const phone = await page.evaluate(() => { startSideQuest('c-lab-12'); const box = document.querySelector('.lab-scene-box').getBoundingClientRect(), card = document.querySelector('.lab-scene-card').getBoundingClientRect();

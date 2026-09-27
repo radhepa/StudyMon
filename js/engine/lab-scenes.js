@@ -78,10 +78,12 @@ function labRewardCard(q) {
     var item = itemById(b.id);
     items.push('<li><span class="lab-reward-icon" aria-hidden="true">' + labItemGlyph(item) + '</span><b>' + b.count + ' × ' + esc(item ? item.name : b.id) + '</b><small>' + esc(item ? titleCase(item.rarity) : '') + '</small></li>');
   });
-  if (r.keepsake) {
-    var k = typeof collectItem === 'function' ? collectItem(r.keepsake) : null;
-    items.push('<li class="lab-reward-keepsake"><span class="lab-reward-icon" aria-hidden="true">' + (k ? k.icon : '🎗') + '</span><b>' + esc(k ? k.name : r.keepsake) + '</b><small>Keepsake · kept in the chest at home</small></li>');
-  }
+  // The quest's own keepsake, then any first-job or set-complete keepsake this claim unlocked.
+  var extra = p && p.rewardReceipt && Array.isArray(p.rewardReceipt.keepsakes) ? p.rewardReceipt.keepsakes : [];
+  [r.keepsake].concat(extra).filter(function (id, i, all) { return id && all.indexOf(id) === i; }).forEach(function (id) {
+    var k = typeof collectItem === 'function' ? collectItem(id) : null;
+    items.push('<li class="lab-reward-keepsake"><span class="lab-reward-icon" aria-hidden="true">' + (k ? k.icon : '🎗') + '</span><b>' + esc(k ? k.name : id) + '</b><small>' + (id === r.keepsake ? 'Keepsake' : 'Bonus keepsake') + ' · in the chest at home</small></li>');
+  });
   if (r.pokemon) {
     var mon = dexOf(r.pokemon.id), shiny = !!r.pokemon.shiny;
     var art = shiny ? spriteUrl(r.pokemon.id, 'shiny') : artUrl(r.pokemon.id);

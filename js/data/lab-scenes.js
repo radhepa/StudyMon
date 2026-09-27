@@ -511,5 +511,310 @@ window.LAB_SCENES = {
       { who: 'mart', reward: true, text: "₵3,000, four Sitrus Berries, and a Dratini, Level 25. It's lived in the Mart's water tank since before I started, and it only comes out for people who can balance the books." },
       { who: 'mart', text: "Don't tell the previous manager about the tank." }
     ] }
+  },
+
+  /* ---- Labs 31-49: the midterm review set ------------------------------ */
+
+  'c-lab-31': {
+    open: { title: 'It Still Boots', place: 'Repair shop, the old terminal', beats: [
+      { who: 'theo', text: "This terminal is older than me. Byte from the Boot Sector gym gave it to the shop because 'it still boots'. It does boot. It just doesn't say anything while it does." },
+      { who: 'theo', text: "I want it to print how a program gets built. The editor, where you write the source. The preprocessor, which handles the # lines. The translator, which makes an object module. The linker, which joins in the library code. The loader, which puts it all in memory." },
+      { who: 'theo', text: "People say 'compile' as if it's one step. The compiler is really the preprocessor and the translator together, and it's still only the middle of the relay." },
+      { who: 'you', text: "And the memory line?" },
+      { who: 'theo', text: "Kilobytes to bytes, bytes to bits, then the last address. Every byte gets its own address, starting at zero, so the last one is one less than the count. Everyone forgets the zero. I forgot the zero. The terminal forgave me. Barely." }
+    ] },
+    close: { title: 'Something to Say', place: 'Repair shop, the old terminal', beats: [
+      { who: 'theo', text: "Step one, editor. Step five, loader. Sixty-four kilobytes, 65536 bytes, addresses 0 to 65535." },
+      { who: 'theo', text: "It said all of that while it booted. It's never said anything before. I know it's a terminal. I still think it's happy.", warm: "It said all of that while it booted. I've been sitting here watching it boot for ten minutes. I'm glad it was you. That sounds odd. It isn't odd." },
+      { who: 'theo', reward: true, text: "₵600 from the shop tin and two Potions from the first-aid shelf. The shelf is mostly screws. These were behind the screws." }
+    ] }
+  },
+
+  'c-lab-32': {
+    open: { title: 'Columns That Wander', place: 'Pier swimming board', beats: [
+      { who: 'coral', text: "Water is a stream. So is your keyboard. So is this scoreboard, if you think about it. I think about it a lot." },
+      { who: 'ink', text: "Coral's board prints times with the columns wandering about. I check every character. It fails every time." },
+      { who: 'coral', text: "So: %6d gives a number a field six wide. A minus sign pushes it to the left. A leading zero pads it with zeros. %.2f keeps two decimals, %10.3f keeps three in a field ten wide, and %% prints an actual percent sign." },
+      { who: 'coral', text: "Now the trap. scanf with %c takes the very next character in the stream, and if a newline is sitting there from the last number, that's what it takes. Put a space before it, \" %c\", and the space swallows the whitespace first. Buffered! Ha!" },
+      { who: 'ink', text: "And a double is read with %lf and printed with %f. One character out and the whole line means nothing." }
+    ] },
+    close: { title: 'Correct to the Terminator', place: 'Pier swimming board', beats: [
+      { who: 'ink', text: "Right-aligned, left-aligned, zero-padded. Brackets lined up. The long number overflowed its field and was printed in full, as a minimum width should allow." },
+      { who: 'coral', text: "Ink's smiling. Ink doesn't smile. Look at that." },
+      { who: 'ink', text: "Correct to the terminator. That makes twice. I may have to revise my opinion of you, upward." },
+      { who: 'coral', reward: true, text: "₵600 from the swim club and three Oran Berries. Eat one before you swim, not during. I learned that one the hard way." }
+    ] }
+  },
+
+  'c-lab-33': {
+    open: { title: 'Every Bag Has a Size', place: 'Victory Road, the second post', beats: [
+      { who: 'c-boss-e2', text: "Oh good, you're here. Hold this. And this. And... no, I've got that one. Probably." },
+      { who: 'c-boss-e2', text: "Everyone says I overpack. I say every bag has a size and I simply like to find it. So: how big is each type, exactly? sizeof will tell you. char, short, int, long long, float, double." },
+      { who: 'c-boss-e2', text: "Then the fun part. Add two big ints and the answer might not fit. In C, signed overflow is undefined, which is a polite way of saying the bag bursts and nobody promises where the socks land. So check before you add: if a is bigger than INT_MAX minus b, it won't fit." },
+      { who: 'c-boss-e2', text: "An unsigned char is kinder. Go past 255 and it wraps back to zero, like an odometer, and that's allowed. And a float only keeps twenty-four bits, so store sixteen million and one and you get sixteen million back. The bag was full. One fell out." },
+      { who: 'you', text: "Is there anything that doesn't overflow?" },
+      { who: 'c-boss-e2', text: "My heart. And my second bag." }
+    ] },
+    close: { title: 'Room for One More', place: 'Victory Road, the second post', beats: [
+      { who: 'c-boss-e2', text: "It said OVERFLOW before it tried the addition. Do you know how rare that is? Most people find out when the zip breaks." },
+      { who: 'c-boss-e2', text: "And the float came back one short, exactly where it should. Tyranitar nodded. Tyranitar carries my spare bags, so it would know." },
+      { who: 'c-boss-e2', reward: true, text: "I packed you a reward. ₵1,400, two Sitrus Berries, and the Rollover Odometer off my old bike. It clicks round from 99999 to 00000, the way an unsigned number should. Then I found room for one more Oran Berry. There's always room for one more." },
+      { who: 'c-boss-e2', text: "Don't look at me like that. It fit." }
+    ] }
+  },
+
+  'c-lab-34': {
+    open: { title: 'Remembered Correctly', place: 'Terminator Glade lockers', beats: [
+      { who: 'c-gym-10', text: "Every locker at the Glade carries a name, and every name is written in a gentle code: each letter shifted along the alphabet, with z wrapping round to a. Everyone deserves to be remembered correctly, even in code." },
+      { who: 'c-gym-10', text: "A char is a small number. 'A' is 65 and 'a' is 97. To shift a lowercase letter, find its place with c - 'a', add the shift, take % 26 so it wraps, then add 'a' back." },
+      { who: 'c-gym-10', text: "Count what each label holds, too: capitals, small letters, digits, spaces. isupper and its friends live in ctype.h. And a digit character is not its value. '7' is 55. '7' - '0' is 7." },
+      { who: 'c-gym-10', text: "One more thing. After scanf reads the shift, its newline is still waiting in the stream. Clear the rest of that line before the label starts, or your first label will be blank. Blissey learned this the patient way." }
+    ] },
+    close: { title: 'A Name Like a Spell', place: 'Terminator Glade lockers', beats: [
+      { who: 'c-gym-10', text: "'Hello, World 42!' became 'Khoor, Zruog 42!'. Two capitals, eight small letters, and the digits add to six. The punctuation stayed exactly as it was. Punctuation has feelings too." },
+      { who: 'c-gym-10', text: "Blissey is already relabelling the lockers. Yours has your name on it, shifted by three. It looks like a spell." },
+      { who: 'c-gym-10', reward: true, text: "₵600 from the Glade and three Oran Berries. Blissey is holding out an egg again. That part isn't a reward; it's just what Blissey does. You may decline. Nobody ever has." }
+    ] }
+  },
+
+  'c-lab-35': {
+    open: { title: 'The Garden Has a Heartbeat', place: 'Mira\'s greenhouse frame', beats: [
+      { who: 'mira', text: "Every third day I water. Every fifth day I feed the beds. And every day I lose track of which day it is." },
+      { who: 'mira', text: "Day numbers just keep climbing, but weeks come round again, and that's what % is for. Take one off first so the first day counts as zero, divide by seven for the week, keep the remainder for the day, then add one back to both." },
+      { who: 'mira', text: "Divisible by three means the remainder is zero. Same for five. My timer counts minutes, and a day is 1440 of them, so split it down: whole days, then hours, then minutes, both printed with two digits." },
+      { who: 'mira', text: "My kitchen clock always shows two digits, and I've got used to it. The beds have too.", warm: "You're the only person who's ever asked me which bed gets watered first. It's the unruly one. It always goes first." }
+    ] },
+    close: { title: 'Trust the Calendar', place: 'Mira\'s greenhouse frame', beats: [
+      { who: 'mira', text: "Day fifteen: week three, day one, water YES, feed YES. Day thirty: both again. It's like the garden has a heartbeat, and now I can hear it." },
+      { who: 'mira', text: "I've written 'trust the calendar' on a seed packet. I'll lose the packet. But I'll have written it." },
+      { who: 'mira', reward: true, text: "₵600 from the stall tin and three Oran Berries from the first bed. Watered on day fifteen. You can taste it." }
+    ] }
+  },
+
+  'c-lab-36': {
+    open: { title: 'Slot Minus One', place: 'Harbour ice rink at dawn', beats: [
+      { who: 'c-boss-e3', text: "I skate the harbour before anyone else is awake. Forward, the lap board works. Backward, it tells me I'm on slot minus one. There is no slot minus one." },
+      { who: 'c-boss-e3', text: "C's % keeps the sign of the left side. -7 % 2 is -1, not 1. It's also why n % 2 == 1 calls -3 even. It isn't. -3 is extremely odd. I've met it." },
+      { who: 'c-boss-e3', text: "For the ring, take the remainder, and if it's negative, add the size once. Then floor division: C's / rounds toward zero, the floor rounds down. They only disagree when there's a remainder and the signs differ, and then the quotient is one lower." },
+      { who: 'c-boss-e3', text: "And don't call me the Second. It's a name, not a ranking. I intend to make it the better one." },
+      { who: 'you', text: "Understood, Fee." },
+      { who: 'c-boss-e3', text: "Good. Now make the board understand." }
+    ] },
+    close: { title: 'Smooth as Ice', place: 'Harbour ice rink at dawn', beats: [
+      { who: 'c-boss-e3', text: "Slot minus one is slot four now. Even INT_MIN lands somewhere real: 352 on a ring of a thousand. I checked it by hand. The board has never once been right before." },
+      { who: 'c-boss-e3', text: "Minus seven over two: minus four, remainder one.", outcome: {
+        independent: "Minus seven over two: minus four, remainder one. The other Fee said you'd need help. I'm going to enjoy telling them you didn't.",
+        persisted: "Minus seven over two: minus four, remainder one. You fell a few times and got back up. That's skating. It's the only way anyone learns ice.",
+        guided: "Minus seven over two: minus four, remainder one. You read the notes first. Smart. The other Fee never reads anything. Don't tell them I said so. Actually, do." } },
+      { who: 'c-boss-e3', reward: true, text: "₵3,000, two Sitrus Berries, and a Spheal, Level 22. When the tide goes out they roll down the pier in a line, round and round. This one keeps rolling back to wherever you're standing. It has decided." },
+      { who: 'c-boss-e3', text: "Smooth as ice. Don't expect me to say that twice." }
+    ] }
+  },
+
+  'c-lab-37': {
+    open: { title: 'Two Customers, One Number', place: 'Café counter', beats: [
+      { who: 'kip', text: "On the house. You look like your last battle went long. Also, could you fix the ticket machine?" },
+      { who: 'kip', text: "A customer takes a ticket and the number goes up afterwards. Regulars skip ahead: the number goes up first and they get the new one. And now and then someone hands a ticket back, and we go down one." },
+      { who: 'kip', text: "It's just t++ and ++t. Postfix hands over the old value and then counts. Prefix counts and then hands over the new one. Put the plus signs on the wrong side and half the café holds the same number." },
+      { who: 'kip', text: "Handing back at zero is an ERROR. We've never had a ticket minus one, and I don't want to meet whoever would be holding it." }
+    ] },
+    close: { title: 'Nobody Fought', place: 'Café counter', beats: [
+      { who: 'kip', text: "Take five, take six, skip to eight, next is eight. Nobody argued over a number all morning. First time since spring." },
+      { who: 'juno', text: "I came in at noon, which for me is dawn, and got a ticket without an argument. Unheard of." },
+      { who: 'kip', reward: true, text: "₵600 from the tip jar, which is a lot for a tip jar, and a tin of the Juniper tea. That one isn't on the house. Well. It is now." }
+    ] }
+  },
+
+  'c-lab-38': {
+    open: { title: 'Across the Brook', place: 'Meadow brook stepping stones', beats: [
+      { who: 'tilda', text: "One stone after another, in order, no skipping. That is how you cross a brook." },
+      { who: 'c-boss-e4', text: "Or! Hop to the third one, spin, hop back to the first, and see what happens!" },
+      { who: 'tilda', text: "What happens is you fall in. Uma Bee of the Elite Four has been improvising across my stones all morning." },
+      { who: 'tilda', text: "So I want the rules written down. Read the stone, then step: stones[(*index)++]. Step, then read: stones[++*index]. The star has to reach the number, not the pointer. *index++ moves the pointer itself, and then you're reading stones that aren't there." },
+      { who: 'c-boss-e4', text: "And you can't change the same thing twice in one breath! i++ + i++ is undefined. The compiler here refuses to build it at all. I tried. It said no. It said no very firmly." },
+      { who: 'tilda', text: "Changing two different things is fine. Grow a, shrink b, one expression. Zero to n minus one, always." }
+    ] },
+    close: { title: 'Weirdly Relaxing', place: 'Meadow brook stepping stones', beats: [
+      { who: 'tilda', text: "Read, step, step, read. Every index exactly where it should be, and nobody fell off the end. Correct." },
+      { who: 'c-boss-e4', text: "I crossed your way, in order, one stone at a time. It was weirdly relaxing. I hated it. I'm crossing backwards tomorrow to recover." },
+      { who: 'c-boss-e4', reward: true, text: "Here. ₵3,000, a die I carved where no face is in the right order, and a Litwick, Level 20. They follow me around at night like a string of lanterns, but this one kept following the sensible person instead. Take it before I get emotional." },
+      { who: 'tilda', text: "The die has two fives." },
+      { who: 'c-boss-e4', text: "That's the point!" }
+    ] }
+  },
+
+  'c-lab-39': {
+    open: { title: 'Precedence Is Character', place: 'Tea room off the square', beats: [
+      { who: 'gus', text: "My grandmother's recipes, my friend. Temperatures in Fahrenheit, amounts averaged by eye, and not a single parenthesis between them." },
+      { who: 'gus', text: "Multiplication, division and remainder bind tighter than addition, and among themselves they go left to right. So a + b + c / 3.0 divides only c. The whole sum wants brackets, and the 3.0 keeps the division from truncating." },
+      { who: 'gus', text: "And beware 5 / 9. In integers that is nought, and the kettle never boils. Subtract, multiply by five, then divide by nine." },
+      { who: 'gus', text: "The remainder of a by seven, then doubled, is not a doubled, then its remainder by seven. Order of operations, my friend. Order of operations." }
+    ] },
+    close: { title: 'As Dense as Intended', place: 'Tea room off the square', beats: [
+      { who: 'gus', text: "Two hundred and twelve Fahrenheit: one hundred Celsius. The kettle agrees, and the kettle is never wrong." },
+      { who: 'gus', text: "The average came out at 1.67 rather than something alarming, so grandmother's scones will be exactly as dense as intended. Which is very." },
+      { who: 'gus', reward: true, text: "₵600 and two Great Balls. A gentleman never sends a friend back onto the route unequipped. Crisply done." }
+    ] }
+  },
+
+  'c-lab-40': {
+    open: { title: 'We Do Not Vote on Precedence', place: 'The Champion\'s hall', beats: [
+      { who: 'c-boss-champ', text: "Please, sit. The league's damage formula has been computed four different ways in four different gyms, and I find that intolerable." },
+      { who: 'c-boss-champ', text: "It is written in words, deliberately. You will translate it into C without changing the meaning of a single step. Two times the level, divided by five, plus two: that whole quantity multiplies the power, so it needs its parentheses. Everything after runs left to right, and the order of the divisions is part of the rule." },
+      { who: 'c-boss-champ', text: "Mind the roll. Add 217 to r mod 39, multiply, then divide by 255. Divide the sum first and you deal no damage at all, which would be a very polite battle." },
+      { who: 'c-boss-champ', text: "The share is a real number, so the conversion happens before the division, not after. And for one more than the larger of two values, remember that ?: binds more loosely than +. Parenthesise the choice." },
+      { who: 'c-boss-champ', text: "The Standard defines the precedence table. We do not vote on it. We simply read it very carefully." }
+    ] },
+    close: { title: 'The Standard Holds', place: 'The Champion\'s hall', beats: [
+      { who: 'c-boss-champ', text: "Base 44, damage 61, share 40.7. Identical to the league's reference, to the last digit. Every gym will use your translation from tomorrow." },
+      { who: 'c-boss-champ', text: "You met the standard.", outcome: {
+        independent: "You met the standard without a single rejected submission. More than met it.",
+        persisted: "It resisted you, and you revised until it did not. That is how every standard was ever written.",
+        guided: "You consulted the notes before you wrote. The committee would call that proper procedure. So do I." } },
+      { who: 'c-boss-champ', reward: true, text: "₵3,000. The brass precedence table from the wall of this hall; I have had a replacement cast. And a Klink, Level 22. Its gears only ever turn in one order, and it seems to feel that you understand why." },
+      { who: 'c-boss-champ', text: "On Thursdays I play board games at the café. The chaotic ones. You would be most welcome. You would also lose." }
+    ] }
+  },
+
+  'c-lab-41': {
+    open: { title: 'The Gate Speaks C', place: 'Ridge trailhead gate', beats: [
+      { who: 'roan', text: "June trained up here. She still walks faster than me on the flat. I've made my peace with that. What I can't make peace with is the permit rules." },
+      { who: 'roan', text: "They're written in English and the gate speaks C. 'At least four badges and level twenty, or a pass.' && binds tighter than ||, but put the brackets in anyway. Clang won't let you mix them bare, and it's right." },
+      { who: 'roan', text: "The lake rule says 'yes unless this or that'. Unless means not, and not of an or is an and of nots. De Morgan. He was a mathematician, not a hiker, but he'd have made a decent one." },
+      { who: 'roan', text: "Passes are just numbers. Five counts as true, minus one counts as true. But 'exactly one of these' compares truth values, so turn the pass into a proper 0 or 1 first. Five and one both mean yes, but five isn't equal to one." }
+    ] },
+    close: { title: 'Write the Variables Down', place: 'Ridge trailhead gate', beats: [
+      { who: 'roan', text: "Ridge, lake, ferry, cave. Eight badges and a pass of five: ferry NO, because both were true, not exactly one. The last clerk would have waved them through." },
+      { who: 'roan', text: "When a trace gets long, write the variables down. Your head is not a whiteboard. You did. I saw the scratch paper." },
+      { who: 'roan', reward: true, text: "₵1,400 from the ranger post and two Ultra Balls. The ridge Pokémon are tough to catch. Don't waste them on anything that's already asleep." }
+    ] }
+  },
+
+  'c-lab-42': {
+    open: { title: 'The Haunted Hallway', place: 'Null Cavern, the candlelit hallway', beats: [
+      { who: 'c-boss-e1', text: "Welcome... to the Haunted Hallway. Mwa. Ha. Ha. Sorry, sorry, force of habit. Tea? I have tea." },
+      { who: 'c-boss-e1', text: "Every door along here has a check, and every check costs something: a lantern, a Duskull's patience, a minute of my evening. So we only ask a question when its answer can still change the outcome." },
+      { who: 'c-boss-e1', text: "&& and || already know this. With A && B, if A is false, B is never asked. With A || B, if A is true, B stays in the dark. Put the cheap test on the left and let the operator skip the rest." },
+      { who: 'c-boss-e1', text: "The deadliest door is a division. Count greater than zero first, then total over count. Ask the other way round with a count of zero and the whole hallway divides by nothing. It is very dramatic. I would know. Drama is my job." },
+      { who: 'c-boss-e1', text: "Duskull and I will be reading in the corner. The one where nobody did it and it was the weather all along." }
+    ] },
+    close: { title: 'Not One Door Too Many', place: 'Null Cavern, the candlelit hallway', beats: [
+      { who: 'c-boss-e1', text: "No check called when it didn't matter. No division by zero. Not one door opened that didn't need opening. The hallway is disappointed. So am I, professionally. Personally, I'm delighted." },
+      { who: 'c-boss-e1', text: "You got through.", outcome: {
+        independent: "You walked straight through my best haunting without a single wrong turn. Magnificent. Truly.",
+        persisted: "You bumped into a few doors in the dark and kept feeling for the handle. That's how everyone gets out of here.",
+        guided: "You brought the notes. Sensible. The notes are the only thing in this hallway that isn't trying to frighten you." } },
+      { who: 'c-boss-e1', reward: true, text: "₵3,000, and something rather special. A Rotom lives in the hallway lamps and short-circuits whenever someone opens a door they didn't need to. It hasn't flickered once since you finished. Look at its colour. That's a shiny, Level 25, and it has chosen you." },
+      { who: 'c-boss-e1', text: "Boo. Sorry. Couldn't resist. Off you go." }
+    ] }
+  },
+
+  'c-lab-43': {
+    open: { title: 'This House Believes', place: 'Café debate table', beats: [
+      { who: 'sasha', text: "I'll take either side of any argument. Today's motion: 'x < y < z means what it looks like it means.' I'm arguing for. I'm going to lose." },
+      { who: 'sasha', text: "In C, a comparison is an int. True is 1 and false is 0. And anything that isn't zero counts as true, which is why !!x turns any non-zero number into a tidy 1." },
+      { who: 'sasha', text: "So x < y < z compares x < y first, gets a 0 or a 1, then compares that with z. Three, two, one comes out true. Three is not less than two. C does not care about your feelings." },
+      { who: 'sasha', text: "Print what C actually thinks. Then print what maths thinks, with two comparisons and an &&. Let the audience decide." }
+    ] },
+    close: { title: 'The Motion Falls', place: 'Café debate table', beats: [
+      { who: 'sasha', text: "Three, two, one. 'In order: 0.' 'C reads x < y < z as: 1.' The motion falls. I concede. Braces. Always braces. Well, brackets, today." },
+      { who: 'sasha', text: "Next week I'm arguing that indentation is a lie we tell ourselves. You should come. Bring your own side." },
+      { who: 'sasha', reward: true, text: "₵600 from the debate kitty and three Oran Berries. The kitty's official position is that you've earned them. I could argue the other side. I won't." }
+    ] }
+  },
+
+  'c-lab-44': {
+    open: { title: 'Nothing to Predict', place: 'Archive reading room', beats: [
+      { who: 'psy', text: "I know which branch you'll take. I usually know before you do. It's terribly dull for me." },
+      { who: 'psy', text: "So, a challenge. No if. No switch. No loops. While your file compiles, the driver turns each of those words into an error. No branches means nothing for me to foresee." },
+      { who: 'psy', text: "What you have instead: a comparison is worth 1 or 0. Multiply by it. Add a few together; (score >= 60) + (score >= 70) + ... counts the thresholds you passed. Or use one as an array index to pick a word or a month length." },
+      { who: 'psy', text: "The ?: operator can't be switched off. I'll know if you use it. I always know." },
+      { who: 'you', text: "Can you see what I'm going to write?" },
+      { who: 'psy', text: "Usually. Today, for once, I'd like to be surprised." }
+    ] },
+    close: { title: 'Surprised', place: 'Archive reading room', beats: [
+      { who: 'psy', text: "Grades, larger, sign, shipping, parity, months. Not a single branch anywhere. I couldn't see any of it coming. It was wonderful." },
+      { who: 'psy', text: "And minus three came out 'odd', not a crash. n % 2 would have handed you minus one as an index. That one I did see coming, and you didn't take it." },
+      { who: 'psy', reward: true, text: "₵1,400 and a Prism Stone. It lets a Pokémon with several evolutions choose its path at once, without waiting at a branch. It seemed fitting." }
+    ] }
+  },
+
+  'c-lab-45': {
+    open: { title: 'Nothing Wasted', place: 'Ridge training ledge', beats: [
+      { who: 'kes', text: "One call. One return. Nothing wasted in between." },
+      { who: 'kes', text: "A function is a technique: a name, what goes in, what comes out. The prototype is the promise. Keep it exactly." },
+      { who: 'kes', text: "Arguments are copies. Change one inside and the caller never feels it. That is pass by value. If percent_of returns a double, give it one: 100.0 * part / whole. 100 * part / whole is integer division, and integers don't do thirds." },
+      { who: 'kes', text: "Rounding: a cast to int cuts toward zero, so add a half for positives and take a half for negatives. fourth_power calls square twice. Reuse the technique. Don't rewrite it." }
+    ] },
+    close: { title: 'Clean Form', place: 'Ridge training ledge', beats: [
+      { who: 'kes', text: "Square, percent, nearest, repeat, fourth power. Minus two and a half rounded to minus three. Clean form." },
+      { who: 'kes', text: "You didn't do too much in the middle. Most people do." },
+      { who: 'kes', reward: true, text: "₵600 and two Potions. One call each. Nothing wasted." }
+    ] }
+  },
+
+  'c-lab-46': {
+    open: { title: 'Three Clerks and 1900', place: 'Archive index room', beats: [
+      { who: 'libr', text: "Everything here is indexed. Every record is dated by its day of the year, and three of my clerks disagree about 1900." },
+      { who: 'libr', text: "Was 1900 a leap year? No. Divisible by four, yes, but also by a hundred, and not by four hundred. 2000 was. The rule has three parts and people remember two." },
+      { who: 'libr', text: "Build it in layers. is_leap. Then days_in_month, which asks is_leap. Then is_valid_date, which asks days_in_month. Then day_of_year and days_left_in_year on top. Each function trusts the one below it. That is what an index is: trust, stacked carefully." },
+      { who: 'libr', text: "An invalid date returns -1. Never a guess. A guessed date in an archive is worse than a missing one, because nobody knows to look for it." }
+    ] },
+    close: { title: 'Trust, Stacked Carefully', place: 'Archive index room', beats: [
+      { who: 'libr', text: "The fifteenth of June, 2000: day 167. The twenty-ninth of February, 1900: -1. The clerks have stopped arguing about this. They have found something else to argue about, but not this." },
+      { who: 'libr', text: "Every layer holds.", outcome: {
+        independent: "You built every layer on the one beneath it and never had to take any of it down. Tidy.",
+        persisted: "Some of those dates fought back. You re-shelved them until they fitted. That is archiving.",
+        guided: "You consulted the notes. Archivists consult things. It is most of the job." } },
+      { who: 'libr', reward: true, text: "₵3,000. The Leap Day Stamp, which we use once every four years, except when we don't. And a Natu, Level 20. It stares at the sun for hours and is said to see the past and the future. It has perched on the calendar shelf since you started. I believe it approved." }
+    ] }
+  },
+
+  'c-lab-47': {
+    open: { title: 'Down, Grab, Up', place: 'End of the pier', beats: [
+      { who: 'perl', text: "Down, grab, up. If you stay down too long, you don't come up at all." },
+      { who: 'perl', text: "A pointer is a dive. You don't carry the pearl bed around with you; you carry where it is. Put a star on the pointer and you're at the bottom with your hand on the pearl. Change it there and it's changed for everyone." },
+      { who: 'perl', text: "To swap two values, keep one in your hand, move the other across, put yours down. That works even when both dives go to the same spot. The clever XOR trick doesn't. It comes up empty-handed." },
+      { who: 'you', text: "What if I lose the address?" },
+      { who: 'perl', text: "Then you've got a pearl and no idea where the bed is. And when someone asks which of two spots holds the bigger pearl, hand them the spot, not a copy of the pearl. They'll be diving there next." }
+    ] },
+    close: { title: 'Clean Dive', place: 'End of the pier', beats: [
+      { who: 'perl', text: "Sorted three. Split the seconds. Swapped a spot with itself and it stayed put. Handed back the real spot, and the driver dived there and came up a hundred richer. Clean dive." },
+      { who: 'perl', text: "You didn't hold on too long. Most people do." },
+      { who: 'perl', reward: true, text: "₵1,400, and this: a pearl I found years back, with the spot I found it scratched inside the shell. The address, not just the pearl. Seemed right." }
+    ] }
+  },
+
+  'c-lab-48': {
+    open: { title: 'The Gauntlet of Ranges', place: 'Indirection Tower stairs', beats: [
+      { who: 'c-gym-9', text: "Welcome to Indirection Tower. Mind the candles. Mind the Gengar. The Gengar is behind you. No, the other side." },
+      { who: 'c-gym-9', text: "My gauntlet is a set of ranges, given only as two pointers. begin points at the first element and end points one past the last. Half-open. When begin equals end the range is empty, and you mustn't touch a thing." },
+      { who: 'c-gym-9', text: "p + 1 isn't one byte along; it's one int along, four bytes in this sandbox. And end - begin is a count of elements, not bytes. The tower's pointers are very polite about units." },
+      { who: 'c-gym-9', text: "Return pointers, not indexes. The driver turns them back into positions in its own array, so a pointer into a copy gets caught. Gengar checks." },
+      { who: 'c-gym-9', text: "Misdreavus has stolen one of my socks. It's fine. It happens every day. Focus on the ranges." }
+    ] },
+    close: { title: 'A Dereference', place: 'Indirection Tower stairs', beats: [
+      { who: 'c-gym-9', text: "Found, counted, reversed, maxed and strided. Empty ranges untouched. The first of equal maxima, not the last. Not one step off the end." },
+      { who: 'c-gym-9', text: "Gengar is impressed.", outcome: {
+        independent: "You always knew exactly where everything was. Gengar is delighted to have finally met its match.",
+        persisted: "You lost your place a few times and found it again. In this tower, that is the whole skill.",
+        guided: "You used the notes. Even Gengar reads the notes. It pretends it doesn't." } },
+      { who: 'c-gym-9', reward: true, text: "₵3,000, and a very particular pointer. A Nosepass: its nose always points north, whatever you do to it. This one is shiny, Level 25, and it has pointed at you since the moment you walked in. I'd call that a dereference." },
+      { who: 'c-gym-9', text: "Gengar would like to walk you out. It'll be behind you. Try not to jump." }
+    ] }
+  },
+
+  'c-lab-49': {
+    open: { title: 'Reproducible Luck', place: 'Linden Lab results bench', beats: [
+      { who: 'sci1', text: "Every result here is reproducible. Let us see whether you are." },
+      { who: 'sci1', text: "rand() is a sequence, not magic. srand(seed) chooses where the sequence starts. Seed once, and the same seed gives the same run every time. Seed inside every roll and you keep restarting it, which is how one trainer got eleven critical hits in a row and wrote to the papers." },
+      { who: 'sci1', text: "Scaling: rand() % sides + 1 gives 1 to sides, and low + rand() % (high - low + 1) gives low to high inclusive. Mind that + 1. It is the difference between a six-sided die and a five-sided one." },
+      { who: 'sci1', text: "For this experiment I have replaced rand and srand with scripted versions. I know every number they will return, and I count every call. One rand per roll. Exactly one." }
+    ] },
+    close: { title: 'Reproducible. Noted.', place: 'Linden Lab results bench', beats: [
+      { who: 'sci1', text: "One srand. One rand per roll. Every result matches the script. Reproducible. Noted." },
+      { who: 'sci1', text: "I ran it four times and got the same numbers each time. I find that more exciting than I can adequately express, so I shall simply write it down." },
+      { who: 'sci1', reward: true, text: "₵1,400 and a Spinda, Level 18. Every Spinda's spots are a different random pattern; no two have ever been seen alike. Consider it a control subject for how random the world actually is." }
+    ] }
   }
 };
