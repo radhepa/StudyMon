@@ -20,6 +20,7 @@ function toast(msg) {
 var CUR = 'title';
 function showScreen(name) {
   if(name !== 'quests' && typeof cancelCJob === 'function') cancelCJob();
+  if(typeof LAB_SCENE !== 'undefined' && LAB_SCENE) closeLabScene(true);
   if(name !== 'kingdom' && typeof kingdomStop === 'function') kingdomStop(true);
   if(name !== 'human' && typeof humanWorldStop === 'function') humanWorldStop(true);
   if (CUR === 'battle' && name !== 'battle' && B && !B.over) {
