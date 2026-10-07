@@ -42,6 +42,7 @@ function questionHtml(q, text) {
    of the bank already uses, so the typesetter only has to know one form. */
 
 var MATH_GREEK = { alpha: 'α', beta: 'β', rho: 'ρ', lambda: 'λ', phi: 'φ' };
+var MATH_FUNCTION_WORD = /^(sin|cos|tan|sec|csc|cot|sinh|cosh|tanh|arcsin|arccos|arctan|log|exp|lim|max|min|sqrt|abs)$/i;
 
 function mathNormalize(s) {
   s = s.replace(/\r\n?/g, '\n');
@@ -91,6 +92,12 @@ function mathNormalize(s) {
   // A hyphen is a minus sign unless it joins two words (x-axis, p-series).
   s = s.replace(/(^|[\s(\[{,=+·/^_<>⟨|:;≤≥→])-(?=[\w(√π∞|⟨.\[θ])/g, '$1−');
   s = s.replace(/ - /g, ' − ');
+  // A word joined to a number is a hyphen too (degree-3, order-4, gap-2), not
+  // "degree minus 3". The non-breaking hyphen keeps the pair on one line and
+  // out of the next rule; function names (sin-1) still get a minus.
+  s = s.replace(/(^|[^A-Za-z])([A-Za-z]{3,})-(?=\d)/g, function (m, before, word) {
+    return MATH_FUNCTION_WORD.test(word) ? m : before + word + '‑';
+  });
   s = s.replace(/([\w)\]⁰¹²³⁴⁵⁶⁷⁸⁹ⁿ₀₁₂₃₄₅₆₇₈₉|!′'])-(?=\d|\(|√|π|θ|[A-Za-z](?![A-Za-z]))/g, '$1−');
   return s;
 }
