@@ -678,7 +678,8 @@ button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visi
   font-size: 13px;
   line-height: 1.45;
 }
-.question-preview span, .question-preview small { color: #806846; white-space: nowrap; }
+.question-preview > div > span, .question-preview > div > small { color: #806846; white-space: nowrap; }
+.question-preview .qp-text { min-width: 0; text-align: left; }
 .question-catalog-head { margin-bottom: 14px; }
 .question-catalog-head h2 { margin: 2px 0 3px; }
 .question-catalog {

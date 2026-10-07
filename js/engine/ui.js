@@ -698,7 +698,10 @@ function routeQuestionBaseHtml(n) {
     '<span class="friend-role">Question base</span>' +
     '<h3>' + met.length + '/' + questions.length + ' questions encountered' +
     (hidden ? ' · ' + hidden + ' hidden' : '') + '</h3></div>' +
-    '<button class="ghost" onclick="openQuestionBase(' + n + ')">See all questions</button></div>' +
+    '<div class="row tight">' +
+    (hidden ? '<button class="ghost" onclick="unhideRoute(' + n + ')" title="Questions you got right ' +
+      reviewPlan().retireAfter + ' times in a row are hidden. This puts them back into rotation.">Bring hidden back</button>' : '') +
+    '<button class="ghost" onclick="openQuestionBase(' + n + ')">See all questions</button></div></div>' +
     '<div class="question-progress" role="progressbar" aria-label="Questions encountered" aria-valuemin="0" ' +
     'aria-valuemax="' + questions.length + '" aria-valuenow="' + met.length + '"><span style="width:' + pct + '%"></span></div>';
   if (!questions.length) {
@@ -709,7 +712,9 @@ function routeQuestionBaseHtml(n) {
     h += '<div class="question-preview">';
     met.slice(0, 4).forEach(function (q) {
       var stats = S.srs[q.id];
-      h += '<div><span>Tier ' + q.t + '</span>' + questionHtml(q, q.q) +
+      // the text gets its own cell: typeset maths is several nodes, each of
+      // which would otherwise become a grid cell of its own
+      h += '<div><span>Tier ' + q.t + '</span><div class="qp-text">' + questionHtml(q, q.q) + '</div>' +
         '<small>' + ((stats.r || 0) + (stats.w || 0)) + ' attempt' +
         (((stats.r || 0) + (stats.w || 0)) === 1 ? '' : 's') + '</small></div>';
     });
@@ -717,6 +722,15 @@ function routeQuestionBaseHtml(n) {
     if (met.length > 4) h += '<p class="small">Plus ' + (met.length - 4) + ' more encountered question' + (met.length - 4 === 1 ? '' : 's') + '.</p>';
   }
   return h + '</section>';
+}
+
+/* Hidden questions used to come back only through unhideQuestions() typed in
+   the browser console. */
+function unhideRoute(n) {
+  var ids = routeQuestions(n).filter(function (q) { return isHidden(q.id); }).map(function (q) { return q.id; });
+  var back = unhideQuestions(ids);
+  toast(back ? back + ' question' + (back === 1 ? ' is' : 's are') + ' back in rotation.' : 'Nothing was hidden here.');
+  openRouteInfo(n);
 }
 
 function openQuestionBase(n) {
