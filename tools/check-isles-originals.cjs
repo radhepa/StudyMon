@@ -129,8 +129,10 @@ const HOMES = { 4: [1039], 5: [1035], 6: [1037, 1046], 7: [1042], 8: [1038], 9: 
       wrong.map(id => id + '=' + r.seen[id].join('|')).join(' ') || Object.keys(r.seen).join(','));
     check('each route can create its original in a wild battle',
       Object.keys(r.forced).every(id => r.forced[id] === Number(id)), JSON.stringify(r.forced));
-    check('every route that holds one is shut until Evening Exam I is sat',
-      r.blockedBefore.every(Boolean), r.blockedBefore.join(','));
+    // Every Isles topic is open from the start now (CALC_SUBJECT.openTopics),
+    // so the routes that hold an original are open before Evening Exam I too.
+    check('every route that holds one is open from the start',
+      r.blockedBefore.every(b => !b), r.blockedBefore.join(','));
     check('routes 4-6 open once Evening Exam I is beaten', r.openAfterExam.every(Boolean), r.openAfterExam.join(','));
     check('front, back and shiny sprites are 96x96', r.spriteProblems.length === 0, r.spriteProblems.join(', '));
     check('artwork loads', r.artMissing.length === 0, r.artMissing.join(','));
