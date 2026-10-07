@@ -44,4 +44,12 @@
 .sq-grade-case { padding:12px; margin:10px 0; border:2px solid #99794c; }
 .sq-grade-case.pass { border-color:#6e8150; }.sq-grade-case.fail { border-color:#a75543; }
 .sq-grade-case code { overflow-wrap:anywhere; }
+/* Page eyebrows are all caps across the game. These are written in normal case
+   (so "StudyMon" and a giver's name stay right for screen readers) and set in
+   caps here, rather than half-capitalised in the source. */
+#s-quests > .section-intro .eyebrow { text-transform:uppercase; }
+#s-quests .sq-editor-keys { margin:0 0 8px; }
+.sq-notes-chapters { margin:4px 0 16px; }
+#s-quests .notes { margin:16px 0; }
+#s-quests h2[tabindex="-1"]:focus { outline:none; }
 .sr-only { position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0; }

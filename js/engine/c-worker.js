@@ -5,7 +5,7 @@ const clean=s=>s.replace(/\x1b\[[0-9;]*m/g,'');
 let running=false;
 self.onmessage=async function(event){
  if(running)return;running=true;
- const job=event.data;let phase='compile',diagnostics='',output='',stderr='';
+ const job=event.data;let phase='compile',stage='compile',diagnostics='',output='',stderr='';
  const modules={};
  async function read(name){const r=await fetch(name);if(!r.ok)throw Error('Compiler asset unavailable: '+name);return r.arrayBuffer();}
  async function mod(name){return modules[name]||(modules[name]=await WebAssembly.compile(await read(name)));}
@@ -18,7 +18,9 @@ self.onmessage=async function(event){
   if(job.harness)api.memfs.addFile('harness.c',new TextEncoder().encode(job.harness+"\n"));
   const flags=api.clangCommonArgs.filter(x=>!['-disable-free','-fcolor-diagnostics'].includes(x));
   await api.run(await api.getModule(ROOT+'clang'),'clang','-cc1','-emit-obj',...flags,'-std=c11','-Wall','-Wextra','-Werror','-pedantic-errors','-O0','-o','quest.o','-x','c',job.harness?'harness.c':'quest.c');
+  stage='link';
   await api.run(await api.getModule(ROOT+'lld'),'wasm-ld','--no-threads','-z','stack-size=1048576','--max-memory=67108864','-Llib/wasm32-wasi','lib/wasm32-wasi/crt1.o','quest.o','-lc','-o','quest.wasm');
+  stage='load';
   const program=await WebAssembly.compile(api.memfs.getFileContents('quest.wasm').slice());
   const cases=job.cases||[{input:job.input||''}];
   postMessage({type:'compiled',diagnostics:clean(diagnostics).trim()});
@@ -74,5 +76,14 @@ self.onmessage=async function(event){
    postMessage({type:'case',index:i,output,stderr,exitCode,error});
   }
   postMessage({type:'done'});
- }catch(e){postMessage({type:'error',phase,message:clean(e.message),diagnostics:clean(diagnostics)});}
+ }catch(e){
+  /* clang or wasm-ld exiting non-zero means the source did not build: flag it
+     (buildFailed, and which stage) so the page can say so, and drop the
+     runtime's own "Error: process exited with code N." echo, which only
+     repeats the message under the real diagnostics. */
+  const buildFailed=phase==='compile'&&(stage==='compile'||stage==='link')&&typeof e.code==='number';
+  let text=clean(diagnostics);
+  if(buildFailed)text=text.replace(/(^|\n)Error: process exited with code \d+\.[^\n]*/g,'').trim();
+  postMessage({type:'error',phase,stage,buildFailed,exitCode:typeof e.code==='number'?e.code:null,message:clean(e.message),diagnostics:text});
+ }
 };

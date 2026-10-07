@@ -77,9 +77,9 @@ var ITEM_EFFECTS = {
   'party-level': function (item, target) {
     if (!target || target.hp <= 0) return { error: 'Revive this Pokémon before training it.' };
     if (target.lvl >= 100) return { error: monName(target) + ' is already level 100.' };
-    var before = target.lvl;
+    var before = target.lvl, name = monName(target);   // named before any evolution renames it
     var events = giveXp(target, Math.max(0, xpToNext(target.lvl) - target.xp));
-    return { events: events, message: monName(target) + ' grew from level ' + before + ' to ' + target.lvl + '.' };
+    return { events: events, message: name + ' grew from level ' + before + ' to ' + target.lvl + '.' };
   },
   'battle-escape': function () {
     if (!B || B.over || B.kind !== 'wild') return { error: 'Poké Dolls only work in wild battles.' };
@@ -175,11 +175,16 @@ function renderBagSummary() {
       categoryKeys.forEach(function (key) {
       var item = itemById(key);
       var partyUse = ['party-heal', 'party-revive', 'party-level', 'party-evolution'].indexOf(item.effectHandler) >= 0;
+      // The row is a space-between flex, so a vignette button and Use share one
+      // right-hand cell (as separate children Use floated to the middle). Use
+      // goes last so it lines up with the Use column of every other row.
+      var actions = (typeof vignetteButtonHtml === 'function' ? vignetteButtonHtml(key) : '') +
+        (partyUse ? '<button ' + (!itemCount(key) ? 'disabled ' : '') +
+          'onclick="openBagItem(\'' + key + '\')">Use</button>' : '');
       h += '<article class="bag-item"><div><strong>' + esc(item.name) + '</strong>' +
         '<span> × ' + itemCount(key) + '</span><p class="small">' + esc(item.description || '') + '</p></div>' +
-        (partyUse ? '<button ' + (!itemCount(key) ? 'disabled ' : '') +
-          'onclick="openBagItem(\'' + key + '\')">Use</button>' : '') +
-        (typeof vignetteButtonHtml === 'function' ? vignetteButtonHtml(key) : '') + '</article>';
+        (actions ? '<div class="bag-item-actions" style="display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:8px;flex-shrink:0">' + actions + '</div>' : '') +
+        '</article>';
       });
       h += '</div></div>';
     });
@@ -246,6 +251,13 @@ function useBagItem(key, index) {
   closeModal();
   renderParty();
   toast(result.message);
+  /* A Rare Candy can push a mon over its evolution level. performItemEffect has
+     already marked the new species seen and caught; this gives it the same
+     "What? X is evolving!" notice and cry a battle evolution gets. The party
+     was re-rendered above, so it already shows the new species behind it. */
+  (result.events || []).forEach(function (event) {
+    if (event.kind === 'evolve' && typeof showEvolve === 'function') showEvolve(event);
+  });
   return true;
 }
 
@@ -284,6 +296,22 @@ function shopInventory(keeperId) {
 
 function shopEntry(keeperId, itemId) {
   return shopInventory(keeperId).find(function (entry) { return entry.item === itemId; }) || null;
+}
+
+/* Shelf gates read the trainer's furthest progress in ANY region, not just the
+   one they are standing in: money and the bag cross every border, so a trainer
+   with fifteen C badges keeps their Ultra Balls on the shelf after sailing to
+   the Isles, where they hold none yet. The active region is read live through
+   badgeCount() (its stored bucket can lag until the next stash); the others
+   from their buckets, the way the ferry counts them. */
+function shopBadgeCount() {
+  var best = badgeCount(), here = activeSubject();
+  var progress = S && S.progress && typeof S.progress === 'object' ? S.progress : {};
+  Object.keys(progress).forEach(function (id) {
+    var badges = id !== here && progress[id] && progress[id].badges;
+    if (badges && typeof badges === 'object') best = Math.max(best, Object.keys(badges).length);
+  });
+  return best;
 }
 
 function shopPurchaseKey(keeperId, itemId) { return keeperId + ':' + itemId; }
@@ -330,7 +358,7 @@ function renderShop() {
     var key = entry.item;
     var it = itemById(key);
     var blurb = it.description || (BALLS[key] ? BALLS[key].blurb : '');
-    var price = shopEntryPrice(entry), locked = (entry.badges || 0) > badgeCount();
+    var price = shopEntryPrice(entry), locked = (entry.badges || 0) > shopBadgeCount();
     var remaining = shopStockRemaining(SHOP_KEEPER || 'legacy', entry), soldOut = remaining <= 0;
     var can = !locked && !soldOut && money() >= price && itemCount(key) < it.maxStack;
     h += '<article class="shop-item"><h3>' + esc(it.name) + '</h3>' +
@@ -368,7 +396,7 @@ function buyItem(key, n) {
   if (!isFinite(n) || n < 1) return;
   var entry = SHOP_KEEPER ? shopEntry(SHOP_KEEPER, key) : { item: key };
   if (!entry) { toast('This shop does not stock that item.'); return; }
-  if ((entry.badges || 0) > badgeCount()) { toast('That stock unlocks at ' + entry.badges + ' badges.'); return; }
+  if ((entry.badges || 0) > shopBadgeCount()) { toast('That stock unlocks at ' + entry.badges + ' badges.'); return; }
   if (n > shopStockRemaining(SHOP_KEEPER || 'legacy', entry)) { toast('That shelf does not have enough left.'); return; }
   if (n > it.maxStack - itemCount(key)) { toast('Your stack cannot hold that many.'); return; }
   var price = shopEntryPrice(entry), cost = price * n;

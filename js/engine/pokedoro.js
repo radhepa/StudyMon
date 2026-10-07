@@ -43,6 +43,7 @@ var POKEDORO = {
   longMin: 15,
   cyclesUntilLong: 4,
   panelOpen: false,
+  settingsOpen: false,      // the "Timer settings" fold, kept across panel rebuilds
   tickTimer: 0,
   alarmActive: false,
   alarmTimer: 0,
@@ -254,6 +255,9 @@ function pokedoroTick() {
 
 /* ---- settings --------------------------------------------------------------- */
 
+/* These update the countdown and cycle text in place rather than calling
+   pokedoroRefresh(): a rebuild here would replace the button the player is
+   in the middle of clicking (committing on blur happens on mousedown). */
 function pokedoroSetDuration(key, value) {
   var n = Math.max(1, Math.min(180, Math.round(Number(value) || 1)));
   POKEDORO[key] = n;
@@ -263,13 +267,40 @@ function pokedoroSetDuration(key, value) {
     POKEDORO.remainingMs = n * 60000;
   }
   pokedoroSaveSettings();
-  pokedoroRefresh();
+  pokedoroUpdateTimeDisplay();
+  pokedoroUpdateTitle();
 }
 
 function pokedoroSetCycles(value) {
   POKEDORO.cyclesUntilLong = Math.max(1, Math.min(12, Math.round(Number(value) || 1)));
   pokedoroSaveSettings();
-  pokedoroRefresh();
+  var cycleEl = document.getElementById('pokedoro-cycle');
+  if (cycleEl) cycleEl.textContent = pokedoroCycleText();
+}
+
+/* The settings fields commit on change (blur, a spinner step, an arrow key)
+   or Enter - never per keystroke, so typing "45" is not cut short at "4" and
+   clearing a field to retype it does not snap it to 1. A blank or unreadable
+   entry puts the current value back; anything else is clamped and shown
+   clamped. */
+function pokedoroCommitSetting(input) {
+  var key = input && input.getAttribute('data-pokedoro-setting');
+  if (!key || !(key in POKEDORO)) return;
+  var raw = String(input.value).trim();
+  var current = POKEDORO[key];
+  if (raw === '' || !isFinite(Number(raw))) { input.value = current; return; }
+  var max = key === 'cyclesUntilLong' ? 12 : 180;
+  var n = Math.max(1, Math.min(max, Math.round(Number(raw))));
+  input.value = n;
+  if (n === current) return;  // Enter on an unchanged field must not restart a paused phase
+  if (key === 'cyclesUntilLong') pokedoroSetCycles(n);
+  else pokedoroSetDuration(key, n);
+}
+
+function pokedoroSettingKey(event, input) {
+  if (event.key !== 'Enter') return;
+  event.preventDefault();
+  pokedoroCommitSetting(input);
 }
 
 /* ---- the alarm: a repeating ring on phase change, not a one-shot chime ------- */
@@ -363,8 +394,20 @@ function pokedoroChip() {
     '</button>';
 }
 
-function pokedoroPanelHTML() {
+function pokedoroCycleText() {
   var cyclePos = (POKEDORO.cyclesDone % POKEDORO.cyclesUntilLong) || (POKEDORO.cyclesDone > 0 ? POKEDORO.cyclesUntilLong : 0);
+  return '🍅 ' + cyclePos + ' of ' + POKEDORO.cyclesUntilLong;
+}
+
+/* The panel is two parts. #pokedoro-main (timer, transport, stats) is rebuilt
+   by pokedoroRefresh() whenever the timer changes state; the settings fold is
+   built once per opening and left alone, so a refresh never closes it, steals
+   focus from a field, or throws away a number that is still being typed. */
+function pokedoroPanelHTML() {
+  return '<div id="pokedoro-main">' + pokedoroMainHTML() + '</div>' + pokedoroSettingsHTML();
+}
+
+function pokedoroMainHTML() {
   var html = '<div class="pokedoro-head"><h2 id="pokedoro-title"><span aria-hidden="true">🍅</span> Pokedoro</h2>' +
     '<button type="button" class="pokedoro-close" onclick="pokedoroClosePanel(true)" aria-label="Close Pokedoro">×</button></div>' +
 
@@ -374,17 +417,17 @@ function pokedoroPanelHTML() {
 
     '<div class="pokedoro-phase-row">' +
       '<span class="pokedoro-phase-label ' + POKEDORO.phase + '">' + pokedoroPhaseLabel(POKEDORO.phase) + '</span>' +
-      '<span class="pokedoro-cycle">🍅 ' + cyclePos + ' of ' + POKEDORO.cyclesUntilLong + '</span>' +
+      '<span class="pokedoro-cycle" id="pokedoro-cycle">' + pokedoroCycleText() + '</span>' +
     '</div>' +
 
     '<div class="pokedoro-time" id="pokedoro-time">' + esc(pokedoroFormatTime(pokedoroRemainingMs())) + '</div>' +
     '<div class="pokedoro-bar"><div class="pokedoro-bar-fill ' + POKEDORO.phase + '" id="pokedoro-bar-fill" style="width:' + pokedoroProgressPct() + '%"></div></div>' +
 
     '<div class="pokedoro-transport">' +
-      '<button type="button" class="primary pokedoro-play" onclick="pokedoroToggle()" aria-label="' + (POKEDORO.running ? 'Pause' : 'Start') + '">' +
+      '<button type="button" id="pokedoro-play" class="primary pokedoro-play" onclick="pokedoroToggle()" aria-label="' + (POKEDORO.running ? 'Pause' : 'Start') + '">' +
         (POKEDORO.running ? '❚❚ Pause' : '▶ Start') + '</button>' +
-      '<button type="button" onclick="pokedoroSkip()">⏭ Skip</button>' +
-      '<button type="button" class="ghost" onclick="pokedoroReset()">↺ Reset</button>' +
+      '<button type="button" id="pokedoro-skip" onclick="pokedoroSkip()">⏭ Skip</button>' +
+      '<button type="button" id="pokedoro-reset" class="ghost" onclick="pokedoroReset()">↺ Reset</button>' +
     '</div>' +
 
     '<p class="pokedoro-note">Your whole party earns XP for every focused minute. Breaks don’t.</p>';
@@ -394,18 +437,25 @@ function pokedoroPanelHTML() {
       ' completed · ' + esc(pokedoroFormatHours(POKEDORO.totalFocusMs)) + ' studied</p>';
   }
 
-  html += '<details class="pokedoro-settings"><summary>Timer settings</summary>' +
-    '<label class="pokedoro-num">Focus <input type="number" min="1" max="180" value="' + POKEDORO.focusMin +
-      '" oninput="pokedoroSetDuration(\'focusMin\',this.value)"> min</label>' +
-    '<label class="pokedoro-num">Short break <input type="number" min="1" max="180" value="' + POKEDORO.shortMin +
-      '" oninput="pokedoroSetDuration(\'shortMin\',this.value)"> min</label>' +
-    '<label class="pokedoro-num">Long break <input type="number" min="1" max="180" value="' + POKEDORO.longMin +
-      '" oninput="pokedoroSetDuration(\'longMin\',this.value)"> min</label>' +
-    '<label class="pokedoro-num">Sessions until long break <input type="number" min="1" max="12" value="' + POKEDORO.cyclesUntilLong +
-      '" oninput="pokedoroSetCycles(this.value)"></label>' +
-  '</details>';
-
   return html;
+}
+
+function pokedoroSettingField(label, key, max, unit) {
+  return '<label class="pokedoro-num">' + label + ' <span class="pokedoro-num-field">' +
+    '<input type="number" id="pokedoro-set-' + key + '" data-pokedoro-setting="' + key + '" min="1" max="' + max +
+    '" step="1" inputmode="numeric" value="' + POKEDORO[key] + '" onchange="pokedoroCommitSetting(this)" ' +
+    'onkeydown="pokedoroSettingKey(event,this)"><span class="pokedoro-num-unit">' + unit + '</span></span></label>';
+}
+
+function pokedoroSettingsHTML() {
+  return '<details class="pokedoro-settings" id="pokedoro-settings"' + (POKEDORO.settingsOpen ? ' open' : '') +
+    ' ontoggle="POKEDORO.settingsOpen=this.open"><summary>Timer settings</summary>' +
+    pokedoroSettingField('Focus', 'focusMin', 180, 'min') +
+    pokedoroSettingField('Short break', 'shortMin', 180, 'min') +
+    pokedoroSettingField('Long break', 'longMin', 180, 'min') +
+    pokedoroSettingField('Sessions until long break', 'cyclesUntilLong', 12, '') +
+    '<p class="pokedoro-settings-note">Type a number, then press Enter or move on to save it.</p>' +
+  '</details>';
 }
 
 function pokedoroPanelEl() {
@@ -443,11 +493,14 @@ function pokedoroPlacePanel() {
 function pokedoroRefresh() {
   if (POKEDORO.panelOpen) {
     var panel = pokedoroPanelEl();
+    var main = document.getElementById('pokedoro-main');
     var scroll = panel.scrollTop;
     var focusId = document.activeElement && panel.contains(document.activeElement) ? document.activeElement.id : '';
-    panel.innerHTML = pokedoroPanelHTML();
+    if (main && panel.contains(main)) main.innerHTML = pokedoroMainHTML();
+    else panel.innerHTML = pokedoroPanelHTML();
     panel.scrollTop = scroll;
-    if (focusId && document.getElementById(focusId)) document.getElementById(focusId).focus({ preventScroll: true });
+    var again = focusId && document.getElementById(focusId);
+    if (again && again !== document.activeElement) again.focus({ preventScroll: true });
   }
   var chip = document.getElementById('pokedoro-chip');
   if (chip) chip.outerHTML = pokedoroChip();
@@ -459,6 +512,7 @@ function pokedoroOpenPanel() {
   var panel = pokedoroPanelEl();
   POKEDORO.panelOpen = true;
   panel.hidden = false;
+  panel.innerHTML = '';  // a fresh opening rebuilds the settings fold from the saved values too
   pokedoroRefresh();
   var play = panel.querySelector('.pokedoro-play');
   if (play) play.focus({ preventScroll: true });
