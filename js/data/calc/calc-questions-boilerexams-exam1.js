@@ -25,7 +25,7 @@ window.CALC_QBANK = window.CALC_QBANK || {};
 var Q = [
 { id: "k1-be-001", chapter: 1, lesson: 2, t: 3, tag: "Vectors",
   q: "Consider the sphere (x − 1)² + (y − 2)² + (z + 4)² = 9. Which of the following is true?",
-  c: ["The sphere intersects the xy-plane but not the yz-plane or the xz-plane.", "The sphere intersects the xy-plane and the yz-plane but does not intersect the xz-plane.", "The sphere intersects the xz-plane but not the yz-plane or the xy-plane.", "The sphere intersects the xz-plane and the yz-plane but does not intersect the xy-plane", "The sphere intersects the xz-plane and the xy-plane but does not intersect the yz-plane."],
+  c: ["The sphere intersects the xy-plane but not the yz-plane or the xz-plane.", "The sphere intersects the xy-plane and the yz-plane but does not intersect the xz-plane.", "The sphere intersects the xz-plane but not the yz-plane or the xy-plane.", "The sphere intersects the xz-plane and the yz-plane but does not intersect the xy-plane.","The sphere intersects the xz-plane and the xy-plane but does not intersect the yz-plane."],
   a: 3,
   why: "The centre (1, 2, -4) is 4 from the xy-plane, 1 from the yz-plane and 2 from the xz-plane. A plane at distance d is crossed only when d < r = 3, so only the yz- and xz-planes qualify.",
   hints: ["A coordinate plane's distance from a point (a, b, c) is just the one coordinate you'd have to zero out: |a| for the yz-plane, |b| for the xz-plane, |c| for the xy-plane.", "The sphere crosses a plane exactly when that distance is less than the radius."] },
@@ -101,11 +101,11 @@ var Q = [
   hints: ["Every horizontal slab of water has the same weight per unit depth: ρg·(length)(width)dy, and must rise (depth - y).", "∫₀² (2-y) dy = 2, so the whole work collapses to ρg·(area)·2 - then match that number to the given form."] },
 
 { id: "k3-be-006", chapter: 3, lesson: 10, t: 4, tag: "Applied",
-  q: "A trough filled with liquid has an isosceles triangle of width 3 m and height 5 m as one of its ends. Find the force due to pressure on this part of the trough. Use ρ for the liquid density (kg/m³) and g for the gravitation constant (N/kg).",
+  q: "A trough filled with liquid has an isosceles triangle (vertex down) of width 3 m and height 5 m as one of its ends, so the end is 3 m wide at the liquid's surface and narrows to a point 5 m below it. Find the force due to pressure on this part of the trough. Use ρ for the liquid density (kg/m³) and g for the gravitation constant (N/kg).",
   c: ["(25/2) ρg N", "(81/10) ρg N", "15 ρg N", "(125/18) ρg N", "(15/2) ρg N", "25 ρg N"],
   a: 0,
-  why: "With the triangle's apex at the bottom (width 0) widening to 3 at the top, the width at depth y is (3/5)y. Force = ρg∫₀⁵ y·(3/5)y dy = (3/5)ρg∫₀⁵y²dy = (3/5)ρg(125/3) = 25ρg/2.",
-  hints: ["The triangle's width grows linearly with depth from 0 at the point to 3 at the surface: width(y) = 3y/5.", "Force is ∫ pressure × width dy = ρg∫₀⁵ y·(3y/5) dy."] },
+  why: "Measure depth y down from the surface. The triangle is 3 wide at y = 0 and narrows to its vertex at y = 5, so the width at depth y is 3(5 − y)/5. Force = ρg∫₀⁵ y·3(5 − y)/5 dy = (3/5)ρg∫₀⁵(5y − y²)dy = (3/5)ρg(125/2 − 125/3) = (3/5)ρg(125/6) = 25ρg/2.",
+  hints: ["Measure depth y from the surface. The width shrinks linearly from 3 at the surface to 0 at the vertex 5 m down: width(y) = 3(5 − y)/5.", "Force is ∫ pressure × width dy = ρg∫₀⁵ y·3(5 − y)/5 dy."] },
 
 { id: "k3-be-007", chapter: 3, lesson: 10, t: 2, tag: "Applied",
   q: "A tank of height 10 m and whose horizontal cross sections are squares of side 2 m is filled with water. How much work is required to pump all of the water out of the tank? Assume that water has density ρ kg/m³ and that the acceleration due to gravity is g m/s².",
@@ -129,7 +129,7 @@ var Q = [
   hints: ["Each infinitesimal piece of the bar, mass ρ(x)dx, ends up at height x once the bar is vertical - that's how far it rises.", "Work = g∫₀² x·ρ(x) dx = g∫₀² x(10+x) dx."] },
 
 { id: "k3-be-010", chapter: 3, lesson: 10, t: 4, tag: "Applied",
-  q: "A cylindrical water tank has the height 8 m and the radius 2 m. It is half full of water. Water has the density ρ (kg/m²) and the acceleration due to gravity is g (m/s²). The work done pumping all the water to the top of the tank is:",
+  q: "A cylindrical water tank has the height 8 m and the radius 2 m. It is half full of water. Water has the density ρ (kg/m³) and the acceleration due to gravity is g (m/s²). The work done pumping all the water to the top of the tank is:",
   c: ["32π ρg J", "64π ρg J", "128π ρg J", "256π ρg J", "96π ρg J"],
   a: 4,
   why: "The tank is half full, so water fills from y=0 to y=4 (measuring from the bottom), and each layer must rise (8-y) to reach the top. W = ρg·π(2²)∫₀⁴(8-y)dy = 4πρg·(8·4-16/2) = 4πρg(24) = 96πρg.",
@@ -143,7 +143,7 @@ var Q = [
   hints: ["Radius 1 means every disk has area π; only the rising distance (4 - y) changes.", "∫₀² (4-y) dy = 6."] },
 
 { id: "k3-be-012", chapter: 3, lesson: 10, t: 1, tag: "Applied",
-  q: "A cubic tank whose sides are 1 m long sits on the ground and is filled with a liquid of density 1200 kg/m³. If we take the gravitational acceleration g = 10m/s². compute the work (in joules) necessary to empty the tank by pumping the liquid through its top.",
+  q: "A cubic tank whose sides are 1 m long sits on the ground and is filled with a liquid of density 1200 kg/m³. Taking the gravitational acceleration to be g = 10 m/s², compute the work (in joules) necessary to empty the tank by pumping the liquid through its top.",
   c: ["6000", "8000", "3000", "5000", "4000"],
   a: 0,
   why: "W = ρg∫₀¹(1-y)dy·(1×1 cross-section) = 1200(10)(1/2) = 6000 J.",
@@ -192,11 +192,11 @@ var Q = [
   hints: ["Expand (x-1)² and set it equal to x+1 to find the two intersection points.", "Check a midpoint like x=1: the line gives 2, the parabola gives 0, so the line is on top across the whole interval."] },
 
 { id: "k3-be-013", chapter: 3, lesson: 9, t: 2, tag: "Applied",
-  q: "A 10 − m chain hangs from a wrench. If the chain weighs 1.5 kg/m, find the work in J to wind up the entire chain. Use g = 10 m/s² in your calculation.",
+  q: "A 10-meter chain hangs from a winch. If the chain weighs 1.5 kg/m, find the work in J to wind up the entire chain. Use g = 10 m/s² in your calculation.",
   c: ["500", "750", "1000", "1250", "1500"],
   a: 1,
   why: "A piece of chain at depth x (from the top) weighs 1.5(10)dx = 15dx and must be lifted x metres. W = 15∫₀^10 x dx = 15(50) = 750 J.",
-  hints: ["Slice the hanging chain into pieces; a piece at distance x below the wrench must be lifted exactly x metres.", "Weight per piece is (mass per metre)·g·dx = 1.5(10)dx = 15dx; integrate x·15 from 0 to 10."] },
+  hints: ["Slice the hanging chain into pieces; a piece at distance x below the winch must be lifted exactly x metres.", "Weight per piece is (mass per metre)·g·dx = 1.5(10)dx = 15dx; integrate x·15 from 0 to 10."] },
 
 { id: "k3-be-014", chapter: 3, lesson: 9, t: 3, tag: "Applied",
   q: "A spring has a natural length of 5 m. If a 25N force is required to keep it stretched to a length of 10 m, how much work (in joules) is required to stretch it from 5 m to 6 m?",
@@ -206,8 +206,8 @@ var Q = [
   hints: ["The natural length doesn't matter for Hooke's law - only how far past it the spring is stretched.", "F = kx with F=25 at x=5 gives k=5; then W = ∫₀¹ kx dx."] },
 
 { id: "k3-be-015", chapter: 3, lesson: 9, t: 3, tag: "Applied",
-  q: "If the work needed to stretch a spring 2 feet beyond its natural length is 8 ft − lb, how much work is needed to stretch the spring 6 inches beyond its natural length?",
-  c: ["(1/4) ft − lb", "2 ft-lb", "(3/2) ft − lb", "1 ft − lb", "(1/2) ft − lb"],
+  q: "If the work needed to stretch a spring 2 feet beyond its natural length is 8 ft-lb, how much work is needed to stretch the spring 6 inches beyond its natural length?",
+  c: ["(1/4) ft-lb", "2 ft-lb", "(3/2) ft-lb", "1 ft-lb", "(1/2) ft-lb"],
   a: 4,
   why: "W(2 ft) = ∫₀² kx dx = 2k = 8, so k = 4 lb/ft. W(0.5 ft) = ∫₀^0.5 4x dx = 4(0.125) = 0.5 ft-lb.",
   hints: ["Use the 2-foot fact to find k first: ∫₀² kx dx = 2k.", "6 inches is 0.5 feet - keep the units consistent before integrating again."] },
@@ -248,10 +248,10 @@ var Q = [
   hints: ["Projection depends only on the DIRECTION of the vector you're projecting onto - check what happens to proj_v formula when v is doubled.", "u×v is built to be perpendicular to both u and v - that's the whole point of the cross product."] },
 
 { id: "k1-be-010", chapter: 1, lesson: 4, t: 3, tag: "Vectors",
-  q: "How many of the following expressions are mathematically meaningful? I. a · (b × c) II. a × (b · c) III. a × (b × c) IV. (a · b) × (c · d) V.(a × b) · (c × d)",
+  q: "How many of the following expressions are mathematically meaningful? I. a · (b × c) II. a × (b · c) III. a × (b × c) IV. (a · b) × (c · d) V. (a × b) · (c × d)",
   c: ["1", "2", "3", "4", "5"],
   a: 2,
-  why: "I: a·(b×c) is a number (scalar times vector, dotted - fine). II: b·c is a scalar, and a×(scalar) is undefined - the cross product needs two vectors. III: b×c is a vector, and a×(vector) is fine. IV: a·b and c·d are both scalars, and you cannot cross two scalars. V: a×b and c×d are vectors, and dotting two vectors is fine. That's three meaningful expressions: I, III, V.",
+  why: "I: b×c is a vector, and a·(vector) is a number - fine. II: b·c is a scalar, and a×(scalar) is undefined - the cross product needs two vectors. III: b×c is a vector, and a×(vector) is fine. IV: a·b and c·d are both scalars, and you cannot cross two scalars. V: a×b and c×d are vectors, and dotting two vectors is fine. That's three meaningful expressions: I, III, V.",
   hints: ["Track what TYPE each sub-expression produces - a number or a vector - before deciding if the outer operation makes sense.", "The cross product only ever takes two vectors; a scalar can never appear on either side of a ×."] },
 
 { id: "k1-be-011", chapter: 1, lesson: 4, t: 3, tag: "Vectors",
@@ -265,8 +265,8 @@ var Q = [
   q: "Let u and v be given three dimensional vectors. How many of the following expressions are always mathematically valid? I. |v| ≥ 0 II. |u + v| = |u| + |v| III. u × v = −(v × u) IV. u · v = v · u V. u · v = |u||v| sin θ where θ is the angle between the vectors",
   c: ["1", "2", "3", "4", "5"],
   a: 2,
-  why: "I is true (magnitude is never negative). II is false in general (triangle inequality gives ≤, not =, unless the vectors are parallel). III is true (swapping the cross product's order negates it, by definition). IV is true (the dot product is commutative). V is false - that formula uses sinθ, but u·v uses cosθ. So exactly three (I, III, IV) are always valid.",
-  hints: ["Check each one against a simple example, like u = v: does II still hold? Does V?", "u·v = |u||v|cosθ; the sinθ version is the CROSS product's magnitude, not the dot product."] },
+  why: "I is true (magnitude is never negative). II is false in general (the triangle inequality gives ≤, with equality only when one vector is a nonnegative multiple of the other, i.e. they point the same way). III is true (swapping the cross product's order negates it, by definition). IV is true (the dot product is commutative). V is false - that formula uses sinθ, but u·v uses cosθ. So exactly three (I, III, IV) are always valid.",
+  hints: ["Check each one against a simple example, like u = ⟨1, 0, 0⟩ and v = ⟨0, 1, 0⟩: does II still hold? Does V?", "u·v = |u||v|cosθ; the sinθ version is the CROSS product's magnitude, not the dot product."] },
 
 { id: "k1-be-013", chapter: 1, lesson: 4, t: 1, tag: "Vectors",
   q: "Determine the cross product u × v for the given vectors u = ⟨2, 1, 0⟩ and v = ⟨1, 0, 1⟩.",
@@ -370,15 +370,15 @@ var Q = [
   q: "Find the volume of the solid obtained by revolving the region bounded by y = e^(x/2) + 1, y = 3, x = 0, and x = 1 about the line y = 1.",
   c: ["π(5 − e)", "π(e² − 4)", "π(e − 4)", "2π(e − 4)", "π(7 − e)"],
   a: 0,
-  why: "By washers about y=1, outer radius (3-1)=2, inner radius (eˣ/²+1-1)=eˣ/², over [0,1]: V = π∫₀¹(4-eˣ)dx = π(4-(e-1)) = π(5-e).",
-  hints: ["Both radii are measured from the axis y=1, not from y=0: outer is 3-1=2, inner is (eˣ/²+1)-1 = eˣ/².", "(eˣ/²)² = eˣ, so the integral is π∫(2²-eˣ)dx = π∫(4-eˣ)dx."] },
+  why: "By washers about y=1, outer radius (3-1)=2, inner radius (e^(x/2)+1-1)=e^(x/2), over [0,1]: V = π∫₀¹(4-eˣ)dx = π(4-(e-1)) = π(5-e).",
+  hints: ["Both radii are measured from the axis y=1, not from y=0: outer is 3-1=2, inner is (e^(x/2)+1)-1 = e^(x/2).", "(e^(x/2))² = eˣ, so the integral is π∫(2²-eˣ)dx = π∫(4-eˣ)dx."] },
 
 { id: "k2-be-010", chapter: 2, lesson: 6, t: 4, tag: "Applied",
   q: "A solid has a semicircular base of radius 2. Cross sections perpendicular to the base and parallel to the straight edge of the semicircle are squares. What is the volume of the solid?",
   c: ["16/3", "16π", "6π", "3π/2", "64/3"],
   a: 4,
-  why: "Slicing perpendicular to the diameter, a square cross-section at position y has side length 2√(4-y²) (the semicircle's width there). V = ∫₀²(2√(4-y²))²dy = ∫₀²4(4-y²)dy = 4(8-8/3) = 64/3.",
-  hints: ["The semicircle's half-width at distance y from the centre is √(r²-y²); the full square side is twice that.", "Area of the square is (side)² = 4(4-y²); integrate over the radius, y from 0 to 2."] },
+  why: "Slicing parallel to the straight edge (the diameter), the square cross-section at distance y from that edge has side length 2√(4-y²) (the semicircle's width there). V = ∫₀²(2√(4-y²))²dy = ∫₀²4(4-y²)dy = 4(8-8/3) = 64/3.",
+  hints: ["The semicircle's half-width at distance y from the straight edge is √(r²-y²); the full square side is twice that.", "Area of the square is (side)² = 4(4-y²); integrate over the radius, y from 0 to 2."] },
 
 { id: "k2-be-011", chapter: 2, lesson: 6, t: 3, tag: "Applied",
   q: "Let R be the region bounded by y = x², y = 2, and the y-axis. What is the volume of the solid obtained by revolving R around the y-axis?",
@@ -392,7 +392,7 @@ var Q = [
   c: ["π", "π/2", "1/6", "1", "π/6"],
   a: 4,
   why: "By shells about the y-axis, radius x, height (x-x²): V = 2π∫₀¹x(x-x²)dx = 2π(1/3-1/4) = π/6.",
-  hints: ["Same region as the disks-vs-shells classic pair - here the y-axis is outside the region's natural x-description, so shells are cleaner.", "V = 2π∫ x·(x-x²) dx over [0,1]."] },
+  hints: ["The region is described most naturally in x (line on top, parabola below, 0 ≤ x ≤ 1), and the axis is vertical, so shells avoid solving for x in terms of y.", "V = 2π∫ x·(x-x²) dx over [0,1]."] },
 
 { id: "k3-be-021", chapter: 3, lesson: 7, t: 1, tag: "Applied",
   q: "Use the method of cylindrical shells to find the volume of the solid obtained by rotating the region bounded by the curves y = x³, y = 0, and x = 1 about the line x = 1. Express your answer as a definite integral.",
@@ -447,8 +447,8 @@ var Q = [
   q: "Which one of the following integrals equals the volume of the solid obtained by rotating the region bounded by y = x² and y = x about the line x = 3?",
   c: ["∫₀¹ 2π(3 − x)(1 − x²) dx", "∫₀¹ 2π(3 − x)²(x − x²)² dx", "∫₀¹ 2π(3 − x)(x − x²)² dx", "∫₀¹ 2π(3 − x)(x − x²) dx", "∫₀¹ 2π(3 − x²)(x − x²) dx"],
   a: 3,
-  why: "Same region and axis as the previous problem - shells give V = 2π∫₀¹(3-x)(x-x²)dx directly, without squaring anything, since a shell's volume element is linear in the radius.",
-  hints: ["This is the same setup as the disk/washer confusion above - shells need only ONE power of the radius, not squared.", "Height is still (x-x²); radius is still (3-x)."] },
+  why: "Use shells about x = 3: a shell at x has radius 3 − x and height x − x² (the line minus the parabola on [0, 1]), so V = 2π∫₀¹(3-x)(x-x²)dx directly, without squaring anything, since a shell's volume element is linear in the radius.",
+  hints: ["Shells need only ONE power of the radius and ONE power of the height - squaring belongs to disks and washers, not shells.", "Height is (x-x²), the line minus the parabola; radius is (3-x), the distance from x to the axis x = 3."] },
 
 { id: "k3-be-026", chapter: 3, lesson: 7, t: 3, tag: "Applied",
   q: "Use the method of cylindrical shells to find the volume generated by rotating the region bounded by the curves y = x − x² and y = 0, about the line x = −1.",
@@ -468,15 +468,15 @@ var Q = [
   q: "Find the volume of the solid whose base is the region bounded by y = √(cos x) and the x-axis on [−π/2, π/2], and whose cross sections through the solid perpendicular to the x-axis are isosceles right triangles with a horizontal leg in the xy-plane and a vertical leg above the x-axis. (Hint: an isosceles right triangle has legs of equal length).",
   c: ["1/2", "1", "2", "π", "2π", "π/2"],
   a: 1,
-  why: "A cross-section at x is an isosceles right triangle with both legs equal to √(cosx), so its area is ½(√cosx)² = (cosx)/2. V = ∫_{−π/2}^{π/2} (cosx)/2 dx = ½[sinx]_{−π/2}^{π/2} = ½(1-(-1)) = 1.",
-  hints: ["An isosceles right triangle with leg L has area L²/2 - here L = √(cosx), so L² = cosx.", "V = ∫ (cosx)/2 dx over the symmetric interval [-π/2, π/2]."] },
+  why: "A cross-section at x is an isosceles right triangle with both legs equal to √(cos x), so its area is ½(√(cos x))² = (cos x)/2. V = ∫_{−π/2}^{π/2} (cos x)/2 dx = ½[sin x]_{−π/2}^{π/2} = ½(1-(-1)) = 1.",
+  hints: ["An isosceles right triangle with leg L has area L²/2 - here L = √(cos x), so L² = cos x.", "V = ∫ (cos x)/2 dx over the symmetric interval [-π/2, π/2]."] },
 
 { id: "k2-be-017", chapter: 2, lesson: 6, t: 4, tag: "Applied",
   q: "A solid has a semicircular base of radius 3. Cross sections perpendicular to the base and parallel to the straight edge of the semicircle are squares. What is the volume of the solid?",
   c: ["9π/2", "72", "18", "27π", "9π/4"],
   a: 1,
-  why: "Same setup as radius 2 but with radius 3: side length 2√(9-y²), area 4(9-y²), V = ∫₀³4(9-y²)dy = 4(27-9) = 72.",
-  hints: ["Same formula as the radius-2 version, just with 3 in place of 2 everywhere.", "V = ∫₀^r 4(r²-y²)dy with r=3."] },
+  why: "Slice parallel to the straight edge. At distance y from that edge (0 ≤ y ≤ 3) the semicircle's chord, which is the square's side, has length 2√(9-y²), so the area is 4(9-y²) and V = ∫₀³4(9-y²)dy = 4(27-9) = 72.",
+  hints: ["At distance y from the straight edge the semicircle's half-width is √(r²-y²), so the square's side is 2√(r²-y²) and its area is 4(r²-y²).", "V = ∫₀^r 4(r²-y²)dy with r=3."] },
 
 { id: "k2-be-018", chapter: 2, lesson: 6, t: 1, tag: "Applied",
   q: "Find the volume of the solid whose base is the region bounded by y = x², the x-axis and x = 2 and whose cross-sections taken perpendicular to the x-axis are squares.",
@@ -489,8 +489,8 @@ var Q = [
   q: "Find the volume of the solid whose base is the region bounded by y = √(cos x) and the x-axis on [−π/2, π/2], and whose cross sections through the solid perpendicular to the x-axis are squares with a horizontal side in the xy-plane and a vertical side above the x-axis.",
   c: ["1", "2", "2π", "π", "2√2"],
   a: 1,
-  why: "A square cross-section at x has side √cosx, area cosx. V = ∫_{−π/2}^{π/2} cosx dx = [sinx]_{−π/2}^{π/2} = 2.",
-  hints: ["This time the cross-section is a full square, not a half-triangle, so there's no factor of 1/2.", "Area = (√cosx)² = cosx; integrate over the same symmetric interval."] },
+  why: "A square cross-section at x has side √(cos x), area cos x. V = ∫_{−π/2}^{π/2} cos x dx = [sin x]_{−π/2}^{π/2} = 2.",
+  hints: ["The cross-section is a full square with side √(cos x), so its area is side² with no factor of 1/2.", "Area = (√(cos x))² = cos x; integrate over the symmetric interval [−π/2, π/2]."] },
 
 { id: "k2-be-020", chapter: 2, lesson: 6, t: 4, tag: "Applied",
   q: "The height of a monument is 3 meters. A horizontal cross-section at a distance x meters from the top is an equilateral triangle with each side being x meters. Find the volume (in m³) of the monument.",
@@ -510,7 +510,7 @@ var Q = [
   q: "Find the surface area of the surface generated when the curve y = x³/3, 0 ≤ x ≤ 1 is rotated about the x-axis.",
   c: ["π(2√2 − 1)/27", "π(2√2 − 1)/9", "π(2√2 − 1)/3", "π(2√2 − 1)/287", "π(2√2 − 1)/81"],
   a: 1,
-  why: "S = 2π∫₀¹y√(1+(y')²)dx with y=x³/3, y'=x². S = 2π∫₀¹(x³/3)√(1+x⁴)dx. Substituting u=1+x⁴, du=4x³dx: = (2π/12)∫₁²√u du = (π/9)[u^(3/2)] from 1 to 2, wait matching the given closed form: = π(2√2-1)/9.",
+  why: "S = 2π∫₀¹y√(1+(y')²)dx with y=x³/3, y'=x². S = 2π∫₀¹(x³/3)√(1+x⁴)dx. Substituting u=1+x⁴, du=4x³dx: = (2π/12)∫₁²√u du = (π/6)(2/3)[u^(3/2)]₁² = (π/9)(2√2 − 1) = π(2√2-1)/9.",
   hints: ["Surface-of-revolution formula: S = 2π∫ y√(1+(y')²) dx, with y'=x².", "Substitute u=1+x⁴ so du=4x³dx - the x³ in front of the square root is exactly what's needed."] },
 
 { id: "k3-be-028", chapter: 3, lesson: 8, t: 2, tag: "Applied",
@@ -522,10 +522,10 @@ var Q = [
 
 { id: "k3-be-029", chapter: 3, lesson: 8, t: 3, tag: "Applied",
   q: "A surface is obtained by rotating y = x³, 0 ≤ x ≤ 1, about the x-axis. Find the surface area.",
-  c: ["(10^(3/2) − 1)", "2π/36", "2π 10^(3/2)", "π/27(10^(3/2) − 1)", "π/27"],
+  c: ["(10^(3/2) − 1)", "2π/36", "2π·10^(3/2)", "(π/27)(10^(3/2) − 1)", "π/27"],
   a: 3,
-  why: "Same integral as the previous problem, restated: S = (π/27)(10^(3/2)-1).",
-  hints: ["Same curve y=x³ on [0,1] as the surface-area problem just before this one.", "The substitution u=1+9x⁴ turns it into a clean power-rule integral."] },
+  why: "y = x³, y′ = 3x², so S = 2π∫₀¹x³√(1+9x⁴)dx. With u = 1+9x⁴, du = 36x³dx: S = (2π/36)∫₁¹⁰√u du = (π/18)(2/3)[u^(3/2)]₁¹⁰ = (π/27)(10^(3/2)-1) ≈ 3.56.",
+  hints: ["Surface area about the x-axis is S = 2π∫ y√(1+(y′)²) dx; here y′ = 3x², so 1+(y′)² = 1+9x⁴.", "The substitution u=1+9x⁴ turns it into a clean power-rule integral."] },
 
 { id: "k3-be-030", chapter: 3, lesson: 8, t: 3, tag: "Applied",
   q: "Find the area of the surface obtained by rotating the curve y = x³/3 about the x-axis, for 0 ≤ x ≤ ⁴√3",
@@ -539,7 +539,7 @@ var Q = [
   c: ["(π/3) ∫₀¹ x³ √(x⁴ + 1) dx", "(4π/3) ∫₀¹ x³ √(x⁴ + 1) dx", "(2π/3) ∫₀¹ x³ √(x⁴ + 1) dx", "(8π/3) ∫₀¹ x³ √(x⁴ + 1) dx", "(16π/3) ∫₀¹ x³ √(x⁴ + 1) dx"],
   a: 2,
   why: "y=x³/3, y'=x², so S = 2π∫₀¹(x³/3)√(1+x⁴)dx = (2π/3)∫₀¹x³√(x⁴+1)dx.",
-  hints: ["Pull the 2π and the 1/3 out front, leaving the same x³√(1+x⁴) integrand as the similar problems above.", "This one only asks for the SET-UP integral, not its evaluated value."] },
+  hints: ["Use S = 2π∫ y√(1+(y')²) dx with y' = x², then pull the 2π and the 1/3 out front, leaving x³√(1+x⁴) as the integrand.", "This one only asks for the SET-UP integral, not its evaluated value."] },
 
 { id: "k3-be-032", chapter: 3, lesson: 8, t: 3, tag: "Applied",
   q: "Find a function whose arc length on the interval [a, b] is given by the following integral: ∫_a^b √(9x⁴ + 6x² + 2) dx",
@@ -581,7 +581,7 @@ var Q = [
   c: ["⟨8/13, 16/13⟩", "⟨8/5, 16/5⟩", "⟨−2, −6⟩", "⟨4/5, 8/5⟩", "⟨4/13, 8/13⟩", "⟨−16/√13, −24/√13⟩"],
   a: 1,
   why: "proj_v w = ((w·v)/(v·v))v. w·v = (-1)(2)+(-2)(3)=-8, v·v=1+4=5, so proj = (-8/5)⟨-1,-2⟩ = ⟨8/5,16/5⟩.",
-  hints: ["Same formula as before; note the sign of v doesn't have to match w's sign for the formula to work.", "w·v=(-1)(2)+(-2)(3)=-8; v·v=(-1)²+(-2)²=5; the two negatives cancel in the final vector."] },
+  hints: ["Use proj_v w = ((w·v)/(v·v))v; the sign of v doesn't have to match w's sign for the formula to work.", "w·v=(-1)(2)+(-2)(3)=-8; v·v=(-1)²+(-2)²=5; the two negatives cancel in the final vector."] },
 
 { id: "k1-be-025", chapter: 1, lesson: 1, t: 1, tag: "Vectors",
   q: "Let a = ⟨1, 2, 3⟩ and b = ⟨2, −1, 2⟩. If proj_b a = c b, what is c?",

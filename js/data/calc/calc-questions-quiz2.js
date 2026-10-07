@@ -116,18 +116,18 @@ const rows = [
     "t": 2,
     "k": "mcq",
     "tag": "Applied",
-    "q": "Find the bounded area enclosed by y = 1/x, y = x^(−2), and x = 2, in the half-plane x > 0.",
+    "q": "Find the bounded area enclosed by y = 1/x, y = 1/x^2, and x = 2, in the half-plane x > 0.",
     "c": [
       "ln(2)",
-      "−1/2 + ln(2)",
-      "1/2 + ln(2)",
-      "−1 + ln(4)"
+      "ln(2) − 1/2",
+      "ln(2) + 1/2",
+      "ln(4) − 1"
     ],
     "a": 1,
-    "why": "The curves meet at x = 1. On (1, 2), 1/x is above x^(−2). ∫ from 1 to 2 of ((x − 1)/x^2) dx. Antiderivative: ln(x) + 1/x. Evaluate at the bounds to get −1/2 + ln(2).",
+    "why": "The curves meet at x = 1. On (1, 2), 1/x is above 1/x^2. ∫ from 1 to 2 of ((x − 1)/x^2) dx. Antiderivative: ln(x) + 1/x. Evaluate at the bounds to get ln(2) − 1/2.",
     "hints": [
       "Sketch the region and identify the top and bottom curves, or right and left boundaries.",
-      "The curves meet at x = 1. On (1, 2), 1/x is above x^(−2).",
+      "The curves meet at x = 1. On (1, 2), 1/x is above 1/x^2.",
       "Evaluate ∫ from 1 to 2 of ((x − 1)/x^2) dx. Use ln(x) + 1/x as the antiderivative."
     ],
     "code": "",
@@ -151,10 +151,10 @@ const rows = [
       "2·√(2)"
     ],
     "a": 2,
-    "why": "At height y, the width is 2√(y/1). The area below c is 4c^(3/2)/(3√(1)); the total is 4·4^(3/2)/(3√(1)). Set the first equal to half the second: c^(3/2) = 4^(3/2)/2. Thus c = 2·2^(1/3), which lies between 0 and 4.",
+    "why": "At height y, the width is 2√y. The area below c is 4c^(3/2)/3; the total is 4·4^(3/2)/3. Set the first equal to half the second: c^(3/2) = 4^(3/2)/2. Thus c = 2·2^(1/3), which lies between 0 and 4.",
     "hints": [
       "Use horizontal strips because the cutting line is horizontal.",
-      "The width at height y is 2√(y/1). Integrate from 0 to c for the lower piece.",
+      "The width at height y is 2√y. Integrate from 0 to c for the lower piece.",
       "Set c^(3/2) = 4^(3/2)/2 and raise both sides to the power 2/3."
     ],
     "code": "",
@@ -178,10 +178,10 @@ const rows = [
       "8·π"
     ],
     "a": 3,
-    "why": "For 0 ≤ y ≤ 4, the horizontal strip runs from x = √(y/1) to x = 2. Thus R = 2 and r = √(y/1). ∫ from 0 to 4 of (π·(4 − y)) dy. Antiderivative: π·y·(8 − y)/2. Evaluate at the bounds to get 8·π.",
+    "why": "For 0 ≤ y ≤ 4, the horizontal strip runs from x = √y to x = 2. Thus R = 2 and r = √y. ∫ from 0 to 4 of (π·(4 − y)) dy. Antiderivative: π·y·(8 − y)/2. Evaluate at the bounds to get 8·π.",
     "hints": [
       "Sketch the region and identify the slice and its dimensions before integrating.",
-      "For 0 ≤ y ≤ 4, the horizontal strip runs from x = √(y/1) to x = 2. Thus R = 2 and r = √(y/1).",
+      "For 0 ≤ y ≤ 4, the horizontal strip runs from x = √y to x = 2. Thus R = 2 and r = √y.",
       "Evaluate ∫ from 0 to 4 of (π·(4 − y)) dy. Use π·y·(8 − y)/2 as the antiderivative."
     ],
     "code": "",
@@ -224,19 +224,19 @@ const rows = [
     "t": 2,
     "k": "mcq",
     "tag": "Applied",
-    "q": "Rotate the region between y = exp(x), y = 0, x = 0 and x = 1 about the x-axis. Find the exact volume.",
+    "q": "Rotate the region between y = eˣ, y = 0, x = 0 and x = 1 about the x-axis. Find the exact volume.",
     "c": [
-      "π·(−1 + E)",
-      "−π·(1 − exp(2))/2",
-      "−π·(1 − exp(2))",
-      "−π·(1 − exp(2))/4"
+      "π(e − 1)",
+      "π(e² − 1)/2",
+      "π(e² − 1)",
+      "π(e² − 1)/4"
     ],
     "a": 1,
-    "why": "R = exp(x), so R² = exp(2·x). The exponent doubles when the radius is squared. ∫ from 0 to 1 of (π·exp(2·x)) dx. Antiderivative: π·exp(2·x)/2. Evaluate at the bounds to get −π·(1 − exp(2))/2.",
+    "why": "R = eˣ, so R² = e^(2x). The exponent doubles when the radius is squared. ∫ from 0 to 1 of πe^(2x) dx. Antiderivative: πe^(2x)/2. Evaluate at the bounds to get π(e² − 1)/2.",
     "hints": [
       "Sketch the region and identify the slice and its dimensions before integrating.",
-      "R = exp(x), so R² = exp(2·x). The exponent doubles when the radius is squared.",
-      "Evaluate ∫ from 0 to 1 of (π·exp(2·x)) dx. Use π·exp(2·x)/2 as the antiderivative."
+      "R = eˣ, so R² = e^(2x). The exponent doubles when the radius is squared.",
+      "Evaluate ∫ from 0 to 1 of πe^(2x) dx. Use πe^(2x)/2 as the antiderivative."
     ],
     "code": "",
     "family": "quiz2-017",
@@ -631,13 +631,13 @@ const rows = [
     "tag": "Applied",
     "q": "Find the bounded area enclosed by y = 2/x, y = 2/x^2, and x = 3, in the half-plane x > 0.",
     "c": [
-      "4/3 + ln(9)",
+      "ln(9) + 4/3",
       "ln(9)",
-      "−4/3 + ln(9)",
-      "−8/3 + ln(81)"
+      "ln(9) − 4/3",
+      "ln(81) − 8/3"
     ],
     "a": 2,
-    "why": "The curves meet at x = 1. On (1, 3), 2/x is above 2/x^2. ∫ from 1 to 3 of (2·(x − 1)/x^2) dx. Antiderivative: 2·ln(x) + 2/x. Evaluate at the bounds to get −4/3 + ln(9).",
+    "why": "The curves meet at x = 1. On (1, 3), 2/x is above 2/x^2. ∫ from 1 to 3 of (2·(x − 1)/x^2) dx. Antiderivative: 2·ln(x) + 2/x. Evaluate at the bounds to get ln(9) − 4/3.",
     "hints": [
       "Sketch the region and identify the top and bottom curves, or right and left boundaries.",
       "The curves meet at x = 1. On (1, 3), 2/x is above 2/x^2.",
@@ -737,19 +737,19 @@ const rows = [
     "t": 2,
     "k": "mcq",
     "tag": "Applied",
-    "q": "Rotate the region between y = 2·exp(2·x), y = 0, x = 0 and x = 1 about the x-axis. Find the exact volume.",
+    "q": "Rotate the region between y = 2e^(2x), y = 0, x = 0 and x = 1 about the x-axis. Find the exact volume.",
     "c": [
-      "−2·π·(1 − exp(4))",
-      "−2·π·(1 − exp(2))",
-      "−π·(1 − exp(4))",
-      "−π·(1 − exp(4))/2"
+      "2π(e⁴ − 1)",
+      "2π(e² − 1)",
+      "π(e⁴ − 1)",
+      "π(e⁴ − 1)/2"
     ],
     "a": 2,
-    "why": "R = 2·exp(2·x), so R² = 4·exp(4·x). The exponent doubles when the radius is squared. ∫ from 0 to 1 of (4·π·exp(4·x)) dx. Antiderivative: π·exp(4·x). Evaluate at the bounds to get −π·(1 − exp(4)).",
+    "why": "R = 2e^(2x), so R² = 4e^(4x). The exponent doubles when the radius is squared. ∫ from 0 to 1 of 4πe^(4x) dx. Antiderivative: πe^(4x). Evaluate at the bounds to get π(e⁴ − 1).",
     "hints": [
       "Sketch the region and identify the slice and its dimensions before integrating.",
-      "R = 2·exp(2·x), so R² = 4·exp(4·x). The exponent doubles when the radius is squared.",
-      "Evaluate ∫ from 0 to 1 of (4·π·exp(4·x)) dx. Use π·exp(4·x) as the antiderivative."
+      "R = 2e^(2x), so R² = 4e^(4x). The exponent doubles when the radius is squared.",
+      "Evaluate ∫ from 0 to 1 of 4πe^(4x) dx. Use πe^(4x) as the antiderivative."
     ],
     "code": "",
     "family": "quiz2-017",
@@ -1144,13 +1144,13 @@ const rows = [
     "tag": "Applied",
     "q": "Find the bounded area enclosed by y = 3/x, y = 3/x^2, and x = 4, in the half-plane x > 0.",
     "c": [
-      "−9/2 + ln(4096)",
+      "ln(4096) − 9/2",
       "ln(64)",
-      "9/4 + ln(64)",
-      "−9/4 + ln(64)"
+      "ln(64) + 9/4",
+      "ln(64) − 9/4"
     ],
     "a": 3,
-    "why": "The curves meet at x = 1. On (1, 4), 3/x is above 3/x^2. ∫ from 1 to 4 of (3·(x − 1)/x^2) dx. Antiderivative: 3·ln(x) + 3/x. Evaluate at the bounds to get −9/4 + ln(64).",
+    "why": "The curves meet at x = 1. On (1, 4), 3/x is above 3/x^2. ∫ from 1 to 4 of (3·(x − 1)/x^2) dx. Antiderivative: 3·ln(x) + 3/x. Evaluate at the bounds to get ln(64) − 9/4.",
     "hints": [
       "Sketch the region and identify the top and bottom curves, or right and left boundaries.",
       "The curves meet at x = 1. On (1, 4), 3/x is above 3/x^2.",
@@ -1177,10 +1177,10 @@ const rows = [
       "3·√(2)"
     ],
     "a": 0,
-    "why": "At height y, the width is 2√(y/1). The area below c is 4c^(3/2)/(3√(1)); the total is 4·6^(3/2)/(3√(1)). Set the first equal to half the second: c^(3/2) = 6^(3/2)/2. Thus c = 3·2^(1/3), which lies between 0 and 6.",
+    "why": "At height y, the width is 2√y. The area below c is 4c^(3/2)/3; the total is 4·6^(3/2)/3. Set the first equal to half the second: c^(3/2) = 6^(3/2)/2. Thus c = 3·2^(1/3), which lies between 0 and 6.",
     "hints": [
       "Use horizontal strips because the cutting line is horizontal.",
-      "The width at height y is 2√(y/1). Integrate from 0 to c for the lower piece.",
+      "The width at height y is 2√y. Integrate from 0 to c for the lower piece.",
       "Set c^(3/2) = 6^(3/2)/2 and raise both sides to the power 2/3."
     ],
     "code": "",
@@ -1250,19 +1250,19 @@ const rows = [
     "t": 2,
     "k": "mcq",
     "tag": "Applied",
-    "q": "Rotate the region between y = exp(3·x), y = 0, x = 0 and x = 1 about the x-axis. Find the exact volume.",
+    "q": "Rotate the region between y = e^(3x), y = 0, x = 0 and x = 1 about the x-axis. Find the exact volume.",
     "c": [
-      "−π·(1 − exp(6))/12",
-      "−π·(1 − exp(3))/3",
-      "−π·(1 − exp(6))/3",
-      "−π·(1 − exp(6))/6"
+      "π(e⁶ − 1)/12",
+      "π(e³ − 1)/3",
+      "π(e⁶ − 1)/3",
+      "π(e⁶ − 1)/6"
     ],
     "a": 3,
-    "why": "R = exp(3·x), so R² = exp(6·x). The exponent doubles when the radius is squared. ∫ from 0 to 1 of (π·exp(6·x)) dx. Antiderivative: π·exp(6·x)/6. Evaluate at the bounds to get −π·(1 − exp(6))/6.",
+    "why": "R = e^(3x), so R² = e^(6x). The exponent doubles when the radius is squared. ∫ from 0 to 1 of πe^(6x) dx. Antiderivative: πe^(6x)/6. Evaluate at the bounds to get π(e⁶ − 1)/6.",
     "hints": [
       "Sketch the region and identify the slice and its dimensions before integrating.",
-      "R = exp(3·x), so R² = exp(6·x). The exponent doubles when the radius is squared.",
-      "Evaluate ∫ from 0 to 1 of (π·exp(6·x)) dx. Use π·exp(6·x)/6 as the antiderivative."
+      "R = e^(3x), so R² = e^(6x). The exponent doubles when the radius is squared.",
+      "Evaluate ∫ from 0 to 1 of πe^(6x) dx. Use πe^(6x)/6 as the antiderivative."
     ],
     "code": "",
     "family": "quiz2-017",
@@ -1655,18 +1655,18 @@ const rows = [
     "t": 3,
     "k": "mcq",
     "tag": "Applied",
-    "q": "Find the bounded area enclosed by y = 1/x, y = x^(−2), and x = 5, in the half-plane x > 0.",
+    "q": "Find the bounded area enclosed by y = 1/x, y = 1/x^2, and x = 5, in the half-plane x > 0.",
     "c": [
-      "−4/5 + ln(5)",
+      "ln(5) − 4/5",
       "ln(5)",
-      "4/5 + ln(5)",
-      "−8/5 + ln(25)"
+      "ln(5) + 4/5",
+      "ln(25) − 8/5"
     ],
     "a": 0,
-    "why": "The curves meet at x = 1. On (1, 5), 1/x is above x^(−2). ∫ from 1 to 5 of ((x − 1)/x^2) dx. Antiderivative: ln(x) + 1/x. Evaluate at the bounds to get −4/5 + ln(5).",
+    "why": "The curves meet at x = 1. On (1, 5), 1/x is above 1/x^2. ∫ from 1 to 5 of ((x − 1)/x^2) dx. Antiderivative: ln(x) + 1/x. Evaluate at the bounds to get ln(5) − 4/5.",
     "hints": [
       "Sketch the region and identify the top and bottom curves, or right and left boundaries.",
-      "The curves meet at x = 1. On (1, 5), 1/x is above x^(−2).",
+      "The curves meet at x = 1. On (1, 5), 1/x is above 1/x^2.",
       "Evaluate ∫ from 1 to 5 of ((x − 1)/x^2) dx. Use ln(x) + 1/x as the antiderivative."
     ],
     "code": "",
@@ -1717,10 +1717,10 @@ const rows = [
       "−625·π/2"
     ],
     "a": 2,
-    "why": "For 0 ≤ y ≤ 25, the horizontal strip runs from x = √(y/1) to x = 5. Thus R = 5 and r = √(y/1). ∫ from 0 to 25 of (π·(25 − y)) dy. Antiderivative: π·y·(50 − y)/2. Evaluate at the bounds to get 625·π/2.",
+    "why": "For 0 ≤ y ≤ 25, the horizontal strip runs from x = √y to x = 5. Thus R = 5 and r = √y. ∫ from 0 to 25 of (π·(25 − y)) dy. Antiderivative: π·y·(50 − y)/2. Evaluate at the bounds to get 625·π/2.",
     "hints": [
       "Sketch the region and identify the slice and its dimensions before integrating.",
-      "For 0 ≤ y ≤ 25, the horizontal strip runs from x = √(y/1) to x = 5. Thus R = 5 and r = √(y/1).",
+      "For 0 ≤ y ≤ 25, the horizontal strip runs from x = √y to x = 5. Thus R = 5 and r = √y.",
       "Evaluate ∫ from 0 to 25 of (π·(25 − y)) dy. Use π·y·(50 − y)/2 as the antiderivative."
     ],
     "code": "",
@@ -1763,19 +1763,19 @@ const rows = [
     "t": 3,
     "k": "mcq",
     "tag": "Applied",
-    "q": "Rotate the region between y = 2·exp(x), y = 0, x = 0 and x = 2 about the x-axis. Find the exact volume.",
+    "q": "Rotate the region between y = 2eˣ, y = 0, x = 0 and x = 2 about the x-axis. Find the exact volume.",
     "c": [
-      "−2·π·(1 − exp(4))",
-      "−4·π·(1 − exp(2))",
-      "−4·π·(1 − exp(4))",
-      "−π·(1 − exp(4))"
+      "2π(e⁴ − 1)",
+      "4π(e² − 1)",
+      "4π(e⁴ − 1)",
+      "π(e⁴ − 1)"
     ],
     "a": 0,
-    "why": "R = 2·exp(x), so R² = 4·exp(2·x). The exponent doubles when the radius is squared. ∫ from 0 to 2 of (4·π·exp(2·x)) dx. Antiderivative: 2·π·exp(2·x). Evaluate at the bounds to get −2·π·(1 − exp(4)).",
+    "why": "R = 2eˣ, so R² = 4e^(2x). The exponent doubles when the radius is squared. ∫ from 0 to 2 of 4πe^(2x) dx. Antiderivative: 2πe^(2x). Evaluate at the bounds to get 2π(e⁴ − 1).",
     "hints": [
       "Sketch the region and identify the slice and its dimensions before integrating.",
-      "R = 2·exp(x), so R² = 4·exp(2·x). The exponent doubles when the radius is squared.",
-      "Evaluate ∫ from 0 to 2 of (4·π·exp(2·x)) dx. Use 2·π·exp(2·x) as the antiderivative."
+      "R = 2eˣ, so R² = 4e^(2x). The exponent doubles when the radius is squared.",
+      "Evaluate ∫ from 0 to 2 of 4πe^(2x) dx. Use 2πe^(2x) as the antiderivative."
     ],
     "code": "",
     "family": "quiz2-017",
@@ -2171,12 +2171,12 @@ const rows = [
     "q": "Find the bounded area enclosed by y = 2/x, y = 2/x^2, and x = 6, in the half-plane x > 0.",
     "c": [
       "ln(36)",
-      "−5/3 + ln(36)",
-      "5/3 + ln(36)",
-      "−10/3 + ln(1296)"
+      "ln(36) − 5/3",
+      "ln(36) + 5/3",
+      "ln(1296) − 10/3"
     ],
     "a": 1,
-    "why": "The curves meet at x = 1. On (1, 6), 2/x is above 2/x^2. ∫ from 1 to 6 of (2·(x − 1)/x^2) dx. Antiderivative: 2·ln(x) + 2/x. Evaluate at the bounds to get −5/3 + ln(36).",
+    "why": "The curves meet at x = 1. On (1, 6), 2/x is above 2/x^2. ∫ from 1 to 6 of (2·(x − 1)/x^2) dx. Antiderivative: 2·ln(x) + 2/x. Evaluate at the bounds to get ln(36) − 5/3.",
     "hints": [
       "Sketch the region and identify the top and bottom curves, or right and left boundaries.",
       "The curves meet at x = 1. On (1, 6), 2/x is above 2/x^2.",
@@ -2203,10 +2203,10 @@ const rows = [
       "4·√(2)"
     ],
     "a": 2,
-    "why": "At height y, the width is 2√(y/1). The area below c is 4c^(3/2)/(3√(1)); the total is 4·8^(3/2)/(3√(1)). Set the first equal to half the second: c^(3/2) = 8^(3/2)/2. Thus c = 4·2^(1/3), which lies between 0 and 8.",
+    "why": "At height y, the width is 2√y. The area below c is 4c^(3/2)/3; the total is 4·8^(3/2)/3. Set the first equal to half the second: c^(3/2) = 8^(3/2)/2. Thus c = 4·2^(1/3), which lies between 0 and 8.",
     "hints": [
       "Use horizontal strips because the cutting line is horizontal.",
-      "The width at height y is 2√(y/1). Integrate from 0 to c for the lower piece.",
+      "The width at height y is 2√y. Integrate from 0 to c for the lower piece.",
       "Set c^(3/2) = 8^(3/2)/2 and raise both sides to the power 2/3."
     ],
     "code": "",
@@ -2276,19 +2276,19 @@ const rows = [
     "t": 3,
     "k": "mcq",
     "tag": "Applied",
-    "q": "Rotate the region between y = exp(2·x), y = 0, x = 0 and x = 2 about the x-axis. Find the exact volume.",
+    "q": "Rotate the region between y = e^(2x), y = 0, x = 0 and x = 2 about the x-axis. Find the exact volume.",
     "c": [
-      "−π·(1 − exp(4))/2",
-      "−π·(1 − exp(8))/4",
-      "−π·(1 − exp(8))/2",
-      "−π·(1 − exp(8))/8"
+      "π(e⁴ − 1)/2",
+      "π(e⁸ − 1)/4",
+      "π(e⁸ − 1)/2",
+      "π(e⁸ − 1)/8"
     ],
     "a": 1,
-    "why": "R = exp(2·x), so R² = exp(4·x). The exponent doubles when the radius is squared. ∫ from 0 to 2 of (π·exp(4·x)) dx. Antiderivative: π·exp(4·x)/4. Evaluate at the bounds to get −π·(1 − exp(8))/4.",
+    "why": "R = e^(2x), so R² = e^(4x). The exponent doubles when the radius is squared. ∫ from 0 to 2 of πe^(4x) dx. Antiderivative: πe^(4x)/4. Evaluate at the bounds to get π(e⁸ − 1)/4.",
     "hints": [
       "Sketch the region and identify the slice and its dimensions before integrating.",
-      "R = exp(2·x), so R² = exp(4·x). The exponent doubles when the radius is squared.",
-      "Evaluate ∫ from 0 to 2 of (π·exp(4·x)) dx. Use π·exp(4·x)/4 as the antiderivative."
+      "R = e^(2x), so R² = e^(4x). The exponent doubles when the radius is squared.",
+      "Evaluate ∫ from 0 to 2 of πe^(4x) dx. Use πe^(4x)/4 as the antiderivative."
     ],
     "code": "",
     "family": "quiz2-017",
@@ -2683,13 +2683,13 @@ const rows = [
     "tag": "Applied",
     "q": "Find the bounded area enclosed by y = 3/x, y = 3/x^2, and x = 7, in the half-plane x > 0.",
     "c": [
-      "18/7 + ln(343)",
+      "ln(343) + 18/7",
       "ln(343)",
-      "−18/7 + ln(343)",
-      "−36/7 + ln(117649)"
+      "ln(343) − 18/7",
+      "ln(117649) − 36/7"
     ],
     "a": 2,
-    "why": "The curves meet at x = 1. On (1, 7), 3/x is above 3/x^2. ∫ from 1 to 7 of (3·(x − 1)/x^2) dx. Antiderivative: 3·ln(x) + 3/x. Evaluate at the bounds to get −18/7 + ln(343).",
+    "why": "The curves meet at x = 1. On (1, 7), 3/x is above 3/x^2. ∫ from 1 to 7 of (3·(x − 1)/x^2) dx. Antiderivative: 3·ln(x) + 3/x. Evaluate at the bounds to get ln(343) − 18/7.",
     "hints": [
       "Sketch the region and identify the top and bottom curves, or right and left boundaries.",
       "The curves meet at x = 1. On (1, 7), 3/x is above 3/x^2.",
@@ -2789,19 +2789,19 @@ const rows = [
     "t": 3,
     "k": "mcq",
     "tag": "Applied",
-    "q": "Rotate the region between y = 2·exp(3·x), y = 0, x = 0 and x = 2 about the x-axis. Find the exact volume.",
+    "q": "Rotate the region between y = 2e^(3x), y = 0, x = 0 and x = 2 about the x-axis. Find the exact volume.",
     "c": [
-      "−4·π·(1 − exp(12))/3",
-      "−4·π·(1 − exp(6))/3",
-      "−2·π·(1 − exp(12))/3",
-      "−π·(1 − exp(12))/3"
+      "4π(e¹² − 1)/3",
+      "4π(e⁶ − 1)/3",
+      "2π(e¹² − 1)/3",
+      "π(e¹² − 1)/3"
     ],
     "a": 2,
-    "why": "R = 2·exp(3·x), so R² = 4·exp(6·x). The exponent doubles when the radius is squared. ∫ from 0 to 2 of (4·π·exp(6·x)) dx. Antiderivative: 2·π·exp(6·x)/3. Evaluate at the bounds to get −2·π·(1 − exp(12))/3.",
+    "why": "R = 2e^(3x), so R² = 4e^(6x). The exponent doubles when the radius is squared. ∫ from 0 to 2 of 4πe^(6x) dx. Antiderivative: 2πe^(6x)/3. Evaluate at the bounds to get 2π(e¹² − 1)/3.",
     "hints": [
       "Sketch the region and identify the slice and its dimensions before integrating.",
-      "R = 2·exp(3·x), so R² = 4·exp(6·x). The exponent doubles when the radius is squared.",
-      "Evaluate ∫ from 0 to 2 of (4·π·exp(6·x)) dx. Use 2·π·exp(6·x)/3 as the antiderivative."
+      "R = 2e^(3x), so R² = 4e^(6x). The exponent doubles when the radius is squared.",
+      "Evaluate ∫ from 0 to 2 of 4πe^(6x) dx. Use 2πe^(6x)/3 as the antiderivative."
     ],
     "code": "",
     "family": "quiz2-017",
@@ -3194,18 +3194,18 @@ const rows = [
     "t": 3,
     "k": "mcq",
     "tag": "Applied",
-    "q": "Find the bounded area enclosed by y = 1/x, y = x^(−2), and x = 8, in the half-plane x > 0.",
+    "q": "Find the bounded area enclosed by y = 1/x, y = 1/x^2, and x = 8, in the half-plane x > 0.",
     "c": [
-      "−7/4 + ln(64)",
+      "ln(64) − 7/4",
       "ln(8)",
-      "7/8 + ln(8)",
-      "−7/8 + ln(8)"
+      "ln(8) + 7/8",
+      "ln(8) − 7/8"
     ],
     "a": 3,
-    "why": "The curves meet at x = 1. On (1, 8), 1/x is above x^(−2). ∫ from 1 to 8 of ((x − 1)/x^2) dx. Antiderivative: ln(x) + 1/x. Evaluate at the bounds to get −7/8 + ln(8).",
+    "why": "The curves meet at x = 1. On (1, 8), 1/x is above 1/x^2. ∫ from 1 to 8 of ((x − 1)/x^2) dx. Antiderivative: ln(x) + 1/x. Evaluate at the bounds to get ln(8) − 7/8.",
     "hints": [
       "Sketch the region and identify the top and bottom curves, or right and left boundaries.",
-      "The curves meet at x = 1. On (1, 8), 1/x is above x^(−2).",
+      "The curves meet at x = 1. On (1, 8), 1/x is above 1/x^2.",
       "Evaluate ∫ from 1 to 8 of ((x − 1)/x^2) dx. Use ln(x) + 1/x as the antiderivative."
     ],
     "code": "",
@@ -3229,10 +3229,10 @@ const rows = [
       "5·√(2)"
     ],
     "a": 0,
-    "why": "At height y, the width is 2√(y/1). The area below c is 4c^(3/2)/(3√(1)); the total is 4·10^(3/2)/(3√(1)). Set the first equal to half the second: c^(3/2) = 10^(3/2)/2. Thus c = 5·2^(1/3), which lies between 0 and 10.",
+    "why": "At height y, the width is 2√y. The area below c is 4c^(3/2)/3; the total is 4·10^(3/2)/3. Set the first equal to half the second: c^(3/2) = 10^(3/2)/2. Thus c = 5·2^(1/3), which lies between 0 and 10.",
     "hints": [
       "Use horizontal strips because the cutting line is horizontal.",
-      "The width at height y is 2√(y/1). Integrate from 0 to c for the lower piece.",
+      "The width at height y is 2√y. Integrate from 0 to c for the lower piece.",
       "Set c^(3/2) = 10^(3/2)/2 and raise both sides to the power 2/3."
     ],
     "code": "",
@@ -3256,10 +3256,10 @@ const rows = [
       "−2048·π"
     ],
     "a": 1,
-    "why": "For 0 ≤ y ≤ 64, the horizontal strip runs from x = √(y/1) to x = 8. Thus R = 8 and r = √(y/1). ∫ from 0 to 64 of (π·(64 − y)) dy. Antiderivative: π·y·(128 − y)/2. Evaluate at the bounds to get 2048·π.",
+    "why": "For 0 ≤ y ≤ 64, the horizontal strip runs from x = √y to x = 8. Thus R = 8 and r = √y. ∫ from 0 to 64 of (π·(64 − y)) dy. Antiderivative: π·y·(128 − y)/2. Evaluate at the bounds to get 2048·π.",
     "hints": [
       "Sketch the region and identify the slice and its dimensions before integrating.",
-      "For 0 ≤ y ≤ 64, the horizontal strip runs from x = √(y/1) to x = 8. Thus R = 8 and r = √(y/1).",
+      "For 0 ≤ y ≤ 64, the horizontal strip runs from x = √y to x = 8. Thus R = 8 and r = √y.",
       "Evaluate ∫ from 0 to 64 of (π·(64 − y)) dy. Use π·y·(128 − y)/2 as the antiderivative."
     ],
     "code": "",
@@ -3302,19 +3302,19 @@ const rows = [
     "t": 3,
     "k": "mcq",
     "tag": "Applied",
-    "q": "Rotate the region between y = exp(x), y = 0, x = 0 and x = 3 about the x-axis. Find the exact volume.",
+    "q": "Rotate the region between y = eˣ, y = 0, x = 0 and x = 3 about the x-axis. Find the exact volume.",
     "c": [
-      "−π·(1 − exp(6))/4",
-      "−π·(1 − exp(3))",
-      "−π·(1 − exp(6))",
-      "−π·(1 − exp(6))/2"
+      "π(e⁶ − 1)/4",
+      "π(e³ − 1)",
+      "π(e⁶ − 1)",
+      "π(e⁶ − 1)/2"
     ],
     "a": 3,
-    "why": "R = exp(x), so R² = exp(2·x). The exponent doubles when the radius is squared. ∫ from 0 to 3 of (π·exp(2·x)) dx. Antiderivative: π·exp(2·x)/2. Evaluate at the bounds to get −π·(1 − exp(6))/2.",
+    "why": "R = eˣ, so R² = e^(2x). The exponent doubles when the radius is squared. ∫ from 0 to 3 of πe^(2x) dx. Antiderivative: πe^(2x)/2. Evaluate at the bounds to get π(e⁶ − 1)/2.",
     "hints": [
       "Sketch the region and identify the slice and its dimensions before integrating.",
-      "R = exp(x), so R² = exp(2·x). The exponent doubles when the radius is squared.",
-      "Evaluate ∫ from 0 to 3 of (π·exp(2·x)) dx. Use π·exp(2·x)/2 as the antiderivative."
+      "R = eˣ, so R² = e^(2x). The exponent doubles when the radius is squared.",
+      "Evaluate ∫ from 0 to 3 of πe^(2x) dx. Use πe^(2x)/2 as the antiderivative."
     ],
     "code": "",
     "family": "quiz2-017",
@@ -3709,13 +3709,13 @@ const rows = [
     "tag": "Exam",
     "q": "Find the bounded area enclosed by y = 2/x, y = 2/x^2, and x = 9, in the half-plane x > 0.",
     "c": [
-      "−16/9 + ln(81)",
+      "ln(81) − 16/9",
       "ln(81)",
-      "16/9 + ln(81)",
-      "−32/9 + ln(6561)"
+      "ln(81) + 16/9",
+      "ln(6561) − 32/9"
     ],
     "a": 0,
-    "why": "The curves meet at x = 1. On (1, 9), 2/x is above 2/x^2. ∫ from 1 to 9 of (2·(x − 1)/x^2) dx. Antiderivative: 2·ln(x) + 2/x. Evaluate at the bounds to get −16/9 + ln(81).",
+    "why": "The curves meet at x = 1. On (1, 9), 2/x is above 2/x^2. ∫ from 1 to 9 of (2·(x − 1)/x^2) dx. Antiderivative: 2·ln(x) + 2/x. Evaluate at the bounds to get ln(81) − 16/9.",
     "hints": [
       "Sketch the region and identify the top and bottom curves, or right and left boundaries.",
       "The curves meet at x = 1. On (1, 9), 2/x is above 2/x^2.",
@@ -3815,19 +3815,19 @@ const rows = [
     "t": 4,
     "k": "mcq",
     "tag": "Exam",
-    "q": "Rotate the region between y = 2·exp(2·x), y = 0, x = 0 and x = 3 about the x-axis. Find the exact volume.",
+    "q": "Rotate the region between y = 2e^(2x), y = 0, x = 0 and x = 3 about the x-axis. Find the exact volume.",
     "c": [
-      "−π·(1 − exp(12))",
-      "−2·π·(1 − exp(6))",
-      "−2·π·(1 − exp(12))",
-      "−π·(1 − exp(12))/2"
+      "π(e¹² − 1)",
+      "2π(e⁶ − 1)",
+      "2π(e¹² − 1)",
+      "π(e¹² − 1)/2"
     ],
     "a": 0,
-    "why": "R = 2·exp(2·x), so R² = 4·exp(4·x). The exponent doubles when the radius is squared. ∫ from 0 to 3 of (4·π·exp(4·x)) dx. Antiderivative: π·exp(4·x). Evaluate at the bounds to get −π·(1 − exp(12)).",
+    "why": "R = 2e^(2x), so R² = 4e^(4x). The exponent doubles when the radius is squared. ∫ from 0 to 3 of 4πe^(4x) dx. Antiderivative: πe^(4x). Evaluate at the bounds to get π(e¹² − 1).",
     "hints": [
       "Sketch the region and identify the slice and its dimensions before integrating.",
-      "R = 2·exp(2·x), so R² = 4·exp(4·x). The exponent doubles when the radius is squared.",
-      "Evaluate ∫ from 0 to 3 of (4·π·exp(4·x)) dx. Use π·exp(4·x) as the antiderivative."
+      "R = 2e^(2x), so R² = 4e^(4x). The exponent doubles when the radius is squared.",
+      "Evaluate ∫ from 0 to 3 of 4πe^(4x) dx. Use πe^(4x) as the antiderivative."
     ],
     "code": "",
     "family": "quiz2-017",
@@ -4223,12 +4223,12 @@ const rows = [
     "q": "Find the bounded area enclosed by y = 3/x, y = 3/x^2, and x = 10, in the half-plane x > 0.",
     "c": [
       "ln(1000)",
-      "−27/10 + ln(1000)",
-      "27/10 + ln(1000)",
-      "−27/5 + ln(1000000)"
+      "ln(1000) − 27/10",
+      "ln(1000) + 27/10",
+      "ln(1000000) − 27/5"
     ],
     "a": 1,
-    "why": "The curves meet at x = 1. On (1, 10), 3/x is above 3/x^2. ∫ from 1 to 10 of (3·(x − 1)/x^2) dx. Antiderivative: 3·ln(x) + 3/x. Evaluate at the bounds to get −27/10 + ln(1000).",
+    "why": "The curves meet at x = 1. On (1, 10), 3/x is above 3/x^2. ∫ from 1 to 10 of (3·(x − 1)/x^2) dx. Antiderivative: 3·ln(x) + 3/x. Evaluate at the bounds to get ln(1000) − 27/10.",
     "hints": [
       "Sketch the region and identify the top and bottom curves, or right and left boundaries.",
       "The curves meet at x = 1. On (1, 10), 3/x is above 3/x^2.",
@@ -4255,10 +4255,10 @@ const rows = [
       "6·√(2)"
     ],
     "a": 2,
-    "why": "At height y, the width is 2√(y/1). The area below c is 4c^(3/2)/(3√(1)); the total is 4·12^(3/2)/(3√(1)). Set the first equal to half the second: c^(3/2) = 12^(3/2)/2. Thus c = 6·2^(1/3), which lies between 0 and 12.",
+    "why": "At height y, the width is 2√y. The area below c is 4c^(3/2)/3; the total is 4·12^(3/2)/3. Set the first equal to half the second: c^(3/2) = 12^(3/2)/2. Thus c = 6·2^(1/3), which lies between 0 and 12.",
     "hints": [
       "Use horizontal strips because the cutting line is horizontal.",
-      "The width at height y is 2√(y/1). Integrate from 0 to c for the lower piece.",
+      "The width at height y is 2√y. Integrate from 0 to c for the lower piece.",
       "Set c^(3/2) = 12^(3/2)/2 and raise both sides to the power 2/3."
     ],
     "code": "",
@@ -4328,19 +4328,19 @@ const rows = [
     "t": 4,
     "k": "mcq",
     "tag": "Exam",
-    "q": "Rotate the region between y = exp(3·x), y = 0, x = 0 and x = 3 about the x-axis. Find the exact volume.",
+    "q": "Rotate the region between y = e^(3x), y = 0, x = 0 and x = 3 about the x-axis. Find the exact volume.",
     "c": [
-      "−π·(1 − exp(9))/3",
-      "−π·(1 − exp(18))/6",
-      "−π·(1 − exp(18))/3",
-      "−π·(1 − exp(18))/12"
+      "π(e⁹ − 1)/3",
+      "π(e¹⁸ − 1)/6",
+      "π(e¹⁸ − 1)/3",
+      "π(e¹⁸ − 1)/12"
     ],
     "a": 1,
-    "why": "R = exp(3·x), so R² = exp(6·x). The exponent doubles when the radius is squared. ∫ from 0 to 3 of (π·exp(6·x)) dx. Antiderivative: π·exp(6·x)/6. Evaluate at the bounds to get −π·(1 − exp(18))/6.",
+    "why": "R = e^(3x), so R² = e^(6x). The exponent doubles when the radius is squared. ∫ from 0 to 3 of πe^(6x) dx. Antiderivative: πe^(6x)/6. Evaluate at the bounds to get π(e¹⁸ − 1)/6.",
     "hints": [
       "Sketch the region and identify the slice and its dimensions before integrating.",
-      "R = exp(3·x), so R² = exp(6·x). The exponent doubles when the radius is squared.",
-      "Evaluate ∫ from 0 to 3 of (π·exp(6·x)) dx. Use π·exp(6·x)/6 as the antiderivative."
+      "R = e^(3x), so R² = e^(6x). The exponent doubles when the radius is squared.",
+      "Evaluate ∫ from 0 to 3 of πe^(6x) dx. Use πe^(6x)/6 as the antiderivative."
     ],
     "code": "",
     "family": "quiz2-017",
@@ -4733,18 +4733,18 @@ const rows = [
     "t": 4,
     "k": "mcq",
     "tag": "Exam",
-    "q": "Find the bounded area enclosed by y = 1/x, y = x^(−2), and x = 11, in the half-plane x > 0.",
+    "q": "Find the bounded area enclosed by y = 1/x, y = 1/x^2, and x = 11, in the half-plane x > 0.",
     "c": [
-      "10/11 + ln(11)",
+      "ln(11) + 10/11",
       "ln(11)",
-      "−10/11 + ln(11)",
-      "−20/11 + ln(121)"
+      "ln(11) − 10/11",
+      "ln(121) − 20/11"
     ],
     "a": 2,
-    "why": "The curves meet at x = 1. On (1, 11), 1/x is above x^(−2). ∫ from 1 to 11 of ((x − 1)/x^2) dx. Antiderivative: ln(x) + 1/x. Evaluate at the bounds to get −10/11 + ln(11).",
+    "why": "The curves meet at x = 1. On (1, 11), 1/x is above 1/x^2. ∫ from 1 to 11 of ((x − 1)/x^2) dx. Antiderivative: ln(x) + 1/x. Evaluate at the bounds to get ln(11) − 10/11.",
     "hints": [
       "Sketch the region and identify the top and bottom curves, or right and left boundaries.",
-      "The curves meet at x = 1. On (1, 11), 1/x is above x^(−2).",
+      "The curves meet at x = 1. On (1, 11), 1/x is above 1/x^2.",
       "Evaluate ∫ from 1 to 11 of ((x − 1)/x^2) dx. Use ln(x) + 1/x as the antiderivative."
     ],
     "code": "",
@@ -4795,10 +4795,10 @@ const rows = [
       "−14641·π/2"
     ],
     "a": 0,
-    "why": "For 0 ≤ y ≤ 121, the horizontal strip runs from x = √(y/1) to x = 11. Thus R = 11 and r = √(y/1). ∫ from 0 to 121 of (π·(121 − y)) dy. Antiderivative: π·y·(242 − y)/2. Evaluate at the bounds to get 14641·π/2.",
+    "why": "For 0 ≤ y ≤ 121, the horizontal strip runs from x = √y to x = 11. Thus R = 11 and r = √y. ∫ from 0 to 121 of (π·(121 − y)) dy. Antiderivative: π·y·(242 − y)/2. Evaluate at the bounds to get 14641·π/2.",
     "hints": [
       "Sketch the region and identify the slice and its dimensions before integrating.",
-      "For 0 ≤ y ≤ 121, the horizontal strip runs from x = √(y/1) to x = 11. Thus R = 11 and r = √(y/1).",
+      "For 0 ≤ y ≤ 121, the horizontal strip runs from x = √y to x = 11. Thus R = 11 and r = √y.",
       "Evaluate ∫ from 0 to 121 of (π·(121 − y)) dy. Use π·y·(242 − y)/2 as the antiderivative."
     ],
     "code": "",
@@ -4841,19 +4841,19 @@ const rows = [
     "t": 4,
     "k": "mcq",
     "tag": "Exam",
-    "q": "Rotate the region between y = 2·exp(x), y = 0, x = 0 and x = 4 about the x-axis. Find the exact volume.",
+    "q": "Rotate the region between y = 2eˣ, y = 0, x = 0 and x = 4 about the x-axis. Find the exact volume.",
     "c": [
-      "−4·π·(1 − exp(8))",
-      "−4·π·(1 − exp(4))",
-      "−2·π·(1 − exp(8))",
-      "−π·(1 − exp(8))"
+      "4π(e⁸ − 1)",
+      "4π(e⁴ − 1)",
+      "2π(e⁸ − 1)",
+      "π(e⁸ − 1)"
     ],
     "a": 2,
-    "why": "R = 2·exp(x), so R² = 4·exp(2·x). The exponent doubles when the radius is squared. ∫ from 0 to 4 of (4·π·exp(2·x)) dx. Antiderivative: 2·π·exp(2·x). Evaluate at the bounds to get −2·π·(1 − exp(8)).",
+    "why": "R = 2eˣ, so R² = 4e^(2x). The exponent doubles when the radius is squared. ∫ from 0 to 4 of 4πe^(2x) dx. Antiderivative: 2πe^(2x). Evaluate at the bounds to get 2π(e⁸ − 1).",
     "hints": [
       "Sketch the region and identify the slice and its dimensions before integrating.",
-      "R = 2·exp(x), so R² = 4·exp(2·x). The exponent doubles when the radius is squared.",
-      "Evaluate ∫ from 0 to 4 of (4·π·exp(2·x)) dx. Use 2·π·exp(2·x) as the antiderivative."
+      "R = 2eˣ, so R² = 4e^(2x). The exponent doubles when the radius is squared.",
+      "Evaluate ∫ from 0 to 4 of 4πe^(2x) dx. Use 2πe^(2x) as the antiderivative."
     ],
     "code": "",
     "family": "quiz2-017",

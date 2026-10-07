@@ -72,7 +72,7 @@
   mc(2, 5, 3, 'Applied', 'The area enclosed by y = x and y = x² between their intersections is:', '1/6',
     ['1/2', '1/3', '1'], 'They meet at x = 0 and x = 1, with the line above the parabola. ∫₀¹ (x − x²) dx = 1/2 − 1/3 = 1/6.');
   mc(2, 6, 3, 'Applied', 'Integrating in dy instead of dx is usually worth doing when:', 'It replaces two integrals with one',
-    ['The region is above the x-axis', 'The curves are polynomials', 'The axis of revolution is vertical'], 'A region bounded by one curve on the left and one on the right for its whole height needs one dy integral where dx might need several.');
+    ['The region is above the x-axis', 'The curves are polynomials', 'The region lies to the right of the y-axis'], 'A region bounded by one curve on the left and one on the right for its whole height needs one dy integral where dx might need several.');
   mc(2, 6, 4, 'Exam', 'The region under y = √x from 0 to 4 is revolved about the x-axis. The volume is:', '8π',
     ['16π', '4π', '32π/3'], 'V = π∫₀⁴ (√x)² dx = π∫₀⁴ x dx = π(16/2) = 8π. Squaring the radical is what makes this integral trivial.');
   mc(2, 6, 4, 'Exam', 'A solid has a circular base of radius 1 and square cross-sections perpendicular to a diameter. The side of the square at position x is:', '2√(1 − x²)',
@@ -130,7 +130,7 @@
   mc(5, 16, 1, 'Recall', 'Partial fraction decomposition requires that the numerator degree be:', 'Strictly less than the denominator degree',
     ['Equal to the denominator degree', 'Greater than the denominator degree', 'Even'], 'If it is not, do polynomial long division first and decompose only the proper remainder.');
   mc(5, 16, 1, "Recall", "In the standard partial-fraction form with a separate term at each power, a repeated linear factor (x − a)² contributes:", "A/(x − a) + B/(x − a)²",
-    ["A/(x − a)²only","A/(x − a) only","(Ax + B)/(x − a)²"], "Include a constant numerator at each power for the full standard form. Grouping the terms into one linear numerator over (x − a)² is equivalent but is not the requested separate-power form.");
+    ["A/(x − a)² only","A/(x − a) only","(Ax + B)/(x − a)²"], "Include a constant numerator at each power for the full standard form. Grouping the terms into one linear numerator over (x − a)² is equivalent but is not the requested separate-power form.");
   mc(5, 16, 1, "Recall", "In the full general partial-fraction form, an irreducible quadratic factor gets a numerator of the form:", "Ax + B",
     ["A","Ax","Ax² + Bx + C"], "Use Ax + B to allow all proper numerators over the quadratic. A or B may turn out to be zero for a particular fraction.");
   mc(5, 15, 1, 'Recall', 'For a DEFINITE trigonometric substitution, the efficient approach is to:', 'Change the limits to θ and never convert back',
@@ -248,7 +248,7 @@
 
   /* ======= GYM 10 - Taylor at Work and Polar (L32-34) ======= */
   mc(10, 33, 1, 'Recall', 'The polar-to-rectangular conversions are:', 'x = r cos θ and y = r sin θ',
-    ['x = r sin θ and y = r cos θ', 'x = r/cos θ and y = r/sin θ', 'x = cos θ and y = sin θ'], 'Cosine goes with x, sine with y. Swapping them reflects every graph across the line y = x.');
+    ['x = r sin θ and y = r cos θ', 'x = r/(cos θ) and y = r/(sin θ)', 'x = cos θ and y = sin θ'], 'Cosine goes with x, sine with y. Swapping them reflects every graph across the line y = x.');
   mc(10, 33, 1, 'Recall', 'In polar coordinates, r² equals:', 'x² + y²',
     ['x² − y²', 'x + y', '(x + y)²'], 'It is the Pythagorean relation. The companion is tan θ = y/x, which needs a quadrant check before you trust the arctangent.');
   mc(10, 34, 1, "Recall", "For a > 0, the polar curve r = a is:", "A circle centred at the origin",

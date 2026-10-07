@@ -61,10 +61,35 @@ for (const r of rows) {
              q: plain(r.q), c: r.choices.map(plain), a: r.answer, why: plain(r.explain) });
 }
 
+/* Corrections to the manual's own drill text, applied by id so a rebuild keeps
+   them. Each one names the exact text it replaces, so if the source changes
+   underneath, the build stops instead of quietly dropping the fix.
+   - two choices that were the same expression (a/cos θ is a sec θ; f'/f is r'/r)
+   - an explanation that pointed at "the last option", but choices are shuffled */
+const FIXES = {
+  'k4-m-L14-2': { c: { 3: ['x = a/ cos θ', 'x = a cos θ'] } },
+  'k10-m-L34-3': { c: { 1: ['dr/dθ ÷ r', 'tan θ'] } },
+  'k94-m-L35-1': { why: ['A = ½∫_α^β r² dθ. The last option is the arc-length integrand, not area.',
+                         'A = ½∫_α^β r² dθ. The integral ∫ √(f² + f\'²) dθ is arc length, not area.'] }
+};
+for (const id in FIXES) {
+  const q = out.find(r => r.id === id), fix = FIXES[id];
+  if (!q) throw new Error('fix for a missing question: ' + id);
+  for (const i in fix.c || {}) {
+    if (q.c[i] !== fix.c[i][0]) throw new Error('choice ' + i + ' of ' + id + ' changed in the source: ' + q.c[i]);
+    q.c[i] = fix.c[i][1];
+  }
+  if (fix.why) {
+    if (q.why !== fix.why[0]) throw new Error('explanation of ' + id + ' changed in the source');
+    q.why = fix.why[1];
+  }
+}
+
 // sanity: the recorded answer must still index a choice after conversion
 for (const q of out) {
   if (!(q.a >= 0 && q.a < q.c.length)) throw new Error('bad answer index on ' + q.id);
   if (!q.q || !q.why || q.c.some(c => !c)) throw new Error('empty field on ' + q.id);
+  if (new Set(q.c).size !== q.c.length) throw new Error('duplicate choices on ' + q.id);
 }
 
 fs.writeFileSync('output/calc/converted.json', JSON.stringify(out, null, 1));

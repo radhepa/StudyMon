@@ -126,13 +126,13 @@
   mc(4, 12, 3, 'Applied', '∫ sin²x dx equals:', 'x/2 − sin(2x)/4 + C',
     ['−cos²x/2 + C', 'sin³x/3 + C', 'x/2 + sin(2x)/4 + C'], 'Both powers even, so use sin²x = (1 − cos 2x)/2 and integrate term by term. The minus sign comes from that identity.');
   mc(4, 12, 3, 'Applied', '∫₀^(π/2) sin²x dx equals:', 'π/4',
-    ['π/2', '1', 'π'], 'Half-angle gives x/2 − sin 2x/4, and at π/2 the sine term vanishes, leaving π/4. Over a quarter period sin² and cos² each average ½.');
+    ['π/2', '1', 'π'], 'Half-angle gives x/2 − sin(2x)/4, and at π/2 the sine term vanishes, leaving π/4. Over a quarter period sin² and cos² each average ½.');
   mc(4, 12, 3, 'Applied', '∫ sin³x dx equals:', '−cos x + cos³x/3 + C',
     ['cos x − cos³x/3 + C', 'sin⁴x/4 + C', '−cos³x/3 + C'], 'Peel one sin x for du = −sin x dx, convert sin²x = 1 − cos²x, then u-substitute with u = cos x.');
   mc(4, 13, 3, "Applied", "∫ tan x sec²x dx equals:", "tan²x/2 + C",
     ["sec²x + C","ln|sec x| + C","tan x sec x + C"], "With u = tan x, du = sec²x dx, so the integral is tan²x/2 + C. The expression sec²x/2 + C would also be valid, since sec²x − tan²x = 1.");
   mc(4, 13, 4, 'Exam', '∫ tan x dx equals:', '−ln|cos x| + C',
-    ['ln|cos x| + C', 'sec²x + C', 'ln|sin x| + C'], 'Write tan = sin/cos and substitute u = cos x. Equivalently ln|sec x| + C.');
+    ['ln|cos x| + C', 'sec²x + C', 'ln|sin x| + C'], 'Write tan x = (sin x)/(cos x) and substitute u = cos x. Equivalently ln|sec x| + C.');
   mc(4, 14, 3, "Applied", "For ∫ dx/√(4 − x²), take x = 2 sin θ with −π/2 < θ < π/2. The integrand becomes:", "dθ",
     ["2 dθ","cos θ dθ","4 cos²θ dθ"], "√(4 − x²) = 2cos θ and dx = 2cos θ dθ, so everything cancels and the answer is θ = arcsin(x/2) + C.");
   mc(4, 14, 4, 'Exam', '∫ dx/(x² + 9) equals:', '(1/3)arctan(x/3) + C',
@@ -280,7 +280,7 @@
   mc(8, 26, 4, "Exam", "For Σₙ₌₀^∞ (−1)ⁿ/n!, the correct conclusion is:", "Absolutely convergent, by the Ratio Test on |aₙ|",
     ["Conditionally convergent","Divergent","Convergent but not absolutely"], "Σ1/n! converges (it sums to e), so the alternating version converges absolutely. It equals 1/e.");
   mc(8, 24, 1, 'Recall', 'A series that converges conditionally has:', 'Σaₙ convergent but Σ|aₙ| divergent',
-    ['Both convergent', 'Both divergent', 'Σ|aₙ| convergent but Σaₙ divergent'], 'The last option is impossible - absolute convergence always implies convergence.');
+    ['Both convergent', 'Both divergent', 'Σ|aₙ| convergent but Σaₙ divergent'], 'Σ|aₙ| convergent with Σaₙ divergent is impossible - absolute convergence always implies convergence.');
   mc(8, 26, 2, 'Method', 'An nth power throughout the general term suggests:', 'The Root Test',
     ['The Integral Test', 'Direct comparison', 'The Alternating Series Test'], 'The nth root cancels the nth power cleanly, which no other test does.');
   mc(8, 25, 4, 'Exam', 'For Σ nⁿ/n!, the Ratio Test limit is:', 'e, so it diverges',
