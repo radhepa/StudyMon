@@ -2277,3 +2277,24 @@ function kingdomStop(stopAudio) {
     kingdomStopMusic(true);
   }
 }
+
+/* new AudioContext() can take a couple of hundred milliseconds while the audio
+   device wakes, and doing it inside renderKingdom froze the first open of this
+   tab. With the music on, the context is made ahead of time instead: after the
+   player's first click (browsers only allow audio after a gesture), once the
+   page is idle, and then suspended until the Kingdom starts a track. */
+(function () {
+  function warm() {
+    if (!KINGDOM_MUSIC_ON || KINGDOM_MUSIC_AUDIO || CUR === 'kingdom') return;
+    var music = kingdomCreateMusicAudio();
+    if (music && !music.active && music.context.state === 'running') music.context.suspend().catch(function () { });
+  }
+  function armed() {
+    document.removeEventListener('pointerdown', armed, true);
+    setTimeout(function () {
+      if (window.requestIdleCallback) window.requestIdleCallback(warm, { timeout: 4000 });
+      else warm();
+    }, 1200);
+  }
+  document.addEventListener('pointerdown', armed, true);
+})();
