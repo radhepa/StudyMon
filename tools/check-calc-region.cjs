@@ -38,26 +38,25 @@ function check(n, ok, d) { results.push({ n, ok }); say((ok ? 'PASS  ' : 'FAIL  
         r.questions >= 400 && r.emptyChapters.length === 0,
         r.questions + ' questions, empty chapters: ' + JSON.stringify(r.emptyChapters));
 
-  // --- exams gate the gyms behind them ------------------------------------
+  // --- no topic waits on badges (openTopics on the Isles) -----------------
   r = await p.evaluate(() => {
     S = freshSave(); switchSubject('calc'); S.badges = {}; S.elite = {};
-    const open = [], shut = [];
-    for (let n = 1; n <= 10; n++) (gymBlockedBy(n) ? shut : open).push(n);
-    return { open, shut, firstBlocker: (gymBlockedBy(4) || {}).id };
+    const open = [];
+    for (let n = 1; n <= 10; n++) if (!gymBlockedBy(n)) open.push(n);
+    return { open, topicsOpen: topicsOpen() };
   });
-  check('with no exams passed, only the first unit is reachable', JSON.stringify(r.open) === '[1,2,3]', 'open ' + JSON.stringify(r.open));
-  check('gym 4 is blocked by the first evening exam', r.firstBlocker === 'x1', r.firstBlocker);
+  check('with no exams passed, every gym is reachable', JSON.stringify(r.open) === '[1,2,3,4,5,6,7,8,9,10]' && r.topicsOpen, 'open ' + JSON.stringify(r.open));
+  check('no evening exam stands in front of a gym', r.open.length === 10);
 
   r = await p.evaluate(() => {
     S = freshSave(); switchSubject('calc'); S.badges = {}; S.elite = { x1: true };
     const open = [];
     for (let n = 1; n <= 10; n++) if (!gymBlockedBy(n)) open.push(n);
-    return { open, blocker7: (gymBlockedBy(7) || {}).id };
+    return { open };
   });
-  check('passing exam I opens the next unit', JSON.stringify(r.open) === '[1,2,3,4,5,6]', 'open ' + JSON.stringify(r.open));
-  check('gym 7 is then blocked by the second exam', r.blocker7 === 'x2', r.blocker7);
+  check('passing exam I changes nothing about what is open', JSON.stringify(r.open) === '[1,2,3,4,5,6,7,8,9,10]', 'open ' + JSON.stringify(r.open));
 
-  // --- bosses open on badge count -----------------------------------------
+  // --- every boss can be challenged at any badge count ---------------------
   r = await p.evaluate(() => {
     S = freshSave(); switchSubject('calc'); S.badges = {}; S.elite = {};
     const none = ELITE.map(e => bossOpen(e));
@@ -67,8 +66,8 @@ function check(n, ok, d) { results.push({ n, ok }); say((ok ? 'PASS  ' : 'FAIL  
     const all = ELITE.map(e => bossOpen(e));
     return { none, three, all, finalAfter: bossAfter(ELITE.find(e => e.id === 'final')) };
   });
-  check('no boss is open without badges', r.none.every(x => x === false));
-  check('three badges open exactly the first exam', JSON.stringify(r.three) === '[true,false,false,false]', JSON.stringify(r.three));
+  check('every boss is open without badges', r.none.every(x => x === true), JSON.stringify(r.none));
+  check('three badges keep every boss open', JSON.stringify(r.three) === '[true,true,true,true]', JSON.stringify(r.three));
   check('all ten badges open every boss including the Final', r.all.every(x => x === true) && r.finalAfter === 10);
 
   // --- the revision routes exist and are exam-only ------------------------

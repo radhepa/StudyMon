@@ -1,0 +1,66 @@
+/* Typeset math in Calculus II questions, and the copy button on the question
+   card. See js/engine/question-format.js. */
+
+/* Powers and indices sit on the line rather than pushing it apart. */
+sup.mx, sub.mx { font-size: .74em; line-height: 0; position: relative; vertical-align: baseline; }
+sup.mx { top: -.5em; }
+sub.mx { top: .26em; }
+.mf sup.mx { top: -.42em; }
+
+/* Stacked fraction. */
+.mf {
+  display: inline-flex; flex-direction: column; align-items: stretch;
+  vertical-align: middle; text-align: center;
+  font-size: .9em; line-height: 1.18; margin: .08em .14em; white-space: nowrap;
+}
+.mf-n { padding: 0 .2em .06em; }
+.mf-d { padding: .1em .2em 0; border-top: .09em solid currentColor; }
+.mf .mf { font-size: .94em; }
+.choice .mf { font-size: 1.04em; }
+
+/* Square root with its bar over the radicand. */
+.mr { white-space: nowrap; padding-left: .05em; }
+.mr-b { border-top: .085em solid currentColor; padding: .06em .12em 0 .06em; margin-left: .02em; }
+
+/* Integral sign with its limits stacked at the right; also used for the
+   evaluation bar [F(x)] with limits a and b. */
+.mi { display: inline-flex; align-items: center; vertical-align: middle; white-space: nowrap; margin-right: .08em; }
+.mi-s {
+  font-family: 'Cambria Math', 'STIX Two Math', 'Latin Modern Math', 'Times New Roman', serif;
+  font-size: 1.55em; line-height: 1; font-style: italic;
+}
+.ml {
+  display: inline-flex; flex-direction: column; justify-content: space-between;
+  vertical-align: middle; align-self: stretch;
+  font-size: .68em; line-height: 1.05; margin: 0 .2em 0 .04em; min-height: 2.3em; text-align: left;
+}
+.ml-u { margin-top: -.1em; }
+.ml-d { margin-bottom: -.15em; }
+
+/* Sum and limit with their bounds over and under. */
+.ms {
+  display: inline-flex; flex-direction: column; align-items: center;
+  vertical-align: middle; line-height: 1.02; margin: 0 .16em; white-space: nowrap;
+}
+.ms-s { font-size: 1.4em; line-height: 1; }
+.ms-u, .ms-d { font-size: .72em; }
+.ms-u { margin-bottom: -.12em; }
+.ms-lim .ms-s { font-size: 1em; }
+.ms-lim .ms-d { margin-top: .05em; }
+.ms-bare { font-size: 1.12em; }
+.minf { font-size: 1.3em; line-height: .8; }
+
+/* An operator held on the line with what it applies to. */
+.mnb { white-space: nowrap; }
+
+/* ---- copy button, top right of the question card ---------------------- */
+.qhead .qcopy {
+  margin-left: auto; min-height: 0; padding: 5px 11px; font-size: 12.5px; line-height: 1.2;
+  display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;
+  font-family: var(--read); font-weight: 600; letter-spacing: 0;
+}
+.qcopy .qcopy-ico { font-size: 14px; line-height: 1; }
+.qcopy.done { border-color: var(--green, #469e72); color: var(--green, #2f6f4a); }
+@media (max-width: 620px) {
+  .qhead .qcopy { padding: 5px 9px; }
+}

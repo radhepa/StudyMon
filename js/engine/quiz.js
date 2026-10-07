@@ -428,7 +428,7 @@ function hintBlockHtml(q) {
     /* A span, not a <b>: the parchment skin gives .note b a filled background,
        which would paint the label as a full-width bar. */
     h += '<div class="note hint" id="hint' + i + '" hidden>' +
-      '<span class="hint-k">Hint ' + (i + 1) + ' of ' + hs.length + '</span>' + esc(hs[i]) + '</div>';
+      '<span class="hint-k">Hint ' + (i + 1) + ' of ' + hs.length + '</span>' + questionHtml(q, hs[i]) + '</div>';
   }
   return h + '</div>';
 }

@@ -129,16 +129,16 @@ function renderQuestion() {
   h += '<span class="qtag">' + (q.tag || 'Question') + '</span>';
   if (B.qReview) h += '<span class="qtag srs">Review</span>';
   h += '<span>Ch ' + chNum + ' · ' + esc(chapterTitle(chNum)) + '</span>';
-  h += '<span class="spacer"></span><span>' + B.pendingMove.label + ' · tier ' + q.t + '</span>';
+  h += '<span class="spacer"></span><span>' + B.pendingMove.label + ' · tier ' + q.t + '</span>' + questionCopyButton('battle');
   h += '</div>';
 
-  h += '<div class="qtext">' + esc(q.q) + '</div>';
+  h += '<div class="qtext">' + questionHtml(q, q.q) + '</div>';
   if (q.code) h += '<pre class="qcode">' + esc(q.code) + '</pre>';
 
   if (q.selfCheck) {
     h += '<div class="selfcheck">' +
       '<button class="primary" id="revealself" onclick="revealSelfCheck()">Reveal worked solution</button>' +
-      '<div id="selfsolution" hidden><div class="why"><b>Worked solution</b>' + esc(q.why) + '</div>' +
+      '<div id="selfsolution" hidden><div class="why"><b>Worked solution</b>' + questionHtml(q, q.why) + '</div>' +
       '<div class="note">Compare your complete work, not just the last line. How did you do?</div>' +
       '<div class="choices">' +
       '<button class="choice" id="ch0" onclick="answer(0)"><span class="k">✓</span><span>I got it</span></button>' +
@@ -154,7 +154,7 @@ function renderQuestion() {
     for (var i = 0; i < choiceOrder.length; i++) {
       var sourceIndex = choiceOrder[i];
       h += '<button class="choice" id="ch' + sourceIndex + '" onclick="answer(' + sourceIndex + ')">' +
-        '<span class="k">' + letters[i] + '</span><span>' + esc(q.c[sourceIndex]) + '</span></button>';
+        '<span class="k">' + letters[i] + '</span><span>' + questionHtml(q, q.c[sourceIndex]) + '</span></button>';
     }
     h += '</div>';
   }
@@ -219,8 +219,8 @@ function answer(choice, isFill) {
     : correct ? 'Correct!' : 'Not quite.';
   var ansTxt = q.k === 'fill' ? q.a[0] : q.c[q.a];
   w.innerHTML = '<b>' + head + '</b>' +
-    (correct || q.selfCheck ? '' : '<div style="margin-bottom:6px"><strong>Answer:</strong> ' + esc(ansTxt) + '</div>') +
-    (q.selfCheck ? '' : esc(q.why)) + retiredNoteHtml(q);
+    (correct || q.selfCheck ? '' : '<div style="margin-bottom:6px"><strong>Answer:</strong> ' + questionHtml(q, ansTxt) + '</div>') +
+    (q.selfCheck ? '' : questionHtml(q, q.why)) + retiredNoteHtml(q);
   card.appendChild(w);
   // a hint you did not need is still worth reading once the answer is in
   showAllHints();

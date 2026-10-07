@@ -47,6 +47,7 @@ const SUITES=[
   ['calculus region',   'tools/check-calc-region.cjs'],
   ['calculus problems', 'tools/check-calc-problems.cjs'],
   ['calculus review',   'tools/check-calc-review.cjs'],
+  ['question format',   'tools/check-question-format.cjs'],
   ['autograder',        'tools/check-autograder.cjs'],
   ['midterm lab cross-check', 'tools/check-midterm-labs.cjs'],
   ['lab cutscenes',     'tools/check-lab-scenes.cjs'],

@@ -81,6 +81,8 @@ You choose a move. The game asks a question whose difficulty matches the move's 
 - **Speed and streaks** earn bonus damage, and a run of correct answers boosts your prize money.
 - **The balance was tuned by simulation.** A gym win is about 85% at near-perfect accuracy, about 55% at 70%, and under 10% at 45%. You cannot grind past not knowing the material.
 - **Levels scale to you.** Wild Pokémon and gym leaders stay near your own party's level, so any route is playable on the night you are actually studying that chapter.
+- **Calculus reads like calculus.** Converging Isles questions are typeset as you go: stacked fractions, raised powers, square roots with a bar, and integrals and sums with their limits in place.
+- **Stuck? Copy it.** The **Copy** button at the top right of every question card copies the question and its lettered choices, ready to paste into Gemini or any other assistant.
 
 Keyboard friendly: `1`–`4` or `A`–`D` to answer, `Enter` to continue.
 
@@ -95,7 +97,7 @@ Keyboard friendly: `1`–`4` or `A`–`D` to answer, `Enter` to continue.
 </tr>
 <tr>
 <td align="center"><sub><b>The C-Region.</b> One route per chapter. Every route is open from day one.</sub></td>
-<td align="center"><sub><b>The Converging Isles.</b> Gym leaders have portraits, and evening exams gate the way forward.</sub></td>
+<td align="center"><sub><b>The Converging Isles.</b> Gym leaders have portraits, and every gym and evening exam is open from day one.</sub></td>
 </tr>
 </table>
 
@@ -131,7 +133,7 @@ All fifteen badges open the **Elite Four**: Seg Fault, Ida Overflow, Fee Seeker 
 </details>
 
 <details>
-<summary><b>The Converging Isles: all ten gyms and the exam gates</b></summary>
+<summary><b>The Converging Isles: all ten gyms and the evening exams</b></summary>
 
 <br>
 
@@ -152,7 +154,7 @@ All fifteen badges open the **Elite Four**: Seg Fault, Ida Overflow, Fee Seeker 
 | 10 | Taylor at Work and Polar Coordinates | Fairy | Rose Kardia | Rose |
 | | ***The Final*** | | Dean Aster | |
 
-Across the 35 lessons, the quizzes cover most of the course. The **evening exams** test the lessons that no quiz asks about, so there is nowhere to hide, and you cannot walk past an exam you have not sat. Each exam also unlocks a **Revision Route** for practice.
+Across the 35 lessons, the quizzes cover most of the course. The **evening exams** test the lessons that no quiz asks about, so there is nowhere to hide. Nothing is locked behind badges: every gym, route and exam is open from the start, so you can study whatever your class is on this week, in any order. A gym fights like the next badge you are due, whichever one you pick. Each exam also has a **Revision Route** for practice.
 
 </details>
 

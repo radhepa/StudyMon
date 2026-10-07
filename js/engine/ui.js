@@ -544,7 +544,7 @@ function routeQuestionBaseHtml(n) {
     h += '<div class="question-preview">';
     met.slice(0, 4).forEach(function (q) {
       var stats = S.srs[q.id];
-      h += '<div><span>Tier ' + q.t + '</span>' + esc(q.q) +
+      h += '<div><span>Tier ' + q.t + '</span>' + questionHtml(q, q.q) +
         '<small>' + ((stats.r || 0) + (stats.w || 0)) + ' attempt' +
         (((stats.r || 0) + (stats.w || 0)) === 1 ? '' : 's') + '</small></div>';
     });
@@ -573,7 +573,7 @@ function openQuestionBase(n) {
       '<span>Tier ' + q.t + (q.lesson ? ' · Lesson ' + q.lesson : '') + '</span>' +
       '<span class="question-status">' + (isHidden(q.id) ? 'Hidden · right ' + reviewPlan().retireAfter + ' in a row' + (attempts ? ' · ' + attempts + ' attempts' : '')
         : metQuestion ? 'Encountered' + (attempts ? ' · ' + attempts + ' attempt' + (attempts === 1 ? '' : 's') : '') : 'Not encountered') + '</span></div>' +
-      '<div class="question-entry-text"><b>' + (i + 1) + '.</b> ' + esc(q.q) + '</div>' +
+      '<div class="question-entry-text"><b>' + (i + 1) + '.</b> ' + questionHtml(q, q.q) + '</div>' +
       (q.code ? '<pre class="qcode">' + esc(q.code) + '</pre>' : '') + '</article>';
   });
   if (!questions.length) h += '<p class="muted">No questions are assigned to this route yet.</p>';
@@ -844,13 +844,13 @@ function renderDrill() {
   h += '<div class="qcard"><div class="qhead"><span class="qtag">' + (q.tag || 'Question') + '</span>' +
     (S.srs[q.id] ? '<span class="qtag srs">Box ' + S.srs[q.id].box + '/5</span>' : '') +
     '<span>Ch ' + chNum + ' · ' + esc(chapterTitle(chNum)) + '</span>' +
-    '<span class="spacer"></span><span>tier ' + q.t + '</span></div>';
-  h += '<div class="qtext">' + esc(q.q) + '</div>';
+    '<span class="spacer"></span><span>tier ' + q.t + '</span>' + questionCopyButton('drill') + '</div>';
+  h += '<div class="qtext">' + questionHtml(q, q.q) + '</div>';
   if (q.code) h += '<pre class="qcode">' + esc(q.code) + '</pre>';
   if (q.selfCheck && !D.exam) {
     h += '<div class="selfcheck">' +
       '<button class="primary" id="drevealself" onclick="revealDrillSelfCheck()">Reveal worked solution</button>' +
-      '<div id="dselfsolution" hidden><div class="why"><b>Worked solution</b>' + esc(q.why) + '</div>' +
+      '<div id="dselfsolution" hidden><div class="why"><b>Worked solution</b>' + questionHtml(q, q.why) + '</div>' +
       '<div class="note">Compare your complete work, not just the last line. How did you do?</div>' +
       '<div class="choices">' +
       '<button class="choice" id="dch0" onclick="drillAnswer(0)"><span class="k">✓</span><span>I got it</span></button>' +
@@ -866,7 +866,7 @@ function renderDrill() {
     for (var i = 0; i < choiceOrder.length; i++) {
       var sourceIndex = choiceOrder[i];
       h += '<button class="choice" id="dch' + sourceIndex + '" onclick="drillAnswer(' + sourceIndex + ')">' +
-        '<span class="k">' + letters[i] + '</span><span>' + esc(q.c[sourceIndex]) + '</span></button>';
+        '<span class="k">' + letters[i] + '</span><span>' + questionHtml(q, q.c[sourceIndex]) + '</span></button>';
     }
     h += '</div>';
   }
@@ -932,7 +932,7 @@ function drillAnswer(choice, isFill) {
     w.className = 'why' + (correct ? '' : ' bad');
     var ansTxt = q.k === 'fill' ? q.a[0] : q.c[q.a];
     w.innerHTML = '<b>' + (correct ? 'Correct!' : 'Not quite.') + '</b>' +
-      (correct ? '' : '<div style="margin-bottom:6px"><strong>Answer:</strong> ' + esc(ansTxt) + '</div>') + esc(q.why);
+      (correct ? '' : '<div style="margin-bottom:6px"><strong>Answer:</strong> ' + questionHtml(q, ansTxt) + '</div>') + questionHtml(q, q.why);
     if (q.selfCheck) w.innerHTML = '<b>' + (correct ? 'Marked correct.' : 'Queued for review.') + '</b>';
     w.innerHTML += retiredNoteHtml(q);
     card.appendChild(w);
@@ -988,10 +988,10 @@ function showExamReport(pct) {
       var chn = questionChapter(q);
       var ans = q.k === 'fill' ? q.a[0] : q.c[q.a];
       h += '<div class="note" style="margin-bottom:8px">' +
-        '<b style="font-family:var(--pixel);font-size:8px">Ch ' + chn + '</b><br>' + esc(q.q) +
+        '<b style="font-family:var(--pixel);font-size:8px">Ch ' + chn + '</b><br>' + questionHtml(q, q.q) +
         (q.code ? '<pre class="qcode" style="margin-top:8px">' + esc(q.code) + '</pre>' : '') +
-        '<div style="margin-top:8px"><b>Answer:</b> ' + esc(ans) + '</div>' +
-        '<div style="margin-top:4px">' + esc(q.why) + '</div></div>';
+        '<div style="margin-top:8px"><b>Answer:</b> ' + questionHtml(q, ans) + '</div>' +
+        '<div style="margin-top:4px">' + questionHtml(q, q.why) + '</div></div>';
     }
     h += '</div>';
   } else {

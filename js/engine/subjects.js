@@ -212,12 +212,31 @@ function bossAfter(e) {
 
 function isChampion(e) { return !!e.champion || e.id === 'champ'; }
 
-function bossOpen(e) { return badgeCount() >= bossAfter(e); }
+/* A subject with open topics (the Converging Isles) never locks a gym, a route
+   or an exam behind badges: you study whatever the course is on this week, in
+   any order. Badges still record what you have beaten. */
+function topicsOpen() {
+  var def = subjectDef();
+  return !!(def && def.openTopics);
+}
+
+function bossOpen(e) { return topicsOpen() || badgeCount() >= bossAfter(e); }
 
 function bossBeaten(e) { return !!(S && S.elite && S.elite[e.id]); }
 
+/* Where gym n sits on the difficulty ramp - normally just n. With open topics
+   the gyms come in any order, so the ramp follows how far you have actually
+   come: a gym fights like the next badge you are due, and never harder than it
+   would in the fixed order. Bosses read the same ramp through bossAfter. */
+function difficultySlot(n) {
+  n = Number(n);
+  if (!S || !topicsOpen()) return n;
+  return Math.min(n, badgeCount() + 1);
+}
+
 /* The unbeaten boss standing between you and gym n, if there is one. */
 function gymBlockedBy(n) {
+  if (topicsOpen()) return null;
   var list = ELITE || [];
   for (var i = 0; i < list.length; i++) {
     if (bossAfter(list[i]) < n && !bossBeaten(list[i])) return list[i];

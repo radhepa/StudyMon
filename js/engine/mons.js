@@ -264,11 +264,14 @@ var BST_FLOOR_MIN = 320, BST_FLOOR_MAX = 600;
 var ACE_BONUS = 3;             // a leader's ace sits above the rest of the team
 var SCALE_UNDERCUT = 3;        // how far below your best the scaling aims
 
-/* How far through the region a gym sits, 0 for the first and 1 for the last. */
+/* How far through the region a gym sits, 0 for the first and 1 for the last.
+   In a region with open topics that is how far through YOUR run it sits - see
+   difficultySlot in subjects.js. */
 function chapterProgress(n) {
   var total = CHAPTERS.length;
   if (total < 2) return 0;
-  return Math.max(0, Math.min(1, (Number(n) - 1) / (total - 1)));
+  var slot = typeof difficultySlot === 'function' ? difficultySlot(n) : Number(n);
+  return Math.max(0, Math.min(1, (slot - 1) / (total - 1)));
 }
 
 function gymLevelFloor(n) {

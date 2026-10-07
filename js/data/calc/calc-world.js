@@ -395,9 +395,10 @@ window.CALC_SUBJECT = {
   region: 'The Converging Isles',
   book: 'MA 16200 - Calculus II Field Manual',
   blurb: 'Ten quizzes, three evening exams, one final. The gyms are the quizzes.',
-  mapIntro: 'Ten gyms, one per quiz on the real syllabus. Three evening exams stand ' +
-    'between them at the points the course sits them, and each one tests the lessons ' +
-    'no quiz covers. You cannot walk past an exam you have not sat. The Final is last.',
+  mapIntro: 'Ten gyms, one per quiz on the real syllabus, with the three evening exams ' +
+    'and the Final at the points the course sits them. Every gym, route and exam is open ' +
+    'from the start: study whatever your class is on this week, in any order. A gym ' +
+    'fights like the next badge you are due, whichever one you pick.',
   CHAPTERS: window.CALC_CHAPTERS,
   QBANK: null,                 // filled by calc-questions.js
   GYM_DIALOGUE: window.CALC_GYM_DIALOGUE,
@@ -405,6 +406,11 @@ window.CALC_SUBJECT = {
   LOCATIONS: window.CALC_LOCATIONS,
   EXAM_CHAPTERS: window.CALC_EXAM_CHAPTERS,
   TOWNSFOLK: null,             // filled by calc-townsfolk.js
+
+  /* No gym, route or exam waits on badges here (see topicsOpen in subjects.js).
+     A real course does not let you skip a quiz week, so the game should never
+     refuse to drill the topic that is on this week. */
+  openTopics: true,
 
   /* Review is built for exposure rather than for drilling one answer until it
      sticks: a question that was answered is left alone for a good while, so what
@@ -432,8 +438,10 @@ function calcGymForLesson(n) {
   return null;
 }
 
-/* The exam that stands between you and the next gym, if one is unbeaten. */
+/* The exam that stands between you and the next gym, if one is unbeaten.
+   Nothing stands anywhere while the Isles keep their topics open. */
 function calcExamBlocking(gymNumber) {
+  if (CALC_SUBJECT.openTopics) return null;
   for (var i = 0; i < CALC_ELITE.length; i++) {
     var e = CALC_ELITE[i];
     if (e.after < gymNumber && !(S && S.elite && S.elite[e.id])) return e;
