@@ -27,6 +27,9 @@ function reviewPlan() {
 function shuffledChoiceOrder(q) {
   var order = (q.c || []).map(function (_, i) { return i; });
   if (q.k === 'fill' || q.selfCheck || order.length < 2) return order;
+  // True / False always reads in that order: a shuffle there only misleads
+  if (order.length === 2 && q.c.indexOf('True') >= 0 && q.c.indexOf('False') >= 0)
+    return [q.c.indexOf('True'), q.c.indexOf('False')];
   for (var i = order.length - 1; i > 0; i--) {
     var j = Math.floor(Math.random() * (i + 1));
     var tmp = order[i]; order[i] = order[j]; order[j] = tmp;

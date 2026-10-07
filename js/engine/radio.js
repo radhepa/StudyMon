@@ -864,7 +864,7 @@ function radioChip() {
   if (RADIO.ambOn && amb) status.push(amb.icon + ' ' + amb.name);
   return '<button type="button" id="radio-chip" class="chip radio-chip' + (status.length ? ' live' : '') + '" ' +
     'aria-haspopup="dialog" aria-expanded="' + RADIO.panelOpen + '" aria-controls="radio-panel" ' +
-    'onclick="radioTogglePanel(event)" title="StudyMon Radio">' +
+    'onclick="radioTogglePanel(event)" title="' + esc('StudyMon Radio' + (status.length ? ': ' + status.join(' · ') : '')) + '">' +
     '<span aria-hidden="true">📻</span> Radio' +
     (status.length ? '<span class="radio-chip-now">' + esc(status.join(' · ')) + '</span>' : '') + '</button>';
 }

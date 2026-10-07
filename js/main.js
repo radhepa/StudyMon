@@ -8,6 +8,19 @@ function fleeToMap() {
   showScreen('map'); renderMap();
 }
 
+/* The nav dock and the ferry leave the battle screen too, and leaving a gym,
+   exam or rematch abandons it, so they ask first, as "Leave battle" does.
+   Capture phase, so a "no" stops the click before the button's own handler. */
+document.addEventListener('click', function (e) {
+  if (CUR !== 'battle' || !B || B.over || B.kind === 'wild') return;
+  var t = e.target && e.target.closest ? e.target.closest('#nav button, .region-chip') : null;
+  if (!t) return;
+  if (!confirm('Leave this battle? You will not earn a win or a battle reward.')) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+}, true);
+
 /* Keyboard: 1-6 or A-F answers, Enter continues. Makes drilling fast.
    Choices are shuffled on screen while their ids keep the bank's order, so a
    key picks the button in that position on screen, never #ch0 by id. */
@@ -51,10 +64,12 @@ document.addEventListener('DOMContentLoaded', function () {
       if (!this.files || !this.files[0]) return;
       var f = this.files[0];
       this.value = '';
+      if (hasSave() && !confirm('Replace your current game with the save in "' + f.name + '"? ' +
+          'Your current game is kept as a backup.')) return;
       importSave(f, function (err) {
-        if (err) { toast('Import failed: ' + err.message); return; }
+        if (err) { toast('Import failed: ' + err.message + '.'); return; }
         toast('Save imported.');
-        showScreen('map'); renderMap();
+        enterLoadedGame();
       });
     });
   }

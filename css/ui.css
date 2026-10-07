@@ -233,7 +233,7 @@
 .pc-slot .s-nm { font-weight: 700; font-size: 13px; line-height: 1.25; }
 .pc-slot .s-lv { font-size: 11px; color: var(--ink-soft); }
 .pc-slot .s-txt { min-width: 0; }
-.pc-slot .s-nm, .pc-slot .s-lv { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pc-slot .s-nm, .pc-slot .s-lv { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 .pc-boxhead { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
 .pc-boxhead .pc-title { font-weight: 700; font-size: 15px; }
@@ -874,3 +874,33 @@ button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visi
 /* Keep the spaces in answer choices. Several C questions test printf field
    widths ("   42|" against "42|"), which collapsed whitespace made identical. */
 .choice .k + span { white-space: pre-wrap; }
+
+/* Laptop screens. The scene gives up some height so the log and your moves
+   still fit under it, above the nav dock; the art's ratio holds because the
+   cap is on the width, as above. The four moves sit in one row. */
+@media (min-width: 761px) {
+  #battlefield { max-width: calc(min(62vh, max(300px, 100vh - 390px)) * 1424 / 748); }
+  #battlelog { max-height: 132px; padding: 12px 20px; }
+}
+@media (min-width: 1000px) {
+  #quiz .moves { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  #quiz .move .mv-bot { flex-wrap: wrap; gap: 2px 8px; }
+}
+
+/* Accuracy bars: a pale track and a strong fill, so an empty bar reads as
+   empty. The dark track with an olive fill made 0% look like a full bar. */
+.bar-out { background: #eadcbd; box-shadow: inset 0 0 0 1px #b99a6b; }
+.bar-in { background: linear-gradient(90deg, #5f8f4a, #9fb455); }
+
+/* Top bar on laptop screens: one row of chips instead of two, with less space
+   under it. (This file loads before radio.css and pokedoro.css, hence #app.) */
+@media (min-width: 761px) {
+  #app #topbar { min-height: 0; padding-bottom: 14px; margin-bottom: 22px; gap: 6px; }
+  #app #topbar .logo { font-size: 27px; margin-right: 6px; }
+  #app #topbar .chip { font-size: 14px; padding: 7px 10px; }
+  #app #topbar .caught-chip { padding: 8px 12px; }
+  #app #topbar .chip.region-chip { font-size: 14px; padding: 7px 10px; }
+  /* the song's name moves to the chip's tooltip and the radio panel; its
+     pulsing dot stays, so the chip keeps one width whatever is playing */
+  #app #topbar .radio-chip-now { width: 14px; max-width: 14px; font-size: 0; padding-left: 6px; }
+}

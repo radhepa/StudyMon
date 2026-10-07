@@ -536,8 +536,8 @@ function renderFriends(){
     var eligible=typeof castEntries==='function'?castEntries({befriendable:true}):[];
     var known=eligible.filter(function(entry){return S.friends[entry.id]&&S.friends[entry.id].met;}).length,cast=eligible.length;
     h+='<div class="panel friend-empty"><h3>Nobody yet</h3>'+
-       '<p>You have not made a friend so far. Everyone starts as a stranger in the region , '+
-       'battle them, talk to them, rest at their Centre, and when someone reaches a full heart '+
+       '<p>You have not made a friend so far. Everyone starts as a stranger in the region. '+
+       'Battle them, talk to them, rest at their Centre, and when someone reaches a full heart '+
        'they move in here.</p><p class="small">'+known+' of '+cast+' people met.</p>'+
        (TOWN_UI_ENABLED ? '<button class="primary" onclick="openTown()">Go and meet someone</button>' : '') + '</div>';
   }

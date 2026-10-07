@@ -32,7 +32,8 @@ function showScreen(name) {
   $$('.screen').forEach(function (s) { s.classList.toggle('on', s.id === 's-' + name); });
   $$('#nav button').forEach(function (b) { b.classList.toggle('sel', b.dataset.scr === name); });
   $('#nav').style.display = (name === 'title' || name === 'starter') ? 'none' : 'flex';
-  $('#topbar').style.display = (name === 'title') ? 'none' : 'flex';
+  // no chips before there is a partner: the ferry would sail off with an empty party
+  $('#topbar').style.display = (name === 'title' || name === 'starter') ? 'none' : 'flex';
   window.scrollTo(0, 0);
   renderTopbar();
 }
@@ -60,12 +61,25 @@ function renderTopbar() {
 function hpPct(m) { return Math.max(0, Math.round(m.hp / maxHp(m) * 100)); }
 function hpClass(m) { var p = hpPct(m); return p <= 20 ? 'low' : p <= 50 ? 'mid' : ''; }
 
+/* The scene is rebuilt only when a different Pokemon steps in. Otherwise the
+   HP plates are updated in place, so a hit's shake, a faint's fade and the HP
+   bar's slide all get to play instead of being replaced in the same frame. */
 function renderBattle() {
   if (!B) return;
   var f = foe(), y = B.you;
   // the scene art is shared; a filter per battle kind keeps them distinct
   var field = $('#battlefield');
   field.className = 'bf-' + (B.kind || 'wild');
+  var key = B.foeIx + ':' + f.id + ':' + (f.shiny ? 1 : 0) + ':' + S.party.indexOf(y) + ':' + y.id;
+  if (field._battle === B && field._key === key && $('#foeimg') && $('#youimg')) {
+    updateHpBox(field.querySelector('.hpbox.foe'), f);
+    updateHpBox(field.querySelector('.hpbox.you'), y);
+    $('#btitle').textContent = B.title;
+    renderTopbar();
+    return;
+  }
+  field._battle = B;
+  field._key = key;
   $('#battlefield').innerHTML =
     '<div class="hpbox foe"><div class="nm"><span>' + esc(monName(f).toUpperCase()) + '</span><span>Lv' + f.lvl + '</span></div>' +
     typePills(dexOf(f.id).types) +
@@ -84,6 +98,17 @@ function renderBattle() {
 
   $('#btitle').textContent = B.title;
   renderTopbar();
+}
+
+function updateHpBox(box, m) {
+  if (!box) return;
+  var nm = box.querySelectorAll('.nm span');
+  if (nm[0]) nm[0].textContent = monName(m).toUpperCase();
+  if (nm[1]) nm[1].textContent = 'Lv' + m.lvl;
+  var fill = box.querySelector('.hpfill');
+  if (fill) { fill.className = 'hpfill ' + hpClass(m); fill.style.width = hpPct(m) + '%'; }
+  var num = box.querySelector('.hpnum');
+  if (num) num.textContent = m.hp + '/' + maxHp(m);
 }
 
 /* ---- seating sprites on the battle platforms -------------------------------
@@ -186,11 +211,15 @@ function hitAnim(sel) {
 
 /* ---- modal --------------------------------------------------------------- */
 
-function modal(html) {
+/* onClose runs after the modal is dismissed any way at all: its own button,
+   Escape, or a click outside it. */
+var MODAL_ON_CLOSE = null;
+function modal(html, onClose) {
   var box = $('#modal .box');
   box.classList.remove('human-town-map-box');
   box.innerHTML = html;
   $('#modal').classList.add('on');
+  MODAL_ON_CLOSE = onClose || null;
 }
 function closeModal() { $('#modal').classList.remove('on'); }
 
@@ -208,7 +237,30 @@ function closeModal() {
     if (notice && notice.done) notice.done();
     return;
   }
+  var after = MODAL_ON_CLOSE;
+  MODAL_ON_CLOSE = null;
   $('#modal').classList.remove('on');
+  // after the button's own handler has run, so a button that navigates wins
+  setTimeout(function () {
+    if (after) after();
+    leaveFinishedBattle();
+  }, 0);
+}
+
+/* A battle that is over has nothing left on its screen to press, so closing
+   its result with Escape or a click outside goes on to the map, as the result's
+   own button does, instead of stranding you on a dead battlefield. */
+function leaveFinishedBattle() {
+  if (CUR !== 'battle' || (B && !B.over) || $('#modal').classList.contains('on')) return;
+  showScreen('map'); renderMap();
+}
+
+/* For a modal that finishes a screen: if it is dismissed without its button,
+   go where the button would have gone. */
+function onToMapFrom(screen) {
+  return function () {
+    if (CUR === screen && !$('#modal').classList.contains('on')) { showScreen('map'); renderMap(); }
+  };
 }
 
 function renderEvolutionNotice() {
@@ -336,7 +388,7 @@ function shuffle(arr) {
 }
 
 function newGame() {
-  if (hasSave() && !confirm('Start a new game? Your current save will be erased.')) return;
+  if (hasSave() && !confirm('Start a new game? Your current save is replaced once you choose a starter.')) return;
   S = freshSave();
   bindProgress('c');          // start in the C region; the Isles are a boat ride away
   showScreen('starter');
@@ -345,6 +397,18 @@ function newGame() {
 
 function continueGame() {
   if (!loadGame()) { toast('No save found.'); return; }
+  enterLoadedGame();
+}
+
+/* A save with nobody in its party (an empty or damaged file, or one written
+   before a partner was chosen) goes to the starter picker rather than to a
+   map where every battle says the whole party has fainted. */
+function enterLoadedGame() {
+  if (!S.party || !S.party.length) {
+    showScreen('starter'); renderStarter();
+    toast('Choose a partner to carry on.');
+    return;
+  }
   showScreen('map'); renderMap();
 }
 
@@ -379,7 +443,8 @@ function pickStarter(id) {
     '<img src="' + artUrl(id) + '" alt="">' +
     '<p class="muted">Head to Route 1. Every attack you make will cost you a question from ' +
     esc(subjectDef().short || 'C') + ', the harder the move, the harder the question.</p>' +
-    '<button class="primary" onclick="closeModal();showScreen(\'map\');renderMap()">Let\'s go ▶</button>');
+    '<button class="primary" onclick="closeModal();showScreen(\'map\');renderMap()">Let\'s go ▶</button>',
+    onToMapFrom('starter'));
 }
 
 /* ---- map ----------------------------------------------------------------- */
@@ -782,6 +847,12 @@ var STUDY_CH = 1;
 
 function goStudy(n) { STUDY_CH = n; showScreen('study'); renderStudy(); }
 
+/* The exam-only chapters have no number of their own. Naming them by the
+   lessons they cover keeps the four buttons from being identical stars. */
+function examNoteLabel(c) {
+  return c.lessons && c.lessons.length ? 'L' + c.lessons.join('/') : String(c.n);
+}
+
 function renderStudy() {
   var c = chapterByNumber(STUDY_CH) || CHAPTERS[0];
   var def = subjectDef();
@@ -804,7 +875,7 @@ function renderStudy() {
   studiableChapters().forEach(function (x) {
     h += '<button class="' + (x.n === STUDY_CH ? 'primary' : 'ghost') +
       (x.examOnly ? ' exam-ch' : '') + '" onclick="goStudy(' + x.n + ')" title="' +
-      esc(x.title) + '">' + (x.examOnly ? '✦' : x.n) + '</button>';
+      esc(x.title) + '">' + (x.examOnly ? '✦ ' + examNoteLabel(x) : x.n) + '</button>';
   });
   h += '</div>';
 
@@ -822,7 +893,9 @@ function renderStudy() {
     (c.thirdEdition ? ' · Third-edition reference: ' + esc(c.thirdEdition) : '') + '</p>';
 
   h += '<div class="notes">';
-  for (var j = 0; j < (c.notes || []).length; j++) h += '<div class="note">' + esc(c.notes[j]) + '</div>';
+  // Calculus notes carry formulas, typeset like the question cards
+  var noteHtml = activeSubject() === 'calc' && typeof mathHtml === 'function' ? mathHtml : esc;
+  for (var j = 0; j < (c.notes || []).length; j++) h += '<div class="note">' + noteHtml(c.notes[j]) + '</div>';
   h += '</div>';
 
   // The self-check coding exercise belongs to the C curriculum only.
@@ -975,7 +1048,9 @@ function renderDrill() {
   h += '</div><div class="row" style="margin-top:12px"><button class="ghost" onclick="endDrill()">End session</button></div>';
   $('#s-drill').innerHTML = h;
   var f = $('#dfill');
-  if (f) { f.focus(); f.onkeydown = function (e) { if (e.key === 'Enter') drillFill(); }; }
+  // preventDefault: otherwise the same Enter presses the Next button that the
+  // answer focuses, and the explanation is skipped before it is seen
+  if (f) { f.focus(); f.onkeydown = function (e) { if (e.key === 'Enter') { e.preventDefault(); drillFill(); } }; }
 }
 
 function revealDrillSelfCheck() {
@@ -989,7 +1064,12 @@ function revealDrillSelfCheck() {
   if (gotIt) gotIt.focus();
 }
 
-function drillFill() { var el = $('#dfill'); if (el) drillAnswer(el.value, true); }
+function drillFill() {
+  var el = $('#dfill');
+  if (!el) return;
+  if (!el.value.trim()) { toast('Type an answer first.'); el.focus(); return; }
+  drillAnswer(el.value, true);
+}
 
 function drillAnswer(choice, isFill) {
   if (!D || D.answered) return;
@@ -1049,12 +1129,14 @@ function drillAnswer(choice, isFill) {
 }
 
 function endDrill() {
+  if (!D) return;
   var pct = D.n ? Math.round(D.right / D.n * 100) : 0;
   if (D.exam) { showExamReport(pct); return; }
   modal('<h2>Session over</h2><p style="font-size:16px">' + D.right + ' of ' + D.n + ' correct (' + pct + '%)</p>' +
     '<p class="muted">Everything you got wrong is queued for review and will come back ' +
       (reviewPlan() ? 'in about ' + reviewPlan().wrong + ' questions.' : 'soon.') + '</p>' +
-    '<button class="primary" onclick="closeModal();showScreen(\'map\');renderMap()">Back to the map</button>');
+    '<button class="primary" onclick="closeModal();showScreen(\'map\');renderMap()">Back to the map</button>',
+    onToMapFrom('drill'));
   D = null;
 }
 
@@ -1063,7 +1145,7 @@ function endDrill() {
 function showExamReport(pct) {
   var mins = Math.max(1, Math.round((Date.now() - D.startedAt) / 60000));
   var wrong = D.exam.filter(function (q) { return q._got === false; });
-  var h = '<h2>Mock Exam , Result</h2>' +
+  var h = '<h2>Mock Exam Result</h2>' +
     '<div class="statgrid" style="margin-bottom:14px">' +
     box(pct + '%', 'Score') + box(D.right + '/' + D.n, 'Correct') + box(mins + ' min', 'Time taken') +
     '</div>';

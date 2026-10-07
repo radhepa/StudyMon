@@ -64,6 +64,11 @@ function check(n,ok,d){results.push({n,ok});console.log((ok?'PASS  ':'FAIL  ')+n
   // --- ferry --------------------------------------------------------------
   t('ferry',()=>{
     switchSubject('c');
+    // no partner yet (the starter screen): the ferry stays in port
+    S.party=[];
+    sailTo('calc');
+    o.ferryNeedsPartner=activeSubject()==='c';
+    S.party=[makeMon(25,10)];
     const from=activeSubject();
     sailTo('calc');
     const mid=activeSubject();
@@ -173,6 +178,7 @@ function check(n,ok,d){results.push({n,ok});console.log((ok?'PASS  ':'FAIL  ')+n
  check('friendship cannot go below zero', r.friendFloor===0, String(r.friendFloor));
  check('friendship is capped', r.friendCeiling===1000, String(r.friendCeiling));
  check('the ferry sails both ways', r.ferry && r.ferry.mid==='calc' && r.ferry.back==='c', JSON.stringify(r.ferry));
+ check('the ferry will not sail before a partner is chosen', r.ferryNeedsPartner);
  check('the team sails with you', r.ferryKeepsParty===true);
  check('badges stay in the region that earned them',
        r.ferryLeavesBadges===true && r.ferryRestoresBadges===true,

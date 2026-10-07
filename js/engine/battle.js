@@ -49,22 +49,68 @@ function startBattle(cfg) {
   if (typeof journalBattle === 'function') journalBattle();
   markSeen(foe().id);
   saveGame();
+  $('#quiz').style.minHeight = '';
   showScreen('battle');
   renderBattle();
   log(cfg.kind === 'wild'
     ? (foe().shiny
-        ? '<span class="good">✦ The colours are all wrong... a SHINY ' + monName(foe()).toUpperCase() + ' appeared! ✦</span>'
+        ? '<span class="good">✦ The colours are all wrong... a SHINY ' + logName(foe()) + ' appeared! ✦</span>'
         : foe().isLegendary
-        ? '<span class="good">A rare visitor! ' + monName(foe()).toUpperCase() + ' appeared!</span>'
-        : 'A wild ' + monName(foe()).toUpperCase() + ' appeared!')
-    : (B.leader ? B.leader + ' sent out ' + monName(foe()).toUpperCase() + '!'
-      : monName(foe()).toUpperCase() + ' wants to battle!'));
+        ? '<span class="good">A rare visitor! ' + logName(foe()) + ' appeared!</span>'
+        : 'A wild ' + logName(foe()) + ' appeared!')
+    : (B.leader ? B.leader + ' sent out ' + logName(foe()) + '!'
+      : logName(foe()) + ' wants to battle!'));
   playCry(foe().id);
   if (cfg.kind === 'wild' && foe().shiny) toast('✦ A shiny! Roughly one in a thousand. Do not let it get away.');
   showMoveMenu();
 }
 
 function foe() { return B.foes[B.foeIx]; }
+
+/* Names go into the log as HTML, and a nickname can hold anything. */
+function logName(m) { return esc(monName(m).toUpperCase()); }
+
+/* ---- keeping the battle on screen -----------------------------------------
+   On a laptop the scene, the log and the controls do not all fit above the
+   nav dock, so each step scrolls just far enough to show what it needs: the
+   scene while a turn plays out, the question or the moves when it is your
+   turn. The start of `last` matters most, then its end, then `first`. */
+function battleFrame(first, last) {
+  if (CUR !== 'battle' || !first || !last) return;
+  var y = window.scrollY, top = 8;
+  var nav = $('#nav');
+  var navTop = nav && getComputedStyle(nav).display !== 'none' ? nav.getBoundingClientRect().top : window.innerHeight;
+  var bottom = Math.min(window.innerHeight, navTop) - 12;
+  var a = first.getBoundingClientRect().top + y;
+  var lr = last.getBoundingClientRect();
+  var target = y;
+  if (a - target < top) target = a - top;
+  if (lr.bottom + y - target > bottom) target = lr.bottom + y - bottom;
+  if (lr.top + y - target < top) target = lr.top + y - top;
+  target = Math.max(0, Math.round(target));
+  if (Math.abs(target - y) < 4) return;
+  var calm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  window.scrollTo({ top: target, behavior: calm ? 'auto' : 'smooth' });
+}
+
+/* While a turn plays out #quiz is empty. It keeps its height meanwhile, so the
+   page never shrinks under the scroll position and snaps it upwards; once the
+   next controls are drawn and framed, the hold is let go as far as the scroll
+   position allows. */
+function battleHoldHeight() {
+  var q = $('#quiz');
+  if (q) q.style.minHeight = Math.max(q.offsetHeight, parseFloat(q.style.minHeight) || 0) + 'px';
+}
+
+function battleReleaseHeight() {
+  var q = $('#quiz');
+  if (!q || !q.style.minHeight) return;
+  var y = window.scrollY, held = parseFloat(q.style.minHeight) || 0;
+  q.style.minHeight = '';
+  var short = y + window.innerHeight - document.documentElement.scrollHeight;
+  if (short > 0) q.style.minHeight = Math.min(held, q.offsetHeight + short) + 'px';
+  if (Math.abs(window.scrollY - y) > 1) window.scrollTo(0, y);
+}
 
 function markSeen(id) { S.seen[id] = true; }
 
@@ -100,12 +146,18 @@ function showMoveMenu() {
   if (B.kind === 'wild') h += '<button class="ghost grow" onclick="runAway()">→ Run</button>';
   h += '</div>';
   $('#quiz').innerHTML = h;
+  B.choosing = true;
+  battleFrame($('#battlefield'), $('#quiz').lastElementChild);
+  battleLater(battleReleaseHeight, 700);
 }
 
+/* One pick per menu: a quick double or triple click on a move used to draw a
+   fresh question for every click and burn the ones before it. */
 function chooseMove(i) {
-  if (B.over) return;
+  if (B.over || !B.choosing) return;
   var mv = movesOf(B.you)[i];
   if (!mv || mv.locked) return;
+  B.choosing = false;
   B.pendingMove = mv;
   askQuestion(B.pendingMove.tier);
 }
@@ -168,9 +220,12 @@ function renderQuestion() {
 
   var fi = $('#fillin');
   if (fi) {
-    fi.focus();
-    fi.onkeydown = function (e) { if (e.key === 'Enter') submitFill(); };
+    fi.focus({ preventScroll: true });
+    // preventDefault: the answer moves focus to Continue, and the same Enter
+    // would otherwise press it and skip straight past the explanation
+    fi.onkeydown = function (e) { if (e.key === 'Enter') { e.preventDefault(); submitFill(); } };
   }
+  battleFrame($('#battlefield'), $('#quiz .qcard'));
 }
 
 function revealSelfCheck() {
@@ -181,12 +236,15 @@ function revealSelfCheck() {
   if (solution) solution.hidden = false;
   showAllHints();
   var gotIt = $('#ch0');
-  if (gotIt) gotIt.focus();
+  if (gotIt) gotIt.focus({ preventScroll: true });
+  battleFrame($('#battlefield'), $('#quiz .qcard'));
 }
 
 function submitFill() {
   var el = $('#fillin');
   if (!el) return;
+  // an empty box is a slip, not an answer: it should not cost the turn
+  if (!el.value.trim()) { toast('Type an answer first.'); el.focus(); return; }
   answer(el.value, true);
 }
 
@@ -234,7 +292,8 @@ function answer(choice, isFill) {
   next.style.marginTop = '12px';
   next.innerHTML = '<button class="primary grow" id="contbtn" onclick="resolveTurn(' + correct + ')">Continue ▶</button>';
   card.appendChild(next);
-  var cb = $('#contbtn'); if (cb) cb.focus();
+  var cb = $('#contbtn'); if (cb) cb.focus({ preventScroll: true });
+  battleFrame($('#battlefield'), card);
 
   if (gotBall === 'streak') toast('Streak of ' + S.streak + '! Prize money ₵' + (40 + S.streak * 2) + '.');
   saveGame();
@@ -245,10 +304,13 @@ function answer(choice, isFill) {
 function resolveTurn(correct) {
   if (!B || B.over || B.turnResolving) return;
   B.turnResolving = true;
+  // the answered card goes; the scene comes back into view for the turn
+  battleHoldHeight();
+  $('#quiz').innerHTML = '';
+  battleFrame($('#battlefield'), $('#battlelog'));
   if (B.catching) { B.catching = false; resolveCatch(correct); return; }
   B.turn++;
   var you = B.you, f = foe(), mv = B.pendingMove;
-  $('#quiz').innerHTML = '';
 
   if (correct) {
     var bonus = 1;
@@ -256,7 +318,7 @@ function resolveTurn(correct) {
     else if (S.streak >= 5) bonus *= 1.1;
     var r = damageOf(you, f, mv, bonus);
     f.hp = Math.max(0, f.hp - r.dmg);
-    var line = monName(you).toUpperCase() + ' used ' + mv.label.toUpperCase() + '!';
+    var line = logName(you) + ' used ' + mv.label.toUpperCase() + '!';
     if (r.eff === 0) line += ' <span class="hit">' + effLabel(0) + '</span>';
     else {
       line += ' <span class="good">' + r.dmg + ' damage.</span>';
@@ -266,7 +328,7 @@ function resolveTurn(correct) {
     log(line);
     hitAnim('#foeimg');
   } else {
-    log('<span class="hit">' + monName(you).toUpperCase() + ' hesitated - the move failed!</span>');
+    log('<span class="hit">' + logName(you) + ' hesitated - the move failed!</span>');
   }
 
   renderBattle();
@@ -297,7 +359,7 @@ function foeTurn(punish) {
   }
   var r = damageOf(f, you, best, punish ? 1.5 : 0.35);
   you.hp = Math.max(0, you.hp - r.dmg);
-  var line = 'Foe ' + monName(f).toUpperCase() + ' used ' + best.label.toUpperCase() + '!';
+  var line = 'Foe ' + logName(f) + ' used ' + best.label.toUpperCase() + '!';
   if (r.eff === 0) line += ' ' + effLabel(0);
   else {
     line += ' <span class="hit">' + r.dmg + ' damage.</span>';
@@ -318,7 +380,7 @@ function foeTurn(punish) {
 function foeFainted() {
   var f = foe();
   var img = $('#foeimg'); if (img) img.classList.add('faint');
-  log('Foe ' + monName(f).toUpperCase() + ' fainted!');
+  log('Foe ' + logName(f) + ' fainted!');
 
   var gain = Math.floor((dexOf(f.id).bst / 6) * f.lvl / 4) + 12;
   if (B.kind !== 'wild') gain = Math.floor(gain * (B.kind === 'rematch' && typeof LEADER_REMATCH_EXP !== 'undefined' ? LEADER_REMATCH_EXP : 1.6));
@@ -353,7 +415,7 @@ function awardBattleXp(fullExp) {
     var award = awards[i];
     var recipientName = monName(award.mon);
     var events = giveXp(award.mon, award.amount);
-    log(recipientName.toUpperCase() + ' gained ' + award.amount + ' EXP.');
+    log(esc(recipientName.toUpperCase()) + ' gained ' + award.amount + ' EXP.');
     handleXpAward(award.mon, events, evolutions);
   }
   renderBattle();
@@ -364,9 +426,9 @@ function awardBattleXp(fullExp) {
 function handleXpAward(recipient, evs, evolutions) {
   for (var i = 0; i < evs.length; i++) {
     var e = evs[i];
-    if (e.kind === 'level') log('<span class="good">' + (e.name || monName(recipient)).toUpperCase() + ' grew to level ' + e.lvl + '!</span>');
+    if (e.kind === 'level') log('<span class="good">' + esc((e.name || monName(recipient)).toUpperCase()) + ' grew to level ' + e.lvl + '!</span>');
     if (e.kind === 'evolve') {
-      log('<span class="good">' + e.from.toUpperCase() + ' evolved into ' + e.to.toUpperCase() + '!</span>');
+      log('<span class="good">' + esc(e.from.toUpperCase()) + ' evolved into ' + esc(e.to.toUpperCase()) + '!</span>');
       S.caught[e.id] = true; S.seen[e.id] = true;
       evolutions.push(e);
     }
@@ -379,14 +441,14 @@ function advanceAfterFoeFaint() {
   B.participants = [B.you];
   markSeen(foe().id);
   renderBattle();
-  log((B.leader || 'The opponent') + ' sent out ' + monName(foe()).toUpperCase() + '!');
+  log((B.leader || 'The opponent') + ' sent out ' + logName(foe()) + '!');
   playCry(foe().id);
   showMoveMenu();
 }
 
 function youFainted() {
   var img = $('#youimg'); if (img) img.classList.add('faint');
-  log('<span class="hit">' + monName(B.you).toUpperCase() + ' fainted!</span>');
+  log('<span class="hit">' + logName(B.you) + ' fainted!</span>');
   battleLater(function () {
     if (!partyAlive()) { loseBattle(); return; }
     openSwitch(true);
@@ -410,6 +472,8 @@ function openSwitch(forced) {
   if (!forced) h += '<div class="row" style="margin-top:10px"><button class="ghost grow" onclick="showMoveMenu()">Back</button></div>';
   h += '</div>';
   $('#quiz').innerHTML = h;
+  battleFrame($('#battlefield'), $('#quiz .qcard'));
+  battleLater(battleReleaseHeight, 700);
 }
 
 function doSwitch(i) {
@@ -418,7 +482,7 @@ function doSwitch(i) {
   B.you = m;
   if (!B.participants) B.participants = [];
   if (B.participants.indexOf(m) < 0) B.participants.push(m);
-  log('Go, ' + monName(m).toUpperCase() + '!');
+  log('Go, ' + logName(m) + '!');
   playCry(m.id);
   renderBattle();
   var img = $('#youimg'); if (img) img.classList.remove('faint');
@@ -455,14 +519,20 @@ function openBattleItemMenu() {
 /* Compatibility entry point retained for older inline handlers and tests. */
 function openPotionMenu() { openBattleItemMenu(); }
 
+/* Using an item is your turn: the menu closes and the foe answers, and a
+   second click before it does is ignored rather than spending another. */
 function useBattleItem(key) {
   var item = itemById(key);
   if (!item || !itemHasContext(item, 'battle')) return false;
+  if (B && (B.over || B.choosing === false)) return false;
   if (!haveItem(key)) { toast('No ' + item.name + 's left.'); return false; }
   var result = performItemEffect(key, 'battle', B.you);
   if (!result) return false;
   if (item.effectHandler === 'battle-heal') {
-    log('You used a ' + item.name + '. ' + result.message.toUpperCase());
+    B.choosing = false;
+    battleHoldHeight();
+    $('#quiz').innerHTML = '';
+    log('You used a ' + item.name + '. ' + esc(result.message.toUpperCase()));
     renderBattle();
     battleLater(function () { foeTurn(false); }, 700);
   }
@@ -582,9 +652,11 @@ function rollCatch(f, ballKey, correct) {
 function baseCatchChance(f) { return catchChanceOf(f, 'poke', true); }
 
 function tryCatch(ballKey) {
+  if (B.over || !B.choosing) return;
   ballKey = BALLS[ballKey] ? ballKey : 'poke';
   var ball = BALLS[ballKey];
   if (!ball.unlimited && !haveItem(ballKey)) { toast('No ' + ball.name + 's left.'); return; }
+  B.choosing = false;
   B.ballKey = ballKey;
   B.catching = true;
   B.pendingMove = { label: ball.name, tier: 2, type: 'normal', power: 0 };
@@ -604,6 +676,7 @@ function askQuestionForCatch() {
   note.textContent = 'A correct answer improves your catch chance to ' +
     Math.round(catchChanceOf(foe(), B.ballKey, true) * 100) + '%.';
   card.appendChild(note);
+  battleFrame($('#battlefield'), card);
 }
 
 function resolveCatch(correct) {
@@ -613,7 +686,7 @@ function resolveCatch(correct) {
   var roll = rollCatch(f, B.ballKey, correct);
   if (roll.critical) log('The ball flew differently...');
   if (roll.caught) {
-    log('<span class="good">Gotcha! ' + monName(f).toUpperCase() + ' was caught!</span>');
+    log('<span class="good">Gotcha! ' + logName(f) + ' was caught!</span>');
     S.caught[f.id] = true; S.seen[f.id] = true; S.totals.caught++;
     if (typeof journalCatch === 'function') journalCatch(f.id);
     if (typeof collectFirstCatch === 'function') collectFirstCatch();

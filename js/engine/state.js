@@ -258,12 +258,27 @@ function exportSave() {
   setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 500);
 }
 
+/* The save an import replaces is kept here, once per import. */
+var SAVE_IMPORT_BACKUP_KEY = 'studymon.save.before-import.v1';
+
 function importSave(file, done) {
   var fr = new FileReader();
   fr.onload = function () {
+    var o;
+    try { o = JSON.parse(fr.result); }
+    catch (e) { done(new Error('that file is not a StudyMon save')); return; }
     try {
-      var o = JSON.parse(fr.result);
-      activateSave(normalizeSave(o));
+      var save = normalizeSave(o);
+      // a species this build does not have would break the party screen and every battle
+      var strays = save.party.concat(save.box).filter(function (m) {
+        return !m || typeof m.id !== 'number' || !dexOf(m.id);
+      });
+      if (strays.length) throw new Error('that save holds Pokemon this game does not know');
+      try {
+        var current = localStorage.getItem(SAVE_KEY);
+        if (current) localStorage.setItem(SAVE_IMPORT_BACKUP_KEY, current);
+      } catch (e2) { }
+      activateSave(save);
       saveGame();
       done(null);
     } catch (e) { done(e); }

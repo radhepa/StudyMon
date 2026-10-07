@@ -78,6 +78,7 @@ function openFerry() {
 function sailTo(id) {
   var def = SUBJECTS[id];
   if (!def) { toast('No such crossing.'); return; }
+  if (!S || !S.party || !S.party.length) { toast('Choose your first partner before you set sail.'); return; }
   var first = badgesIn(id) === 0 && !(S.visited && S.visited[id]);
 
   if (!switchSubject(id)) { toast('You are already there.'); return; }
