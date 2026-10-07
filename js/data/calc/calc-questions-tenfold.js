@@ -20,6 +20,50 @@ function frac(n, d) {
   var g = gcd(n, d); n /= g; d /= g;
   return d === 1 ? String(n) : n + '/' + d;
 }
+/* The templates build text by pasting numbers in, which leaves the marks of
+   that behind: 1x, 1pi, tan^1(x), x - (-4), arctan(x/1), "= 1/4 = 1/4". Write
+   each one the way a person would, without changing what it says. Arithmetic
+   that is showing its working - 4 - (-2), 1(1) + 2(-1) - is left as it is. */
+var FUNC_NAMES = 'ln|log|exp|sin|cos|tan|sec|csc|cot|arcsin|arccos|arctan|sqrt';
+function tidy(text) {
+  if (typeof text !== 'string') return text;
+  return text
+    // a coefficient of one: 1x, 1pi, 1theta, 1e^(...), "1 ln(...)"
+    .replace(/(^|[\s(=+\-*\/\[])1(?=[a-zA-Z])(?!\d)/g, '$1')
+    .replace(new RegExp('(^|[\\s(=+\\-\\[])1 (?=(' + FUNC_NAMES + ')\\()', 'g'), '$1')
+    // a power of one: tan^1(x), u^1, n^1, (N+1)^1 - never a limit like _0^1
+    .replace(/([A-Za-z)])\^1(?![\d.])/g, '$1')
+    // x - (-4), x + (-4), x - (4), and x - (0) after a variable
+    .replace(/\(([A-Za-z]) [-+] \(0\)\)/g, '$1')
+    .replace(/\|([A-Za-z]) [-+] \(0\)\|/g, '|$1|')
+    .replace(/([A-Za-z]) ([-+]) \((-?\d+(?:\.\d+)?)\)/g, function (m, v, op, n) {
+      var neg = n.charAt(0) === '-', num = neg ? n.slice(1) : n;
+      if (Number(num) === 0) return v;
+      return v + ' ' + ((op === '-') !== neg ? '-' : '+') + ' ' + num;
+    })
+    // dividing by one
+    .replace(/\(1\/1\) /g, '')
+    .replace(/\(([A-Za-z])\/1\)/g, '($1)')
+    .replace(/\)\/1(?![\d.])/g, ')')
+    .replace(/([\w)])\/1(?![\d.])/g, '$1')
+    // one to any power is one: "1^n x^n" is x^n
+    .replace(/(^|[\s(=+\-])1\^(?:[a-z0-9]+|\([^()]*\)) ?(?=[a-zA-Z(])/g, '$1')
+    // a lone variable needs no brackets: (x)^n, e^(x)
+    .replace(/\(([A-Za-z])\)\^/g, '$1^')
+    .replace(/e\^\(([A-Za-z])\)/g, 'e^$1')
+    // ln(1) is zero
+    .replace(/(^|[\s(=])ln\(1\) \+ /g, '$1')
+    .replace(/(^|[\s(=])ln\(1\) - /g, '$1-')
+    .replace(/\b(\d+)\/1 = \1\b/g, '$1')
+    // the same value stated twice: "= 1/4 = 1/4"
+    .replace(/= ([^=\s]+) = \1(?=[.,;\s]|$)/g, '= $1')
+    .replace(/\(\s+/g, '(')
+    // a fraction coefficient, written so it cannot be misread: 9/2pi is 9pi/2
+    // and 1/2x^2 is x^2/2, never 9/(2pi); before a function it takes brackets
+    .replace(/(^|[^\w)\/.^])(\d+)\/(\d+)((?:pi|[a-z])(?:\^(?:\d+|\([^()]*\)|[a-z]))?)(?![\w(])/g,
+      function (m, pre, num, den, x) { return pre + (num === '1' ? '' : num) + x + '/' + den; })
+    .replace(/(^|[^\w)\/.^])(\d+\/\d+)(?=[a-zA-Z(])/g, '$1($2)');
+}
 function pick(correct, distractors, seed) {
   var others = [];
   (distractors || []).forEach(function (x) {
@@ -38,6 +82,9 @@ function family(meta, build) {
   var made = [];
   for (var i = 0; i < SIZE; i++) {
     var p = build(i);
+    p.q = tidy(p.q); p.why = tidy(p.why); p.correct = tidy(String(p.correct));
+    p.wrong = (p.wrong || []).map(function (w) { return tidy(String(w)); });
+    p.hints = (p.hints || []).map(tidy);
     var selected = pick(p.correct, p.wrong, i + meta.lesson);
     var id = 'k' + meta.chapter + '-ten-' + meta.lesson + '-' + meta.slug + '-' + String(i + 1).padStart(2, '0');
     var q = {
@@ -207,9 +254,13 @@ family({ chapter:91, lesson:10, slug:'hydrostatic-force', name:'Hydrostatic forc
     hints:['Pressure equals weight-density times depth.','Use a horizontal strip of area '+width+' dy.','Integrate '+(w*width)+'y from depth '+a+' to '+(a+h)+'.'] };
 });
 family({ chapter:91, lesson:11, slug:'parts-polynomial-exponential', name:'Integration by parts with exponentials', section:'8.2' }, function (i) {
-  var a=i+1, correct=(a===1?'1':'('+a+' - 1)e^'+a+' + 1');
+  var a=i+1;
+  function ke(k) { return (k === 1 ? '' : k) + 'e^' + a; }
+  // (a - 1)e^a + 1. At a = 1 the usual slips all collapse to e - 1, so use
+  // three different wrong values there instead of one value written three ways.
+  var correct=(a===1?'1':ke(a-1)+' + 1');
   return { q:'Evaluate integral_0^'+a+' x e^x dx.', correct:correct,
-    wrong:[a+'e^'+a+' - 1','e^'+a+' - 1','('+a+' + 1)e^'+a+' - 1'],
+    wrong:(a===1?['e - 1','e + 1','2e - 1']:[ke(a)+' - 1',ke(1)+' - 1',ke(a+1)+' - 1']),
     why:'With u = x and dv = e^x dx, the antiderivative is e^x(x - 1). Evaluating from 0 to '+a+' gives '+correct+'.',
     hints:['Choose the algebraic factor as u.','Take u = x and dv = e^x dx.','Use the antiderivative e^x(x - 1), then apply both bounds.'] };
 });
@@ -264,10 +315,22 @@ family({ chapter:4, lesson:14, slug:'plus-radical', name:'Substitution for sqrt(
     why:'Let x = '+a+'tan(theta), or use the standard antiderivative ln(x + sqrt(x^2 + a^2)). The lower endpoint contributes ln('+a+'), which cancels the factor '+a+' from the upper logarithm, leaving '+ans+'.',
     hints:['This is the sqrt(x^2 + a^2) form, so tangent substitution works.','Use x = '+a+'tan(theta), or the logarithmic antiderivative.','Factor '+a+' from the upper expression and subtract ln('+a+') from the lower bound.'] };
 });
+/* The usual slips on pi/(4b) - pi/(2b), b*pi/4, pi/4 - land on the answer or
+   on each other when b is 1 or 2, so take the first three that are different
+   from the answer and from one another. */
+function distinctPiSlips(b) {
+  var seen = {}, out = [];
+  seen[1 / (4 * b)] = true;
+  [[1, 2 * b], [b, 4], [1, 4], [1, b], [1, 8 * b]].forEach(function (r) {
+    var v = r[0] / r[1];
+    if (!seen[v] && out.length < 3) { seen[v] = true; out.push(frac(r[0], r[1]) + 'pi'); }
+  });
+  return out;
+}
 family({ chapter:5, lesson:15, slug:'complete-square', name:'Completing the square before integration', section:'8.4' }, function (i) {
   var c=i-3,b=(i%4)+1,lo=c,hi=c+b,ans=frac(1,4*b)+'pi';
   return { q:'Evaluate integral_'+lo+'^'+hi+' dx/((x - ('+c+'))^2 + '+(b*b)+').', correct:ans,
-    wrong:[frac(1,2*b)+'pi',frac(b,4)+'pi','pi/4'],
+    wrong:distinctPiSlips(b),
     why:'Set u = (x - ('+c+'))/'+b+'. Then dx = '+b+'du and the bounds are 0 to 1. The integral becomes (1/'+b+') integral_0^1 du/(1+u^2) = pi/'+(4*b)+' = '+ans+'.',
     hints:['The denominator is already a completed square plus b^2.','Scale with u = (x - center)/b.','The transformed bounds are 0 and 1, producing arctan(1) = pi/4.'] };
 });
@@ -282,7 +345,10 @@ family({ chapter:5, lesson:16, slug:'distinct-linear-factors', name:'Partial fra
   var a=(i%4)+1,b=a+(i%5)+2,A=(i%3)+1,B=(i%4)+2,px=A+B,pc=A*b+B*a;
   var correct=A+'/(x + '+a+') + '+B+'/(x + '+b+')';
   return { q:'Decompose ('+px+'x + '+pc+')/((x + '+a+')(x + '+b+')) into partial fractions.', correct:correct,
-    wrong:[B+'/(x + '+a+') + '+A+'/(x + '+b+')',A+'/(x + '+b+') + '+B+'/(x + '+a+')',px+'/(x + '+a+') + '+pc+'/(x + '+b+')'],
+    // When A = B, swapping them changes nothing, so a sign slip and an
+    // off-by-one stand in for the swaps.
+    wrong:(A===B?[A+'/(x + '+a+') - '+B+'/(x + '+b+')',(A+1)+'/(x + '+a+') + '+(B-1)+'/(x + '+b+')',px+'/(x + '+a+') + '+pc+'/(x + '+b+')']
+      :[B+'/(x + '+a+') + '+A+'/(x + '+b+')',A+'/(x + '+b+') + '+B+'/(x + '+a+')',px+'/(x + '+a+') + '+pc+'/(x + '+b+')']),
     why:'Writing A/(x + '+a+') + B/(x + '+b+') gives numerator A(x + '+b+') + B(x + '+a+'). Matching the constructed numerator yields A = '+A+' and B = '+B+', so the decomposition is '+correct+'.',
     hints:['Use one constant numerator over each distinct linear factor.','Clear denominators before matching coefficients.','Substitute x = -'+a+' and x = -'+b+' to isolate the constants.'] };
 });
@@ -302,10 +368,16 @@ family({ chapter:5, lesson:17, slug:'repeated-linear-factor', name:'Partial frac
     hints:['A repeated factor needs one term for every power up to the multiplicity.','Write A/(x + a) + B/(x + a)^2.','Clear denominators and match the x coefficient first.'] };
 });
 family({ chapter:5, lesson:17, slug:'quadratic-numerator', name:'Integrals with an irreducible quadratic', section:'8.5' }, function (i) {
-  var a=(i%4)+1,c=i+1,coef=frac(c,a);
-  return { q:'Find an antiderivative of (2x + '+c+')/(x^2 + '+(a*a)+').', correct:'ln(x^2 + '+(a*a)+') + '+coef+' arctan(x/'+a+') + C',
-    wrong:['2ln(x^2 + '+(a*a)+') + '+c+' arctan(x/'+a+') + C','ln(x^2 + '+(a*a)+') + '+c+' arctan(x) + C',coef+' ln(x^2 + '+(a*a)+') + arctan(x/'+a+') + C'],
-    why:'Split the numerator. The 2x term integrates to ln(x^2 + '+(a*a)+'). The constant term uses integral dx/(x^2 + a^2) = (1/a)arctan(x/a), contributing '+coef+' arctan(x/'+a+').',
+  var a=(i%4)+1,c=i+1,coef=frac(c,a),sq=a*a,xa=(a===1?'x':'x/'+a);
+  function arc(k, arg) { return (String(k)==='1'?'':k+' ')+'arctan('+arg+')'; }
+  // Each wrong choice must be wrong for every a and c. With a = 1, "forgot to
+  // scale x" is the right answer, and with c = a, "swapped the coefficients"
+  // is too, so those two slips get a stand-in that is really a slip.
+  var forgotScale=(a===1?'ln(x^2 + 1) - '+arc(coef,'x')+' + C':'ln(x^2 + '+sq+') + '+arc(c,'x')+' + C');
+  var swapped=(coef==='1'?'(1/2)ln(x^2 + '+sq+') + '+arc(1,xa)+' + C':coef+' ln(x^2 + '+sq+') + '+arc(1,xa)+' + C');
+  return { q:'Find an antiderivative of (2x + '+c+')/(x^2 + '+sq+').', correct:'ln(x^2 + '+sq+') + '+arc(coef,xa)+' + C',
+    wrong:['2ln(x^2 + '+sq+') + '+arc(c,xa)+' + C',forgotScale,swapped],
+    why:'Split the numerator. The 2x term integrates to ln(x^2 + '+sq+'). The constant term uses integral dx/(x^2 + a^2) = (1/a)arctan(x/a), contributing '+arc(coef,xa)+'.',
     hints:['Split into a derivative-of-denominator term and a constant term.','The 2x term produces a logarithm.','Use the arctangent formula with a = '+a+' for the remaining constant term.'] };
 });
 
@@ -455,14 +527,17 @@ family({ chapter:8, lesson:26, slug:'mixed-verdicts', name:'Mixed convergence cl
 family({ chapter:93, lesson:27, slug:'taylor-polynomial-exponential', name:'Taylor polynomials for exponentials', section:'10.8' }, function (i) {
   var k=i+1,quad=frac(k*k,2);
   return { q:'Find the degree-2 Maclaurin polynomial for e^('+k+'x).', correct:'1 + '+k+'x + '+quad+'x^2',
-    wrong:['1 + x + x^2/2','1 + '+k+'x + '+(k*k)+'x^2','1 + '+k+'x + '+frac(k,2)+'x^2'],
+    // At k = 1, "forgot to substitute kx" is the right answer.
+    wrong:(k===1?['1 + x + x^2','1 + x - x^2/2','1 - x + x^2/2']:['1 + x + x^2/2','1 + '+k+'x + '+(k*k)+'x^2','1 + '+k+'x + '+frac(k,2)+'x^2']),
     why:'Substitute '+k+'x into e^u = 1 + u + u^2/2! + ... . Keeping through degree 2 gives 1 + '+k+'x + '+k+'^2x^2/2 = 1 + '+k+'x + '+quad+'x^2.',
     hints:['Start with the Maclaurin series for e^u.','Replace every u by '+k+'x.','Keep terms only through x^2 and simplify the factorial.'] };
 });
 family({ chapter:93, lesson:27, slug:'taylor-polynomial-log', name:'Taylor polynomials at a nonzero center', section:'10.8' }, function (i) {
   var a=i+1;
   return { q:'Find the degree-2 Taylor polynomial for ln(x) centered at a = '+a+'.', correct:'ln('+a+') + (x - '+a+')/'+a+' - (x - '+a+')^2/'+(2*a*a),
-    wrong:['ln('+a+') + (x - '+a+') - (x - '+a+')^2/2','ln('+a+') - (x - '+a+')/'+a+' + (x - '+a+')^2/'+(2*a*a),'(x - '+a+')/'+a+' - (x - '+a+')^2/'+(a*a)],
+    // At a = 1 dividing by a changes nothing, so "forgot to divide by a" would be
+    // a second right answer; a sign slip stands in for it there.
+    wrong:[(a===1?'(x - 1) + (x - 1)^2/2':'ln('+a+') + (x - '+a+') - (x - '+a+')^2/2'),'ln('+a+') - (x - '+a+')/'+a+' + (x - '+a+')^2/'+(2*a*a),'(x - '+a+')/'+a+' - (x - '+a+')^2/'+(a*a)],
     why:'For f(x)=ln(x), f(a)=ln(a), f prime(a)=1/a, and f double-prime(a)=-1/a^2. Thus P_2 = ln(a) + (x-a)/a - (x-a)^2/(2a^2), giving the stated polynomial.',
     hints:['Use f(a) + f prime(a)(x-a) + f double-prime(a)(x-a)^2/2!.','For ln(x), the first two derivatives are 1/x and -1/x^2.','Evaluate them at a = '+a+' and include the 2! denominator.'] };
 });
@@ -511,15 +586,19 @@ family({ chapter:9, lesson:30, slug:'integrate-known-series', name:'Integrating 
 family({ chapter:9, lesson:31, slug:'maclaurin-sine', name:'Maclaurin expansions by substitution', section:'10.8' }, function (i) {
   var k=i+1,a3=frac(k*k*k,6),a5=frac(Math.pow(k,5),120);
   return { q:'Write the first three nonzero terms of sin('+k+'x).', correct:k+'x - '+a3+'x^3 + '+a5+'x^5',
-    wrong:[k+'x + '+a3+'x^3 + '+a5+'x^5','x - x^3/6 + x^5/120',k+'x - '+frac(k,6)+'x^3 + '+frac(k,120)+'x^5'],
+    // At k = 1, "forgot to substitute kx" is the right answer.
+    wrong:(k===1?['x + x^3/6 + x^5/120','x - x^3/3 + x^5/5','x - x^3/6 + x^5/24']:[k+'x + '+a3+'x^3 + '+a5+'x^5','x - x^3/6 + x^5/120',k+'x - '+frac(k,6)+'x^3 + '+frac(k,120)+'x^5']),
     why:'Substitute '+k+'x into sin(u)=u-u^3/3!+u^5/5!-... . The powers produce '+k+'x - '+k+'^3x^3/6 + '+k+'^5x^5/120.',
     hints:['Start with the standard sine series.','Replace u by '+k+'x inside every power.','Cube and fifth-power the coefficient '+k+' as well as x.'] };
 });
 family({ chapter:9, lesson:31, slug:'coefficient-formula', name:'Coefficients of a Taylor series', section:'10.8' }, function (i) {
   var a=i+1;
-  return { q:'For f(x) = 1/(1 - '+a+'x), what is the coefficient c_n in f(x) = sum c_n x^n?', correct:a+'^n',
-    wrong:['1/'+a+'^n',a+'n','1/n!'],
-    why:'The geometric series 1/(1-u)=sum u^n with u='+a+'x gives sum ('+a+'x)^n = sum '+a+'^n x^n. Therefore c_n='+a+'^n.',
+  // At a = 1, a^n and 1/a^n are both 1, so that variation asks for 1 against
+  // three slips that are really different.
+  return { q:'For f(x) = 1/(1 - '+a+'x), what is the coefficient c_n in f(x) = sum c_n x^n?', correct:(a===1?'1':a+'^n'),
+    wrong:(a===1?['n','1/n!','(-1)^n']:['1/'+a+'^n',a+'n','1/n!']),
+    why:(a===1?'The geometric series 1/(1-u)=sum u^n with u=x gives sum x^n, so every coefficient is 1: c_n=1.'
+      :'The geometric series 1/(1-u)=sum u^n with u='+a+'x gives sum ('+a+'x)^n = sum '+a+'^n x^n. Therefore c_n='+a+'^n.'),
     hints:['Recognize a geometric-series denominator.','Use u = '+a+'x in 1/(1-u).','Expand ('+a+'x)^n into coefficient times x^n.'] };
 });
 
@@ -575,8 +654,11 @@ family({ chapter:94, lesson:35, slug:'polar-area-one-petal', name:'Areas enclose
 });
 family({ chapter:94, lesson:35, slug:'polar-arc-length', name:'Arc length of polar curves', section:'11.4' }, function (i) {
   var k=i+1;
-  return { q:'Find the polar arc length of r = e^('+k+' theta) for 0 <= theta <= 1.', correct:'sqrt(1 + '+k+'^2)(e^'+k+' - 1)/'+k,
-    wrong:['sqrt(1 + '+k+'^2)(e^'+k+' - 1)','(e^'+k+' - 1)/'+k,'sqrt(1 + '+k+')(e^'+k+' - 1)/'+k],
+  // At k = 1, "forgot to divide by k" and "1 + k for 1 + k^2" are both the right
+  // answer, so that variation gets three slips that really are wrong.
+  return { q:'Find the polar arc length of r = e^('+(k===1?'':k+' ')+'theta) for 0 <= theta <= 1.',
+    correct:(k===1?'sqrt(2)(e - 1)':'sqrt(1 + '+k+'^2)(e^'+k+' - 1)/'+k),
+    wrong:(k===1?['e - 1','2(e - 1)','sqrt(2)e']:['sqrt(1 + '+k+'^2)(e^'+k+' - 1)','(e^'+k+' - 1)/'+k,'sqrt(1 + '+k+')(e^'+k+' - 1)/'+k]),
     why:'Polar arc length is integral sqrt(r^2+(dr/dtheta)^2)dtheta. Here dr/dtheta='+k+'e^('+k+'theta), so the integrand is sqrt(1+'+k+'^2)e^('+k+'theta). Integrating from 0 to 1 gives sqrt(1+'+k+'^2)(e^'+k+'-1)/'+k+'.',
     hints:['Use L = integral sqrt(r^2 + (dr/dtheta)^2) dtheta.','Differentiate r = e^('+k+'theta).','Factor e^('+k+'theta) from the square root, then integrate the exponential.'] };
 });

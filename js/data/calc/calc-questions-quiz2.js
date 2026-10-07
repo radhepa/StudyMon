@@ -70,10 +70,10 @@ const rows = [
       "32/3"
     ],
     "a": 3,
-    "why": "The gap factors as (x − (-1))(3 − x). It is positive from -1 to 3, so the line is on top. ∫ from −1 to 3 of (−x^2 + 2·x + 3) dx. Antiderivative: x·(−x^2 + 3·x + 9)/3. Evaluate at the bounds to get 32/3.",
+    "why": "The gap factors as (x + 1)(3 − x). It is positive from -1 to 3, so the line is on top. ∫ from −1 to 3 of (−x^2 + 2·x + 3) dx. Antiderivative: x·(−x^2 + 3·x + 9)/3. Evaluate at the bounds to get 32/3.",
     "hints": [
       "Sketch the region and identify the top and bottom curves, or right and left boundaries.",
-      "The gap factors as (x − (-1))(3 − x). It is positive from -1 to 3, so the line is on top.",
+      "The gap factors as (x + 1)(3 − x). It is positive from -1 to 3, so the line is on top.",
       "Evaluate ∫ from −1 to 3 of (−x^2 + 2·x + 3) dx. Use x·(−x^2 + 3·x + 9)/3 as the antiderivative."
     ],
     "code": "",
@@ -583,10 +583,10 @@ const rows = [
       "−36"
     ],
     "a": 0,
-    "why": "The gap factors as (x − (-2))(4 − x). It is positive from -2 to 4, so the line is on top. ∫ from −2 to 4 of (−x^2 + 2·x + 8) dx. Antiderivative: x·(−x^2 + 3·x + 24)/3. Evaluate at the bounds to get 36.",
+    "why": "The gap factors as (x + 2)(4 − x). It is positive from -2 to 4, so the line is on top. ∫ from −2 to 4 of (−x^2 + 2·x + 8) dx. Antiderivative: x·(−x^2 + 3·x + 24)/3. Evaluate at the bounds to get 36.",
     "hints": [
       "Sketch the region and identify the top and bottom curves, or right and left boundaries.",
-      "The gap factors as (x − (-2))(4 − x). It is positive from -2 to 4, so the line is on top.",
+      "The gap factors as (x + 2)(4 − x). It is positive from -2 to 4, so the line is on top.",
       "Evaluate ∫ from −2 to 4 of (−x^2 + 2·x + 8) dx. Use x·(−x^2 + 3·x + 24)/3 as the antiderivative."
     ],
     "code": "",
@@ -1096,10 +1096,10 @@ const rows = [
       "−256/3"
     ],
     "a": 1,
-    "why": "The gap factors as (x − (-3))(5 − x). It is positive from -3 to 5, so the line is on top. ∫ from −3 to 5 of (−x^2 + 2·x + 15) dx. Antiderivative: x·(−x^2 + 3·x + 45)/3. Evaluate at the bounds to get 256/3.",
+    "why": "The gap factors as (x + 3)(5 − x). It is positive from -3 to 5, so the line is on top. ∫ from −3 to 5 of (−x^2 + 2·x + 15) dx. Antiderivative: x·(−x^2 + 3·x + 45)/3. Evaluate at the bounds to get 256/3.",
     "hints": [
       "Sketch the region and identify the top and bottom curves, or right and left boundaries.",
-      "The gap factors as (x − (-3))(5 − x). It is positive from -3 to 5, so the line is on top.",
+      "The gap factors as (x + 3)(5 − x). It is positive from -3 to 5, so the line is on top.",
       "Evaluate ∫ from −3 to 5 of (−x^2 + 2·x + 15) dx. Use x·(−x^2 + 3·x + 45)/3 as the antiderivative."
     ],
     "code": "",
@@ -1609,10 +1609,10 @@ const rows = [
       "−343/6"
     ],
     "a": 2,
-    "why": "The gap factors as (x − (-1))(6 − x). It is positive from -1 to 6, so the line is on top. ∫ from −1 to 6 of (−x^2 + 5·x + 6) dx. Antiderivative: x·(−2·x^2 + 15·x + 36)/6. Evaluate at the bounds to get 343/6.",
+    "why": "The gap factors as (x + 1)(6 − x). It is positive from -1 to 6, so the line is on top. ∫ from −1 to 6 of (−x^2 + 5·x + 6) dx. Antiderivative: x·(−2·x^2 + 15·x + 36)/6. Evaluate at the bounds to get 343/6.",
     "hints": [
       "Sketch the region and identify the top and bottom curves, or right and left boundaries.",
-      "The gap factors as (x − (-1))(6 − x). It is positive from -1 to 6, so the line is on top.",
+      "The gap factors as (x + 1)(6 − x). It is positive from -1 to 6, so the line is on top.",
       "Evaluate ∫ from −1 to 6 of (−x^2 + 5·x + 6) dx. Use x·(−2·x^2 + 15·x + 36)/6 as the antiderivative."
     ],
     "code": "",
@@ -2122,10 +2122,10 @@ const rows = [
       "243/2"
     ],
     "a": 3,
-    "why": "The gap factors as (x − (-2))(7 − x). It is positive from -2 to 7, so the line is on top. ∫ from −2 to 7 of (−x^2 + 5·x + 14) dx. Antiderivative: x·(−2·x^2 + 15·x + 84)/6. Evaluate at the bounds to get 243/2.",
+    "why": "The gap factors as (x + 2)(7 − x). It is positive from -2 to 7, so the line is on top. ∫ from −2 to 7 of (−x^2 + 5·x + 14) dx. Antiderivative: x·(−2·x^2 + 15·x + 84)/6. Evaluate at the bounds to get 243/2.",
     "hints": [
       "Sketch the region and identify the top and bottom curves, or right and left boundaries.",
-      "The gap factors as (x − (-2))(7 − x). It is positive from -2 to 7, so the line is on top.",
+      "The gap factors as (x + 2)(7 − x). It is positive from -2 to 7, so the line is on top.",
       "Evaluate ∫ from −2 to 7 of (−x^2 + 5·x + 14) dx. Use x·(−2·x^2 + 15·x + 84)/6 as the antiderivative."
     ],
     "code": "",
@@ -2635,10 +2635,10 @@ const rows = [
       "−1331/6"
     ],
     "a": 0,
-    "why": "The gap factors as (x − (-3))(8 − x). It is positive from -3 to 8, so the line is on top. ∫ from −3 to 8 of (−x^2 + 5·x + 24) dx. Antiderivative: x·(−2·x^2 + 15·x + 144)/6. Evaluate at the bounds to get 1331/6.",
+    "why": "The gap factors as (x + 3)(8 − x). It is positive from -3 to 8, so the line is on top. ∫ from −3 to 8 of (−x^2 + 5·x + 24) dx. Antiderivative: x·(−2·x^2 + 15·x + 144)/6. Evaluate at the bounds to get 1331/6.",
     "hints": [
       "Sketch the region and identify the top and bottom curves, or right and left boundaries.",
-      "The gap factors as (x − (-3))(8 − x). It is positive from -3 to 8, so the line is on top.",
+      "The gap factors as (x + 3)(8 − x). It is positive from -3 to 8, so the line is on top.",
       "Evaluate ∫ from −3 to 8 of (−x^2 + 5·x + 24) dx. Use x·(−2·x^2 + 15·x + 144)/6 as the antiderivative."
     ],
     "code": "",
@@ -3148,10 +3148,10 @@ const rows = [
       "−500/3"
     ],
     "a": 1,
-    "why": "The gap factors as (x − (-1))(9 − x). It is positive from -1 to 9, so the line is on top. ∫ from −1 to 9 of (−x^2 + 8·x + 9) dx. Antiderivative: x·(−x^2 + 12·x + 27)/3. Evaluate at the bounds to get 500/3.",
+    "why": "The gap factors as (x + 1)(9 − x). It is positive from -1 to 9, so the line is on top. ∫ from −1 to 9 of (−x^2 + 8·x + 9) dx. Antiderivative: x·(−x^2 + 12·x + 27)/3. Evaluate at the bounds to get 500/3.",
     "hints": [
       "Sketch the region and identify the top and bottom curves, or right and left boundaries.",
-      "The gap factors as (x − (-1))(9 − x). It is positive from -1 to 9, so the line is on top.",
+      "The gap factors as (x + 1)(9 − x). It is positive from -1 to 9, so the line is on top.",
       "Evaluate ∫ from −1 to 9 of (−x^2 + 8·x + 9) dx. Use x·(−x^2 + 12·x + 27)/3 as the antiderivative."
     ],
     "code": "",
@@ -3661,10 +3661,10 @@ const rows = [
       "−288"
     ],
     "a": 2,
-    "why": "The gap factors as (x − (-2))(10 − x). It is positive from -2 to 10, so the line is on top. ∫ from −2 to 10 of (−x^2 + 8·x + 20) dx. Antiderivative: x·(−x^2 + 12·x + 60)/3. Evaluate at the bounds to get 288.",
+    "why": "The gap factors as (x + 2)(10 − x). It is positive from -2 to 10, so the line is on top. ∫ from −2 to 10 of (−x^2 + 8·x + 20) dx. Antiderivative: x·(−x^2 + 12·x + 60)/3. Evaluate at the bounds to get 288.",
     "hints": [
       "Sketch the region and identify the top and bottom curves, or right and left boundaries.",
-      "The gap factors as (x − (-2))(10 − x). It is positive from -2 to 10, so the line is on top.",
+      "The gap factors as (x + 2)(10 − x). It is positive from -2 to 10, so the line is on top.",
       "Evaluate ∫ from −2 to 10 of (−x^2 + 8·x + 20) dx. Use x·(−x^2 + 12·x + 60)/3 as the antiderivative."
     ],
     "code": "",
@@ -4174,10 +4174,10 @@ const rows = [
       "1372/3"
     ],
     "a": 3,
-    "why": "The gap factors as (x − (-3))(11 − x). It is positive from -3 to 11, so the line is on top. ∫ from −3 to 11 of (−x^2 + 8·x + 33) dx. Antiderivative: x·(−x^2 + 12·x + 99)/3. Evaluate at the bounds to get 1372/3.",
+    "why": "The gap factors as (x + 3)(11 − x). It is positive from -3 to 11, so the line is on top. ∫ from −3 to 11 of (−x^2 + 8·x + 33) dx. Antiderivative: x·(−x^2 + 12·x + 99)/3. Evaluate at the bounds to get 1372/3.",
     "hints": [
       "Sketch the region and identify the top and bottom curves, or right and left boundaries.",
-      "The gap factors as (x − (-3))(11 − x). It is positive from -3 to 11, so the line is on top.",
+      "The gap factors as (x + 3)(11 − x). It is positive from -3 to 11, so the line is on top.",
       "Evaluate ∫ from −3 to 11 of (−x^2 + 8·x + 33) dx. Use x·(−x^2 + 12·x + 99)/3 as the antiderivative."
     ],
     "code": "",
@@ -4687,10 +4687,10 @@ const rows = [
       "−2197/6"
     ],
     "a": 0,
-    "why": "The gap factors as (x − (-1))(12 − x). It is positive from -1 to 12, so the line is on top. ∫ from −1 to 12 of (−x^2 + 11·x + 12) dx. Antiderivative: x·(−2·x^2 + 33·x + 72)/6. Evaluate at the bounds to get 2197/6.",
+    "why": "The gap factors as (x + 1)(12 − x). It is positive from -1 to 12, so the line is on top. ∫ from −1 to 12 of (−x^2 + 11·x + 12) dx. Antiderivative: x·(−2·x^2 + 33·x + 72)/6. Evaluate at the bounds to get 2197/6.",
     "hints": [
       "Sketch the region and identify the top and bottom curves, or right and left boundaries.",
-      "The gap factors as (x − (-1))(12 − x). It is positive from -1 to 12, so the line is on top.",
+      "The gap factors as (x + 1)(12 − x). It is positive from -1 to 12, so the line is on top.",
       "Evaluate ∫ from −1 to 12 of (−x^2 + 11·x + 12) dx. Use x·(−2·x^2 + 33·x + 72)/6 as the antiderivative."
     ],
     "code": "",

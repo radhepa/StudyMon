@@ -412,10 +412,10 @@ const rows = [
     "t": 2,
     "tag": "Core",
     "q": "Using the spring above, find the work to stretch it from 0.5 m to 1.2 m beyond natural length.",
-    "why": "W = ∫₀.⁵¹·² 40x dx = [20x²]₀.⁵¹·² = 20(1.44 − 0.25) = 23.8 J\nThe work formula ½k(b² − a²) gives the same thing: 20(1.44 − 0.25). Note the work is not proportional to distance; stretching farther costs progressively more.",
+    "why": "W = ∫_{0.5}^{1.2} 40x dx = [20x²]_{0.5}^{1.2} = 20(1.44 − 0.25) = 23.8 J\nThe work formula ½k(b² − a²) gives the same thing: 20(1.44 − 0.25). Note the work is not proportional to distance; stretching farther costs progressively more.",
     "hints": [
       "Identify the governing formula or convergence test before doing the algebra.",
-      "W = ∫₀.⁵¹·² 40x dx = [20x²]₀.⁵¹·² = 20(1.44 − 0.25) = 23.8 J",
+      "W = ∫_{0.5}^{1.2} 40x dx = [20x²]_{0.5}^{1.2} = 20(1.44 − 0.25) = 23.8 J",
       "The work formula ½k(b² − a²) gives the same thing: 20(1.44 − 0.25). Note the work is not proportional to distance; stretching farther costs progressively more."
     ],
     "code": "",
@@ -838,9 +838,9 @@ const rows = [
     "k": "fill",
     "a": [
       "sec¹¹x/11 − 2sec⁹x/9 + sec⁷x/7 + C",
-      "sec^1^1x/11 - 2sec^9x/9 + sec^7x/7 + C",
+      "sec^11x/11 - 2sec^9x/9 + sec^7x/7 + C",
       "sec¹¹x/11−2sec⁹x/9+sec⁷x/7+C",
-      "sec^1^1x/11-2sec^9x/9+sec^7x/7+C"
+      "sec^11x/11-2sec^9x/9+sec^7x/7+C"
     ]
   },
   {
@@ -1106,7 +1106,7 @@ const rows = [
     "lesson": 17,
     "t": 3,
     "tag": "Exam level",
-    "q": "For each integral, name the first technique you would use, without solving: (a) ∫x√(x−1)dx (b) ∫x²eᵗdx (c) ∫dx/(x²−4) (d) ∫√(4−x²)dx (e) ∫sin⁵x cos²x dx (f) ∫(x³+1)/x² dx",
+    "q": "For each integral, name the first technique you would use, without solving: (a) ∫x√(x−1)dx (b) ∫x²eˣdx (c) ∫dx/(x²−4) (d) ∫√(4−x²)dx (e) ∫sin⁵x cos²x dx (f) ∫(x³+1)/x² dx",
     "why": "(a) u-substitution, u = x − 1, then rewrite x = u + 1\n(b) integration by parts, tabular\n(c) partial fractions\n(d) trig substitution, x = 2sinθ\n(e) trig integral, odd sine, peel one and set u = cos x\n(f) algebraic split into x + x⁻²\nDrill this format. On an exam the recognition step is what costs time, not the execution.",
     "hints": [
       "Identify the governing formula or convergence test before doing the algebra.",
@@ -1159,10 +1159,10 @@ const rows = [
     "t": 1,
     "tag": "Warm-up",
     "q": "Evaluate ∫₁^∞ dx/x³ or show it diverges.",
-    "why": "= lim(b→∞) ∫₁ᶜ x⁻³dx = lim [−1/(2x²)]₁ᶜ = lim(−1/(2b²) + 1/2) = 1/2, converges\nAlso immediate from the p-rule: p = 3 > 1.",
+    "why": "= lim(b→∞) ∫₁ᵇ x⁻³dx = lim [−1/(2x²)]₁ᵇ = lim(−1/(2b²) + 1/2) = 1/2, converges\nAlso immediate from the p-rule: p = 3 > 1.",
     "hints": [
       "Start from the definition or formula introduced in this lesson.",
-      "= lim(b→∞) ∫₁ᶜ x⁻³dx = lim [−1/(2x²)]₁ᶜ = lim(−1/(2b²) + 1/2) = 1/2, converges",
+      "= lim(b→∞) ∫₁ᵇ x⁻³dx = lim [−1/(2x²)]₁ᵇ = lim(−1/(2b²) + 1/2) = 1/2, converges",
       "Also immediate from the p-rule: p = 3 > 1."
     ],
     "code": "",
@@ -1183,11 +1183,11 @@ const rows = [
     "t": 1,
     "tag": "Warm-up",
     "q": "Determine whether ∫₁^∞ dx/√x converges.",
-    "why": "p = 1/2 ≤ 1, so it diverges.\nConfirming: lim[2√x]₁ᶜ = lim(2√b − 2) = ∞",
+    "why": "p = 1/2 ≤ 1, so it diverges.\nConfirming: lim[2√x]₁ᵇ = lim(2√b − 2) = ∞",
     "hints": [
       "Start from the definition or formula introduced in this lesson.",
       "p = 1/2 ≤ 1, so it diverges.",
-      "Confirming: lim[2√x]₁ᶜ = lim(2√b − 2) = ∞"
+      "Confirming: lim[2√x]₁ᵇ = lim(2√b − 2) = ∞"
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 18, Practice 2",
@@ -1206,11 +1206,11 @@ const rows = [
     "t": 2,
     "tag": "Core",
     "q": "Evaluate ∫₀¹ dx/√x or show it diverges.",
-    "why": "This is Type 2: the integrand blows up at x = 0, the lower limit.\n= lim(t→0⁺) ∫ᵗ¹ x^(−1/2)dx = lim [2√x]ᵗ¹ = lim(2 − 2√t) = 2, converges\nNotice the reversal: p = 1/2 diverges on [1,∞) but converges on (0,1]. Near a spike, small p is fine; in a tail, large p is what you need.",
+    "why": "This is Type 2: the integrand blows up at x = 0, the lower limit.\n= lim(t→0⁺) ∫ₜ¹ x^(−1/2)dx = lim [2√x]ₜ¹ = lim(2 − 2√t) = 2, converges\nNotice the reversal: p = 1/2 diverges on [1,∞) but converges on (0,1]. Near a spike, small p is fine; in a tail, large p is what you need.",
     "hints": [
       "Identify the governing formula or convergence test before doing the algebra.",
       "This is Type 2: the integrand blows up at x = 0, the lower limit.",
-      "= lim(t→0⁺) ∫ᵗ¹ x^(−1/2)dx = lim [2√x]ᵗ¹ = lim(2 − 2√t) = 2, converges"
+      "= lim(t→0⁺) ∫ₜ¹ x^(−1/2)dx = lim [2√x]ₜ¹ = lim(2 − 2√t) = 2, converges"
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 18, Practice 3",
@@ -1230,11 +1230,11 @@ const rows = [
     "t": 2,
     "tag": "Core",
     "q": "Evaluate ∫₀^∞ x e^(−x) dx.",
-    "why": "Integration by parts first: ∫xe^(−x)dx = −xe^(−x) − e^(−x) = −(x+1)e^(−x)\nlim(b→∞)[−(x+1)e^(−x)]₀ᶜ = lim(−(b+1)e^(−b) + 1)\n(b+1)e^(−b) → 0 since exponentials beat polynomials.\n= 1, converges",
+    "why": "Integration by parts first: ∫xe^(−x)dx = −xe^(−x) − e^(−x) = −(x+1)e^(−x)\nlim(b→∞)[−(x+1)e^(−x)]₀ᵇ = lim(−(b+1)e^(−b) + 1)\n(b+1)e^(−b) → 0 since exponentials beat polynomials.\n= 1, converges",
     "hints": [
       "Identify the governing formula or convergence test before doing the algebra.",
       "Integration by parts first: ∫xe^(−x)dx = −xe^(−x) − e^(−x) = −(x+1)e^(−x)",
-      "lim(b→∞)[−(x+1)e^(−x)]₀ᶜ = lim(−(b+1)e^(−b) + 1)"
+      "lim(b→∞)[−(x+1)e^(−x)]₀ᵇ = lim(−(b+1)e^(−b) + 1)"
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 18, Practice 4",
@@ -1254,11 +1254,11 @@ const rows = [
     "t": 3,
     "tag": "Exam level",
     "q": "Evaluate ∫₋₁₂ dx/x² or explain why it fails.",
-    "why": "The integrand blows up at x = 0, which is inside the interval, so the integral must be split.\n∫₀² dx/x² = lim(t→0⁺)[−1/x]ᵗ² = lim(−1/2 + 1/t) = ∞\nSince one half diverges, the whole thing diverges.\nEvaluating blindly gives [−1/x]₋₁₂ = −1/2 − 1 = −3/2, a negative answer for a positive integrand. That absurdity is the tell.",
+    "why": "The integrand blows up at x = 0, which is inside the interval, so the integral must be split.\n∫₀² dx/x² = lim(t→0⁺)[−1/x]ₜ² = lim(−1/2 + 1/t) = ∞\nSince one half diverges, the whole thing diverges.\nEvaluating blindly gives [−1/x]₋₁₂ = −1/2 − 1 = −3/2, a negative answer for a positive integrand. That absurdity is the tell.",
     "hints": [
       "Identify the governing formula or convergence test before doing the algebra.",
       "The integrand blows up at x = 0, which is inside the interval, so the integral must be split.",
-      "∫₀² dx/x² = lim(t→0⁺)[−1/x]ᵗ² = lim(−1/2 + 1/t) = ∞"
+      "∫₀² dx/x² = lim(t→0⁺)[−1/x]ₜ² = lim(−1/2 + 1/t) = ∞"
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 18, Practice 5",
@@ -1324,10 +1324,10 @@ const rows = [
     "t": 4,
     "tag": "Stretch",
     "q": "Evaluate ∫₀^∞ dx/(1 + x²) and ∫₋∞^∞ dx/(1 + x²).",
-    "why": "First: lim(b→∞)[arctan x]₀ᶜ = π/2 − 0 = π/2\nSecond: split at 0. The left half gives 0 − (−π/2) = π/2. Both halves converge, so the total is π.\nBoth pieces must converge independently. Here they do, so the answer is legitimate, unlike ∫₋∞^∞ x dx where each half is infinite.",
+    "why": "First: lim(b→∞)[arctan x]₀ᵇ = π/2 − 0 = π/2\nSecond: split at 0. The left half gives 0 − (−π/2) = π/2. Both halves converge, so the total is π.\nBoth pieces must converge independently. Here they do, so the answer is legitimate, unlike ∫₋∞^∞ x dx where each half is infinite.",
     "hints": [
       "Break the problem into a setup, a calculation, and a reason the method applies.",
-      "First: lim(b→∞)[arctan x]₀ᶜ = π/2 − 0 = π/2",
+      "First: lim(b→∞)[arctan x]₀ᵇ = π/2 − 0 = π/2",
       "Second: split at 0. The left half gives 0 − (−π/2) = π/2. Both halves converge, so the total is π."
     ],
     "code": "",
@@ -1375,7 +1375,7 @@ const rows = [
     "lesson": 19,
     "t": 1,
     "tag": "Warm-up",
-    "q": "Write out S₁, S₂, S₃, S₄ for Σ(k=1) 1/2ᵇ.",
+    "q": "Write out S₁, S₂, S₃, S₄ for Σ(k=1) 1/2ᵏ.",
     "why": "S₁ = 1/2, S₂ = 3/4, S₃ = 7/8, S₄ = 15/16\nThe pattern is Sₙ = 1 − 1/2ⁿ, so Sₙ → 1 and the series converges to 1. Partial sums are themselves a sequence, and that is what convergence of a series means.",
     "hints": [
       "Start from the definition or formula introduced in this lesson.",
@@ -1666,7 +1666,7 @@ const rows = [
     "lesson": 21,
     "t": 1,
     "tag": "Warm-up",
-    "q": "Find the sum of Σ(k=0 to ∞) 5(2/3)ᵇ.",
+    "q": "Find the sum of Σ(k=0 to ∞) 5(2/3)ᵏ.",
     "why": "Geometric with first term a = 5 and r = 2/3, and |r| < 1 so it converges.\nSum = a/(1 − r) = 5/(1/3) = 15",
     "hints": [
       "Start from the definition or formula introduced in this lesson.",
@@ -1689,7 +1689,7 @@ const rows = [
     "lesson": 21,
     "t": 1,
     "tag": "Warm-up",
-    "q": "Does Σ(k=1 to ∞) 3(5/4)ᵇ converge?",
+    "q": "Does Σ(k=1 to ∞) 3(5/4)ᵏ converge?",
     "why": "r = 5/4 and |r| ≥ 1, so the series diverges.\nApplying a/(1−r) here would give 3(5/4)/(−1/4) = −15, a negative sum for a series of positive terms. That absurd result is what the convergence condition prevents.",
     "hints": [
       "Start from the definition or formula introduced in this lesson.",
@@ -1712,11 +1712,11 @@ const rows = [
     "lesson": 21,
     "t": 2,
     "tag": "Core",
-    "q": "Find the sum of Σ(k=3 to ∞) 2ᵇ/5ᵇ⁻¹.",
-    "why": "Rewrite: 2ᵇ/5ᵇ⁻¹ = 5 · (2/5)ᵇ. First term at k = 3 is 5(2/5)³ = 5(8/125) = 8/25, and r = 2/5.\nSum = (8/25)/(1 − 2/5) = (8/25)/(3/5) = 8/15\nUse first term over one minus ratio rather than memorizing index-shifted formulas.",
+    "q": "Find the sum of Σ(k=3 to ∞) 2ᵏ/5ᵏ⁻¹.",
+    "why": "Rewrite: 2ᵏ/5ᵏ⁻¹ = 5 · (2/5)ᵏ. First term at k = 3 is 5(2/5)³ = 5(8/125) = 8/25, and r = 2/5.\nSum = (8/25)/(1 − 2/5) = (8/25)/(3/5) = 8/15\nUse first term over one minus ratio rather than memorizing index-shifted formulas.",
     "hints": [
       "Identify the governing formula or convergence test before doing the algebra.",
-      "Rewrite: 2ᵇ/5ᵇ⁻¹ = 5 · (2/5)ᵇ. First term at k = 3 is 5(2/5)³ = 5(8/125) = 8/25, and r = 2/5.",
+      "Rewrite: 2ᵏ/5ᵏ⁻¹ = 5 · (2/5)ᵏ. First term at k = 3 is 5(2/5)³ = 5(8/125) = 8/25, and r = 2/5.",
       "Sum = (8/25)/(1 − 2/5) = (8/25)/(3/5) = 8/15"
     ],
     "code": "",
@@ -1805,7 +1805,7 @@ const rows = [
     "lesson": 21,
     "t": 4,
     "tag": "Stretch",
-    "q": "For what values of x does Σ(k=0 to ∞) (x − 2)ᵇ/3ᵇ converge, and what is the sum?",
+    "q": "For what values of x does Σ(k=0 to ∞) (x − 2)ᵏ/3ᵏ converge, and what is the sum?",
     "why": "This is geometric with r = (x−2)/3.\nConverges when |(x−2)/3| < 1, that is |x − 2| < 3, so −1 < x < 5.\nSum = 1/(1 − (x−2)/3) = 3/(3 − x + 2) = 3/(5 − x)\nThis is a preview of power series: the same object, viewed as a function of x with an interval of convergence.",
     "hints": [
       "Break the problem into a setup, a calculation, and a reason the method applies.",
@@ -1855,11 +1855,11 @@ const rows = [
     "t": 2,
     "tag": "Core",
     "q": "Use the Integral Test on Σ(n=1) n/(n² + 1).",
-    "why": "f(x) = x/(x²+1) is positive and continuous on [1,∞). Its derivative is (1 − x²)/(x²+1)² < 0 for x > 1, so it is decreasing. All three conditions hold.\n∫₁^∞ x/(x²+1)dx = lim ½ln(x²+1)|₁ᶜ = ∞\nThe integral diverges, so the series diverges.\nNote the terms do go to 0, so the Divergence Test was useless here.",
+    "why": "f(x) = x/(x²+1) is positive and continuous on [1,∞). Its derivative is (1 − x²)/(x²+1)² < 0 for x > 1, so it is decreasing. All three conditions hold.\n∫₁^∞ x/(x²+1)dx = lim ½ln(x²+1)|₁ᵇ = ∞\nThe integral diverges, so the series diverges.\nNote the terms do go to 0, so the Divergence Test was useless here.",
     "hints": [
       "Identify the governing formula or convergence test before doing the algebra.",
       "f(x) = x/(x²+1) is positive and continuous on [1,∞). Its derivative is (1 − x²)/(x²+1)² < 0 for x > 1, so it is decreasing. All three conditions hold.",
-      "∫₁^∞ x/(x²+1)dx = lim ½ln(x²+1)|₁ᶜ = ∞"
+      "∫₁^∞ x/(x²+1)dx = lim ½ln(x²+1)|₁ᵇ = ∞"
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 22, Practice 3",
@@ -1878,10 +1878,10 @@ const rows = [
     "t": 2,
     "tag": "Core",
     "q": "Determine whether Σ(n=2) 1/(n ln n) converges.",
-    "why": "Integral Test with u = ln x: ∫₂^∞ dx/(x ln x) = lim ln(ln x)|₂ᶜ = ∞.\nDiverges.\nContrast with Σ1/(n(ln n)²), which converges. The logarithm barely fails to save it at the first power.",
+    "why": "Integral Test with u = ln x: ∫₂^∞ dx/(x ln x) = lim ln(ln x)|₂ᵇ = ∞.\nDiverges.\nContrast with Σ1/(n(ln n)²), which converges. The logarithm barely fails to save it at the first power.",
     "hints": [
       "Identify the governing formula or convergence test before doing the algebra.",
-      "Integral Test with u = ln x: ∫₂^∞ dx/(x ln x) = lim ln(ln x)|₂ᶜ = ∞.",
+      "Integral Test with u = ln x: ∫₂^∞ dx/(x ln x) = lim ln(ln x)|₂ᵇ = ∞.",
       "Diverges."
     ],
     "code": "",
@@ -2482,11 +2482,11 @@ const rows = [
     "lesson": 27,
     "t": 1,
     "tag": "Warm-up",
-    "q": "Find the Maclaurin polynomial of order 3 for f(x) = eᵗ.",
-    "why": "Every derivative is eᵗ, equal to 1 at 0.\np₃(x) = 1 + x + x²/2 + x³/6",
+    "q": "Find the Maclaurin polynomial of order 3 for f(x) = eˣ.",
+    "why": "Every derivative is eˣ, equal to 1 at 0.\np₃(x) = 1 + x + x²/2 + x³/6",
     "hints": [
       "Start from the definition or formula introduced in this lesson.",
-      "Every derivative is eᵗ, equal to 1 at 0.",
+      "Every derivative is eˣ, equal to 1 at 0.",
       "p₃(x) = 1 + x + x²/2 + x³/6"
     ],
     "code": "",
@@ -2729,11 +2729,11 @@ const rows = [
     "lesson": 29,
     "t": 1,
     "tag": "Warm-up",
-    "q": "Find the radius of convergence of Σ xᵇ/k.",
-    "why": "|aᵏ₊₁/aᵏ| = |x|ᵇ⁺¹/(k+1) · k/|x|ᵇ = |x|k/(k+1) → |x|\nConverges when |x| < 1, so R = 1.",
+    "q": "Find the radius of convergence of Σ xᵏ/k.",
+    "why": "|aₖ₊₁/aₖ| = |x|ᵏ⁺¹/(k+1) · k/|x|ᵏ = |x|k/(k+1) → |x|\nConverges when |x| < 1, so R = 1.",
     "hints": [
       "Start from the definition or formula introduced in this lesson.",
-      "|aᵏ₊₁/aᵏ| = |x|ᵇ⁺¹/(k+1) · k/|x|ᵇ = |x|k/(k+1) → |x|",
+      "|aₖ₊₁/aₖ| = |x|ᵏ⁺¹/(k+1) · k/|x|ᵏ = |x|k/(k+1) → |x|",
       "Converges when |x| < 1, so R = 1."
     ],
     "code": "",
@@ -2755,7 +2755,7 @@ const rows = [
     "t": 1,
     "tag": "Warm-up",
     "q": "Find the interval of convergence for the series above.",
-    "why": "Interior: (−1, 1). Now the endpoints.\nx = 1: Σ1/k, the harmonic series, diverges.\nx = −1: Σ(−1)ᵇ/k, alternating harmonic, converges by the AST.\nInterval: [−1, 1)\nAsymmetric intervals are normal.",
+    "why": "Interior: (−1, 1). Now the endpoints.\nx = 1: Σ1/k, the harmonic series, diverges.\nx = −1: Σ(−1)ᵏ/k, alternating harmonic, converges by the AST.\nInterval: [−1, 1)\nAsymmetric intervals are normal.",
     "hints": [
       "Start from the definition or formula introduced in this lesson.",
       "Interior: (−1, 1). Now the endpoints.",
@@ -2780,11 +2780,11 @@ const rows = [
     "lesson": 29,
     "t": 2,
     "tag": "Core",
-    "q": "Find the interval of convergence for Σ (x + 3)ᵇ/(k² 2ᵇ).",
-    "why": "Ratio: |x+3|ᵇ⁺¹/((k+1)²2ᵇ⁺¹) · k²2ᵇ/|x+3|ᵇ = (|x+3|/2)(k/(k+1))² → |x+3|/2\nNeed |x+3| < 2, so R = 2 and the center is −3: interior (−5, −1).\nx = −1: Σ2ᵇ/(k²2ᵇ) = Σ1/k², converges.\nx = −5: Σ(−2)ᵇ/(k²2ᵇ) = Σ(−1)ᵇ/k², converges absolutely.\nInterval: [−5, −1]",
+    "q": "Find the interval of convergence for Σ (x + 3)ᵏ/(k² 2ᵏ).",
+    "why": "Ratio: |x+3|ᵏ⁺¹/((k+1)²2ᵏ⁺¹) · k²2ᵏ/|x+3|ᵏ = (|x+3|/2)(k/(k+1))² → |x+3|/2\nNeed |x+3| < 2, so R = 2 and the center is −3: interior (−5, −1).\nx = −1: Σ2ᵏ/(k²2ᵏ) = Σ1/k², converges.\nx = −5: Σ(−2)ᵏ/(k²2ᵏ) = Σ(−1)ᵏ/k², converges absolutely.\nInterval: [−5, −1]",
     "hints": [
       "Identify the governing formula or convergence test before doing the algebra.",
-      "Ratio: |x+3|ᵇ⁺¹/((k+1)²2ᵇ⁺¹) · k²2ᵇ/|x+3|ᵇ = (|x+3|/2)(k/(k+1))² → |x+3|/2",
+      "Ratio: |x+3|ᵏ⁺¹/((k+1)²2ᵏ⁺¹) · k²2ᵏ/|x+3|ᵏ = (|x+3|/2)(k/(k+1))² → |x+3|/2",
       "Need |x+3| < 2, so R = 2 and the center is −3: interior (−5, −1)."
     ],
     "code": "",
@@ -2806,12 +2806,12 @@ const rows = [
     "lesson": 29,
     "t": 2,
     "tag": "Core",
-    "q": "Find R for Σ k! xᵇ and for Σ xᵇ/k!.",
-    "why": "Σk!xᵇ: ratio = (k+1)|x| → ∞ unless x = 0. So R = 0, converging only at x = 0.\nΣxᵇ/k!: ratio = |x|/(k+1) → 0 for every x. So R = ∞, converging everywhere.\nThese are the two extreme cases, and factorial placement decides which you get.",
+    "q": "Find R for Σ k! xᵏ and for Σ xᵏ/k!.",
+    "why": "Σk!xᵏ: ratio = (k+1)|x| → ∞ unless x = 0. So R = 0, converging only at x = 0.\nΣxᵏ/k!: ratio = |x|/(k+1) → 0 for every x. So R = ∞, converging everywhere.\nThese are the two extreme cases, and factorial placement decides which you get.",
     "hints": [
       "Identify the governing formula or convergence test before doing the algebra.",
-      "Σk!xᵇ: ratio = (k+1)|x| → ∞ unless x = 0. So R = 0, converging only at x = 0.",
-      "Σxᵇ/k!: ratio = |x|/(k+1) → 0 for every x. So R = ∞, converging everywhere."
+      "Σk!xᵏ: ratio = (k+1)|x| → ∞ unless x = 0. So R = 0, converging only at x = 0.",
+      "Σxᵏ/k!: ratio = |x|/(k+1) → 0 for every x. So R = ∞, converging everywhere."
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 29, Practice 4",
@@ -2832,8 +2832,8 @@ const rows = [
     "lesson": 29,
     "t": 3,
     "tag": "Exam level",
-    "q": "Find the interval of convergence for Σ (−1)ᵇ (2x − 1)ᵇ/√k.",
-    "why": "Ratio: |2x−1|√(k/(k+1)) → |2x − 1|\nNeed |2x − 1| < 1 ⇒ −1 < 2x − 1 < 1 ⇒ 0 < x < 1. Center 1/2, R = 1/2.\nx = 1: Σ(−1)ᵇ/√k converges by the AST.\nx = 0: 2x − 1 = −1, giving Σ(−1)ᵇ(−1)ᵇ/√k = Σ1/√k, a p-series with p = 1/2, diverges.\nInterval: (0, 1]\nWhen the variable has a coefficient, solve carefully for x; the radius in x is half the radius in (2x−1).",
+    "q": "Find the interval of convergence for Σ (−1)ᵏ (2x − 1)ᵏ/√k.",
+    "why": "Ratio: |2x−1|√(k/(k+1)) → |2x − 1|\nNeed |2x − 1| < 1 ⇒ −1 < 2x − 1 < 1 ⇒ 0 < x < 1. Center 1/2, R = 1/2.\nx = 1: Σ(−1)ᵏ/√k converges by the AST.\nx = 0: 2x − 1 = −1, giving Σ(−1)ᵏ(−1)ᵏ/√k = Σ1/√k, a p-series with p = 1/2, diverges.\nInterval: (0, 1]\nWhen the variable has a coefficient, solve carefully for x; the radius in x is half the radius in (2x−1).",
     "hints": [
       "Identify the governing formula or convergence test before doing the algebra.",
       "Ratio: |2x−1|√(k/(k+1)) → |2x − 1|",
@@ -2856,7 +2856,7 @@ const rows = [
     "lesson": 29,
     "t": 3,
     "tag": "Exam level",
-    "q": "Find R for Σ (3x)ᵇ/k³.",
+    "q": "Find R for Σ (3x)ᵏ/k³.",
     "why": "Ratio: 3|x|(k/(k+1))³ → 3|x|\nConverges when 3|x| < 1, so |x| < 1/3 and R = 1/3.\nBoth endpoints give Σ±1/k³, which converge, so the interval is [−1/3, 1/3].",
     "hints": [
       "Identify the governing formula or convergence test before doing the algebra.",
@@ -2881,7 +2881,7 @@ const rows = [
     "lesson": 29,
     "t": 4,
     "tag": "Stretch",
-    "q": "A power series Σcᵏ(x − 2)ᵏ converges at x = 5 and diverges at x = −2. What can you say about convergence at x = 0 and x = 6?",
+    "q": "A power series Σcₖ(x − 2)ᵏ converges at x = 5 and diverges at x = −2. What can you say about convergence at x = 0 and x = 6?",
     "why": "Convergence at x = 5 means R ≥ 3. Divergence at x = −2 means R ≤ 4.\nSo 3 ≤ R ≤ 4, and the interval of convergence contains (−1, 5) and is contained in [−2, 6].\nx = 0 is distance 2 from the center, which is inside the guaranteed interior, so it converges.\nx = 6 is distance 4, which may be inside or outside depending on R, so the behavior there is undetermined.\nDistance from the center is the only thing that matters.",
     "hints": [
       "Break the problem into a setup, a calculation, and a reason the method applies.",
@@ -2908,10 +2908,10 @@ const rows = [
     "t": 1,
     "tag": "Warm-up",
     "q": "Find a power series for 1/(1 + 3x) and its radius.",
-    "why": "1/(1 − (−3x)) = Σ(−3x)ᵇ = Σ(−1)ᵇ3ᵇxᵇ\nConverges when |3x| < 1, so R = 1/3.",
+    "why": "1/(1 − (−3x)) = Σ(−3x)ᵏ = Σ(−1)ᵏ3ᵏxᵏ\nConverges when |3x| < 1, so R = 1/3.",
     "hints": [
       "Start from the definition or formula introduced in this lesson.",
-      "1/(1 − (−3x)) = Σ(−3x)ᵇ = Σ(−1)ᵇ3ᵇxᵇ",
+      "1/(1 − (−3x)) = Σ(−3x)ᵏ = Σ(−1)ᵏ3ᵏxᵏ",
       "Converges when |3x| < 1, so R = 1/3."
     ],
     "code": "",
@@ -2934,10 +2934,10 @@ const rows = [
     "t": 1,
     "tag": "Warm-up",
     "q": "Find a power series for 1/(5 − x).",
-    "why": "Factor out 5 to expose the required 1: 1/(5(1 − x/5)) = (1/5)Σ(x/5)ᵇ = Σxᵇ/5ᵇ⁺¹, valid for |x| < 5.",
+    "why": "Factor out 5 to expose the required 1: 1/(5(1 − x/5)) = (1/5)Σ(x/5)ᵏ = Σxᵏ/5ᵏ⁺¹, valid for |x| < 5.",
     "hints": [
       "Start from the definition or formula introduced in this lesson.",
-      "Factor out 5 to expose the required 1: 1/(5(1 − x/5)) = (1/5)Σ(x/5)ᵇ = Σxᵇ/5ᵇ⁺¹, valid for |x| < 5.",
+      "Factor out 5 to expose the required 1: 1/(5(1 − x/5)) = (1/5)Σ(x/5)ᵏ = Σxᵏ/5ᵏ⁺¹, valid for |x| < 5.",
       "Carry the calculation through carefully and check the result against the original conditions."
     ],
     "code": "",
@@ -2947,8 +2947,8 @@ const rows = [
     "variation": 1,
     "k": "fill",
     "a": [
-      "Σxᵇ/5ᵇ⁺¹",
-      "Σxᵇ/5ᵇ⁺^1"
+      "Σxᵏ/5ᵏ⁺¹",
+      "Σx^k/5^(k+1)"
     ]
   },
   {
@@ -2958,10 +2958,10 @@ const rows = [
     "t": 2,
     "tag": "Core",
     "q": "Find a power series for ln(1 − x) by integration.",
-    "why": "1/(1−x) = Σxᵇ. Integrating gives −ln(1−x) = Σxᵇ⁺¹/(k+1) + C.\nAt x = 0 both sides are 0, so C = 0.\nln(1 − x) = −Σ(k=0) xᵇ⁺¹/(k+1) = −x − x²/2 − x³/3 − …, for −1 ≤ x < 1",
+    "why": "1/(1−x) = Σxᵏ. Integrating gives −ln(1−x) = Σxᵏ⁺¹/(k+1) + C.\nAt x = 0 both sides are 0, so C = 0.\nln(1 − x) = −Σ(k=0) xᵏ⁺¹/(k+1) = −x − x²/2 − x³/3 − …, for −1 ≤ x < 1",
     "hints": [
       "Identify the governing formula or convergence test before doing the algebra.",
-      "1/(1−x) = Σxᵇ. Integrating gives −ln(1−x) = Σxᵇ⁺¹/(k+1) + C.",
+      "1/(1−x) = Σxᵏ. Integrating gives −ln(1−x) = Σxᵏ⁺¹/(k+1) + C.",
       "At x = 0 both sides are 0, so C = 0."
     ],
     "code": "",
@@ -2971,10 +2971,10 @@ const rows = [
     "variation": 1,
     "k": "fill",
     "a": [
-      "−Σ(k=0) xᵇ⁺¹/(k+1)",
-      "-Σ(k=0) xᵇ⁺^1/(k+1)",
-      "−Σ(k=0)xᵇ⁺¹/(k+1)",
-      "-Σ(k=0)xᵇ⁺^1/(k+1)"
+      "−Σ(k=0) xᵏ⁺¹/(k+1)",
+      "-Σ(k=0) x^(k+1)/(k+1)",
+      "−Σ(k=0)xᵏ⁺¹/(k+1)",
+      "-Σ(k=0)x^(k+1)/(k+1)"
     ]
   },
   {
@@ -2984,11 +2984,11 @@ const rows = [
     "t": 3,
     "tag": "Exam level",
     "q": "Use a series to evaluate ∫₀^0.5 dx/(1 + x⁴) to four decimal places.",
-    "why": "1/(1+x⁴) = Σ(−1)ᵇx⁴ᵇ\n∫₀^0.5 = Σ(−1)ᵇ(0.5)⁴ᵇ⁺¹/(4k+1) = 0.5 − 0.5⁵/5 + 0.5⁹/9 − …\n= 0.5 − 0.00625 + 0.000217 − 0.0000094\n≈ 0.4940\nIt alternates, so the error after four terms is under the fifth term, about 4×10⁻⁷.",
+    "why": "1/(1+x⁴) = Σ(−1)ᵏx⁴ᵏ\n∫₀^0.5 = Σ(−1)ᵏ(0.5)⁴ᵏ⁺¹/(4k+1) = 0.5 − 0.5⁵/5 + 0.5⁹/9 − …\n= 0.5 − 0.00625 + 0.000217 − 0.0000094\n≈ 0.4940\nIt alternates, so the error after four terms is under the fifth term, about 4×10⁻⁷.",
     "hints": [
       "Identify the governing formula or convergence test before doing the algebra.",
-      "1/(1+x⁴) = Σ(−1)ᵇx⁴ᵇ",
-      "∫₀^0.5 = Σ(−1)ᵇ(0.5)⁴ᵇ⁺¹/(4k+1) = 0.5 − 0.5⁵/5 + 0.5⁹/9 − …"
+      "1/(1+x⁴) = Σ(−1)ᵏx⁴ᵏ",
+      "∫₀^0.5 = Σ(−1)ᵏ(0.5)⁴ᵏ⁺¹/(4k+1) = 0.5 − 0.5⁵/5 + 0.5⁹/9 − …"
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 30, Practice 6",
@@ -3006,12 +3006,12 @@ const rows = [
     "lesson": 30,
     "t": 4,
     "tag": "Stretch",
-    "q": "Find the sum of Σ(k=1 to ∞) k/2ᵇ.",
-    "why": "Start from Σ(k=1) k xᵇ⁻¹ = 1/(1−x)². Multiply by x:\nΣ(k=1) k xᵇ = x/(1−x)²\nAt x = 1/2: (1/2)/(1/4) = 2\nRecognizing a numerical series as a known power series evaluated at a point is the standard method for summing anything with a k in the numerator.",
+    "q": "Find the sum of Σ(k=1 to ∞) k/2ᵏ.",
+    "why": "Start from Σ(k=1) k xᵏ⁻¹ = 1/(1−x)². Multiply by x:\nΣ(k=1) k xᵏ = x/(1−x)²\nAt x = 1/2: (1/2)/(1/4) = 2\nRecognizing a numerical series as a known power series evaluated at a point is the standard method for summing anything with a k in the numerator.",
     "hints": [
       "Break the problem into a setup, a calculation, and a reason the method applies.",
-      "Start from Σ(k=1) k xᵇ⁻¹ = 1/(1−x)². Multiply by x:",
-      "Σ(k=1) k xᵇ = x/(1−x)²"
+      "Start from Σ(k=1) k xᵏ⁻¹ = 1/(1−x)². Multiply by x:",
+      "Σ(k=1) k xᵏ = x/(1−x)²"
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 30, Practice 7",
@@ -3030,11 +3030,11 @@ const rows = [
     "t": 1,
     "tag": "Warm-up",
     "q": "Write the Maclaurin series for e^(3x).",
-    "why": "Substitute 3x into Σxᵇ/k!:\nΣ(3x)ᵇ/k! = Σ3ᵇxᵇ/k!, valid for all x.",
+    "why": "Substitute 3x into Σxᵏ/k!:\nΣ(3x)ᵏ/k! = Σ3ᵏxᵏ/k!, valid for all x.",
     "hints": [
       "Start from the definition or formula introduced in this lesson.",
-      "Substitute 3x into Σxᵇ/k!:",
-      "Σ(3x)ᵇ/k! = Σ3ᵇxᵇ/k!, valid for all x."
+      "Substitute 3x into Σxᵏ/k!:",
+      "Σ(3x)ᵏ/k! = Σ3ᵏxᵏ/k!, valid for all x."
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 31, Practice 1",
@@ -3043,8 +3043,8 @@ const rows = [
     "variation": 1,
     "k": "fill",
     "a": [
-      "Σ(3x)ᵇ/k! = Σ3ᵇxᵇ/k!",
-      "Σ(3x)ᵇ/k!=Σ3ᵇxᵇ/k!"
+      "Σ(3x)ᵏ/k! = Σ3ᵏxᵏ/k!",
+      "Σ(3x)ᵏ/k!=Σ3ᵏxᵏ/k!"
     ]
   },
   {
@@ -3054,11 +3054,11 @@ const rows = [
     "t": 2,
     "tag": "Core",
     "q": "Find the Maclaurin series for x² e^(−x²).",
-    "why": "e^u = Σuᵇ/k! with u = −x² gives Σ(−1)ᵇx²ᵇ/k!.\nMultiply by x²: Σ(−1)ᵇx²ᵇ⁺²/k!, all x.\nSubstituting into a known series is always faster than differentiating this function repeatedly.",
+    "why": "e^u = Σuᵏ/k! with u = −x² gives Σ(−1)ᵏx²ᵏ/k!.\nMultiply by x²: Σ(−1)ᵏx²ᵏ⁺²/k!, all x.\nSubstituting into a known series is always faster than differentiating this function repeatedly.",
     "hints": [
       "Identify the governing formula or convergence test before doing the algebra.",
-      "e^u = Σuᵇ/k! with u = −x² gives Σ(−1)ᵇx²ᵇ/k!.",
-      "Multiply by x²: Σ(−1)ᵇx²ᵇ⁺²/k!, all x."
+      "e^u = Σuᵏ/k! with u = −x² gives Σ(−1)ᵏx²ᵏ/k!.",
+      "Multiply by x²: Σ(−1)ᵏx²ᵏ⁺²/k!, all x."
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 31, Practice 3",
@@ -3067,8 +3067,8 @@ const rows = [
     "variation": 1,
     "k": "fill",
     "a": [
-      "Σ(−1)ᵇx²ᵇ⁺²/k!",
-      "Σ(-1)ᵇx^2ᵇ⁺^2/k!"
+      "Σ(−1)ᵏx²ᵏ⁺²/k!",
+      "Σ(-1)^k x^(2k+2)/k!"
     ]
   },
   {
@@ -3078,11 +3078,11 @@ const rows = [
     "t": 2,
     "tag": "Core",
     "q": "Find the Maclaurin series for sin(x)/x and state its value at x = 0.",
-    "why": "sin x = x − x³/3! + x⁵/5! − …\nDivide by x: 1 − x²/3! + x⁴/5! − … = Σ(−1)ᵇx²ᵇ/(2k+1)!\nAt x = 0 the series gives 1, which is the removable-singularity value and matches lim sin x/x = 1.",
+    "why": "sin x = x − x³/3! + x⁵/5! − …\nDivide by x: 1 − x²/3! + x⁴/5! − … = Σ(−1)ᵏx²ᵏ/(2k+1)!\nAt x = 0 the series gives 1, which is the removable-singularity value and matches lim sin x/x = 1.",
     "hints": [
       "Identify the governing formula or convergence test before doing the algebra.",
       "sin x = x − x³/3! + x⁵/5! − …",
-      "Divide by x: 1 − x²/3! + x⁴/5! − … = Σ(−1)ᵇx²ᵇ/(2k+1)!"
+      "Divide by x: 1 − x²/3! + x⁴/5! − … = Σ(−1)ᵏx²ᵏ/(2k+1)!"
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 31, Practice 4",
@@ -3091,10 +3091,10 @@ const rows = [
     "variation": 1,
     "k": "fill",
     "a": [
-      "1 − x²/3! + x⁴/5! − … = Σ(−1)ᵇx²ᵇ/(2k+1)!",
-      "1 - x^2/3! + x^4/5! - … = Σ(-1)ᵇx^2ᵇ/(2k+1)!",
-      "1−x²/3!+x⁴/5!−…=Σ(−1)ᵇx²ᵇ/(2k+1)!",
-      "1-x^2/3!+x^4/5!-…=Σ(-1)ᵇx^2ᵇ/(2k+1)!"
+      "1 − x²/3! + x⁴/5! − … = Σ(−1)ᵏx²ᵏ/(2k+1)!",
+      "1 - x^2/3! + x^4/5! - … = Σ(-1)^k x^(2k)/(2k+1)!",
+      "1−x²/3!+x⁴/5!−…=Σ(−1)ᵏx²ᵏ/(2k+1)!",
+      "1-x^2/3!+x^4/5!-…=Σ(-1)^k x^(2k)/(2k+1)!"
     ]
   },
   {
@@ -3104,11 +3104,11 @@ const rows = [
     "t": 3,
     "tag": "Exam level",
     "q": "Find the Taylor series for f(x) = 1/x centered at a = 1.",
-    "why": "Write 1/x = 1/(1 + (x−1)) = 1/(1 − (−(x−1)))\n= Σ(−(x−1))ᵇ = Σ(−1)ᵇ(x − 1)ᵇ, valid for |x − 1| < 1, that is 0 < x < 2.\nForcing the expression into the geometric form beats computing derivatives.",
+    "why": "Write 1/x = 1/(1 + (x−1)) = 1/(1 − (−(x−1)))\n= Σ(−(x−1))ᵏ = Σ(−1)ᵏ(x − 1)ᵏ, valid for |x − 1| < 1, that is 0 < x < 2.\nForcing the expression into the geometric form beats computing derivatives.",
     "hints": [
       "Identify the governing formula or convergence test before doing the algebra.",
       "Write 1/x = 1/(1 + (x−1)) = 1/(1 − (−(x−1)))",
-      "= Σ(−(x−1))ᵇ = Σ(−1)ᵇ(x − 1)ᵇ, valid for |x − 1| < 1, that is 0 < x < 2."
+      "= Σ(−(x−1))ᵏ = Σ(−1)ᵏ(x − 1)ᵏ, valid for |x − 1| < 1, that is 0 < x < 2."
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 31, Practice 5",
@@ -3117,10 +3117,10 @@ const rows = [
     "variation": 1,
     "k": "fill",
     "a": [
-      "Σ(−1)ᵇ(x − 1)ᵇ",
-      "Σ(-1)ᵇ(x - 1)ᵇ",
-      "Σ(−1)ᵇ(x−1)ᵇ",
-      "Σ(-1)ᵇ(x-1)ᵇ"
+      "Σ(−1)ᵏ(x − 1)ᵏ",
+      "Σ(-1)^k(x - 1)^k",
+      "Σ(−1)ᵏ(x−1)ᵏ",
+      "Σ(-1)^k(x-1)^k"
     ]
   },
   {
@@ -3129,12 +3129,12 @@ const rows = [
     "lesson": 31,
     "t": 4,
     "tag": "Stretch",
-    "q": "Find the Maclaurin series for f(x) = eᵗ sin x through the x⁴ term.",
-    "why": "Multiply the two series and collect by degree.\neᵗ = 1 + x + x²/2 + x³/6 + x⁴/24\nsin x = x − x³/6\nx¹: 1·x = x\nx²: x·x = x²\nx³: (x²/2)(x) + (1)(−x³/6) = x³/2 − x³/6 = x³/3\nx⁴: (x³/6)(x) + (x)(−x³/6) = x⁴/6 − x⁴/6 = 0\nx + x² + x³/3 + 0·x⁴ + …\nMultiplying series is legal inside the common interval of convergence, and it is far easier than taking four derivatives of a product.",
+    "q": "Find the Maclaurin series for f(x) = eˣ sin x through the x⁴ term.",
+    "why": "Multiply the two series and collect by degree.\neˣ = 1 + x + x²/2 + x³/6 + x⁴/24\nsin x = x − x³/6\nx¹: 1·x = x\nx²: x·x = x²\nx³: (x²/2)(x) + (1)(−x³/6) = x³/2 − x³/6 = x³/3\nx⁴: (x³/6)(x) + (x)(−x³/6) = x⁴/6 − x⁴/6 = 0\nx + x² + x³/3 + 0·x⁴ + …\nMultiplying series is legal inside the common interval of convergence, and it is far easier than taking four derivatives of a product.",
     "hints": [
       "Break the problem into a setup, a calculation, and a reason the method applies.",
       "Multiply the two series and collect by degree.",
-      "eᵗ = 1 + x + x²/2 + x³/6 + x⁴/24"
+      "eˣ = 1 + x + x²/2 + x³/6 + x⁴/24"
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 31, Practice 7",
@@ -3178,11 +3178,11 @@ const rows = [
     "lesson": 32,
     "t": 1,
     "tag": "Warm-up",
-    "q": "Use series to find lim(x→0) (eᵗ − 1)/x.",
-    "why": "eᵗ − 1 = x + x²/2 + …, so the quotient is 1 + x/2 + … → 1",
+    "q": "Use series to find lim(x→0) (eˣ − 1)/x.",
+    "why": "eˣ − 1 = x + x²/2 + …, so the quotient is 1 + x/2 + … → 1",
     "hints": [
       "Start from the definition or formula introduced in this lesson.",
-      "eᵗ − 1 = x + x²/2 + …, so the quotient is 1 + x/2 + … → 1",
+      "eˣ − 1 = x + x²/2 + …, so the quotient is 1 + x/2 + … → 1",
       "Carry the calculation through carefully and check the result against the original conditions."
     ],
     "code": "",
@@ -3247,11 +3247,11 @@ const rows = [
     "lesson": 32,
     "t": 3,
     "tag": "Exam level",
-    "q": "Evaluate Σ(k=0 to ∞) (−1)ᵇπ²ᵇ⁺¹/(4²ᵇ⁺¹(2k+1)!).",
-    "why": "Odd powers with (2k+1)! and alternating signs is the sine series, with x²ᵇ⁺¹ = (π/4)²ᵇ⁺¹.\nSo the sum is sin(π/4) = √2/2\nMatch the factorial and the parity of the exponent first, then read off x.",
+    "q": "Evaluate Σ(k=0 to ∞) (−1)ᵏπ²ᵏ⁺¹/(4²ᵏ⁺¹(2k+1)!).",
+    "why": "Odd powers with (2k+1)! and alternating signs is the sine series, with x²ᵏ⁺¹ = (π/4)²ᵏ⁺¹.\nSo the sum is sin(π/4) = √2/2\nMatch the factorial and the parity of the exponent first, then read off x.",
     "hints": [
       "Identify the governing formula or convergence test before doing the algebra.",
-      "Odd powers with (2k+1)! and alternating signs is the sine series, with x²ᵇ⁺¹ = (π/4)²ᵇ⁺¹.",
+      "Odd powers with (2k+1)! and alternating signs is the sine series, with x²ᵏ⁺¹ = (π/4)²ᵏ⁺¹.",
       "So the sum is sin(π/4) = √2/2"
     ],
     "code": "",
@@ -3643,7 +3643,7 @@ const rows = [
     "t": 2,
     "tag": "Core",
     "q": "Find the area of the region inside r = 3sinθ and outside r = 1 + sinθ.",
-    "why": "Intersect: 3sinθ = 1 + sinθ ⇒ sinθ = 1/2 ⇒ θ = π/6, 5π/6.\nOn that interval 3sinθ is larger (test θ = π/2: 3 vs 2).\nA = ½∫&ₚᵢ;/₆^(5π/6) [9sin²θ − (1+sinθ)²] dθ\n= ½∫ [9sin²θ − 1 − 2sinθ − sin²θ] dθ = ½∫[8sin²θ − 2sinθ − 1]dθ\n8sin²θ = 4 − 4cos2θ, so the integrand is 3 − 4cos2θ − 2sinθ\n= ½[3θ − 2sin2θ + 2cosθ]&ₚᵢ;/₆^(5π/6)\n= ½[(5π/2 + √3 − √3) − (π/2 − √3 + √3)] = ½(2π) = π",
+    "why": "Intersect: 3sinθ = 1 + sinθ ⇒ sinθ = 1/2 ⇒ θ = π/6, 5π/6.\nOn that interval 3sinθ is larger (test θ = π/2: 3 vs 2).\nA = ½∫_{π/6}^{5π/6} [9sin²θ − (1+sinθ)²] dθ\n= ½∫ [9sin²θ − 1 − 2sinθ − sin²θ] dθ = ½∫[8sin²θ − 2sinθ − 1]dθ\n8sin²θ = 4 − 4cos2θ, so the integrand is 3 − 4cos2θ − 2sinθ\n= ½[3θ − 2sin2θ + 2cosθ]_{π/6}^{5π/6}\n= ½[(5π/2 + √3 − √3) − (π/2 − √3 + √3)] = ½(2π) = π",
     "hints": [
       "Identify the governing formula or convergence test before doing the algebra.",
       "Intersect: 3sinθ = 1 + sinθ ⇒ sinθ = 1/2 ⇒ θ = π/6, 5π/6.",
@@ -3667,11 +3667,11 @@ const rows = [
     "t": 3,
     "tag": "Exam level",
     "q": "Find the area inside one loop of r² = 4cos2θ.",
-    "why": "r = 0 when cos2θ = 0, so 2θ = ±π/2 and θ = ±π/4 bound the right loop.\nA = ½∫&ₘᵢₙᵤₛ;&ₚᵢ;/₄^(π/4) 4cos2θ dθ = 2[sin2θ/2]&ₘᵢₙᵤₛ;&ₚᵢ;/₄^(π/4) = [sin2θ]&ₘᵢₙᵤₛ;&ₚᵢ;/₄^(π/4) = 1 − (−1) = 2\nSince the equation gives r² directly, no squaring step is needed.",
+    "why": "r = 0 when cos2θ = 0, so 2θ = ±π/2 and θ = ±π/4 bound the right loop.\nA = ½∫_{−π/4}^{π/4} 4cos2θ dθ = 2[sin2θ/2]_{−π/4}^{π/4} = [sin2θ]_{−π/4}^{π/4} = 1 − (−1) = 2\nSince the equation gives r² directly, no squaring step is needed.",
     "hints": [
       "Identify the governing formula or convergence test before doing the algebra.",
       "r = 0 when cos2θ = 0, so 2θ = ±π/2 and θ = ±π/4 bound the right loop.",
-      "A = ½∫&ₘᵢₙᵤₛ;&ₚᵢ;/₄^(π/4) 4cos2θ dθ = 2[sin2θ/2]&ₘᵢₙᵤₛ;&ₚᵢ;/₄^(π/4) = [sin2θ]&ₘᵢₙᵤₛ;&ₚᵢ;/₄^(π/4) = 1 − (−1) = 2"
+      "A = ½∫_{−π/4}^{π/4} 4cos2θ dθ = 2[sin2θ/2]_{−π/4}^{π/4} = [sin2θ]_{−π/4}^{π/4} = 1 − (−1) = 2"
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 35, Practice 5",
@@ -3690,7 +3690,7 @@ const rows = [
     "t": 4,
     "tag": "Stretch",
     "q": "Find the area inside both r = 1 and r = 2cosθ.",
-    "why": "The curves meet at θ = ±π/3. Inside means taking whichever curve is smaller at each angle.\nFor |θ| < π/3, 2cosθ > 1, so the circle r = 1 is the inner boundary.\nFor π/3 < θ < π/2, 2cosθ < 1, so r = 2cosθ bounds the region.\nA = 2[ ½∫₀^(π/3) 1 dθ + ½∫&ₚᵢ;/₃^(π/2) 4cos²θ dθ ]\n= π/3 + 2∫&ₚᵢ;/₃^(π/2)(1 + cos2θ)dθ = π/3 + 2[θ + sin2θ/2]&ₚᵢ;/₃^(π/2)\n= π/3 + 2[(π/2) − (π/3 + √3/4)] = π/3 + π/3 − π/3... carefully: = π/3 + (π − 2π/3 − √3/2) = 2π/3 − √3/2 ≈ 1.228\nRegions inside two curves nearly always require splitting at the intersection angle, because the binding curve changes.",
+    "why": "The curves meet at θ = ±π/3. Inside means taking whichever curve is smaller at each angle.\nFor |θ| < π/3, 2cosθ > 1, so the circle r = 1 is the inner boundary.\nFor π/3 < θ < π/2, 2cosθ < 1, so r = 2cosθ bounds the region.\nA = 2[ ½∫₀^(π/3) 1 dθ + ½∫_{π/3}^{π/2} 4cos²θ dθ ]\n= π/3 + 2∫_{π/3}^{π/2}(1 + cos2θ)dθ = π/3 + 2[θ + sin2θ/2]_{π/3}^{π/2}\n= π/3 + 2[(π/2) − (π/3 + √3/4)] = π/3 + π/3 − π/3... carefully: = π/3 + (π − 2π/3 − √3/2) = 2π/3 − √3/2 ≈ 1.228\nRegions inside two curves nearly always require splitting at the intersection angle, because the binding curve changes.",
     "hints": [
       "Break the problem into a setup, a calculation, and a reason the method applies.",
       "The curves meet at θ = ±π/3. Inside means taking whichever curve is smaller at each angle.",

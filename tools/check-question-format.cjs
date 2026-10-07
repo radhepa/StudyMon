@@ -66,6 +66,26 @@ function check(n,ok,d){results.push({n,ok});console.log((ok?'PASS  ':'FAIL  ')+n
     };
   });
 
+  t('clean data',()=>{
+    fresh('calc');
+    const texts=[];
+    allQuestions().forEach(q=>[q.q].concat(q.c||[],q.hints||[],[q.why],q.k==='fill'&&Array.isArray(q.a)?q.a:[])
+      .forEach(s=>{if(typeof s==='string'&&s)texts.push([q,s]);}));
+    const bad=(re,onlyGenerated)=>texts.filter(([q,s])=>(!onlyGenerated||/-ten-/.test(q.id))&&re.test(s)).map(([q])=>q.id);
+    o.clean={
+      // shifted or garbled conversions from the field manual
+      garbled:bad(/&[ₐ-ₜᵢ-ᵥ]|⁺\^|\^1\^1|ᶜ|₀\.⁵/),
+      kSeriesWithB:bad(/Σ\(k=.*ᵇ/),
+      // leftovers from pasting numbers into the generated questions
+      coefOne:bad(/(^|[\s(=+\-\[])1(?=[a-zA-Z])/,true),
+      powOne:bad(/[A-Za-z)]\^1(?![\d.])/,true),
+      varMinusParen:bad(/[A-Za-z] [-+] \(-?\d+(\.\d+)?\)/,true),
+      fracCoef:bad(/(^|[^\w)\/.^(])\d+\/\d+[a-zA-Z(]/,true)
+    };
+    // every generated question offers four different choices
+    o.cleanDistinct=allQuestions().filter(q=>/-ten-/.test(q.id)&&(q.c.length!==4||new Set(q.c).size!==4)).map(q=>q.id);
+  });
+
   t('C untouched',()=>{
     let n=0,diff=0;
     const bank=SUBJECTS.c.QBANK;
@@ -133,6 +153,11 @@ function check(n,ok,d){results.push({n,ok});console.log((ok?'PASS  ':'FAIL  ')+n
  check('hyphens become minus signs only between terms', s.minus&&s.keepsHyphen, JSON.stringify({m:s.minus,h:s.keepsHyphen}));
  check('prose stays prose (and/or, units, "integral from ... becomes")', s.keepsWords&&s.prose, JSON.stringify({w:s.keepsWords,p:s.prose}));
  check('text is still escaped, and <= reads as ≤', s.escapes);
+ const cl=r.clean||{};
+ check('no garbled or shifted math is left in the Calculus II bank', cl.garbled&&cl.garbled.length===0&&cl.kSeriesWithB.length===0, JSON.stringify({g:(cl.garbled||[]).slice(0,3),k:(cl.kSeriesWithB||[]).slice(0,3)}));
+ check('generated questions read cleanly (no 1x, ^1, x - (-4) or 9/2pi)',
+   cl.coefOne&&[cl.coefOne,cl.powOne,cl.varMinusParen,cl.fracCoef].every(a=>a.length===0)&&r.cleanDistinct.length===0,
+   JSON.stringify({c:(cl.coefOne||[]).slice(0,2),p:(cl.powOne||[]).slice(0,2),v:(cl.varMinusParen||[]).slice(0,2),f:(cl.fracCoef||[]).slice(0,2),d:(r.cleanDistinct||[]).slice(0,2)}));
  check('C questions render exactly as before', r.c&&r.c.texts>1000&&r.c.diff===0, JSON.stringify(r.c));
  const op=r.open||{};
  check('every Isles gym and route is open on a fresh save', op.gymsBlocked===0&&op.disabledButtons===0, JSON.stringify({g:op.gymsBlocked,d:op.disabledButtons}));

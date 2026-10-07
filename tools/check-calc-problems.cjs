@@ -63,7 +63,7 @@ function check(n, ok, d) { results.push({ n, ok }); say((ok ? 'PASS  ' : 'FAIL  
       guidedCounts: Array.from({ length: 35 }, (_, i) => (guidedByLesson[i + 1] || []).length)
     };
   });
-  check('the expanded problems load into the calculus bank', r.probs === 357 && r.total === 1695, r.probs + ' legacy problems of ' + r.total + ' total');
+  check('the expanded problems load into the calculus bank', r.probs === 357 && r.total === 1735, r.probs + ' legacy problems of ' + r.total + ' total');
   check('all Quiz 3+ Field Manual prompts are accounted for', r.fieldManual && r.fieldManual.total === 204 &&
     r.fieldManual.preserved + r.fieldManual.added === 204 && r.fieldManual.added === 150,
     JSON.stringify(r.fieldManual));
@@ -74,11 +74,11 @@ function check(n, ok, d) { results.push({ n, ok }); say((ok ? 'PASS  ' : 'FAIL  
   check('problems sit at the harder tiers', !r.tiers[1] && r.tiers[3] + r.tiers[4] > r.probs / 2, JSON.stringify(r.tiers));
   check('Quiz 2 has nineteen paper-work families with ten variations each',
     r.quiz2FamilyCount === 19 && r.quiz2FamilySizes.every(n => n === 10) && r.quiz2Valid, JSON.stringify(r.quiz2FamilySizes));
-  check('all other lessons have sixty-six fully guided tenfold families',
-    r.tenfoldCount === 660 && r.tenfoldFamilyCount === 66 && r.tenfoldFamilySizes.every(n => n === 10) && r.tenfoldValid,
+  check('all other lessons have seventy fully guided tenfold families',
+    r.tenfoldCount === 700 && r.tenfoldFamilyCount === 70 && r.tenfoldFamilySizes.every(n => n === 10) && r.tenfoldValid,
     r.tenfoldCount + ' questions; sizes ' + JSON.stringify(r.tenfoldFamilySizes));
-  check('all gyms and exam routes total eighty-five atomic families with ten variants each',
-    r.atomicFamilyCount === 85 && r.atomicFamilySizes.every(n => n === 10) && r.atomicChapters.length === 14,
+  check('all gyms and exam routes total eighty-nine atomic families with ten variants each',
+    r.atomicFamilyCount === 89 && r.atomicFamilySizes.every(n => n === 10) && r.atomicChapters.length === 14,
     r.atomicFamilyCount + ' families across ' + JSON.stringify(r.atomicChapters));
   check('the Thomas top-up is fully guided and routed to the right gyms',
     r.thomasCount === 42 && r.thomasValid, r.thomasCount);
@@ -175,7 +175,7 @@ function check(n, ok, d) { results.push({ n, ok }); say((ok ? 'PASS  ' : 'FAIL  
     }));
   }
   check('the four-digit Bank seen counter stays centered on desktop and mobile',
-    bankLayouts.every(x => x.text === '38/1695' && !x.overflow && x.centerDelta < 1), JSON.stringify(bankLayouts));
+    bankLayouts.every(x => x.text === '38/1735' && !x.overflow && x.centerDelta < 1), JSON.stringify(bankLayouts));
 
   // a full gym battle still runs with the new questions in the pool
   r = await p.evaluate(async () => {

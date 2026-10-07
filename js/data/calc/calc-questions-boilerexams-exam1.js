@@ -468,7 +468,7 @@ var Q = [
   q: "Find the volume of the solid whose base is the region bounded by y = √(cos x) and the x-axis on [−π/2, π/2], and whose cross sections through the solid perpendicular to the x-axis are isosceles right triangles with a horizontal leg in the xy-plane and a vertical leg above the x-axis. (Hint: an isosceles right triangle has legs of equal length).",
   c: ["1/2", "1", "2", "π", "2π", "π/2"],
   a: 1,
-  why: "A cross-section at x is an isosceles right triangle with both legs equal to √(cosx), so its area is ½(√cosx)² = (cosx)/2. V = ∫₋π/2^π/2 (cosx)/2 dx = ½[sinx]₋π/2^π/2 = ½(1-(-1)) = 1.",
+  why: "A cross-section at x is an isosceles right triangle with both legs equal to √(cosx), so its area is ½(√cosx)² = (cosx)/2. V = ∫_{−π/2}^{π/2} (cosx)/2 dx = ½[sinx]_{−π/2}^{π/2} = ½(1-(-1)) = 1.",
   hints: ["An isosceles right triangle with leg L has area L²/2 - here L = √(cosx), so L² = cosx.", "V = ∫ (cosx)/2 dx over the symmetric interval [-π/2, π/2]."] },
 
 { id: "k2-be-017", chapter: 2, lesson: 6, t: 4, tag: "Applied",
@@ -489,7 +489,7 @@ var Q = [
   q: "Find the volume of the solid whose base is the region bounded by y = √(cos x) and the x-axis on [−π/2, π/2], and whose cross sections through the solid perpendicular to the x-axis are squares with a horizontal side in the xy-plane and a vertical side above the x-axis.",
   c: ["1", "2", "2π", "π", "2√2"],
   a: 1,
-  why: "A square cross-section at x has side √cosx, area cosx. V = ∫₋π/2^π/2 cosx dx = [sinx]₋π/2^π/2 = 2.",
+  why: "A square cross-section at x has side √cosx, area cosx. V = ∫_{−π/2}^{π/2} cosx dx = [sinx]_{−π/2}^{π/2} = 2.",
   hints: ["This time the cross-section is a full square, not a half-triangle, so there's no factor of 1/2.", "Area = (√cosx)² = cosx; integrate over the same symmetric interval."] },
 
 { id: "k2-be-020", chapter: 2, lesson: 6, t: 4, tag: "Applied",

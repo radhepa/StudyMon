@@ -422,7 +422,7 @@
   mc(94, 35, 3, 'Applied', 'The area enclosed by the cardioid r = 1 + cos θ is:', '3π/2',
     ['π', '2π', '3π'], '½∫₀^(2π) (1 + cos θ)² dθ. Expanding gives 1 + 2cos θ + cos²θ; the cosine term integrates to 0 and cos²θ contributes π, so ½(2π + π) = 3π/2.');
   mc(94, 35, 4, 'Exam', 'The area of one petal of r = cos 2θ is:', 'π/8',
-    ['π/4', 'π/2', 'π'], '½∫₋π/4^(π/4) cos²2θ dθ. The half-angle gives π/4 for the integral, halved to π/8. All four petals total π/2.');
+    ['π/4', 'π/2', 'π'], '½∫_{−π/4}^{π/4} cos²2θ dθ. The half-angle gives π/4 for the integral, halved to π/8. All four petals total π/2.');
   mc(94, 35, 4, 'Exam', 'The area enclosed by r = 2cos θ, integrating over 0 to 2π, gives:', 'Twice the true area, because the circle is traced twice',
     ['The true area', 'Half the true area', 'Zero'], 'The circle is fully traced as θ runs from −π/2 to π/2. Over 0 to 2π you go round it twice, which is why the θ range must be found first.');
   mc(94, 35, 3, 'Applied', 'The arc length of the circle r = 3 from θ = 0 to 2π is:', '6π',

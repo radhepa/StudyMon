@@ -1365,10 +1365,10 @@ var Q = [
 ["k94-p-004",94,35,4,"Exam","fill",
  "Find the area inside one loop of r² = 4cos 2θ. Give the exact value.",
  ["2","two"],null,
- "r = 0 when cos 2θ = 0, so θ = ±π/4 bound the right loop. A = ½∫₋π/4^(π/4) 4cos 2θ dθ = [sin 2θ]₋π/4^(π/4) = 1 − (−1) = 2. Since the equation gives r² directly, there is no squaring step.",
+ "r = 0 when cos 2θ = 0, so θ = ±π/4 bound the right loop. A = ½∫_{−π/4}^{π/4} 4cos 2θ dθ = [sin 2θ]_{−π/4}^{π/4} = 1 − (−1) = 2. Since the equation gives r² directly, there is no squaring step.",
  ["The equation already gives you r², which is exactly what the area formula wants.",
   "The loop runs between consecutive zeros: cos 2θ = 0 at θ = ±π/4.",
-  "A = ½∫₋π/4^(π/4) 4cos 2θ dθ, and ∫cos 2θ dθ = sin(2θ)/2."]],
+  "A = ½∫_{−π/4}^{π/4} 4cos 2θ dθ, and ∫cos 2θ dθ = sin(2θ)/2."]],
 
 ["k94-p-005",94,35,4,"Exam","mcq",
  "Find the arc length of r = e^(2θ) from θ = 0 to θ = π.",
