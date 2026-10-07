@@ -23,7 +23,7 @@ const {chromium}=require('./playwright.cjs');
  await page.evaluate(()=>runQuestCode(true));await page.waitForFunction(()=>C_JOB&&C_JOB.phase==='run',{},{timeout:45000});
  await page.evaluate(()=>openSideQuests());assert.ok(await page.evaluate(()=>!C_JOB&&!sideQuestProgress('c-lab-02').rewardClaimed));console.log('PASS leaving a quest cancels execution without rewards');
  await page.evaluate(()=>{S=freshSave();switchSubject('calc');S.party=[makeMon(255,10)];B=null;beginGymBattle(4);});
- assert.ok(await page.evaluate(()=>!B));console.log('PASS direct gym entry enforces exam prerequisites');
+ assert.ok(await page.evaluate(()=>!!B&&B.kind==='gym'));console.log('PASS direct gym entry is open in the Isles, where every topic is open');
  console.log('PASS: runtime edge cases and cancellation');
  }finally{await browser.close();}
 })().catch(e=>{console.error(e);process.exitCode=1});

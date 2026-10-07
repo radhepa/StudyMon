@@ -154,6 +154,8 @@ function check(name, ok, detail) {
       B = { over: false, kind: 'wild', you: mon, foes: [makeMon(7, 10)], foeIx: 0 };
       const healed = useBattleItem('potion');
       const healState = { hp: mon.hp, count: itemCount('potion'), healed };
+      // using an item is the turn, so the doll needs a turn of its own
+      B = { over: false, kind: 'wild', you: mon, foes: [makeMon(7, 10)], foeIx: 0 };
       const escaped = useBattleItem('pokeDoll');
       const escapeState = { over: B.over, count: itemCount('pokeDoll'), escaped };
       B = { over: false, kind: 'gym', you: mon, foes: [makeMon(7, 10)], foeIx: 0 };
