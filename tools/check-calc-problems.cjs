@@ -67,7 +67,7 @@ function check(n, ok, d) { results.push({ n, ok }); say((ok ? 'PASS  ' : 'FAIL  
   check('all Quiz 3+ Field Manual prompts are accounted for', r.fieldManual && r.fieldManual.total === 204 &&
     r.fieldManual.preserved + r.fieldManual.added === 204 && r.fieldManual.added === 150,
     JSON.stringify(r.fieldManual));
-  check('proof and derivation prompts use self-check grading', r.selfChecks === 25, r.selfChecks);
+  check('proof and derivation prompts use self-check grading', r.selfChecks === 52, r.selfChecks);
   check('every problem carries exactly three hints', r.hinted === r.probs, r.hinted + '/' + r.probs);
   check('every hint is a real sentence', r.hintsAreStrings);
   check('problems reach every gym and every exam route', r.chapters.length === 14, JSON.stringify(r.chapters));

@@ -13,9 +13,9 @@ const rows = [
     "q": "Use shells to find the volume when the region under y = x² on [0,2] is rotated about the y-axis.",
     "why": "Shell radius x, shell height x², thickness dx.\nV = 2π∫₀² x·x² dx = 2π∫₀² x³ dx = 2π[x⁴/4]₀² = 8π\nCompare with washers in y: you would need x = √y and an outer radius of 2, more setup for the same answer.",
     "hints": [
-      "Start from the definition or formula introduced in this lesson.",
+      "Sketch the region and the axis. A shell has volume 2π(radius)(height)(thickness): write the radius and the height in terms of the variable you integrate.",
       "Shell radius x, shell height x², thickness dx.",
-      "V = 2π∫₀² x·x² dx = 2π∫₀² x³ dx = 2π[x⁴/4]₀² = 8π"
+      "V = 2π∫₀² x·x² dx = 2π∫₀² x³ dx = 2π[x⁴/4]₀² = …"
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 7, Practice 1",
@@ -37,7 +37,7 @@ const rows = [
     "q": "Region bounded by y = 2x − x² and y = 0, rotated about the y-axis. Use shells.",
     "why": "The parabola meets y = 0 at x = 0 and x = 2.\nV = 2π∫₀² x(2x − x²) dx = 2π∫₀² (2x² − x³) dx\n= 2π[2x³/3 − x⁴/4]₀² = 2π(16/3 − 4) = 8π/3\nWashers here would require solving a quadratic for x in terms of y and splitting into two branches. Shells sidestep all of it.",
     "hints": [
-      "Start from the definition or formula introduced in this lesson.",
+      "Sketch the region and the axis. A shell has volume 2π(radius)(height)(thickness): write the radius and the height in terms of the variable you integrate.",
       "The parabola meets y = 0 at x = 0 and x = 2.",
       "V = 2π∫₀² x(2x − x²) dx = 2π∫₀² (2x² − x³) dx"
     ],
@@ -61,9 +61,9 @@ const rows = [
     "q": "Region bounded by y = x and y = x² rotated about the y-axis. Use shells.",
     "why": "They meet at x = 0 and 1. Shell height is top minus bottom, x − x².\nV = 2π∫₀¹ x(x − x²) dx = 2π∫₀¹ (x² − x³) dx = 2π(1/3 − 1/4) = π/6\nShell height obeys the same top-minus-bottom rule as area problems.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Sketch the region and the axis. A shell has volume 2π(radius)(height)(thickness): write the radius and the height in terms of the variable you integrate.",
       "They meet at x = 0 and 1. Shell height is top minus bottom, x − x².",
-      "V = 2π∫₀¹ x(x − x²) dx = 2π∫₀¹ (x² − x³) dx = 2π(1/3 − 1/4) = π/6"
+      "V = 2π∫₀¹ x(x − x²) dx = 2π∫₀¹ (x² − x³) dx = 2π(1/3 − 1/4) = …"
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 7, Practice 3",
@@ -83,9 +83,9 @@ const rows = [
     "t": 2,
     "tag": "Core",
     "q": "Region under y = 1/x on [1,3] rotated about the line x = −1. Use shells.",
-    "why": "The shell radius is the distance from x to the axis: x − (−1) = x + 1.\nV = 2π∫₁³ (x+1)(1/x) dx = 2π∫₁³ (1 + 1/x) dx = 2π[x + ln x]₁³\n= 2π(3 + ln3 − 1) = 2π(2 + ln 3) ≈ 19.46\nShifting the axis changes only the radius factor, never the height.",
+    "why": "The shell radius is the distance from x to the axis: x − (−1) = x + 1.\nV = 2π∫₁³ (x+1)(1/x) dx = 2π∫₁³ (1 + 1/x) dx = 2π[x + ln x]₁³\n= 2π(3 + ln3 − 1) = 2π(2 + ln 3) ≈ 19.47\nShifting the axis changes only the radius factor, never the height.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Sketch the region and the axis. A shell has volume 2π(radius)(height)(thickness): write the radius and the height in terms of the variable you integrate.",
       "The shell radius is the distance from x to the axis: x − (−1) = x + 1.",
       "V = 2π∫₁³ (x+1)(1/x) dx = 2π∫₁³ (1 + 1/x) dx = 2π[x + ln x]₁³"
     ],
@@ -96,15 +96,29 @@ const rows = [
     "variation": 1,
     "k": "fill",
     "a": [
-      "2π(2 + ln 3) ≈ 19.46",
-      "2pi(2 + ln 3) ~ 19.46",
-      "2π(2+ln3)≈19.46",
-      "2pi(2+ln3)~19.46",
+      "2π(2 + ln 3) ≈ 19.47",
+      "2π(2+ln3)≈19.47",
+      "2pi(2 + ln 3) ~ 19.47",
+      "2pi(2+ln3)~19.47",
       "2π(2 + ln 3)",
-      "2pi(2 + ln 3)",
       "2π(2+ln3)",
+      "2pi(2 + ln 3)",
       "2pi(2+ln3)",
-      "19.46"
+      "2π(2 + ln(3))",
+      "2π(2+ln(3))",
+      "2pi(2 + ln(3))",
+      "2pi(2+ln(3))",
+      "4π + 2π ln 3",
+      "4π+2πln3",
+      "4pi + 2pi ln 3",
+      "4pi+2piln3",
+      "4π + 2πln(3)",
+      "4π+2πln(3)",
+      "4pi + 2piln(3)",
+      "4pi+2piln(3)",
+      "19.47",
+      "19.469",
+      "19.5"
     ]
   },
   {
@@ -116,7 +130,7 @@ const rows = [
     "q": "Region bounded by y = √x, y = 0, x = 4, rotated about the x-axis. Use shells (integrate in y).",
     "why": "The axis is horizontal, so shells are horizontal strips and the variable is y, running 0 to 2.\nShell radius = y. Shell height = horizontal extent = 4 − y².\nV = 2π∫₀² y(4 − y²) dy = 2π[2y² − y⁴/4]₀² = 2π(8 − 4) = 8π\nConfirm with disks in x: π∫₀⁴ x dx = 8π ✓ Both methods must agree, which makes this a useful self-check technique.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Sketch the region and the axis. A shell has volume 2π(radius)(height)(thickness): write the radius and the height in terms of the variable you integrate.",
       "The axis is horizontal, so shells are horizontal strips and the variable is y, running 0 to 2.",
       "Shell radius = y. Shell height = horizontal extent = 4 − y²."
     ],
@@ -140,20 +154,22 @@ const rows = [
     "q": "Region bounded by y = x³, y = 8, x = 0, rotated about the x-axis. Choose the easier method and explain.",
     "why": "Rotating about a horizontal axis with the region described by y = x³ suggests washers in x. The region runs x = 0 to 2, with outer radius 8 and inner radius x³.\nV = π∫₀² (64 − x⁶) dx = π[64x − x⁷/7]₀² = π(128 − 128/7) = 768π/7\nShells would need y^(1/3) and would work too, but washers avoid the fractional exponent.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Sketch the region and the axis. A shell has volume 2π(radius)(height)(thickness): write the radius and the height in terms of the variable you integrate.",
       "Rotating about a horizontal axis with the region described by y = x³ suggests washers in x. The region runs x = 0 to 2, with outer radius 8 and inner radius x³.",
-      "V = π∫₀² (64 − x⁶) dx = π[64x − x⁷/7]₀² = π(128 − 128/7) = 768π/7"
+      "V = π∫₀² (64 − x⁶) dx = π[64x − x⁷/7]₀² = π(128 − 128/7) = …"
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 7, Practice 6",
     "family": "field-manual-L07-P06",
     "familyName": "Volumes by shells - practice 6",
     "variation": 1,
-    "k": "fill",
-    "a": [
-      "768π/7",
-      "768pi/7"
-    ]
+    "k": "mcq",
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "a": 0,
+    "selfCheck": true
   },
   {
     "id": "k3-fm-L07-P07",
@@ -164,7 +180,7 @@ const rows = [
     "q": "A hole of radius 1 is bored through the center of a sphere of radius 3. Find the remaining volume using shells.",
     "why": "Put the sphere at the origin. At distance x from the axis (1 ≤ x ≤ 3), the shell height is the vertical extent of the sphere, 2√(9 − x²).\nV = 2π∫₁³ x·2√(9−x²) dx = 4π∫₁³ x√(9−x²) dx\nLet u = 9 − x², du = −2x dx: = 4π·½∫₀⁸ √u du = 2π[2u^(3/2)/3]₀⁸\n= (4π/3)(8)^(3/2) = (4π/3)(16√2) = 64√2π/3 ≈ 94.8",
     "hints": [
-      "Break the problem into a setup, a calculation, and a reason the method applies.",
+      "Sketch the region and the axis. A shell has volume 2π(radius)(height)(thickness): write the radius and the height in terms of the variable you integrate.",
       "Put the sphere at the origin. At distance x from the axis (1 ≤ x ≤ 3), the shell height is the vertical extent of the sphere, 2√(9 − x²).",
       "V = 2π∫₁³ x·2√(9−x²) dx = 4π∫₁³ x√(9−x²) dx"
     ],
@@ -176,12 +192,21 @@ const rows = [
     "k": "fill",
     "a": [
       "64√2π/3 ≈ 94.8",
-      "64sqrt(2pi)/3 ~ 94.8",
       "64√2π/3≈94.8",
-      "64sqrt(2pi)/3~94.8",
+      "64sqrt(2)pi/3 ~ 94.8",
+      "64sqrt(2)pi/3~94.8",
       "64√2π/3",
-      "64sqrt(2pi)/3",
-      "94.8"
+      "64sqrt(2)pi/3",
+      "64π√2/3",
+      "64pisqrt(2)/3",
+      "(64√2/3)π",
+      "(64sqrt(2)/3)pi",
+      "94.8",
+      "94.78",
+      "64sqrt(2)*pi/3",
+      "64*sqrt(2)*pi/3",
+      "64pi*sqrt(2)/3",
+      "64 pi sqrt(2)/3"
     ]
   },
   {
@@ -193,9 +218,9 @@ const rows = [
     "q": "Find the arc length of y = (2/3)x^(3/2) on [0, 3].",
     "why": "f′ = x^(1/2), so (f′)² = x.\nL = ∫₀³ √(1 + x) dx = [(2/3)(1+x)^(3/2)]₀³ = (2/3)(8 − 1) = 14/3\nThe exponent 3/2 is chosen precisely so the radical simplifies. Recognizing that saves you from looking for a substitution.",
     "hints": [
-      "Start from the definition or formula introduced in this lesson.",
+      "Arc length is ∫√(1 + (f′)²) dx and surface area about the x-axis is ∫2πf√(1 + (f′)²) dx. Find f′ and simplify 1 + (f′)² before you integrate.",
       "f′ = x^(1/2), so (f′)² = x.",
-      "L = ∫₀³ √(1 + x) dx = [(2/3)(1+x)^(3/2)]₀³ = (2/3)(8 − 1) = 14/3"
+      "L = ∫₀³ √(1 + x) dx = [(2/3)(1+x)^(3/2)]₀³ = (2/3)(8 − 1) = …"
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 8, Practice 1",
@@ -216,8 +241,8 @@ const rows = [
     "q": "Set up (do not evaluate) the arc length of y = sin x on [0, π].",
     "why": "f′ = cos x, so L = ∫₀^π √(1 + cos²x) dx\nThis has no elementary antiderivative, which is normal. Exam problems asking you to evaluate are always rigged to simplify; problems that do not simplify ask only for the setup.",
     "hints": [
-      "Start from the definition or formula introduced in this lesson.",
-      "f′ = cos x, so L = ∫₀^π √(1 + cos²x) dx",
+      "Arc length is ∫√(1 + (f′)²) dx and surface area about the x-axis is ∫2πf√(1 + (f′)²) dx. Find f′ and simplify 1 + (f′)² before you integrate.",
+      "f′ = cos x, so L = …",
       "This has no elementary antiderivative, which is normal. Exam problems asking you to evaluate are always rigged to simplify; problems that do not simplify ask only for the setup."
     ],
     "code": "",
@@ -225,13 +250,13 @@ const rows = [
     "family": "field-manual-L08-P02",
     "familyName": "Arc length and surface area - practice 2",
     "variation": 1,
-    "k": "fill",
-    "a": [
-      "∫₀^π √(1 + cos²x) dx",
-      "∫_0^pi sqrt(1 + cos^2x) dx",
-      "∫₀^π√(1+cos²x)dx",
-      "∫_0^pisqrt(1+cos^2x)dx"
-    ]
+    "k": "mcq",
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "a": 0,
+    "selfCheck": true
   },
   {
     "id": "k3-fm-L08-P03",
@@ -242,7 +267,7 @@ const rows = [
     "q": "Find the arc length of y = x²/4 − (ln x)/2 on [1, 3].",
     "why": "f′ = x/2 − 1/(2x)\n(f′)² = x²/4 − 1/2 + 1/(4x²)\n1 + (f′)² = x²/4 + 1/2 + 1/(4x²) = (x/2 + 1/(2x))²\nL = ∫₁³ (x/2 + 1/(2x)) dx = [x²/4 + (ln x)/2]₁³ = (9/4 + (ln3)/2) − 1/4 = 2 + (ln 3)/2 ≈ 2.549\nThe signature pattern: the cross term of the square cancels against the −1/2, turning a difference of squares plus one into a perfect square sum.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Arc length is ∫√(1 + (f′)²) dx and surface area about the x-axis is ∫2πf√(1 + (f′)²) dx. Find f′ and simplify 1 + (f′)² before you integrate.",
       "f′ = x/2 − 1/(2x)",
       "(f′)² = x²/4 − 1/2 + 1/(4x²)"
     ],
@@ -269,9 +294,9 @@ const rows = [
     "t": 2,
     "tag": "Core",
     "q": "Find the surface area when y = √x on [1,4] is rotated about the x-axis.",
-    "why": "f′ = 1/(2√x), (f′)² = 1/(4x)\nS = 2π∫₁⁴ √x · √(1 + 1/(4x)) dx = 2π∫₁⁴ √(x + 1/4) dx\n= 2π[(2/3)(x + 1/4)^(3/2)]₁⁴ = (4π/3)[(17/4)^(3/2) − (5/4)^(3/2)]\n= (4π/3)(8.755 − 1.398) ≈ 30.85\nPulling √x inside the radical is the simplification that makes this integrable.",
+    "why": "f′ = 1/(2√x), (f′)² = 1/(4x)\nS = 2π∫₁⁴ √x · √(1 + 1/(4x)) dx = 2π∫₁⁴ √(x + 1/4) dx\n= 2π[(2/3)(x + 1/4)^(3/2)]₁⁴ = (4π/3)[(17/4)^(3/2) − (5/4)^(3/2)]\n= (π/6)(17√17 − 5√5) = (4π/3)(8.762 − 1.398) ≈ 30.85\nPulling √x inside the radical is the simplification that makes this integrable.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Arc length is ∫√(1 + (f′)²) dx and surface area about the x-axis is ∫2πf√(1 + (f′)²) dx. Find f′ and simplify 1 + (f′)² before you integrate.",
       "f′ = 1/(2√x), (f′)² = 1/(4x)",
       "S = 2π∫₁⁴ √x · √(1 + 1/(4x)) dx = 2π∫₁⁴ √(x + 1/4) dx"
     ],
@@ -282,7 +307,21 @@ const rows = [
     "variation": 1,
     "k": "fill",
     "a": [
-      "30.85"
+      "(π/6)(17√17 − 5√5) ≈ 30.85",
+      "(π/6)(17√17−5√5)≈30.85",
+      "(pi/6)(17sqrt(17) - 5sqrt(5)) ~ 30.85",
+      "(pi/6)(17sqrt(17)-5sqrt(5))~30.85",
+      "(π/6)(17√17 − 5√5)",
+      "(π/6)(17√17−5√5)",
+      "(pi/6)(17sqrt(17) - 5sqrt(5))",
+      "(pi/6)(17sqrt(17)-5sqrt(5))",
+      "π(17√17 − 5√5)/6",
+      "π(17√17−5√5)/6",
+      "pi(17sqrt(17) - 5sqrt(5))/6",
+      "pi(17sqrt(17)-5sqrt(5))/6",
+      "30.85",
+      "30.8",
+      "30.846"
     ]
   },
   {
@@ -294,7 +333,7 @@ const rows = [
     "q": "Find the surface area when y = x³ on [0,2] is rotated about the x-axis.",
     "why": "f′ = 3x², so S = 2π∫₀² x³√(1 + 9x⁴) dx\nLet u = 1 + 9x⁴, du = 36x³ dx, so x³dx = du/36. Limits: 1 to 145.\nS = 2π/36 ∫₁¹⁴⁵ √u du = (π/18)[(2/3)u^(3/2)]₁¹⁴⁵\n= (π/27)(145^(3/2) − 1) ≈ 203.0\nThe x³ out front is exactly what the substitution needs, which is why the problem uses the x-axis and not the y-axis.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Arc length is ∫√(1 + (f′)²) dx and surface area about the x-axis is ∫2πf√(1 + (f′)²) dx. Find f′ and simplify 1 + (f′)² before you integrate.",
       "f′ = 3x², so S = 2π∫₀² x³√(1 + 9x⁴) dx",
       "Let u = 1 + 9x⁴, du = 36x³ dx, so x³dx = du/36. Limits: 1 to 145."
     ],
@@ -305,7 +344,25 @@ const rows = [
     "variation": 1,
     "k": "fill",
     "a": [
-      "203.0"
+      "(π/27)(145^(3/2) − 1) ≈ 203.0",
+      "(π/27)(145^(3/2)−1)≈203.0",
+      "(pi/27)(145^(3/2) - 1) ~ 203.0",
+      "(pi/27)(145^(3/2)-1)~203.0",
+      "(π/27)(145^(3/2) − 1)",
+      "(π/27)(145^(3/2)−1)",
+      "(pi/27)(145^(3/2) - 1)",
+      "(pi/27)(145^(3/2)-1)",
+      "(π/27)(145√145 − 1)",
+      "(π/27)(145√145−1)",
+      "(pi/27)(145sqrt(145) - 1)",
+      "(pi/27)(145sqrt(145)-1)",
+      "π(145√145 − 1)/27",
+      "π(145√145−1)/27",
+      "pi(145sqrt(145) - 1)/27",
+      "pi(145sqrt(145)-1)/27",
+      "203.0",
+      "203",
+      "203.04"
     ]
   },
   {
@@ -317,7 +374,7 @@ const rows = [
     "q": "Find the surface area when the curve x = √(4 − y²) on [−1,1] is rotated about the y-axis.",
     "why": "Here the radius is x itself and the variable is y.\ndx/dy = −y/√(4−y²), so 1 + (dx/dy)² = 1 + y²/(4−y²) = 4/(4−y²)\nS = 2π∫₋₁¹ √(4−y²) · 2/√(4−y²) dy = 2π∫₋₁¹ 2 dy = 8π\nThe radicals cancel completely. This is the classic result that a band on a sphere has area depending only on its height.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Arc length is ∫√(1 + (f′)²) dx and surface area about the x-axis is ∫2πf√(1 + (f′)²) dx. Find f′ and simplify 1 + (f′)² before you integrate.",
       "Here the radius is x itself and the variable is y.",
       "dx/dy = −y/√(4−y²), so 1 + (dx/dy)² = 1 + y²/(4−y²) = 4/(4−y²)"
     ],
@@ -341,9 +398,9 @@ const rows = [
     "q": "A curve satisfies (f′(x))² = x⁴ − 1 with f(1) = 0 on [1,2]. Find its arc length.",
     "why": "1 + (f′)² = x⁴, so √(1 + (f′)²) = x² on [1,2] where x > 0.\nL = ∫₁² x² dx = [x³/3]₁² = 8/3 − 1/3 = 7/3\nYou never needed f itself. Arc length depends only on the derivative, so information about f′ is enough.",
     "hints": [
-      "Break the problem into a setup, a calculation, and a reason the method applies.",
+      "Arc length is ∫√(1 + (f′)²) dx and surface area about the x-axis is ∫2πf√(1 + (f′)²) dx. Find f′ and simplify 1 + (f′)² before you integrate.",
       "1 + (f′)² = x⁴, so √(1 + (f′)²) = x² on [1,2] where x > 0.",
-      "L = ∫₁² x² dx = [x³/3]₁² = 8/3 − 1/3 = 7/3"
+      "L = ∫₁² x² dx = [x³/3]₁² = 8/3 − 1/3 = …"
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 8, Practice 7",
@@ -364,8 +421,8 @@ const rows = [
     "q": "A rod on [0,4] meters has linear density ρ(x) = 3 + 2x kg/m. Find its mass.",
     "why": "m = ∫₀⁴ (3 + 2x) dx = [3x + x²]₀⁴ = 12 + 16 = 28 kg\nDensity times length gives mass, but since density varies you integrate rather than multiply.",
     "hints": [
-      "Start from the definition or formula introduced in this lesson.",
-      "m = ∫₀⁴ (3 + 2x) dx = [3x + x²]₀⁴ = 12 + 16 = 28 kg",
+      "Slice it up: mass is ∫ρ dx, the center of mass is ∫xρ dx divided by the mass, and work is ∫(force on a slice)(distance it moves). For a spring, F = kx with x measured from natural length.",
+      "m = ∫₀⁴ (3 + 2x) dx = [3x + x²]₀⁴ = 12 + 16 = …",
       "Density times length gives mass, but since density varies you integrate rather than multiply."
     ],
     "code": "",
@@ -376,7 +433,8 @@ const rows = [
     "k": "fill",
     "a": [
       "28 kg",
-      "28kg"
+      "28kg",
+      "28"
     ]
   },
   {
@@ -388,8 +446,8 @@ const rows = [
     "q": "A force of 20 N stretches a spring 0.5 m beyond its natural length. Find k.",
     "why": "Hooke's law: F = kx, so 20 = k(0.5), giving k = 40 N/m.\nx is always displacement from natural length, never total length. Every spring problem starts here.",
     "hints": [
-      "Start from the definition or formula introduced in this lesson.",
-      "Hooke's law: F = kx, so 20 = k(0.5), giving k = 40 N/m.",
+      "Slice it up: mass is ∫ρ dx, the center of mass is ∫xρ dx divided by the mass, and work is ∫(force on a slice)(distance it moves). For a spring, F = kx with x measured from natural length.",
+      "Hooke's law: F = kx, so 20 = k(0.5), giving k = …",
       "x is always displacement from natural length, never total length. Every spring problem starts here."
     ],
     "code": "",
@@ -402,7 +460,10 @@ const rows = [
       "k = 40 N/m",
       "k=40N/m",
       "40 N/m",
-      "40N/m"
+      "40N/m",
+      "40",
+      "k = 40",
+      "k=40"
     ]
   },
   {
@@ -411,11 +472,11 @@ const rows = [
     "lesson": 9,
     "t": 2,
     "tag": "Core",
-    "q": "Using the spring above, find the work to stretch it from 0.5 m to 1.2 m beyond natural length.",
+    "q": "A force of 20 N stretches a spring 0.5 m beyond its natural length (so k = 40 N/m). Find the work to stretch it from 0.5 m to 1.2 m beyond natural length.",
     "why": "W = ∫_{0.5}^{1.2} 40x dx = [20x²]_{0.5}^{1.2} = 20(1.44 − 0.25) = 23.8 J\nThe work formula ½k(b² − a²) gives the same thing: 20(1.44 − 0.25). Note the work is not proportional to distance; stretching farther costs progressively more.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
-      "W = ∫_{0.5}^{1.2} 40x dx = [20x²]_{0.5}^{1.2} = 20(1.44 − 0.25) = 23.8 J",
+      "Slice it up: mass is ∫ρ dx, the center of mass is ∫xρ dx divided by the mass, and work is ∫(force on a slice)(distance it moves). For a spring, F = kx with x measured from natural length.",
+      "W = ∫_{0.5}^{1.2} 40x dx = [20x²]_{0.5}^{1.2} = 20(1.44 − 0.25) = …",
       "The work formula ½k(b² − a²) gives the same thing: 20(1.44 − 0.25). Note the work is not proportional to distance; stretching farther costs progressively more."
     ],
     "code": "",
@@ -426,7 +487,8 @@ const rows = [
     "k": "fill",
     "a": [
       "23.8 J",
-      "23.8J"
+      "23.8J",
+      "23.8"
     ]
   },
   {
@@ -438,7 +500,7 @@ const rows = [
     "q": "A 40 ft chain weighing 3 lb/ft hangs from a winch. Find the work to wind it all up.",
     "why": "Let y measure distance below the winch, 0 to 40.\nA slice at depth y weighs 3 dy pounds and must be lifted a distance y.\nW = ∫₀⁴⁰ 3y dy = [3y²/2]₀⁴⁰ = 2400 ft·lb\nEquivalently: the whole chain weighs 120 lb and its center of mass rises 20 ft, giving 2400. The integral is doing exactly that averaging.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Slice it up: mass is ∫ρ dx, the center of mass is ∫xρ dx divided by the mass, and work is ∫(force on a slice)(distance it moves). For a spring, F = kx with x measured from natural length.",
       "Let y measure distance below the winch, 0 to 40.",
       "A slice at depth y weighs 3 dy pounds and must be lifted a distance y."
     ],
@@ -450,9 +512,19 @@ const rows = [
     "k": "fill",
     "a": [
       "2400 ft·lb",
-      "2400 ft*lb",
       "2400ft·lb",
-      "2400ft*lb"
+      "2400 ft*lb",
+      "2400ft*lb",
+      "2400 ft-lb",
+      "2400ft-lb",
+      "2400 lb·ft",
+      "2400lb·ft",
+      "2400 lb*ft",
+      "2400lb*ft",
+      "2400 foot-pounds",
+      "2400foot-pounds",
+      "2400",
+      "2,400"
     ]
   },
   {
@@ -461,11 +533,11 @@ const rows = [
     "lesson": 9,
     "t": 3,
     "tag": "Exam level",
-    "q": "The same 40 ft, 3 lb/ft chain has a 60 lb weight attached at the bottom. Find the total work to wind it up.",
-    "why": "The chain contributes 2400 ft·lb as computed above.\nThe weight is a single object lifted the full 40 ft: 60(40) = 2400 ft·lb.\nTotal: 4800 ft·lb\nPoint masses are multiplication, distributed masses are integration. Add the two contributions.",
+    "q": "A 40 ft chain weighing 3 lb/ft hangs from a winch, with a 60 lb weight attached at the bottom. Find the total work to wind it all up.",
+    "why": "The chain: with y the distance below the winch, a slice weighs 3 dy and rises y, so W = ∫₀⁴⁰ 3y dy = [3y²/2]₀⁴⁰ = 2400 ft·lb.\nThe weight is a single object lifted the full 40 ft: 60(40) = 2400 ft·lb.\nTotal: 4800 ft·lb\nPoint masses are multiplication, distributed masses are integration. Add the two contributions.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
-      "The chain contributes 2400 ft·lb as computed above.",
+      "Slice it up: mass is ∫ρ dx, the center of mass is ∫xρ dx divided by the mass, and work is ∫(force on a slice)(distance it moves). For a spring, F = kx with x measured from natural length.",
+      "The chain: with y the distance below the winch, a slice weighs 3 dy and rises y, so W = ∫₀⁴⁰ 3y dy = [3y²/2]₀⁴⁰ = 2400 ft·lb.",
       "The weight is a single object lifted the full 40 ft: 60(40) = 2400 ft·lb."
     ],
     "code": "",
@@ -476,9 +548,19 @@ const rows = [
     "k": "fill",
     "a": [
       "4800 ft·lb",
-      "4800 ft*lb",
       "4800ft·lb",
-      "4800ft*lb"
+      "4800 ft*lb",
+      "4800ft*lb",
+      "4800 ft-lb",
+      "4800ft-lb",
+      "4800 lb·ft",
+      "4800lb·ft",
+      "4800 lb*ft",
+      "4800lb*ft",
+      "4800 foot-pounds",
+      "4800foot-pounds",
+      "4800",
+      "4,800"
     ]
   },
   {
@@ -487,10 +569,10 @@ const rows = [
     "lesson": 9,
     "t": 3,
     "tag": "Exam level",
-    "q": "A rod on [0,2] m has density ρ(x) = x² + 1 kg/m. Find its mass and the position of its center of mass.",
+    "q": "A rod on [0,2] m has density ρ(x) = x² + 1 kg/m. Find the position of its center of mass.",
     "why": "m = ∫₀² (x²+1) dx = [x³/3 + x]₀² = 8/3 + 2 = 14/3 kg\nMoment = ∫₀² x(x²+1) dx = [x⁴/4 + x²/2]₀² = 4 + 2 = 6\nx̄ = moment/mass = 6/(14/3) = 9/7 ≈ 1.29 m\nThat is past the midpoint of 1 m, which makes sense since the rod is denser toward the right end.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Slice it up: mass is ∫ρ dx, the center of mass is ∫xρ dx divided by the mass, and work is ∫(force on a slice)(distance it moves). For a spring, F = kx with x measured from natural length.",
       "m = ∫₀² (x²+1) dx = [x³/3 + x]₀² = 8/3 + 2 = 14/3 kg",
       "Moment = ∫₀² x(x²+1) dx = [x⁴/4 + x²/2]₀² = 4 + 2 = 6"
     ],
@@ -507,7 +589,15 @@ const rows = [
       "9/7~1.29m",
       "9/7",
       "1.29 m",
-      "1.29m"
+      "1.29m",
+      "9/7 m",
+      "9/7m",
+      "1.29",
+      "1.286",
+      "x = 9/7",
+      "x=9/7",
+      "x = 1.29",
+      "x=1.29"
     ]
   },
   {
@@ -519,9 +609,9 @@ const rows = [
     "q": "Only half of a chain 30 ft long weighing 2 lb/ft is hanging over the edge of a roof. Find the work to pull the hanging part up.",
     "why": "Only the hanging 15 ft moves. Let y measure distance below the roof, 0 to 15.\nW = ∫₀¹⁵ 2y dy = [y²]₀¹⁵ = 225 ft·lb\nThe part lying flat on the roof does not rise, so it contributes nothing. Deciding which parts actually move, and how far, is the entire problem.",
     "hints": [
-      "Break the problem into a setup, a calculation, and a reason the method applies.",
+      "Slice it up: mass is ∫ρ dx, the center of mass is ∫xρ dx divided by the mass, and work is ∫(force on a slice)(distance it moves). For a spring, F = kx with x measured from natural length.",
       "Only the hanging 15 ft moves. Let y measure distance below the roof, 0 to 15.",
-      "W = ∫₀¹⁵ 2y dy = [y²]₀¹⁵ = 225 ft·lb"
+      "W = ∫₀¹⁵ 2y dy = [y²]₀¹⁵ = …"
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 9, Practice 7",
@@ -531,9 +621,18 @@ const rows = [
     "k": "fill",
     "a": [
       "225 ft·lb",
-      "225 ft*lb",
       "225ft·lb",
-      "225ft*lb"
+      "225 ft*lb",
+      "225ft*lb",
+      "225 ft-lb",
+      "225ft-lb",
+      "225 lb·ft",
+      "225lb·ft",
+      "225 lb*ft",
+      "225lb*ft",
+      "225 foot-pounds",
+      "225foot-pounds",
+      "225"
     ]
   },
   {
@@ -545,22 +644,22 @@ const rows = [
     "q": "A cylindrical tank of radius 2 m and height 6 m is full of water. Set up the integral for the work to pump all the water over the top.",
     "why": "y = 0 at the bottom. A(y) = π(2)² = 4π, constant. Distance lifted: 6 − y.\nW = ∫₀⁶ 1000(9.8)(4π)(6 − y) dy\nEvaluating: 39200π[6y − y²/2]₀⁶ = 39200π(18) ≈ 2.22 × 10⁶ J",
     "hints": [
-      "Start from the definition or formula introduced in this lesson.",
+      "Slice horizontally. Pumping: integrate ρg·A(y)·(distance that slice is lifted). Force on a vertical wall: integrate ρg·(depth)·(strip width) over the depth.",
       "y = 0 at the bottom. A(y) = π(2)² = 4π, constant. Distance lifted: 6 − y.",
-      "W = ∫₀⁶ 1000(9.8)(4π)(6 − y) dy"
+      "Evaluating: 39200π[6y − y²/2]₀⁶ = 39200π(18) ≈ 2.22 × 10⁶ J"
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 10, Practice 1",
     "family": "field-manual-L10-P01",
     "familyName": "Physical applications II: pumping fluid and force on a dam - practice 1",
     "variation": 1,
-    "k": "fill",
-    "a": [
-      "∫₀⁶ 1000(9.8)(4π)(6 − y) dy",
-      "∫_0^6 1000(9.8)(4pi)(6 - y) dy",
-      "∫₀⁶1000(9.8)(4π)(6−y)dy",
-      "∫_0^61000(9.8)(4pi)(6-y)dy"
-    ]
+    "k": "mcq",
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "a": 0,
+    "selfCheck": true
   },
   {
     "id": "k91-fm-L10-P02",
@@ -568,12 +667,12 @@ const rows = [
     "lesson": 10,
     "t": 1,
     "tag": "Warm-up",
-    "q": "Same tank, but only filled to a depth of 4 m. What changes?",
-    "why": "The area and the lift distance are unchanged. Only the upper limit changes, from 6 to 4, because there is no water above y = 4.\nW = ∫₀⁴ 39200π(6 − y) dy = 39200π[6y − y²/2]₀⁴ = 39200π(16) ≈ 1.97 × 10⁶ J\nIntegrate over the water, not over the tank. This is the most commonly missed detail in the section.",
+    "q": "A cylindrical tank of radius 2 m and height 6 m holds water to a depth of 4 m. Find the work needed to pump all of the water out over the top. (Water: 1000 kg/m³, g = 9.8 m/s².)",
+    "why": "Put y = 0 at the bottom. Each slice has area π(2)² = 4π and is lifted 6 − y to the top, so its weight per unit height is 1000(9.8)(4π) = 39200π. The water only fills 0 ≤ y ≤ 4, so the upper limit is 4, not 6.\nW = ∫₀⁴ 39200π(6 − y) dy = 39200π[6y − y²/2]₀⁴ = 39200π(16) ≈ 1.97 × 10⁶ J\nIntegrate over the water, not over the tank. This is the most commonly missed detail in the section.",
     "hints": [
-      "Start from the definition or formula introduced in this lesson.",
-      "The area and the lift distance are unchanged. Only the upper limit changes, from 6 to 4, because there is no water above y = 4.",
-      "W = ∫₀⁴ 39200π(6 − y) dy = 39200π[6y − y²/2]₀⁴ = 39200π(16) ≈ 1.97 × 10⁶ J"
+      "Slice horizontally. Pumping: integrate ρg·A(y)·(distance that slice is lifted). Force on a vertical wall: integrate ρg·(depth)·(strip width) over the depth.",
+      "Put y = 0 at the bottom. Each slice has area π(2)² = 4π and is lifted 6 − y to the top, so its weight per unit height is 1000(9.8)(4π) = 39200π. The water only fills 0 ≤ y ≤ 4, so the upper limit is 4, not 6.",
+      "W = ∫₀⁴ 39200π(6 − y) dy = 39200π[6y − y²/2]₀⁴ = 39200π(16) ≈ …"
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 10, Practice 2",
@@ -583,9 +682,51 @@ const rows = [
     "k": "fill",
     "a": [
       "1.97 × 10⁶ J",
-      "1.97 × 10^6 J",
+      "1.97 × 10⁶",
+      "1.97 × 10⁶J",
+      "1.97×10⁶",
+      "1.97×10⁶ J",
       "1.97×10⁶J",
-      "1.97×10^6J"
+      "1.97 × 10^6",
+      "1.97 × 10^6 J",
+      "1.97 × 10^6J",
+      "1.97×10^6",
+      "1.97×10^6 J",
+      "1.97×10^6J",
+      "1.97 x 10^6",
+      "1.97 x 10^6 J",
+      "1.97 x 10^6J",
+      "1.97x10^6",
+      "1.97x10^6 J",
+      "1.97x10^6J",
+      "1.97 * 10^6",
+      "1.97 * 10^6 J",
+      "1.97 * 10^6J",
+      "1.97*10^6",
+      "1.97*10^6 J",
+      "1.97*10^6J",
+      "1.97 x 10⁶",
+      "1.97 x 10⁶ J",
+      "1.97 x 10⁶J",
+      "1.97x10⁶",
+      "1.97x10⁶ J",
+      "1.97x10⁶J",
+      "1.97e6",
+      "1.97e6 J",
+      "1.97e6J",
+      "1970000",
+      "1970000 J",
+      "1,970,000",
+      "1,970,000 J",
+      "1970407",
+      "1970407 J",
+      "627200π",
+      "627200pi",
+      "627200π J",
+      "627200πJ",
+      "627200pi J",
+      "627200piJ",
+      "627,200π"
     ]
   },
   {
@@ -597,7 +738,7 @@ const rows = [
     "q": "A cone, point down, with height 6 m and top radius 2 m, is full of water pumped out over the rim. Find the work.",
     "why": "y = 0 at the tip. Similar triangles: r/y = 2/6, so r = y/3 and A(y) = πy²/9.\nLift distance: 6 − y.\nW = ∫₀⁶ 9800(πy²/9)(6−y) dy = (9800π/9)∫₀⁶ (6y² − y³) dy\n= (9800π/9)[2y³ − y⁴/4]₀⁶ = (9800π/9)(432 − 324) = (9800π/9)(108) ≈ 3.69 × 10⁵ J",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Slice horizontally. Pumping: integrate ρg·A(y)·(distance that slice is lifted). Force on a vertical wall: integrate ρg·(depth)·(strip width) over the depth.",
       "y = 0 at the tip. Similar triangles: r/y = 2/6, so r = y/3 and A(y) = πy²/9.",
       "Lift distance: 6 − y."
     ],
@@ -609,9 +750,49 @@ const rows = [
     "k": "fill",
     "a": [
       "3.69 × 10⁵ J",
-      "3.69 × 10^5 J",
+      "3.69 × 10⁵",
+      "3.69 × 10⁵J",
+      "3.69×10⁵",
+      "3.69×10⁵ J",
       "3.69×10⁵J",
-      "3.69×10^5J"
+      "3.69 × 10^5",
+      "3.69 × 10^5 J",
+      "3.69 × 10^5J",
+      "3.69×10^5",
+      "3.69×10^5 J",
+      "3.69×10^5J",
+      "3.69 x 10^5",
+      "3.69 x 10^5 J",
+      "3.69 x 10^5J",
+      "3.69x10^5",
+      "3.69x10^5 J",
+      "3.69x10^5J",
+      "3.69 * 10^5",
+      "3.69 * 10^5 J",
+      "3.69 * 10^5J",
+      "3.69*10^5",
+      "3.69*10^5 J",
+      "3.69*10^5J",
+      "3.69 x 10⁵",
+      "3.69 x 10⁵ J",
+      "3.69 x 10⁵J",
+      "3.69x10⁵",
+      "3.69x10⁵ J",
+      "3.69x10⁵J",
+      "3.69e5",
+      "3.69e5 J",
+      "3.69e5J",
+      "369000",
+      "369000 J",
+      "369,000",
+      "369451",
+      "369451 J",
+      "117600π",
+      "117600pi",
+      "117600π J",
+      "117600πJ",
+      "117600pi J",
+      "117600piJ"
     ]
   },
   {
@@ -621,9 +802,9 @@ const rows = [
     "t": 2,
     "tag": "Core",
     "q": "A spherical tank of radius 3 m is full of water, pumped out through a spout at the top of the tank. Set up the integral.",
-    "why": "Put y = 0 at the center of the sphere, so y runs from −3 to 3.\nRadius of the slice: √(9 − y²), so A(y) = π(9 − y²).\nDistance lifted to the top of the tank: 3 − y.\nW = ∫₋³³ 9800π(9 − y²)(3 − y) dy\nCentering the coordinate at the sphere's center makes the radius formula clean. Putting y = 0 at the bottom works too but produces (y−3)² inside.",
+    "why": "Put y = 0 at the center of the sphere, so y runs from −3 to 3.\nRadius of the slice: √(9 − y²), so A(y) = π(9 − y²).\nDistance lifted to the top of the tank: 3 − y.\nW = ∫₋₃³ 9800π(9 − y²)(3 − y) dy\nCentering the coordinate at the sphere's center makes the radius formula clean. Putting y = 0 at the bottom works too but produces (y−3)² inside.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Slice horizontally. Pumping: integrate ρg·A(y)·(distance that slice is lifted). Force on a vertical wall: integrate ρg·(depth)·(strip width) over the depth.",
       "Put y = 0 at the center of the sphere, so y runs from −3 to 3.",
       "Radius of the slice: √(9 − y²), so A(y) = π(9 − y²)."
     ],
@@ -632,13 +813,13 @@ const rows = [
     "family": "field-manual-L10-P04",
     "familyName": "Physical applications II: pumping fluid and force on a dam - practice 4",
     "variation": 1,
-    "k": "fill",
-    "a": [
-      "∫₋³³ 9800π(9 − y²)(3 − y) dy",
-      "∫₋^3^3 9800pi(9 - y^2)(3 - y) dy",
-      "∫₋³³9800π(9−y²)(3−y)dy",
-      "∫₋^3^39800pi(9-y^2)(3-y)dy"
-    ]
+    "k": "mcq",
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "a": 0,
+    "selfCheck": true
   },
   {
     "id": "k91-fm-L10-P05",
@@ -649,7 +830,7 @@ const rows = [
     "q": "A trough 10 ft long has triangular cross sections, 4 ft across the top and 3 ft deep, point down, full of water. Find the work to pump it over the top.",
     "why": "y = 0 at the bottom point. Width at height y: by similar triangles, w/y = 4/3 so w = 4y/3.\nSlice area (a rectangle 10 ft long): A(y) = 10(4y/3) = 40y/3.\nLift distance: 3 − y.\nW = ∫₀³ 62.4(40y/3)(3−y) dy = 832∫₀³ (3y − y²) dy\n= 832[3y²/2 − y³/3]₀³ = 832(13.5 − 9) = 3744 ft·lb\nIn US units, 62.4 lb/ft³ is already a weight density, so no g appears.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Slice horizontally. Pumping: integrate ρg·A(y)·(distance that slice is lifted). Force on a vertical wall: integrate ρg·(depth)·(strip width) over the depth.",
       "y = 0 at the bottom point. Width at height y: by similar triangles, w/y = 4/3 so w = 4y/3.",
       "Slice area (a rectangle 10 ft long): A(y) = 10(4y/3) = 40y/3."
     ],
@@ -661,9 +842,19 @@ const rows = [
     "k": "fill",
     "a": [
       "3744 ft·lb",
-      "3744 ft*lb",
       "3744ft·lb",
-      "3744ft*lb"
+      "3744 ft*lb",
+      "3744ft*lb",
+      "3744 ft-lb",
+      "3744ft-lb",
+      "3744 lb·ft",
+      "3744lb·ft",
+      "3744 lb*ft",
+      "3744lb*ft",
+      "3744 foot-pounds",
+      "3744foot-pounds",
+      "3744",
+      "3,744"
     ]
   },
   {
@@ -673,11 +864,11 @@ const rows = [
     "t": 3,
     "tag": "Exam level",
     "q": "A vertical dam face is a rectangle 20 m wide and 10 m tall, with water level at the top. Find the hydrostatic force.",
-    "why": "Let d measure depth below the surface, 0 to 10.\nF = ∫₀¹⁰ 1000(9.8)(d)(20) dd = 196000[d²/2]₀¹⁰ = 196000(50) = 9.8 × 10⁷ N\nPressure grows linearly with depth, so the force is not pressure times area at the average depth by coincidence: it works out that way for a rectangle specifically.",
+    "why": "Let d measure depth below the surface, 0 to 10.\nF = ∫₀¹⁰ 1000(9.8)(d)(20) dd = 196000[d²/2]₀¹⁰ = 196000(50) = 9.8 × 10⁶ N\nCheck: this is the pressure at the plate's centroid (depth 5 m) times its area, 9800(5)(200) = 9.8 × 10⁶ N. That shortcut holds for any flat plate, not just rectangles, because pressure grows linearly with depth; for a rectangle the centroid is simply at mid-depth.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Slice horizontally. Pumping: integrate ρg·A(y)·(distance that slice is lifted). Force on a vertical wall: integrate ρg·(depth)·(strip width) over the depth.",
       "Let d measure depth below the surface, 0 to 10.",
-      "F = ∫₀¹⁰ 1000(9.8)(d)(20) dd = 196000[d²/2]₀¹⁰ = 196000(50) = 9.8 × 10⁷ N"
+      "F = ∫₀¹⁰ 1000(9.8)(d)(20) dd = 196000[d²/2]₀¹⁰ = 196000(50) = …"
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 10, Practice 6",
@@ -686,10 +877,44 @@ const rows = [
     "variation": 1,
     "k": "fill",
     "a": [
-      "9.8 × 10⁷ N",
-      "9.8 × 10^7 N",
-      "9.8×10⁷N",
-      "9.8×10^7N"
+      "9.8 × 10⁶ N",
+      "9.8 × 10⁶",
+      "9.8 × 10⁶N",
+      "9.8×10⁶",
+      "9.8×10⁶ N",
+      "9.8×10⁶N",
+      "9.8 × 10^6",
+      "9.8 × 10^6 N",
+      "9.8 × 10^6N",
+      "9.8×10^6",
+      "9.8×10^6 N",
+      "9.8×10^6N",
+      "9.8 x 10^6",
+      "9.8 x 10^6 N",
+      "9.8 x 10^6N",
+      "9.8x10^6",
+      "9.8x10^6 N",
+      "9.8x10^6N",
+      "9.8 * 10^6",
+      "9.8 * 10^6 N",
+      "9.8 * 10^6N",
+      "9.8*10^6",
+      "9.8*10^6 N",
+      "9.8*10^6N",
+      "9.8 x 10⁶",
+      "9.8 x 10⁶ N",
+      "9.8 x 10⁶N",
+      "9.8x10⁶",
+      "9.8x10⁶ N",
+      "9.8x10⁶N",
+      "9.8e6",
+      "9.8e6 N",
+      "9.8e6N",
+      "9800000 N",
+      "9800000N",
+      "9800000",
+      "9,800,000 N",
+      "9,800,000"
     ]
   },
   {
@@ -701,7 +926,7 @@ const rows = [
     "q": "A vertical triangular plate has its 4 m base at the surface and its vertex 3 m down. Find the hydrostatic force on it.",
     "why": "Let d be depth, 0 to 3. The plate narrows going down: at depth d the width is w = 4(1 − d/3) = 4 − 4d/3.\nF = ∫₀³ 9800 d (4 − 4d/3) dd = 9800∫₀³ (4d − 4d²/3) dd\n= 9800[2d² − 4d³/9]₀³ = 9800(18 − 12) = 58800 N\nTwo things vary with depth here, the pressure and the width, and the product of both goes inside the integral.",
     "hints": [
-      "Break the problem into a setup, a calculation, and a reason the method applies.",
+      "Slice horizontally. Pumping: integrate ρg·A(y)·(distance that slice is lifted). Force on a vertical wall: integrate ρg·(depth)·(strip width) over the depth.",
       "Let d be depth, 0 to 3. The plate narrows going down: at depth d the width is w = 4(1 − d/3) = 4 − 4d/3.",
       "F = ∫₀³ 9800 d (4 − 4d/3) dd = 9800∫₀³ (4d − 4d²/3) dd"
     ],
@@ -713,7 +938,44 @@ const rows = [
     "k": "fill",
     "a": [
       "58800 N",
-      "58800N"
+      "58800N",
+      "58800",
+      "58,800 N",
+      "58,800N",
+      "58,800",
+      "5.88 × 10⁴",
+      "5.88 × 10⁴ N",
+      "5.88 × 10⁴N",
+      "5.88×10⁴",
+      "5.88×10⁴ N",
+      "5.88×10⁴N",
+      "5.88 × 10^4",
+      "5.88 × 10^4 N",
+      "5.88 × 10^4N",
+      "5.88×10^4",
+      "5.88×10^4 N",
+      "5.88×10^4N",
+      "5.88 x 10^4",
+      "5.88 x 10^4 N",
+      "5.88 x 10^4N",
+      "5.88x10^4",
+      "5.88x10^4 N",
+      "5.88x10^4N",
+      "5.88 * 10^4",
+      "5.88 * 10^4 N",
+      "5.88 * 10^4N",
+      "5.88*10^4",
+      "5.88*10^4 N",
+      "5.88*10^4N",
+      "5.88 x 10⁴",
+      "5.88 x 10⁴ N",
+      "5.88 x 10⁴N",
+      "5.88x10⁴",
+      "5.88x10⁴ N",
+      "5.88x10⁴N",
+      "5.88e4",
+      "5.88e4 N",
+      "5.88e4N"
     ]
   },
   {
@@ -725,7 +987,7 @@ const rows = [
     "q": "Derive the reduction formula ∫ sinⁿx dx = −(sinⁿ⁻¹x cos x)/n + ((n−1)/n)∫ sinⁿ⁻²x dx.",
     "why": "Split sinⁿx = sinⁿ⁻¹x · sin x. Take u = sinⁿ⁻¹x, dv = sin x dx.\ndu = (n−1)sinⁿ⁻²x cos x dx, v = −cos x\n∫sinⁿx dx = −sinⁿ⁻¹x cos x + (n−1)∫sinⁿ⁻²x cos²x dx\nReplace cos²x = 1 − sin²x:\n= −sinⁿ⁻¹x cos x + (n−1)∫sinⁿ⁻²x dx − (n−1)∫sinⁿx dx\nMove the last term left: n∫sinⁿx dx = −sinⁿ⁻¹x cos x + (n−1)∫sinⁿ⁻²x dx, then divide by n. ✓",
     "hints": [
-      "Break the problem into a setup, a calculation, and a reason the method applies.",
+      "Integration by parts: choose u to get simpler when differentiated and dv to be easy to integrate, then use ∫u dv = uv − ∫v du.",
       "Split sinⁿx = sinⁿ⁻¹x · sin x. Take u = sinⁿ⁻¹x, dv = sin x dx.",
       "du = (n−1)sinⁿ⁻²x cos x dx, v = −cos x"
     ],
@@ -751,22 +1013,22 @@ const rows = [
     "q": "Evaluate ∫ sin²x dx.",
     "why": "Both powers even, so power reduction: sin²x = (1 − cos2x)/2.\n= ½∫(1 − cos2x)dx = ½(x − sin2x/2) + C = x/2 − sin(2x)/4 + C",
     "hints": [
-      "Start from the definition or formula introduced in this lesson.",
+      "With an odd power, peel off one factor and convert the rest using sin²x + cos²x = 1. With only even powers, use the half-angle identities.",
       "Both powers even, so power reduction: sin²x = (1 − cos2x)/2.",
-      "= ½∫(1 − cos2x)dx = ½(x − sin2x/2) + C = x/2 − sin(2x)/4 + C"
+      "= ½∫(1 − cos2x)dx = ½(x − sin2x/2) + C = …"
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 12, Practice 2",
     "family": "field-manual-L12-P02",
     "familyName": "Trigonometric integrals I: sines and cosines - practice 2",
     "variation": 1,
-    "k": "fill",
-    "a": [
-      "x/2 − sin(2x)/4 + C",
-      "x/2 - sin(2x)/4 + C",
-      "x/2−sin(2x)/4+C",
-      "x/2-sin(2x)/4+C"
-    ]
+    "k": "mcq",
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "a": 0,
+    "selfCheck": true
   },
   {
     "id": "k4-fm-L12-P04",
@@ -777,7 +1039,7 @@ const rows = [
     "q": "Evaluate ∫₀^(π/2) cos⁵x dx.",
     "why": "Odd cosine power: cos⁵x = (1 − sin²x)² cos x.\nu = sin x, limits 0 to 1.\n= ∫₀¹ (1 − u²)² du = ∫₀¹ (1 − 2u² + u⁴) du = 1 − 2/3 + 1/5 = 8/15",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "With an odd power, peel off one factor and convert the rest using sin²x + cos²x = 1. With only even powers, use the half-angle identities.",
       "Odd cosine power: cos⁵x = (1 − sin²x)² cos x.",
       "u = sin x, limits 0 to 1."
     ],
@@ -800,7 +1062,7 @@ const rows = [
     "q": "Evaluate ∫ sin³x cos⁵x dx two different ways and confirm they agree.",
     "why": "Way 1 (peel a sine): ∫(1−cos²x)cos⁵x sin x dx, u = cos x\n= −∫(1−u²)u⁵du = −u⁶/6 + u⁸/8 + C = cos⁸x/8 − cos⁶x/6 + C\nWay 2 (peel a cosine): ∫sin³x(1−sin²x)²cos x dx, u = sin x\n= ∫(u³ − 2u⁵ + u⁷)du = sin⁴x/4 − sin⁶x/3 + sin⁸x/8 + C\nBoth are correct. They differ by a constant, which you can verify with the Pythagorean identity. When both powers are odd, peel from the smaller one for less algebra.",
     "hints": [
-      "Break the problem into a setup, a calculation, and a reason the method applies.",
+      "With an odd power, peel off one factor and convert the rest using sin²x + cos²x = 1. With only even powers, use the half-angle identities.",
       "Way 1 (peel a sine): ∫(1−cos²x)cos⁵x sin x dx, u = cos x",
       "= −∫(1−u²)u⁵du = −u⁶/6 + u⁸/8 + C = cos⁸x/8 − cos⁶x/6 + C"
     ],
@@ -826,7 +1088,7 @@ const rows = [
     "q": "Evaluate ∫ tan⁵x sec⁷x dx.",
     "why": "Odd tangent power: peel sec x tan x, convert the rest with tan²x = sec²x − 1.\ntan⁵x sec⁷x = (tan²x)² sec⁶x · (sec x tan x) = (sec²x−1)²sec⁶x(sec x tan x)\nu = sec x: = ∫(u²−1)²u⁶du = ∫(u¹⁰ − 2u⁸ + u⁶)du\n= sec¹¹x/11 − 2sec⁹x/9 + sec⁷x/7 + C",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Odd power of tan x: save sec x tan x and set u = sec x. Even power of sec x: save sec²x and set u = tan x. If neither fits, try integration by parts.",
       "Odd tangent power: peel sec x tan x, convert the rest with tan²x = sec²x − 1.",
       "tan⁵x sec⁷x = (tan²x)² sec⁶x · (sec x tan x) = (sec²x−1)²sec⁶x(sec x tan x)"
     ],
@@ -835,13 +1097,13 @@ const rows = [
     "family": "field-manual-L13-P03",
     "familyName": "Trigonometric integrals II: tangents and secants - practice 3",
     "variation": 1,
-    "k": "fill",
-    "a": [
-      "sec¹¹x/11 − 2sec⁹x/9 + sec⁷x/7 + C",
-      "sec^11x/11 - 2sec^9x/9 + sec^7x/7 + C",
-      "sec¹¹x/11−2sec⁹x/9+sec⁷x/7+C",
-      "sec^11x/11-2sec^9x/9+sec^7x/7+C"
-    ]
+    "k": "mcq",
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "a": 0,
+    "selfCheck": true
   },
   {
     "id": "k4-fm-L13-P07",
@@ -852,7 +1114,7 @@ const rows = [
     "q": "Evaluate ∫ sec³x dx from scratch.",
     "why": "Neither case applies (odd secant, even tangent), so integrate by parts.\nu = sec x, dv = sec²x dx ⇒ du = sec x tan x dx, v = tan x\nI = sec x tan x − ∫sec x tan²x dx = sec x tan x − ∫sec x(sec²x − 1)dx\nI = sec x tan x − I + ∫sec x dx\n2I = sec x tan x + ln|sec x + tan x|\nI = ½sec x tan x + ½ln|sec x + tan x| + C\nMemorize the result; it appears constantly inside trig substitution problems.",
     "hints": [
-      "Break the problem into a setup, a calculation, and a reason the method applies.",
+      "Odd power of tan x: save sec x tan x and set u = sec x. Even power of sec x: save sec²x and set u = tan x. If neither fits, try integration by parts.",
       "Neither case applies (odd secant, even tangent), so integrate by parts.",
       "u = sec x, dv = sec²x dx ⇒ du = sec x tan x dx, v = tan x"
     ],
@@ -861,13 +1123,13 @@ const rows = [
     "family": "field-manual-L13-P07",
     "familyName": "Trigonometric integrals II: tangents and secants - practice 7",
     "variation": 1,
-    "k": "fill",
-    "a": [
-      "½sec x tan x + ½ln|sec x + tan x| + C",
-      "1/2sec x tan x + 1/2ln|sec x + tan x| + C",
-      "½secxtanx+½ln|secx+tanx|+C",
-      "1/2secxtanx+1/2ln|secx+tanx|+C"
-    ]
+    "k": "mcq",
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "a": 0,
+    "selfCheck": true
   },
   {
     "id": "k4-fm-L14-P01",
@@ -878,7 +1140,7 @@ const rows = [
     "q": "Which substitution fits ∫ dx/√(x² − 25)? State it and simplify the radical.",
     "why": "The form is x² − a² with a = 5, so x = 5secθ, dx = 5secθtanθ dθ.\n√(25sec²θ − 25) = 5√(sec²θ−1) = 5tanθ\nThe integral becomes ∫5secθtanθ/(5tanθ) dθ = ∫secθdθ = ln|secθ+tanθ| + C = ln|x/5 + √(x²−25)/5| + C",
     "hints": [
-      "Start from the definition or formula introduced in this lesson.",
+      "Match the radical: a² − x² → x = a sinθ, a² + x² → x = a tanθ, x² − a² → x = a secθ. Check first whether a plain u-substitution already works.",
       "The form is x² − a² with a = 5, so x = 5secθ, dx = 5secθtanθ dθ.",
       "√(25sec²θ − 25) = 5√(sec²θ−1) = 5tanθ"
     ],
@@ -904,20 +1166,22 @@ const rows = [
     "q": "Evaluate ∫ dx/√(4 − x²) using trig substitution.",
     "why": "a² − x² form: x = 2sinθ, dx = 2cosθdθ, √(4−x²) = 2cosθ\n= ∫2cosθ/(2cosθ) dθ = θ + C = arcsin(x/2) + C\nThis confirms the arcsin entry in the integral table, which you could have used directly.",
     "hints": [
-      "Start from the definition or formula introduced in this lesson.",
+      "Match the radical: a² − x² → x = a sinθ, a² + x² → x = a tanθ, x² − a² → x = a secθ. Check first whether a plain u-substitution already works.",
       "a² − x² form: x = 2sinθ, dx = 2cosθdθ, √(4−x²) = 2cosθ",
-      "= ∫2cosθ/(2cosθ) dθ = θ + C = arcsin(x/2) + C"
+      "= ∫2cosθ/(2cosθ) dθ = θ + C = …"
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 14, Practice 2",
     "family": "field-manual-L14-P02",
     "familyName": "Trigonometric substitution I - practice 2",
     "variation": 1,
-    "k": "fill",
-    "a": [
-      "arcsin(x/2) + C",
-      "arcsin(x/2)+C"
-    ]
+    "k": "mcq",
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "a": 0,
+    "selfCheck": true
   },
   {
     "id": "k4-fm-L14-P07",
@@ -928,7 +1192,7 @@ const rows = [
     "q": "Evaluate ∫ x³√(x² + 9) dx without trig substitution, then say why it works.",
     "why": "Write x³ = x² · x and let u = x² + 9, so x² = u − 9 and du = 2x dx.\n= ½∫(u − 9)√u du = ½∫(u^(3/2) − 9u^(1/2))du\n= ½(2u^(5/2)/5 − 6u^(3/2)) + C = (x²+9)^(5/2)/5 − 3(x²+9)^(3/2) + C\nWhy it works: the odd power of x supplies the x dx needed for du. Trig substitution is only necessary when there is no such factor available.",
     "hints": [
-      "Break the problem into a setup, a calculation, and a reason the method applies.",
+      "Match the radical: a² − x² → x = a sinθ, a² + x² → x = a tanθ, x² − a² → x = a secθ. Check first whether a plain u-substitution already works.",
       "Write x³ = x² · x and let u = x² + 9, so x² = u − 9 and du = 2x dx.",
       "= ½∫(u − 9)√u du = ½∫(u^(3/2) − 9u^(1/2))du"
     ],
@@ -937,13 +1201,13 @@ const rows = [
     "family": "field-manual-L14-P07",
     "familyName": "Trigonometric substitution I - practice 7",
     "variation": 1,
-    "k": "fill",
-    "a": [
-      "(x²+9)^(5/2)/5 − 3(x²+9)^(3/2) + C",
-      "(x^2+9)^(5/2)/5 - 3(x^2+9)^(3/2) + C",
-      "(x²+9)^(5/2)/5−3(x²+9)^(3/2)+C",
-      "(x^2+9)^(5/2)/5-3(x^2+9)^(3/2)+C"
-    ]
+    "k": "mcq",
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "a": 0,
+    "selfCheck": true
   },
   {
     "id": "k5-fm-L15-P02",
@@ -954,7 +1218,7 @@ const rows = [
     "q": "Complete the square: x² − 8x + 25. What substitution follows?",
     "why": "x² − 8x + 16 + 9 = (x − 4)² + 9\nLet w = x − 4, giving w² + 9, the plus case, so w = 3tanθ.",
     "hints": [
-      "Start from the definition or formula introduced in this lesson.",
+      "Complete the square if needed, pick the trig substitution, and either change the limits to θ or convert back to x with a reference triangle.",
       "x² − 8x + 16 + 9 = (x − 4)² + 9",
       "Let w = x − 4, giving w² + 9, the plus case, so w = 3tanθ."
     ],
@@ -980,7 +1244,7 @@ const rows = [
     "q": "Evaluate ∫₀² x²√(4 − x²) dx.",
     "why": "x = 2sinθ: limits 0 to π/2. dx = 2cosθdθ, radical = 2cosθ.\n= ∫₀^(π/2) 4sin²θ · 2cosθ · 2cosθ dθ = 16∫₀^(π/2) sin²θcos²θ dθ\n= 16 · ¼∫sin²2θ dθ = 4∫₀^(π/2)(1 − cos4θ)/2 dθ\n= 2[θ − sin4θ/4]₀^(π/2) = 2(π/2) = π",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Complete the square if needed, pick the trig substitution, and either change the limits to θ or convert back to x with a reference triangle.",
       "x = 2sinθ: limits 0 to π/2. dx = 2cosθdθ, radical = 2cosθ.",
       "= ∫₀^(π/2) 4sin²θ · 2cosθ · 2cosθ dθ = 16∫₀^(π/2) sin²θcos²θ dθ"
     ],
@@ -1004,7 +1268,7 @@ const rows = [
     "q": "Evaluate ∫ dx/(x² + 1)².",
     "why": "x = tanθ, dx = sec²θdθ, (x²+1)² = sec⁴θ\n= ∫ sec²θ/sec⁴θ dθ = ∫cos²θ dθ = ½(θ + sinθcosθ) + C\nTriangle: sinθ = x/√(x²+1), cosθ = 1/√(x²+1), so sinθcosθ = x/(x²+1)\n= ½arctan x + x/(2(x²+1)) + C\nTrig substitution works even without a radical when a quadratic is raised to a power.",
     "hints": [
-      "Break the problem into a setup, a calculation, and a reason the method applies.",
+      "Complete the square if needed, pick the trig substitution, and either change the limits to θ or convert back to x with a reference triangle.",
       "x = tanθ, dx = sec²θdθ, (x²+1)² = sec⁴θ",
       "= ∫ sec²θ/sec⁴θ dθ = ∫cos²θ dθ = ½(θ + sinθcosθ) + C"
     ],
@@ -1013,13 +1277,13 @@ const rows = [
     "family": "field-manual-L15-P07",
     "familyName": "Trigonometric substitution II: definite integrals and completing the square - practice 7",
     "variation": 1,
-    "k": "fill",
-    "a": [
-      "½arctan x + x/(2(x²+1)) + C",
-      "1/2arctan x + x/(2(x^2+1)) + C",
-      "½arctanx+x/(2(x²+1))+C",
-      "1/2arctanx+x/(2(x^2+1))+C"
-    ]
+    "k": "mcq",
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "a": 0,
+    "selfCheck": true
   },
   {
     "id": "k5-fm-L16-P07",
@@ -1028,11 +1292,11 @@ const rows = [
     "t": 4,
     "tag": "Stretch",
     "q": "Evaluate ∫₂³ dx/(x² − 1) and interpret the sign.",
-    "why": "From the second problem's method: (1/2)ln|(x−1)/(x+1)| + C.\n[(1/2)ln((x−1)/(x+1))]₂³ = ½[ln(2/4) − ln(1/3)] = ½[ln(1/2) + ln3] = ½ln(3/2) ≈ 0.203\nPositive, as it should be: on [2,3] the integrand 1/(x²−1) is positive. Getting a negative value here would signal a sign error in the decomposition.",
+    "why": "Partial fractions: 1/(x² − 1) = ½[1/(x − 1) − 1/(x + 1)], so the antiderivative is ½ln|(x − 1)/(x + 1)| + C.\n[(1/2)ln((x−1)/(x+1))]₂³ = ½[ln(2/4) − ln(1/3)] = ½[ln(1/2) + ln3] = ½ln(3/2) ≈ 0.203\nPositive, as it should be: on [2,3] the integrand 1/(x²−1) is positive. Getting a negative value here would signal a sign error in the decomposition.",
     "hints": [
-      "Break the problem into a setup, a calculation, and a reason the method applies.",
-      "From the second problem's method: (1/2)ln|(x−1)/(x+1)| + C.",
-      "[(1/2)ln((x−1)/(x+1))]₂³ = ½[ln(2/4) − ln(1/3)] = ½[ln(1/2) + ln3] = ½ln(3/2) ≈ 0.203"
+      "Factor the denominator, write one partial fraction per factor, and solve for the constants by plugging in roots and matching coefficients.",
+      "Partial fractions: 1/(x² − 1) = ½[1/(x − 1) − 1/(x + 1)], so the antiderivative is ½ln|(x − 1)/(x + 1)| + C.",
+      "[(1/2)ln((x−1)/(x+1))]₂³ = ½[ln(2/4) − ln(1/3)] = ½[ln(1/2) + ln3] = …"
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 16, Practice 7",
@@ -1047,7 +1311,13 @@ const rows = [
       "1/2ln(3/2)~0.203",
       "½ln(3/2)",
       "1/2ln(3/2)",
-      "0.203"
+      "0.203",
+      "(1/2)ln(3/2)",
+      "ln(3/2)/2",
+      "(1/2)ln(1.5)",
+      "0.5ln(1.5)",
+      "1/2 ln(3/2)",
+      "0.2027"
     ]
   },
   {
@@ -1059,20 +1329,22 @@ const rows = [
     "q": "Evaluate ∫ 5/(x² + 4) dx.",
     "why": "Pure arctan form with a = 2.\n= 5 · (1/2)arctan(x/2) + C = (5/2)arctan(x/2) + C",
     "hints": [
-      "Start from the definition or formula introduced in this lesson.",
+      "Check for a simple form first (substitution, arctan). Otherwise factor the denominator completely over the reals; an irreducible quadratic factor gets (Bx + C) on top.",
       "Pure arctan form with a = 2.",
-      "= 5 · (1/2)arctan(x/2) + C = (5/2)arctan(x/2) + C"
+      "= 5 · (1/2)arctan(x/2) + C = …"
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 17, Practice 2",
     "family": "field-manual-L17-P02",
     "familyName": "Partial fractions II and choosing a strategy - practice 2",
     "variation": 1,
-    "k": "fill",
-    "a": [
-      "(5/2)arctan(x/2) + C",
-      "(5/2)arctan(x/2)+C"
-    ]
+    "k": "mcq",
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "a": 0,
+    "selfCheck": true
   },
   {
     "id": "k5-fm-L17-P04",
@@ -1083,7 +1355,7 @@ const rows = [
     "q": "Decompose (x² + 1)/((x+1)(x²+4)) and integrate.",
     "why": "(x²+1)/((x+1)(x²+4)) = A/(x+1) + (Bx + C)/(x²+4)\nx² + 1 = A(x²+4) + (Bx+C)(x+1)\nx = −1: 2 = 5A ⇒ A = 2/5\nCompare x² coefficients: 1 = A + B ⇒ B = 3/5\nCompare constants: 1 = 4A + C = 8/5 + C ⇒ C = −3/5\n∫[2/5 · 1/(x+1) + (3x/5 − 3/5)/(x²+4)]dx\n= (2/5)ln|x+1| + (3/10)ln(x²+4) − (3/10)arctan(x/2) + C",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Check for a simple form first (substitution, arctan). Otherwise factor the denominator completely over the reals; an irreducible quadratic factor gets (Bx + C) on top.",
       "(x²+1)/((x+1)(x²+4)) = A/(x+1) + (Bx + C)/(x²+4)",
       "x² + 1 = A(x²+4) + (Bx+C)(x+1)"
     ],
@@ -1092,13 +1364,13 @@ const rows = [
     "family": "field-manual-L17-P04",
     "familyName": "Partial fractions II and choosing a strategy - practice 4",
     "variation": 1,
-    "k": "fill",
-    "a": [
-      "(2/5)ln|x+1| + (3/10)ln(x²+4) − (3/10)arctan(x/2) + C",
-      "(2/5)ln|x+1| + (3/10)ln(x^2+4) - (3/10)arctan(x/2) + C",
-      "(2/5)ln|x+1|+(3/10)ln(x²+4)−(3/10)arctan(x/2)+C",
-      "(2/5)ln|x+1|+(3/10)ln(x^2+4)-(3/10)arctan(x/2)+C"
-    ]
+    "k": "mcq",
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "a": 0,
+    "selfCheck": true
   },
   {
     "id": "k5-fm-L17-P06",
@@ -1109,7 +1381,7 @@ const rows = [
     "q": "For each integral, name the first technique you would use, without solving: (a) ∫x√(x−1)dx (b) ∫x²eˣdx (c) ∫dx/(x²−4) (d) ∫√(4−x²)dx (e) ∫sin⁵x cos²x dx (f) ∫(x³+1)/x² dx",
     "why": "(a) u-substitution, u = x − 1, then rewrite x = u + 1\n(b) integration by parts, tabular\n(c) partial fractions\n(d) trig substitution, x = 2sinθ\n(e) trig integral, odd sine, peel one and set u = cos x\n(f) algebraic split into x + x⁻²\nDrill this format. On an exam the recognition step is what costs time, not the execution.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Check for a simple form first (substitution, arctan). Otherwise factor the denominator completely over the reals; an irreducible quadratic factor gets (Bx + C) on top.",
       "(a) u-substitution, u = x − 1, then rewrite x = u + 1",
       "(b) integration by parts, tabular"
     ],
@@ -1133,9 +1405,9 @@ const rows = [
     "t": 4,
     "tag": "Stretch",
     "q": "Evaluate ∫ dx/(x⁴ − 1).",
-    "why": "Factor fully: x⁴ − 1 = (x−1)(x+1)(x²+1).\n1/(x⁴−1) = A/(x−1) + B/(x+1) + (Cx+D)/(x²+1)\nx = 1: 1 = A(2)(2) ⇒ A = 1/4\nx = −1: 1 = B(−2)(2) ⇒ B = −1/4\nExpanding and matching x³ coefficients: 0 = A + B + C ⇒ C = 0\nConstants: −1 = −A + B − D... solving gives D = −1/2\n= (1/4)ln|x−1| − (1/4)ln|x+1| − (1/2)arctan x + C\nFactor as far as possible over the reals first. Leaving x⁴−1 as (x²−1)(x²+1) misses that x²−1 factors further.",
+    "why": "Factor fully: x⁴ − 1 = (x−1)(x+1)(x²+1).\n1/(x⁴−1) = A/(x−1) + B/(x+1) + (Cx+D)/(x²+1)\nx = 1: 1 = A(2)(2) ⇒ A = 1/4\nx = −1: 1 = B(−2)(2) ⇒ B = −1/4\nExpanding and matching x³ coefficients: 0 = A + B + C ⇒ C = 0\nConstants: 1 = A − B − D = 1/4 + 1/4 − D, so D = −1/2\n= (1/4)ln|x−1| − (1/4)ln|x+1| − (1/2)arctan x + C\nFactor as far as possible over the reals first. Leaving x⁴−1 as (x²−1)(x²+1) misses that x²−1 factors further.",
     "hints": [
-      "Break the problem into a setup, a calculation, and a reason the method applies.",
+      "Check for a simple form first (substitution, arctan). Otherwise factor the denominator completely over the reals; an irreducible quadratic factor gets (Bx + C) on top.",
       "Factor fully: x⁴ − 1 = (x−1)(x+1)(x²+1).",
       "1/(x⁴−1) = A/(x−1) + B/(x+1) + (Cx+D)/(x²+1)"
     ],
@@ -1144,13 +1416,13 @@ const rows = [
     "family": "field-manual-L17-P07",
     "familyName": "Partial fractions II and choosing a strategy - practice 7",
     "variation": 1,
-    "k": "fill",
-    "a": [
-      "(1/4)ln|x−1| − (1/4)ln|x+1| − (1/2)arctan x + C",
-      "(1/4)ln|x-1| - (1/4)ln|x+1| - (1/2)arctan x + C",
-      "(1/4)ln|x−1|−(1/4)ln|x+1|−(1/2)arctanx+C",
-      "(1/4)ln|x-1|-(1/4)ln|x+1|-(1/2)arctanx+C"
-    ]
+    "k": "mcq",
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "a": 0,
+    "selfCheck": true
   },
   {
     "id": "k6-fm-L18-P01",
@@ -1161,8 +1433,8 @@ const rows = [
     "q": "Evaluate ∫₁^∞ dx/x³ or show it diverges.",
     "why": "= lim(b→∞) ∫₁ᵇ x⁻³dx = lim [−1/(2x²)]₁ᵇ = lim(−1/(2b²) + 1/2) = 1/2, converges\nAlso immediate from the p-rule: p = 3 > 1.",
     "hints": [
-      "Start from the definition or formula introduced in this lesson.",
-      "= lim(b→∞) ∫₁ᵇ x⁻³dx = lim [−1/(2x²)]₁ᵇ = lim(−1/(2b²) + 1/2) = 1/2, converges",
+      "Replace the infinite limit, or the point where the integrand blows up, with a variable; integrate, then take the limit. Remember ∫₁^∞ dx/xᵖ converges only when p > 1.",
+      "= lim(b→∞) ∫₁ᵇ x⁻³dx = lim [−1/(2x²)]₁ᵇ = lim(−1/(2b²) + 1/2) = …",
       "Also immediate from the p-rule: p = 3 > 1."
     ],
     "code": "",
@@ -1173,7 +1445,18 @@ const rows = [
     "k": "fill",
     "a": [
       "1/2, converges",
-      "1/2,converges"
+      "1/2,converges",
+      "1/2",
+      "0.5",
+      "½",
+      "converges to 1/2",
+      "convergesto1/2",
+      "converges to 0.5",
+      "convergesto0.5",
+      "0.5, converges",
+      "0.5,converges",
+      "1/2 (converges)",
+      "1/2(converges)"
     ]
   },
   {
@@ -1185,9 +1468,9 @@ const rows = [
     "q": "Determine whether ∫₁^∞ dx/√x converges.",
     "why": "p = 1/2 ≤ 1, so it diverges.\nConfirming: lim[2√x]₁ᵇ = lim(2√b − 2) = ∞",
     "hints": [
-      "Start from the definition or formula introduced in this lesson.",
-      "p = 1/2 ≤ 1, so it diverges.",
-      "Confirming: lim[2√x]₁ᵇ = lim(2√b − 2) = ∞"
+      "Replace the infinite limit, or the point where the integrand blows up, with a variable; integrate, then take the limit. Remember ∫₁^∞ dx/xᵖ converges only when p > 1.",
+      "p = 1/2 ≤ 1.",
+      "Confirming: lim[2√x]₁ᵇ = lim(2√b − 2) = …"
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 18, Practice 2",
@@ -1196,7 +1479,16 @@ const rows = [
     "variation": 1,
     "k": "fill",
     "a": [
-      "diverges"
+      "diverges",
+      "divergent",
+      "diverge",
+      "it diverges",
+      "the series diverges",
+      "no",
+      "does not converge",
+      "doesn't converge",
+      "diverges to ∞",
+      "diverges to infinity"
     ]
   },
   {
@@ -1208,9 +1500,9 @@ const rows = [
     "q": "Evaluate ∫₀¹ dx/√x or show it diverges.",
     "why": "This is Type 2: the integrand blows up at x = 0, the lower limit.\n= lim(t→0⁺) ∫ₜ¹ x^(−1/2)dx = lim [2√x]ₜ¹ = lim(2 − 2√t) = 2, converges\nNotice the reversal: p = 1/2 diverges on [1,∞) but converges on (0,1]. Near a spike, small p is fine; in a tail, large p is what you need.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Replace the infinite limit, or the point where the integrand blows up, with a variable; integrate, then take the limit. Remember ∫₁^∞ dx/xᵖ converges only when p > 1.",
       "This is Type 2: the integrand blows up at x = 0, the lower limit.",
-      "= lim(t→0⁺) ∫ₜ¹ x^(−1/2)dx = lim [2√x]ₜ¹ = lim(2 − 2√t) = 2, converges"
+      "= lim(t→0⁺) ∫ₜ¹ x^(−1/2)dx = lim [2√x]ₜ¹ = lim(2 − 2√t) = …"
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 18, Practice 3",
@@ -1220,7 +1512,12 @@ const rows = [
     "k": "fill",
     "a": [
       "2, converges",
-      "2,converges"
+      "2,converges",
+      "2",
+      "converges to 2",
+      "convergesto2",
+      "2 (converges)",
+      "2(converges)"
     ]
   },
   {
@@ -1232,7 +1529,7 @@ const rows = [
     "q": "Evaluate ∫₀^∞ x e^(−x) dx.",
     "why": "Integration by parts first: ∫xe^(−x)dx = −xe^(−x) − e^(−x) = −(x+1)e^(−x)\nlim(b→∞)[−(x+1)e^(−x)]₀ᵇ = lim(−(b+1)e^(−b) + 1)\n(b+1)e^(−b) → 0 since exponentials beat polynomials.\n= 1, converges",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Replace the infinite limit, or the point where the integrand blows up, with a variable; integrate, then take the limit. Remember ∫₁^∞ dx/xᵖ converges only when p > 1.",
       "Integration by parts first: ∫xe^(−x)dx = −xe^(−x) − e^(−x) = −(x+1)e^(−x)",
       "lim(b→∞)[−(x+1)e^(−x)]₀ᵇ = lim(−(b+1)e^(−b) + 1)"
     ],
@@ -1244,7 +1541,12 @@ const rows = [
     "k": "fill",
     "a": [
       "1, converges",
-      "1,converges"
+      "1,converges",
+      "1",
+      "converges to 1",
+      "convergesto1",
+      "1 (converges)",
+      "1(converges)"
     ]
   },
   {
@@ -1253,12 +1555,12 @@ const rows = [
     "lesson": 18,
     "t": 3,
     "tag": "Exam level",
-    "q": "Evaluate ∫₋₁₂ dx/x² or explain why it fails.",
-    "why": "The integrand blows up at x = 0, which is inside the interval, so the integral must be split.\n∫₀² dx/x² = lim(t→0⁺)[−1/x]ₜ² = lim(−1/2 + 1/t) = ∞\nSince one half diverges, the whole thing diverges.\nEvaluating blindly gives [−1/x]₋₁₂ = −1/2 − 1 = −3/2, a negative answer for a positive integrand. That absurdity is the tell.",
+    "q": "Evaluate ∫₋₁² dx/x² or explain why it fails.",
+    "why": "The integrand blows up at x = 0, which is inside the interval, so the integral must be split.\n∫₀² dx/x² = lim(t→0⁺)[−1/x]ₜ² = lim(−1/2 + 1/t) = ∞\nSince one half diverges, the whole thing diverges.\nEvaluating blindly gives [−1/x]₋₁² = −1/2 − 1 = −3/2, a negative answer for a positive integrand. That absurdity is the tell.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Replace the infinite limit, or the point where the integrand blows up, with a variable; integrate, then take the limit. Remember ∫₁^∞ dx/xᵖ converges only when p > 1.",
       "The integrand blows up at x = 0, which is inside the interval, so the integral must be split.",
-      "∫₀² dx/x² = lim(t→0⁺)[−1/x]ₜ² = lim(−1/2 + 1/t) = ∞"
+      "∫₀² dx/x² = lim(t→0⁺)[−1/x]ₜ² = lim(−1/2 + 1/t) = …"
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 18, Practice 5",
@@ -1267,7 +1569,17 @@ const rows = [
     "variation": 1,
     "k": "fill",
     "a": [
-      "diverges"
+      "diverges",
+      "divergent",
+      "diverge",
+      "it diverges",
+      "the series diverges",
+      "does not converge",
+      "doesn't converge",
+      "diverges to ∞",
+      "diverges to infinity",
+      "∞",
+      "infinity"
     ]
   },
   {
@@ -1279,7 +1591,7 @@ const rows = [
     "q": "Determine whether ∫₁^∞ (2 + cos x)/x² dx converges.",
     "why": "No elementary antiderivative, so compare. Since 1 ≤ 2 + cos x ≤ 3,\n0 < (2 + cos x)/x² ≤ 3/x²\n∫₁^∞ 3/x² dx = 3 converges, so by comparison the original converges.\nBounded oscillating factors are always handled this way.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Replace the infinite limit, or the point where the integrand blows up, with a variable; integrate, then take the limit. Remember ∫₁^∞ dx/xᵖ converges only when p > 1.",
       "No elementary antiderivative, so compare. Since 1 ≤ 2 + cos x ≤ 3,",
       "0 < (2 + cos x)/x² ≤ 3/x²"
     ],
@@ -1290,7 +1602,12 @@ const rows = [
     "variation": 1,
     "k": "fill",
     "a": [
-      "converges"
+      "converges",
+      "convergent",
+      "converge",
+      "it converges",
+      "the series converges",
+      "yes"
     ]
   },
   {
@@ -1302,7 +1619,7 @@ const rows = [
     "q": "For what values of p does ∫₂^∞ dx/(x(ln x)ᵖ) converge?",
     "why": "Substitute u = ln x, du = dx/x. Limits: ln2 to ∞.\n∫ₗₙ₂^∞ du/uᵖ, which is a p-integral in u.\nConverges exactly when p > 1.\nThis result reappears in the Integral Test, so it is worth carrying forward.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Replace the infinite limit, or the point where the integrand blows up, with a variable; integrate, then take the limit. Remember ∫₁^∞ dx/xᵖ converges only when p > 1.",
       "Substitute u = ln x, du = dx/x. Limits: ln2 to ∞.",
       "∫ₗₙ₂^∞ du/uᵖ, which is a p-integral in u."
     ],
@@ -1314,7 +1631,13 @@ const rows = [
     "k": "fill",
     "a": [
       "p > 1",
-      "p>1"
+      "p>1",
+      "(1, ∞)",
+      "(1,∞)",
+      "(1, infinity)",
+      "(1,infinity)",
+      "1 < p",
+      "1<p"
     ]
   },
   {
@@ -1326,7 +1649,7 @@ const rows = [
     "q": "Evaluate ∫₀^∞ dx/(1 + x²) and ∫₋∞^∞ dx/(1 + x²).",
     "why": "First: lim(b→∞)[arctan x]₀ᵇ = π/2 − 0 = π/2\nSecond: split at 0. The left half gives 0 − (−π/2) = π/2. Both halves converge, so the total is π.\nBoth pieces must converge independently. Here they do, so the answer is legitimate, unlike ∫₋∞^∞ x dx where each half is infinite.",
     "hints": [
-      "Break the problem into a setup, a calculation, and a reason the method applies.",
+      "Replace the infinite limit, or the point where the integrand blows up, with a variable; integrate, then take the limit. Remember ∫₁^∞ dx/xᵖ converges only when p > 1.",
       "First: lim(b→∞)[arctan x]₀ᵇ = π/2 − 0 = π/2",
       "Second: split at 0. The left half gives 0 − (−π/2) = π/2. Both halves converge, so the total is π."
     ],
@@ -1352,7 +1675,7 @@ const rows = [
     "q": "For aₙ = (−1)ⁿ/n, does the sequence converge? Does the series Σaₙ converge?",
     "why": "The sequence converges to 0, since |aₙ| = 1/n → 0.\nThe series also converges, by the Alternating Series Test, to −ln2.\nCompare with aₙ = 1/n, where the sequence converges to 0 but the series diverges. Sequence behavior does not determine series behavior.",
     "hints": [
-      "Start from the definition or formula introduced in this lesson.",
+      "Keep the sequence aₙ and the partial sums Sₙ apart: a series converges exactly when its partial sums approach a finite limit, and aₙ = Sₙ − Sₙ₋₁.",
       "The sequence converges to 0, since |aₙ| = 1/n → 0.",
       "The series also converges, by the Alternating Series Test, to −ln2."
     ],
@@ -1378,7 +1701,7 @@ const rows = [
     "q": "Write out S₁, S₂, S₃, S₄ for Σ(k=1) 1/2ᵏ.",
     "why": "S₁ = 1/2, S₂ = 3/4, S₃ = 7/8, S₄ = 15/16\nThe pattern is Sₙ = 1 − 1/2ⁿ, so Sₙ → 1 and the series converges to 1. Partial sums are themselves a sequence, and that is what convergence of a series means.",
     "hints": [
-      "Start from the definition or formula introduced in this lesson.",
+      "Keep the sequence aₙ and the partial sums Sₙ apart: a series converges exactly when its partial sums approach a finite limit, and aₙ = Sₙ − Sₙ₋₁.",
       "S₁ = 1/2, S₂ = 3/4, S₃ = 7/8, S₄ = 15/16",
       "The pattern is Sₙ = 1 − 1/2ⁿ, so Sₙ → 1 and the series converges to 1. Partial sums are themselves a sequence, and that is what convergence of a series means."
     ],
@@ -1404,7 +1727,7 @@ const rows = [
     "q": "Find the sum of Σ(k=1 to ∞) 1/(k(k+2)) using partial sums.",
     "why": "Partial fractions: 1/(k(k+2)) = ½[1/k − 1/(k+2)]\nSₙ = ½[(1 − 1/3) + (1/2 − 1/4) + (1/3 − 1/5) + … + (1/n − 1/(n+2))]\nEverything cancels except the first two positives and the last two negatives:\nSₙ = ½[1 + 1/2 − 1/(n+1) − 1/(n+2)]\nlim Sₙ = ½(3/2) = 3/4\nWriting five terms rather than two is what reveals the gap-2 cancellation pattern.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Keep the sequence aₙ and the partial sums Sₙ apart: a series converges exactly when its partial sums approach a finite limit, and aₙ = Sₙ − Sₙ₋₁.",
       "Partial fractions: 1/(k(k+2)) = ½[1/k − 1/(k+2)]",
       "Sₙ = ½[(1 − 1/3) + (1/2 − 1/4) + (1/3 − 1/5) + … + (1/n − 1/(n+2))]"
     ],
@@ -1427,8 +1750,8 @@ const rows = [
     "q": "A sequence is defined by a₁ = 3, aₙ₊₁ = (aₙ + 6)/2. Find its limit, assuming it exists.",
     "why": "Set L = (L + 6)/2 ⇒ 2L = L + 6 ⇒ L = 6\nChecking a few terms: 3, 4.5, 5.25, 5.625, climbing toward 6. This supports the answer, and a full argument would show the sequence is increasing and bounded above by 6.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
-      "Set L = (L + 6)/2 ⇒ 2L = L + 6 ⇒ L = 6",
+      "Keep the sequence aₙ and the partial sums Sₙ apart: a series converges exactly when its partial sums approach a finite limit, and aₙ = Sₙ − Sₙ₋₁.",
+      "Set L = (L + 6)/2 ⇒ 2L = L + 6 ⇒ …",
       "Checking a few terms: 3, 4.5, 5.25, 5.625, climbing toward 6. This supports the answer, and a full argument would show the sequence is increasing and bounded above by 6."
     ],
     "code": "",
@@ -1450,11 +1773,11 @@ const rows = [
     "t": 3,
     "tag": "Exam level",
     "q": "Given Sₙ = (3n + 1)/(n + 4) as the partial sums of a series, find the sum of the series and find aₙ.",
-    "why": "Sum = lim Sₙ = 3\naₙ = Sₙ − Sₙ₋₁ = (3n+1)/(n+4) − (3n−2)/(n+3)\n= [(3n+1)(n+3) − (3n−2)(n+4)]/((n+4)(n+3))\n= [(3n²+10n+3) − (3n²+10n−8)]/((n+4)(n+3)) = 11/((n+4)(n+3))\nThe relationship aₙ = Sₙ − Sₙ₋₁ is the bridge between the two objects, and it works in both directions.",
+    "why": "Sum = lim Sₙ = 3\nFor n ≥ 2, aₙ = Sₙ − Sₙ₋₁ = (3n+1)/(n+4) − (3n−2)/(n+3)\n= [(3n+1)(n+3) − (3n−2)(n+4)]/((n+4)(n+3))\n= [(3n²+10n+3) − (3n²+10n−8)]/((n+4)(n+3)) = 11/((n+4)(n+3))\nThe first term has no S₀ to subtract: a₁ = S₁ = 4/5, while the formula would give 11/20. So aₙ = 11/((n+4)(n+3)) for n ≥ 2, with a₁ = 4/5.\nThe relationship aₙ = Sₙ − Sₙ₋₁ is the bridge between the two objects, and it works in both directions.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Keep the sequence aₙ and the partial sums Sₙ apart: a series converges exactly when its partial sums approach a finite limit, and aₙ = Sₙ − Sₙ₋₁.",
       "Sum = lim Sₙ = 3",
-      "aₙ = Sₙ − Sₙ₋₁ = (3n+1)/(n+4) − (3n−2)/(n+3)"
+      "For n ≥ 2, aₙ = Sₙ − Sₙ₋₁ = (3n+1)/(n+4) − (3n−2)/(n+3)"
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 19, Practice 5",
@@ -1478,8 +1801,8 @@ const rows = [
     "q": "True or false, with justification: if aₙ → 0 then Σaₙ converges.",
     "why": "False. The harmonic series Σ1/n has terms going to 0 yet diverges.\nThe correct statement runs the other way: if Σaₙ converges, then aₙ → 0. The converse fails, which is exactly why the Divergence Test can only prove divergence.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
-      "False. The harmonic series Σ1/n has terms going to 0 yet diverges.",
+      "Keep the sequence aₙ and the partial sums Sₙ apart: a series converges exactly when its partial sums approach a finite limit, and aₙ = Sₙ − Sₙ₋₁.",
+      "The harmonic series Σ1/n has terms going to 0 yet diverges.",
       "The correct statement runs the other way: if Σaₙ converges, then aₙ → 0. The converse fails, which is exactly why the Divergence Test can only prove divergence."
     ],
     "code": "",
@@ -1501,8 +1824,8 @@ const rows = [
     "q": "Find lim (4n³ − n)/(2n³ + 5n²).",
     "why": "Divide numerator and denominator by n³: (4 − 1/n²)/(2 + 5/n) → 2",
     "hints": [
-      "Start from the definition or formula introduced in this lesson.",
-      "Divide numerator and denominator by n³: (4 − 1/n²)/(2 + 5/n) → 2",
+      "Treat aₙ as f(n): divide by the highest power, compare growth rates, or use L'Hôpital on f(x). For a recursive sequence, show it is monotone and bounded, then solve L = f(L).",
+      "Divide numerator and denominator by n³: (4 − 1/n²)/(2 + 5/n) → …",
       "Carry the calculation through carefully and check the result against the original conditions."
     ],
     "code": "",
@@ -1524,7 +1847,7 @@ const rows = [
     "q": "Find lim (0.9)ⁿ and lim (1.1)ⁿ.",
     "why": "|0.9| < 1 so (0.9)ⁿ → 0. |1.1| > 1 so (1.1)ⁿ diverges to ∞.\nThe whole geometric sequence rule lives in whether |r| crosses 1.",
     "hints": [
-      "Start from the definition or formula introduced in this lesson.",
+      "Treat aₙ as f(n): divide by the highest power, compare growth rates, or use L'Hôpital on f(x). For a recursive sequence, show it is monotone and bounded, then solve L = f(L).",
       "|0.9| < 1 so (0.9)ⁿ → 0. |1.1| > 1 so (1.1)ⁿ diverges to ∞.",
       "The whole geometric sequence rule lives in whether |r| crosses 1."
     ],
@@ -1548,11 +1871,11 @@ const rows = [
     "t": 2,
     "tag": "Core",
     "q": "Find lim (ln n)²/n.",
-    "why": "Compare growth rates: any power of ln n loses to any positive power of n.\nOr apply L'H∘pital twice on (ln x)²/x: 2ln x/x, then 2/x → 0.\nLimit is 0.",
+    "why": "Compare growth rates: any power of ln n loses to any positive power of n.\nOr apply L'Hôpital twice on (ln x)²/x: (2 ln x)/x, then 2/x → 0.\nLimit is 0.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Treat aₙ as f(n): divide by the highest power, compare growth rates, or use L'Hôpital on f(x). For a recursive sequence, show it is monotone and bounded, then solve L = f(L).",
       "Compare growth rates: any power of ln n loses to any positive power of n.",
-      "Or apply L'H∘pital twice on (ln x)²/x: 2ln x/x, then 2/x → 0."
+      "Or apply L'Hôpital twice on (ln x)²/x: (2 ln x)/x, then 2/x → …"
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 20, Practice 3",
@@ -1571,11 +1894,11 @@ const rows = [
     "t": 2,
     "tag": "Core",
     "q": "Find lim n sin(1/n).",
-    "why": "Rewrite as sin(1/n)/(1/n) and let t = 1/n → 0.\nlim(t→0) sin t/t = 1\nRecognizing a Calc I limit inside a sequence is the trick here.",
+    "why": "Rewrite as sin(1/n)/(1/n) and let t = 1/n → 0.\nlim(t→0) (sin t)/t = 1\nRecognizing a Calc I limit inside a sequence is the trick here.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Treat aₙ as f(n): divide by the highest power, compare growth rates, or use L'Hôpital on f(x). For a recursive sequence, show it is monotone and bounded, then solve L = f(L).",
       "Rewrite as sin(1/n)/(1/n) and let t = 1/n → 0.",
-      "lim(t→0) sin t/t = 1"
+      "lim(t→0) (sin t)/t = …"
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 20, Practice 4",
@@ -1596,7 +1919,7 @@ const rows = [
     "q": "Determine whether aₙ = (2n)!/((n!)² 4ⁿ) converges, using ratios.",
     "why": "aₙ₊₁/aₙ = [(2n+2)!/((n+1)!²4ⁿ⁺¹)] · [(n!)²4ⁿ/(2n)!]\n= (2n+2)(2n+1)/((n+1)² · 4) = (2(n+1)(2n+1))/(4(n+1)²) = (2n+1)/(2n+2)\nThis is less than 1 for all n, so the sequence is decreasing, and it is bounded below by 0.\nBy the Monotone Convergence Theorem it converges (in fact to 0).",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Treat aₙ as f(n): divide by the highest power, compare growth rates, or use L'Hôpital on f(x). For a recursive sequence, show it is monotone and bounded, then solve L = f(L).",
       "aₙ₊₁/aₙ = [(2n+2)!/((n+1)!²4ⁿ⁺¹)] · [(n!)²4ⁿ/(2n)!]",
       "= (2n+2)(2n+1)/((n+1)² · 4) = (2(n+1)(2n+1))/(4(n+1)²) = (2n+1)/(2n+2)"
     ],
@@ -1607,7 +1930,14 @@ const rows = [
     "variation": 1,
     "k": "fill",
     "a": [
-      "converges"
+      "converges",
+      "convergent",
+      "converge",
+      "it converges",
+      "the series converges",
+      "yes",
+      "converges to 0",
+      "it converges to 0"
     ]
   },
   {
@@ -1617,11 +1947,11 @@ const rows = [
     "t": 3,
     "tag": "Exam level",
     "q": "Find lim (1 + 5/n)ⁿ.",
-    "why": "This is the standard form with a = 5.\nLimit is e⁵.\nIf you do not recall the form: take the log, giving n ln(1 + 5/n), rewrite as ln(1+5/n)/(1/n), and apply L'H∘pital to get 5. Then exponentiate.",
+    "why": "This is the standard form with a = 5.\nLimit is e⁵.\nIf you do not recall the form: take the log, giving n ln(1 + 5/n), rewrite as ln(1+5/n)/(1/n), and apply L'Hôpital to get 5. Then exponentiate.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Treat aₙ as f(n): divide by the highest power, compare growth rates, or use L'Hôpital on f(x). For a recursive sequence, show it is monotone and bounded, then solve L = f(L).",
       "This is the standard form with a = 5.",
-      "Limit is e⁵."
+      "If you do not recall the form: take the log, giving n ln(1 + 5/n), rewrite as ln(1+5/n)/(1/n), and apply L'Hôpital to get 5. Then exponentiate."
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 20, Practice 6",
@@ -1643,7 +1973,7 @@ const rows = [
     "q": "Let a₁ = 1 and aₙ₊₁ = 3aₙ/(1 + aₙ). Show the sequence converges and find the limit.",
     "why": "Bounded above by 2: if aₙ < 2 then aₙ₊₁ = 3aₙ/(1+aₙ) < 6/3 = 2 (since t/(1+t) is increasing). With a₁ = 1 < 2, induction gives aₙ < 2 for all n.\nIncreasing: aₙ₊₁ − aₙ = aₙ(3 − 1 − aₙ)/(1+aₙ) = aₙ(2 − aₙ)/(1+aₙ) > 0 whenever 0 < aₙ < 2. ✓\nMonotone and bounded, so the limit L exists.\nL = 3L/(1+L) ⇒ L(1+L) = 3L ⇒ L² = 2L ⇒ L = 0 or 2. Since the sequence increases from 1, L = 2.\nBoth parts are required. Solving the fixed-point equation alone would leave you unable to choose between 0 and 2.",
     "hints": [
-      "Break the problem into a setup, a calculation, and a reason the method applies.",
+      "Treat aₙ as f(n): divide by the highest power, compare growth rates, or use L'Hôpital on f(x). For a recursive sequence, show it is monotone and bounded, then solve L = f(L).",
       "Bounded above by 2: if aₙ < 2 then aₙ₊₁ = 3aₙ/(1+aₙ) < 6/3 = 2 (since t/(1+t) is increasing). With a₁ = 1 < 2, induction gives aₙ < 2 for all n.",
       "Increasing: aₙ₊₁ − aₙ = aₙ(3 − 1 − aₙ)/(1+aₙ) = aₙ(2 − aₙ)/(1+aₙ) > 0 whenever 0 < aₙ < 2. ✓"
     ],
@@ -1669,9 +1999,9 @@ const rows = [
     "q": "Find the sum of Σ(k=0 to ∞) 5(2/3)ᵏ.",
     "why": "Geometric with first term a = 5 and r = 2/3, and |r| < 1 so it converges.\nSum = a/(1 − r) = 5/(1/3) = 15",
     "hints": [
-      "Start from the definition or formula introduced in this lesson.",
+      "Decide whether it is geometric (find the first term a and the ratio r: it converges only if |r| < 1, to a/(1 − r)) or telescoping (write out partial sums and cancel).",
       "Geometric with first term a = 5 and r = 2/3, and |r| < 1 so it converges.",
-      "Sum = a/(1 − r) = 5/(1/3) = 15"
+      "Sum = a/(1 − r) = 5/(1/3) = …"
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 21, Practice 1",
@@ -1692,8 +2022,8 @@ const rows = [
     "q": "Does Σ(k=1 to ∞) 3(5/4)ᵏ converge?",
     "why": "r = 5/4 and |r| ≥ 1, so the series diverges.\nApplying a/(1−r) here would give 3(5/4)/(−1/4) = −15, a negative sum for a series of positive terms. That absurd result is what the convergence condition prevents.",
     "hints": [
-      "Start from the definition or formula introduced in this lesson.",
-      "r = 5/4 and |r| ≥ 1, so the series diverges.",
+      "Decide whether it is geometric (find the first term a and the ratio r: it converges only if |r| < 1, to a/(1 − r)) or telescoping (write out partial sums and cancel).",
+      "r = 5/4 and |r| ≥ 1.",
       "Applying a/(1−r) here would give 3(5/4)/(−1/4) = −15, a negative sum for a series of positive terms. That absurd result is what the convergence condition prevents."
     ],
     "code": "",
@@ -1703,7 +2033,14 @@ const rows = [
     "variation": 1,
     "k": "fill",
     "a": [
-      "diverges"
+      "diverges",
+      "divergent",
+      "diverge",
+      "it diverges",
+      "the series diverges",
+      "no",
+      "does not converge",
+      "doesn't converge"
     ]
   },
   {
@@ -1715,9 +2052,9 @@ const rows = [
     "q": "Find the sum of Σ(k=3 to ∞) 2ᵏ/5ᵏ⁻¹.",
     "why": "Rewrite: 2ᵏ/5ᵏ⁻¹ = 5 · (2/5)ᵏ. First term at k = 3 is 5(2/5)³ = 5(8/125) = 8/25, and r = 2/5.\nSum = (8/25)/(1 − 2/5) = (8/25)/(3/5) = 8/15\nUse first term over one minus ratio rather than memorizing index-shifted formulas.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Decide whether it is geometric (find the first term a and the ratio r: it converges only if |r| < 1, to a/(1 − r)) or telescoping (write out partial sums and cancel).",
       "Rewrite: 2ᵏ/5ᵏ⁻¹ = 5 · (2/5)ᵏ. First term at k = 3 is 5(2/5)³ = 5(8/125) = 8/25, and r = 2/5.",
-      "Sum = (8/25)/(1 − 2/5) = (8/25)/(3/5) = 8/15"
+      "Sum = (8/25)/(1 − 2/5) = (8/25)/(3/5) = …"
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 21, Practice 3",
@@ -1738,9 +2075,9 @@ const rows = [
     "q": "Write 0.272727... as a fraction using a geometric series.",
     "why": "0.272727... = 27/100 + 27/10000 + …, first term 27/100, ratio 1/100.\nSum = (27/100)/(99/100) = 27/99 = 3/11",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Decide whether it is geometric (find the first term a and the ratio r: it converges only if |r| < 1, to a/(1 − r)) or telescoping (write out partial sums and cancel).",
       "0.272727... = 27/100 + 27/10000 + …, first term 27/100, ratio 1/100.",
-      "Sum = (27/100)/(99/100) = 27/99 = 3/11"
+      "Sum = (27/100)/(99/100) = 27/99 = …"
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 21, Practice 4",
@@ -1761,7 +2098,7 @@ const rows = [
     "q": "Find the sum of Σ(k=1 to ∞) [1/(k+2) − 1/(k+4)].",
     "why": "Telescoping with a gap of 2. Write out terms:\n(1/3 − 1/5) + (1/4 − 1/6) + (1/5 − 1/7) + (1/6 − 1/8) + …\nThe 1/5 and 1/6 cancel; only 1/3 and 1/4 survive at the front, and the tail terms vanish.\nSₙ = 1/3 + 1/4 − 1/(n+3) − 1/(n+4) → 7/12",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Decide whether it is geometric (find the first term a and the ratio r: it converges only if |r| < 1, to a/(1 − r)) or telescoping (write out partial sums and cancel).",
       "Telescoping with a gap of 2. Write out terms:",
       "(1/3 − 1/5) + (1/4 − 1/6) + (1/5 − 1/7) + (1/6 − 1/8) + …"
     ],
@@ -1784,7 +2121,7 @@ const rows = [
     "q": "A ball dropped from 10 ft rebounds to 3/5 of its previous height each bounce. Find the total vertical distance traveled.",
     "why": "First drop: 10. Each subsequent bounce contributes an up and a down of the same height.\nTotal = 10 + 2(10)(3/5) + 2(10)(3/5)² + … = 10 + 2 · [6/(1 − 3/5)]\n= 10 + 2(15) = 40 ft\nThe factor of 2 on everything after the first drop is where these problems go wrong.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Decide whether it is geometric (find the first term a and the ratio r: it converges only if |r| < 1, to a/(1 − r)) or telescoping (write out partial sums and cancel).",
       "First drop: 10. Each subsequent bounce contributes an up and a down of the same height.",
       "Total = 10 + 2(10)(3/5) + 2(10)(3/5)² + … = 10 + 2 · [6/(1 − 3/5)]"
     ],
@@ -1796,7 +2133,8 @@ const rows = [
     "k": "fill",
     "a": [
       "40 ft",
-      "40ft"
+      "40ft",
+      "40"
     ]
   },
   {
@@ -1808,7 +2146,7 @@ const rows = [
     "q": "For what values of x does Σ(k=0 to ∞) (x − 2)ᵏ/3ᵏ converge, and what is the sum?",
     "why": "This is geometric with r = (x−2)/3.\nConverges when |(x−2)/3| < 1, that is |x − 2| < 3, so −1 < x < 5.\nSum = 1/(1 − (x−2)/3) = 3/(3 − x + 2) = 3/(5 − x)\nThis is a preview of power series: the same object, viewed as a function of x with an interval of convergence.",
     "hints": [
-      "Break the problem into a setup, a calculation, and a reason the method applies.",
+      "Decide whether it is geometric (find the first term a and the ratio r: it converges only if |r| < 1, to a/(1 − r)) or telescoping (write out partial sums and cancel).",
       "This is geometric with r = (x−2)/3.",
       "Converges when |(x−2)/3| < 1, that is |x − 2| < 3, so −1 < x < 5."
     ],
@@ -1834,8 +2172,8 @@ const rows = [
     "q": "Does Σ 1/n^(4/3) converge?",
     "why": "p-series with p = 4/3 > 1, so it converges.",
     "hints": [
-      "Start from the definition or formula introduced in this lesson.",
-      "p-series with p = 4/3 > 1, so it converges.",
+      "First check whether the terms go to 0; if not, the series diverges. Otherwise compare with a p-series, or use the Integral Test after checking f is positive, continuous and decreasing.",
+      "p-series with p = 4/3 > 1.",
       "Carry the calculation through carefully and check the result against the original conditions."
     ],
     "code": "",
@@ -1845,7 +2183,12 @@ const rows = [
     "variation": 1,
     "k": "fill",
     "a": [
-      "converges"
+      "converges",
+      "convergent",
+      "converge",
+      "it converges",
+      "the series converges",
+      "yes"
     ]
   },
   {
@@ -1857,9 +2200,9 @@ const rows = [
     "q": "Use the Integral Test on Σ(n=1) n/(n² + 1).",
     "why": "f(x) = x/(x²+1) is positive and continuous on [1,∞). Its derivative is (1 − x²)/(x²+1)² < 0 for x > 1, so it is decreasing. All three conditions hold.\n∫₁^∞ x/(x²+1)dx = lim ½ln(x²+1)|₁ᵇ = ∞\nThe integral diverges, so the series diverges.\nNote the terms do go to 0, so the Divergence Test was useless here.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "First check whether the terms go to 0; if not, the series diverges. Otherwise compare with a p-series, or use the Integral Test after checking f is positive, continuous and decreasing.",
       "f(x) = x/(x²+1) is positive and continuous on [1,∞). Its derivative is (1 − x²)/(x²+1)² < 0 for x > 1, so it is decreasing. All three conditions hold.",
-      "∫₁^∞ x/(x²+1)dx = lim ½ln(x²+1)|₁ᵇ = ∞"
+      "∫₁^∞ x/(x²+1)dx = lim ½ln(x²+1)|₁ᵇ = …"
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 22, Practice 3",
@@ -1868,7 +2211,11 @@ const rows = [
     "variation": 1,
     "k": "fill",
     "a": [
-      "diverges"
+      "diverges",
+      "divergent",
+      "diverge",
+      "it diverges",
+      "the series diverges"
     ]
   },
   {
@@ -1880,9 +2227,9 @@ const rows = [
     "q": "Determine whether Σ(n=2) 1/(n ln n) converges.",
     "why": "Integral Test with u = ln x: ∫₂^∞ dx/(x ln x) = lim ln(ln x)|₂ᵇ = ∞.\nDiverges.\nContrast with Σ1/(n(ln n)²), which converges. The logarithm barely fails to save it at the first power.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
-      "Integral Test with u = ln x: ∫₂^∞ dx/(x ln x) = lim ln(ln x)|₂ᵇ = ∞.",
-      "Diverges."
+      "First check whether the terms go to 0; if not, the series diverges. Otherwise compare with a p-series, or use the Integral Test after checking f is positive, continuous and decreasing.",
+      "Integral Test with u = ln x: ∫₂^∞ dx/(x ln x) = lim ln(ln x)|₂ᵇ = …",
+      "Contrast with Σ1/(n(ln n)²), which converges. The logarithm barely fails to save it at the first power."
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 22, Practice 4",
@@ -1891,7 +2238,15 @@ const rows = [
     "variation": 1,
     "k": "fill",
     "a": [
-      "Diverges."
+      "Diverges.",
+      "diverges",
+      "divergent",
+      "diverge",
+      "it diverges",
+      "the series diverges",
+      "no",
+      "does not converge",
+      "doesn't converge"
     ]
   },
   {
@@ -1903,7 +2258,7 @@ const rows = [
     "q": "How many terms of Σ1/n⁴ guarantee the partial sum is within 0.0001 of the true sum?",
     "why": "Rₙ ≤ ∫ₙ^∞ dx/x⁴ = 1/(3n³)\nNeed 1/(3n³) < 0.0001 ⇒ n³ > 3333.3 ⇒ n > 14.94\nTake n = 15 terms.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "First check whether the terms go to 0; if not, the series diverges. Otherwise compare with a p-series, or use the Integral Test after checking f is positive, continuous and decreasing.",
       "Rₙ ≤ ∫ₙ^∞ dx/x⁴ = 1/(3n³)",
       "Need 1/(3n³) < 0.0001 ⇒ n³ > 3333.3 ⇒ n > 14.94"
     ],
@@ -1917,7 +2272,10 @@ const rows = [
       "n = 15 terms",
       "n=15terms",
       "15 terms",
-      "15terms"
+      "15terms",
+      "15",
+      "n = 15",
+      "n=15"
     ]
   },
   {
@@ -1929,7 +2287,7 @@ const rows = [
     "q": "Estimate Σ(n=1) 1/n³ using S₃, and bound the true sum.",
     "why": "S₃ = 1 + 1/8 + 1/27 ≈ 1.1620\n∫₃^∞ dx/x³ = 1/(2·9) = 1/18 ≈ 0.0556\n∫₄^∞ dx/x³ = 1/32 = 0.03125\nBounds: S₃ + 0.03125 ≤ S ≤ S₃ + 0.0556, so 1.193 ≤ S ≤ 1.218\nThe true value is about 1.2021, inside the interval. The integral bounds the remainder, it does not equal the sum.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "First check whether the terms go to 0; if not, the series diverges. Otherwise compare with a p-series, or use the Integral Test after checking f is positive, continuous and decreasing.",
       "S₃ = 1 + 1/8 + 1/27 ≈ 1.1620",
       "∫₃^∞ dx/x³ = 1/(2·9) = 1/18 ≈ 0.0556"
     ],
@@ -1938,13 +2296,13 @@ const rows = [
     "family": "field-manual-L22-P06",
     "familyName": "Divergence Test and Integral Test - practice 6",
     "variation": 1,
-    "k": "fill",
-    "a": [
-      "1.193 ≤ S ≤ 1.218",
-      "1.193 <= S <= 1.218",
-      "1.193≤S≤1.218",
-      "1.193<=S<=1.218"
-    ]
+    "k": "mcq",
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "a": 0,
+    "selfCheck": true
   },
   {
     "id": "k7-fm-L22-P07",
@@ -1953,9 +2311,9 @@ const rows = [
     "t": 4,
     "tag": "Stretch",
     "q": "For which p does Σ(n=2) 1/(n(ln n)ᵖ) converge? Prove it.",
-    "why": "f(x) = 1/(x(ln x)ᵖ) is positive, continuous, decreasing on [2,∞) for p > 0.\nSubstitute u = ln x, du = dx/x: ∫₂^∞ dx/(x(ln x)ᵖ) = ∫ₗₙ₂^∞ du/uᵖ\nThat is a p-integral, converging exactly when p > 1.\nSo the series converges if and only if p > 1. For p ≤ 0 the terms do not go to 0 fast enough and the Divergence Test or the same integral handles it.",
+    "why": "f(x) = 1/(x(ln x)ᵖ) is positive, continuous, decreasing on [2,∞) for p > 0.\nSubstitute u = ln x, du = dx/x: ∫₂^∞ dx/(x(ln x)ᵖ) = ∫ₗₙ₂^∞ du/uᵖ\nThat is a p-integral, converging exactly when p > 1.\nSo the series converges if and only if p > 1. For p ≤ 0 the terms still go to 0, so the Divergence Test settles nothing; compare instead: for n ≥ 3, ln n > 1 makes (ln n)ᵖ ≤ 1, so 1/(n(ln n)ᵖ) ≥ 1/n, and Σ1/n diverges.",
     "hints": [
-      "Break the problem into a setup, a calculation, and a reason the method applies.",
+      "First check whether the terms go to 0; if not, the series diverges. Otherwise compare with a p-series, or use the Integral Test after checking f is positive, continuous and decreasing.",
       "f(x) = 1/(x(ln x)ᵖ) is positive, continuous, decreasing on [2,∞) for p > 0.",
       "Substitute u = ln x, du = dx/x: ∫₂^∞ dx/(x(ln x)ᵖ) = ∫ₗₙ₂^∞ du/uᵖ"
     ],
@@ -1966,8 +2324,18 @@ const rows = [
     "variation": 1,
     "k": "fill",
     "a": [
+      "p > 1",
+      "p>1",
       "if and only if p > 1",
-      "ifandonlyifp>1"
+      "ifandonlyifp>1",
+      "p > 1 only",
+      "p>1only",
+      "(1, ∞)",
+      "(1,∞)",
+      "(1, infinity)",
+      "(1,infinity)",
+      "1 < p",
+      "1<p"
     ]
   },
   {
@@ -1979,9 +2347,9 @@ const rows = [
     "q": "Use direct comparison on Σ 1/(n² + 5).",
     "why": "1/(n²+5) < 1/n² for all n ≥ 1, and Σ1/n² converges as a p-series with p = 2.\nSmaller than convergent, so the series converges.",
     "hints": [
-      "Start from the definition or formula introduced in this lesson.",
-      "1/(n²+5) < 1/n² for all n ≥ 1, and Σ1/n² converges as a p-series with p = 2.",
-      "Smaller than convergent, so the series converges."
+      "Find the dominant part of the terms (highest powers, or exponentials), then compare directly or compute lim aₙ/bₙ.",
+      "1/(n²+5) < 1/n² for all n ≥ 1.",
+      "Carry the calculation through carefully and check the result against the original conditions."
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 23, Practice 1",
@@ -1990,7 +2358,11 @@ const rows = [
     "variation": 1,
     "k": "fill",
     "a": [
-      "converges"
+      "converges",
+      "convergent",
+      "converge",
+      "it converges",
+      "the series converges"
     ]
   },
   {
@@ -2002,7 +2374,7 @@ const rows = [
     "q": "Use limit comparison on Σ (2n² + 3n)/(n⁴ − n + 1).",
     "why": "Skeleton: 2n²/n⁴ = 2/n², so compare with bₙ = 1/n².\nlim aₙ/bₙ = lim (2n⁴ + 3n³)/(n⁴ − n + 1) = 2, finite and positive.\nΣ1/n² converges, so the series converges.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Find the dominant part of the terms (highest powers, or exponentials), then compare directly or compute lim aₙ/bₙ.",
       "Skeleton: 2n²/n⁴ = 2/n², so compare with bₙ = 1/n².",
       "lim aₙ/bₙ = lim (2n⁴ + 3n³)/(n⁴ − n + 1) = 2, finite and positive."
     ],
@@ -2013,7 +2385,11 @@ const rows = [
     "variation": 1,
     "k": "fill",
     "a": [
-      "converges"
+      "converges",
+      "convergent",
+      "converge",
+      "it converges",
+      "the series converges"
     ]
   },
   {
@@ -2023,11 +2399,11 @@ const rows = [
     "t": 3,
     "tag": "Exam level",
     "q": "Determine convergence of Σ (3 + sin n)/n³.",
-    "why": "Bounded numerator: 2 ≤ 3 + sin n ≤ 4, so aₙ ≤ 4/n³.\nΣ4/n³ converges (p = 3), so by direct comparison the series converges.\nLimit comparison would also work with bₙ = 1/n³, but the ratio has no limit because of the oscillation, so direct comparison is the correct tool here.",
+    "why": "Bounded numerator: 2 ≤ 3 + sin n ≤ 4, so aₙ ≤ 4/n³.\nΣ4/n³ converges (p = 3), so by direct comparison the series converges.\nLimit comparison with bₙ = 1/n³ does not work here: the ratio aₙ/bₙ = 3 + sin n oscillates and has no limit. Direct comparison is the right tool for a bounded oscillating factor.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Find the dominant part of the terms (highest powers, or exponentials), then compare directly or compute lim aₙ/bₙ.",
       "Bounded numerator: 2 ≤ 3 + sin n ≤ 4, so aₙ ≤ 4/n³.",
-      "Σ4/n³ converges (p = 3), so by direct comparison the series converges."
+      "Limit comparison with bₙ = 1/n³ does not work here: the ratio aₙ/bₙ = 3 + sin n oscillates and has no limit. Direct comparison is the right tool for a bounded oscillating factor."
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 23, Practice 5",
@@ -2036,7 +2412,11 @@ const rows = [
     "variation": 1,
     "k": "fill",
     "a": [
-      "converges"
+      "converges",
+      "convergent",
+      "converge",
+      "it converges",
+      "the series converges"
     ]
   },
   {
@@ -2048,7 +2428,7 @@ const rows = [
     "q": "Determine convergence of Σ (2ⁿ + n)/(3ⁿ + n²).",
     "why": "For large n the exponentials dominate, giving skeleton (2/3)ⁿ.\nlim aₙ/(2/3)ⁿ = lim [(2ⁿ+n)/(3ⁿ+n²)] · [3ⁿ/2ⁿ] = lim (2ⁿ+n)3ⁿ/((3ⁿ+n²)2ⁿ)\nDivide top and bottom by 2ⁿ3ⁿ: = lim (1 + n/2ⁿ)/(1 + n²/3ⁿ) = 1\nΣ(2/3)ⁿ is geometric with r = 2/3, which converges, so the series converges.\nWhen both exponentials and polynomials appear, the exponentials set the skeleton.",
     "hints": [
-      "Break the problem into a setup, a calculation, and a reason the method applies.",
+      "Find the dominant part of the terms (highest powers, or exponentials), then compare directly or compute lim aₙ/bₙ.",
       "For large n the exponentials dominate, giving skeleton (2/3)ⁿ.",
       "lim aₙ/(2/3)ⁿ = lim [(2ⁿ+n)/(3ⁿ+n²)] · [3ⁿ/2ⁿ] = lim (2ⁿ+n)3ⁿ/((3ⁿ+n²)2ⁿ)"
     ],
@@ -2059,7 +2439,11 @@ const rows = [
     "variation": 1,
     "k": "fill",
     "a": [
-      "converges"
+      "converges",
+      "convergent",
+      "converge",
+      "it converges",
+      "the series converges"
     ]
   },
   {
@@ -2071,9 +2455,9 @@ const rows = [
     "q": "Classify Σ (−1)ⁿ/n³ as absolutely convergent, conditionally convergent, or divergent.",
     "why": "Test absolute value first: Σ1/n³ converges as a p-series with p = 3.\nAbsolutely convergent. No need to run the AST at all.",
     "hints": [
-      "Start from the definition or formula introduced in this lesson.",
+      "Test Σ|aₙ| first. If that diverges, check the Alternating Series Test (terms decreasing to 0). For an estimate, the error is less than the first omitted term.",
       "Test absolute value first: Σ1/n³ converges as a p-series with p = 3.",
-      "Absolutely convergent. No need to run the AST at all."
+      "No need to run the AST at all."
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 24, Practice 2",
@@ -2083,7 +2467,12 @@ const rows = [
     "k": "fill",
     "a": [
       "Absolutely convergent.",
-      "Absolutelyconvergent."
+      "Absolutelyconvergent.",
+      "absolutely convergent",
+      "converges absolutely",
+      "absolutely converges",
+      "absolutely",
+      "absolute convergence"
     ]
   },
   {
@@ -2093,11 +2482,11 @@ const rows = [
     "t": 2,
     "tag": "Core",
     "q": "Approximate Σ(n=1) (−1)ⁿ⁺¹/n⁴ with error less than 0.0005.",
-    "why": "Need aₙ₊₁ = 1/(n+1)⁴ < 0.0005 ⇒ (n+1)⁴ > 2000 ⇒ n + 1 > 6.69 ⇒ n ≥ 6.\nUse 6 terms: 1 − 1/16 + 1/81 − 1/256 + 1/625 − 1/1296 ≈ 0.9470\nThe alternating error bound is the easiest in the course: the error is smaller than the first omitted term.",
+    "why": "Need aₙ₊₁ = 1/(n+1)⁴ < 0.0005 ⇒ (n+1)⁴ > 2000 ⇒ n + 1 > 6.69 ⇒ n ≥ 6.\nUse 6 terms: 1 − 1/16 + 1/81 − 1/256 + 1/625 − 1/1296 ≈ 0.9468\nThe alternating error bound is the easiest in the course: the error is smaller than the first omitted term.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Test Σ|aₙ| first. If that diverges, check the Alternating Series Test (terms decreasing to 0). For an estimate, the error is less than the first omitted term.",
       "Need aₙ₊₁ = 1/(n+1)⁴ < 0.0005 ⇒ (n+1)⁴ > 2000 ⇒ n + 1 > 6.69 ⇒ n ≥ 6.",
-      "Use 6 terms: 1 − 1/16 + 1/81 − 1/256 + 1/625 − 1/1296 ≈ 0.9470"
+      "Use 6 terms: 1 − 1/16 + 1/81 − 1/256 + 1/625 − 1/1296 ≈ 0.9468"
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 24, Practice 4",
@@ -2121,7 +2510,7 @@ const rows = [
     "q": "Give an example of a series that converges conditionally but not absolutely, and explain why the distinction matters.",
     "why": "Standard example: Σ(−1)ⁿ⁺¹/n = ln 2, while Σ1/n diverges.\nThe distinction matters because a conditionally convergent series can be rearranged to sum to any real number you like (the Riemann rearrangement theorem). Absolutely convergent series can be rearranged freely without changing the sum. So absolute convergence is the stronger, better behaved property, which is why power series are analyzed through it.",
     "hints": [
-      "Break the problem into a setup, a calculation, and a reason the method applies.",
+      "Test Σ|aₙ| first. If that diverges, check the Alternating Series Test (terms decreasing to 0). For an estimate, the error is less than the first omitted term.",
       "Standard example: Σ(−1)ⁿ⁺¹/n = ln 2, while Σ1/n diverges.",
       "The distinction matters because a conditionally convergent series can be rearranged to sum to any real number you like (the Riemann rearrangement theorem). Absolutely convergent series can be rearranged freely without changing the sum. So absolute convergence is the stronger, better behaved property, which is why power series are analyzed through it."
     ],
@@ -2147,9 +2536,9 @@ const rows = [
     "q": "Apply the Ratio Test to Σ n/2ⁿ.",
     "why": "aₙ₊₁/aₙ = [(n+1)/2ⁿ⁺¹][2ⁿ/n] = (n+1)/(2n) → 1/2 < 1\nConverges absolutely.",
     "hints": [
-      "Start from the definition or formula introduced in this lesson.",
+      "Compute ρ = lim |aₙ₊₁/aₙ|, or lim |aₙ|^(1/n) when there are nth powers: ρ < 1 converges absolutely, ρ > 1 diverges, ρ = 1 says nothing.",
       "aₙ₊₁/aₙ = [(n+1)/2ⁿ⁺¹][2ⁿ/n] = (n+1)/(2n) → 1/2 < 1",
-      "Converges absolutely."
+      "Carry the calculation through carefully and check the result against the original conditions."
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 25, Practice 1",
@@ -2159,7 +2548,14 @@ const rows = [
     "k": "fill",
     "a": [
       "Converges absolutely.",
-      "Convergesabsolutely."
+      "converges absolutely",
+      "absolutely convergent",
+      "absolutely converges",
+      "converges",
+      "convergent",
+      "converge",
+      "it converges",
+      "the series converges"
     ]
   },
   {
@@ -2171,9 +2567,9 @@ const rows = [
     "q": "Apply the Root Test to Σ (n/(2n+1))ⁿ.",
     "why": "ρ = lim n/(2n+1) = 1/2 < 1\nConverges. The nth power structure is the signal to use the Root Test.",
     "hints": [
-      "Start from the definition or formula introduced in this lesson.",
+      "Compute ρ = lim |aₙ₊₁/aₙ|, or lim |aₙ|^(1/n) when there are nth powers: ρ < 1 converges absolutely, ρ > 1 diverges, ρ = 1 says nothing.",
       "ρ = lim n/(2n+1) = 1/2 < 1",
-      "Converges. The nth power structure is the signal to use the Root Test."
+      "The nth power structure is the signal to use the Root Test."
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 25, Practice 2",
@@ -2182,7 +2578,15 @@ const rows = [
     "variation": 1,
     "k": "fill",
     "a": [
-      "Converges."
+      "Converges.",
+      "converges",
+      "convergent",
+      "converge",
+      "it converges",
+      "the series converges",
+      "converges absolutely",
+      "absolutely convergent",
+      "absolutely converges"
     ]
   },
   {
@@ -2194,7 +2598,7 @@ const rows = [
     "q": "Determine convergence of Σ (2n)!/(n!)².",
     "why": "aₙ₊₁/aₙ = [(2n+2)!/((n+1)!)²][(n!)²/(2n)!]\n(2n+2)! = (2n+2)(2n+1)(2n)! and (n+1)!² = (n+1)²(n!)²\n= (2n+2)(2n+1)/(n+1)² = 2(2n+1)/(n+1) → 4 > 1\nDiverges.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Compute ρ = lim |aₙ₊₁/aₙ|, or lim |aₙ|^(1/n) when there are nth powers: ρ < 1 converges absolutely, ρ > 1 diverges, ρ = 1 says nothing.",
       "aₙ₊₁/aₙ = [(2n+2)!/((n+1)!)²][(n!)²/(2n)!]",
       "(2n+2)! = (2n+2)(2n+1)(2n)! and (n+1)!² = (n+1)²(n!)²"
     ],
@@ -2205,7 +2609,12 @@ const rows = [
     "variation": 1,
     "k": "fill",
     "a": [
-      "Diverges."
+      "Diverges.",
+      "diverges",
+      "divergent",
+      "diverge",
+      "it diverges",
+      "the series diverges"
     ]
   },
   {
@@ -2217,7 +2626,7 @@ const rows = [
     "q": "Determine convergence of Σ (−3)ⁿ/(n 4ⁿ⁺¹).",
     "why": "Use the Ratio Test on absolute values.\n|aₙ₊₁/aₙ| = [3ⁿ⁺¹/((n+1)4ⁿ⁺²)][n4ⁿ⁺¹/3ⁿ] = (3/4)(n/(n+1)) → 3/4 < 1\nConverges absolutely.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Compute ρ = lim |aₙ₊₁/aₙ|, or lim |aₙ|^(1/n) when there are nth powers: ρ < 1 converges absolutely, ρ > 1 diverges, ρ = 1 says nothing.",
       "Use the Ratio Test on absolute values.",
       "|aₙ₊₁/aₙ| = [3ⁿ⁺¹/((n+1)4ⁿ⁺²)][n4ⁿ⁺¹/3ⁿ] = (3/4)(n/(n+1)) → 3/4 < 1"
     ],
@@ -2229,7 +2638,14 @@ const rows = [
     "k": "fill",
     "a": [
       "Converges absolutely.",
-      "Convergesabsolutely."
+      "converges absolutely",
+      "absolutely convergent",
+      "absolutely converges",
+      "converges",
+      "convergent",
+      "converge",
+      "it converges",
+      "the series converges"
     ]
   },
   {
@@ -2241,7 +2657,7 @@ const rows = [
     "q": "Show that the Ratio Test is inconclusive for both Σ1/n and Σ1/n², and explain the lesson.",
     "why": "Σ1/n: ratio = n/(n+1) → 1. Σ1/n²: ratio = n²/(n+1)² → 1.\nBoth give exactly 1, yet the first diverges and the second converges. So a limit of 1 genuinely carries no information.\nThe lesson: for rational functions of n, skip the Ratio Test entirely and go to Limit Comparison with a p-series.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Compute ρ = lim |aₙ₊₁/aₙ|, or lim |aₙ|^(1/n) when there are nth powers: ρ < 1 converges absolutely, ρ > 1 diverges, ρ = 1 says nothing.",
       "Σ1/n: ratio = n/(n+1) → 1. Σ1/n²: ratio = n²/(n+1)² → 1.",
       "Both give exactly 1, yet the first diverges and the second converges. So a limit of 1 genuinely carries no information."
     ],
@@ -2267,7 +2683,7 @@ const rows = [
     "q": "Determine convergence of Σ nⁿ/(3ⁿ n!).",
     "why": "Ratio: [(n+1)ⁿ⁺¹/(3ⁿ⁺¹(n+1)!)][3ⁿn!/nⁿ]\n= (n+1)ⁿ⁺¹/(3(n+1)nⁿ) = (n+1)ⁿ/(3nⁿ) = (1 + 1/n)ⁿ/3 → e/3\nSince e ≈ 2.718 < 3, the limit is less than 1 and the series converges.\nRecognizing (1 + 1/n)ⁿ → e inside a ratio computation is the whole difficulty.",
     "hints": [
-      "Break the problem into a setup, a calculation, and a reason the method applies.",
+      "Compute ρ = lim |aₙ₊₁/aₙ|, or lim |aₙ|^(1/n) when there are nth powers: ρ < 1 converges absolutely, ρ > 1 diverges, ρ = 1 says nothing.",
       "Ratio: [(n+1)ⁿ⁺¹/(3ⁿ⁺¹(n+1)!)][3ⁿn!/nⁿ]",
       "= (n+1)ⁿ⁺¹/(3(n+1)nⁿ) = (n+1)ⁿ/(3nⁿ) = (1 + 1/n)ⁿ/3 → e/3"
     ],
@@ -2278,7 +2694,14 @@ const rows = [
     "variation": 1,
     "k": "fill",
     "a": [
-      "converges"
+      "converges",
+      "convergent",
+      "converge",
+      "it converges",
+      "the series converges",
+      "converges absolutely",
+      "absolutely convergent",
+      "absolutely converges"
     ]
   },
   {
@@ -2290,8 +2713,8 @@ const rows = [
     "q": "Name the test you would use, without solving: Σ 5ⁿ/n!",
     "why": "Factorial present, so the Ratio Test. It gives 5/(n+1) → 0, so the series converges.",
     "hints": [
-      "Start from the definition or formula introduced in this lesson.",
-      "Factorial present, so the Ratio Test. It gives 5/(n+1) → 0, so the series converges.",
+      "Read the shape of the terms: factorials point to the Ratio Test, nth powers to the Root Test, rational functions to Limit Comparison with a p-series, alternating signs to absolute values first and then the AST.",
+      "Factorial present.",
       "Carry the calculation through carefully and check the result against the original conditions."
     ],
     "code": "",
@@ -2302,7 +2725,9 @@ const rows = [
     "k": "fill",
     "a": [
       "Ratio Test",
-      "RatioTest"
+      "RatioTest",
+      "the ratio test",
+      "ratio"
     ]
   },
   {
@@ -2314,8 +2739,8 @@ const rows = [
     "q": "Name the test: Σ (n² + 1)/(n⁴ + 3n)",
     "why": "Rational function, so Limit Comparison with skeleton n²/n⁴ = 1/n². That p-series converges, so the series converges.",
     "hints": [
-      "Start from the definition or formula introduced in this lesson.",
-      "Rational function, so Limit Comparison with skeleton n²/n⁴ = 1/n². That p-series converges, so the series converges.",
+      "Read the shape of the terms: factorials point to the Ratio Test, nth powers to the Root Test, rational functions to Limit Comparison with a p-series, alternating signs to absolute values first and then the AST.",
+      "Rational function.",
       "Carry the calculation through carefully and check the result against the original conditions."
     ],
     "code": "",
@@ -2326,7 +2751,12 @@ const rows = [
     "k": "fill",
     "a": [
       "Limit Comparison",
-      "LimitComparison"
+      "LimitComparison",
+      "limit comparison test",
+      "the limit comparison test",
+      "LCT",
+      "limit comparison with 1/n²",
+      "limit comparison with 1/n^2"
     ]
   },
   {
@@ -2335,10 +2765,10 @@ const rows = [
     "lesson": 26,
     "t": 2,
     "tag": "Core",
-    "q": "Classify each and name the test: (a) Σ(−1)ⁿ/√(n+1) (b) Σ(n/(n+4))ⁿ (c) Σ3/(2ⁿ) (d) Σ1/(n^0.9)",
+    "q": "Classify each series (each sum starts at n = 1) and name the test: (a) Σ(−1)ⁿ/√(n+1) (b) Σ(n/(n+4))ⁿ (c) Σ3/(2ⁿ) (d) Σ1/(n^0.9)",
     "why": "(a) Mixed signs: absolute series is a p-series with p = 1/2, diverging; AST applies, so conditionally convergent.\n(b) nth power: Root Test, ρ = lim n/(n+4) = 1, inconclusive. Fall back to the Divergence Test: (n/(n+4))ⁿ = (1 + 4/n)⁻ⁿ → e⁻⁴ ≠ 0, so it diverges.\n(c) Geometric, r = 1/2, converges to 3.\n(d) p-series with p = 0.9 ≤ 1, diverges.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Read the shape of the terms: factorials point to the Ratio Test, nth powers to the Root Test, rational functions to Limit Comparison with a p-series, alternating signs to absolute values first and then the AST.",
       "(a) Mixed signs: absolute series is a p-series with p = 1/2, diverging; AST applies, so conditionally convergent.",
       "(b) nth power: Root Test, ρ = lim n/(n+4) = 1, inconclusive. Fall back to the Divergence Test: (n/(n+4))ⁿ = (1 + 4/n)⁻ⁿ → e⁻⁴ ≠ 0, so it diverges."
     ],
@@ -2361,10 +2791,10 @@ const rows = [
     "lesson": 26,
     "t": 2,
     "tag": "Core",
-    "q": "Determine convergence of Σ (n! )²/(2n)! and name the test.",
+    "q": "Use the Ratio Test to determine whether Σ (n!)²/(2n)! converges.",
     "why": "Factorials, so the Ratio Test.\naₙ₊₁/aₙ = [((n+1)!)²/(2n+2)!][(2n)!/(n!)²] = (n+1)²/((2n+2)(2n+1)) = (n+1)/(2(2n+1)) → 1/4 < 1\nConverges.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Read the shape of the terms: factorials point to the Ratio Test, nth powers to the Root Test, rational functions to Limit Comparison with a p-series, alternating signs to absolute values first and then the AST.",
       "Factorials, so the Ratio Test.",
       "aₙ₊₁/aₙ = [((n+1)!)²/(2n+2)!][(2n)!/(n!)²] = (n+1)²/((2n+2)(2n+1)) = (n+1)/(2(2n+1)) → 1/4 < 1"
     ],
@@ -2375,7 +2805,15 @@ const rows = [
     "variation": 1,
     "k": "fill",
     "a": [
-      "Converges."
+      "Converges.",
+      "converges",
+      "convergent",
+      "converge",
+      "it converges",
+      "the series converges",
+      "converges absolutely",
+      "absolutely convergent",
+      "absolutely converges"
     ]
   },
   {
@@ -2387,7 +2825,7 @@ const rows = [
     "q": "Write a complete justification for the convergence of Σ (n + 2)/(n³ + 1), in the three-part format.",
     "why": "Test: Limit Comparison with bₙ = 1/n².\nHypotheses: Both aₙ = (n+2)/(n³+1) and bₙ = 1/n² are positive for n ≥ 1. Compute lim aₙ/bₙ = lim n²(n+2)/(n³+1) = lim (n³+2n²)/(n³+1) = 1, which is finite and positive.\nConclusion: Σ1/n² converges as a p-series with p = 2 > 1, so Σ(n+2)/(n³+1) converges.\nName it, verify it, conclude it. A bare 'converges' loses most of the points even when correct.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Read the shape of the terms: factorials point to the Ratio Test, nth powers to the Root Test, rational functions to Limit Comparison with a p-series, alternating signs to absolute values first and then the AST.",
       "Test: Limit Comparison with bₙ = 1/n².",
       "Hypotheses: Both aₙ = (n+2)/(n³+1) and bₙ = 1/n² are positive for n ≥ 1. Compute lim aₙ/bₙ = lim n²(n+2)/(n³+1) = lim (n³+2n²)/(n³+1) = 1, which is finite and positive."
     ],
@@ -2413,7 +2851,7 @@ const rows = [
     "q": "Sort these by which test applies: Σn³/eⁿ, Σ1/(n²+n), Σ(−1)ⁿn/(n²+1), Σ(1 + 1/n)ⁿ, Σ2ⁿ/(3ⁿ+1)",
     "why": "Σn³/eⁿ: Ratio Test, limit 1/e < 1, converges.\nΣ1/(n²+n): Limit Comparison with 1/n², converges. (It also telescopes, since 1/(n²+n) = 1/n − 1/(n+1), and sums to 1.)\nΣ(−1)ⁿn/(n²+1): AST, conditionally convergent.\nΣ(1+1/n)ⁿ: terms go to e ≠ 0, diverges by the Divergence Test.\nΣ2ⁿ/(3ⁿ+1): Limit Comparison with (2/3)ⁿ, converges.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Read the shape of the terms: factorials point to the Ratio Test, nth powers to the Root Test, rational functions to Limit Comparison with a p-series, alternating signs to absolute values first and then the AST.",
       "Σn³/eⁿ: Ratio Test, limit 1/e < 1, converges.",
       "Σ1/(n²+n): Limit Comparison with 1/n², converges. (It also telescopes, since 1/(n²+n) = 1/n − 1/(n+1), and sums to 1.)"
     ],
@@ -2439,7 +2877,7 @@ const rows = [
     "q": "Determine convergence of Σ(n=2) 1/(ln n)^(ln n).",
     "why": "Rewrite the term: (ln n)^(ln n) = e^(ln n · ln ln n).\nCompare to n² = e^(2 ln n). The exponents are ln n · ln ln n versus 2 ln n, and the ratio is ln ln n, which exceeds 2 once n is large enough (roughly n > e^(e²)).\nSo eventually (ln n)^(ln n) > n², giving aₙ < 1/n².\nΣ1/n² converges, so the series converges by direct comparison.\nRewriting an awkward power as an exponential of logarithms is the move that makes comparison possible.",
     "hints": [
-      "Break the problem into a setup, a calculation, and a reason the method applies.",
+      "Read the shape of the terms: factorials point to the Ratio Test, nth powers to the Root Test, rational functions to Limit Comparison with a p-series, alternating signs to absolute values first and then the AST.",
       "Rewrite the term: (ln n)^(ln n) = e^(ln n · ln ln n).",
       "Compare to n² = e^(2 ln n). The exponents are ln n · ln ln n versus 2 ln n, and the ratio is ln ln n, which exceeds 2 once n is large enough (roughly n > e^(e²))."
     ],
@@ -2450,7 +2888,11 @@ const rows = [
     "variation": 1,
     "k": "fill",
     "a": [
-      "converges"
+      "converges",
+      "convergent",
+      "converge",
+      "it converges",
+      "the series converges"
     ]
   },
   {
@@ -2459,10 +2901,10 @@ const rows = [
     "lesson": 27,
     "t": 1,
     "tag": "Warm-up",
-    "q": "Find the linear approximation of f(x) = √x at a = 9 and estimate √9.1.",
+    "q": "Use the linear approximation of f(x) = √x at a = 9 to estimate √9.1.",
     "why": "f(9) = 3, f′(x) = 1/(2√x), f′(9) = 1/6\nL(x) = 3 + (x − 9)/6\n√9.1 ≈ 3 + 0.1/6 ≈ 3.01667 (true value 3.016621)",
     "hints": [
-      "Start from the definition or formula introduced in this lesson.",
+      "Compute f and its first few derivatives at the center a, then build pₙ(x) = Σ f⁽ᵏ⁾(a)(x − a)ᵏ/k!.",
       "f(9) = 3, f′(x) = 1/(2√x), f′(9) = 1/6",
       "L(x) = 3 + (x − 9)/6"
     ],
@@ -2473,7 +2915,14 @@ const rows = [
     "variation": 1,
     "k": "fill",
     "a": [
-      "3.01667"
+      "3.01667",
+      "3.0167",
+      "3.017",
+      "3.016667",
+      "3.0166667",
+      "181/60",
+      "3 + 1/60",
+      "3+1/60"
     ]
   },
   {
@@ -2485,22 +2934,22 @@ const rows = [
     "q": "Find the Maclaurin polynomial of order 3 for f(x) = eˣ.",
     "why": "Every derivative is eˣ, equal to 1 at 0.\np₃(x) = 1 + x + x²/2 + x³/6",
     "hints": [
-      "Start from the definition or formula introduced in this lesson.",
+      "Compute f and its first few derivatives at the center a, then build pₙ(x) = Σ f⁽ᵏ⁾(a)(x − a)ᵏ/k!.",
       "Every derivative is eˣ, equal to 1 at 0.",
-      "p₃(x) = 1 + x + x²/2 + x³/6"
+      "Carry the calculation through carefully and check the result against the original conditions."
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 27, Practice 2",
     "family": "field-manual-L27-P02",
     "familyName": "Approximating functions with polynomials I - practice 2",
     "variation": 1,
-    "k": "fill",
-    "a": [
-      "1 + x + x²/2 + x³/6",
-      "1 + x + x^2/2 + x^3/6",
-      "1+x+x²/2+x³/6",
-      "1+x+x^2/2+x^3/6"
-    ]
+    "k": "mcq",
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "a": 0,
+    "selfCheck": true
   },
   {
     "id": "k93-fm-L27-P03",
@@ -2509,10 +2958,10 @@ const rows = [
     "t": 2,
     "tag": "Core",
     "q": "Find the Taylor polynomial of order 3 for f(x) = ln x centered at a = 1.",
-    "why": "f(1) = 0, f′ = 1/x so f′(1) = 1, f″ = −1/x² so f″(1) = −1, f⃗ = 2/x³ so f⃗(1) = 2\np₃(x) = 0 + (x−1) − (x−1)²/2! + 2(x−1)³/3!\n= (x−1) − (x−1)²/2 + (x−1)³/3\nNote the powers are (x − 1), not x. Centering at a nonzero point is where that error appears.",
+    "why": "f(1) = 0, f′ = 1/x so f′(1) = 1, f″ = −1/x² so f″(1) = −1, f‴ = 2/x³ so f‴(1) = 2\np₃(x) = 0 + (x−1) − (x−1)²/2! + 2(x−1)³/3!\n= (x−1) − (x−1)²/2 + (x−1)³/3\nNote the powers are (x − 1), not x. Centering at a nonzero point is where that error appears.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
-      "f(1) = 0, f′ = 1/x so f′(1) = 1, f″ = −1/x² so f″(1) = −1, f⃗ = 2/x³ so f⃗(1) = 2",
+      "Compute f and its first few derivatives at the center a, then build pₙ(x) = Σ f⁽ᵏ⁾(a)(x − a)ᵏ/k!.",
+      "f(1) = 0, f′ = 1/x so f′(1) = 1, f″ = −1/x² so f″(1) = −1, f‴ = 2/x³ so f‴(1) = 2",
       "p₃(x) = 0 + (x−1) − (x−1)²/2! + 2(x−1)³/3!"
     ],
     "code": "",
@@ -2520,13 +2969,13 @@ const rows = [
     "family": "field-manual-L27-P03",
     "familyName": "Approximating functions with polynomials I - practice 3",
     "variation": 1,
-    "k": "fill",
-    "a": [
-      "(x−1) − (x−1)²/2 + (x−1)³/3",
-      "(x-1) - (x-1)^2/2 + (x-1)^3/3",
-      "(x−1)−(x−1)²/2+(x−1)³/3",
-      "(x-1)-(x-1)^2/2+(x-1)^3/3"
-    ]
+    "k": "mcq",
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "a": 0,
+    "selfCheck": true
   },
   {
     "id": "k93-fm-L27-P04",
@@ -2534,10 +2983,10 @@ const rows = [
     "lesson": 27,
     "t": 2,
     "tag": "Core",
-    "q": "Find p₂(x) for f(x) = cos x centered at a = π/3, then estimate cos(1.1).",
+    "q": "Use the order 2 Taylor polynomial p₂(x) of f(x) = cos x centered at a = π/3 to estimate cos(1.1).",
     "why": "f(π/3) = 1/2, f′ = −sin so f′(π/3) = −√3/2, f″ = −cos so f″(π/3) = −1/2\np₂(x) = 1/2 − (√3/2)(x − π/3) − (1/4)(x − π/3)²\nWith x = 1.1, x − π/3 ≈ 1.1 − 1.0472 = 0.0528\n≈ 0.5 − 0.0457 − 0.0007 = 0.4536 (true value 0.45360)",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Compute f and its first few derivatives at the center a, then build pₙ(x) = Σ f⁽ᵏ⁾(a)(x − a)ᵏ/k!.",
       "f(π/3) = 1/2, f′ = −sin so f′(π/3) = −√3/2, f″ = −cos so f″(π/3) = −1/2",
       "p₂(x) = 1/2 − (√3/2)(x − π/3) − (1/4)(x − π/3)²"
     ],
@@ -2548,7 +2997,9 @@ const rows = [
     "variation": 1,
     "k": "fill",
     "a": [
-      "0.4536"
+      "0.4536",
+      "0.45357",
+      "0.454"
     ]
   },
   {
@@ -2560,7 +3011,7 @@ const rows = [
     "q": "Show that the order 2 Taylor polynomial of any function at a is the unique quadratic matching f, f′, and f″ at a.",
     "why": "Write q(x) = c₀ + c₁(x−a) + c₂(x−a)².\nq(a) = c₀, so matching values forces c₀ = f(a).\nq′(x) = c₁ + 2c₂(x−a), so q′(a) = c₁ = f′(a).\nq″(x) = 2c₂, so q″(a) = 2c₂ = f″(a), giving c₂ = f″(a)/2!.\nEach condition determines exactly one coefficient, so the quadratic is unique and matches the Taylor formula. This is also where the factorials come from: differentiating (x−a)ᵏ k times produces k!.",
     "hints": [
-      "Break the problem into a setup, a calculation, and a reason the method applies.",
+      "Compute f and its first few derivatives at the center a, then build pₙ(x) = Σ f⁽ᵏ⁾(a)(x − a)ᵏ/k!.",
       "Write q(x) = c₀ + c₁(x−a) + c₂(x−a)².",
       "q(a) = c₀, so matching values forces c₀ = f(a)."
     ],
@@ -2583,12 +3034,12 @@ const rows = [
     "lesson": 28,
     "t": 1,
     "tag": "Warm-up",
-    "q": "How many terms of the Maclaurin series for sin x are needed for sin(1) within 0.0001?",
+    "q": "What order Maclaurin polynomial for sin x does the remainder bound require to approximate sin(1) within 0.0001?",
     "why": "|Rₙ| ≤ 1·1ⁿ⁺¹/(n+1)! = 1/(n+1)!\nNeed (n+1)! > 10000: 7! = 5040 (too small), 8! = 40320 ✓, so n + 1 = 8, n = 7.\nOrder 7, which for sine means the terms through x⁷, that is four nonzero terms.",
     "hints": [
-      "Start from the definition or formula introduced in this lesson.",
+      "Use the remainder bound |Rₙ| ≤ M|x − a|ⁿ⁺¹/(n+1)!, where M bounds |f⁽ⁿ⁺¹⁾| between a and x.",
       "|Rₙ| ≤ 1·1ⁿ⁺¹/(n+1)! = 1/(n+1)!",
-      "Need (n+1)! > 10000: 7! = 5040 (too small), 8! = 40320 ✓, so n + 1 = 8, n = 7."
+      "Need (n+1)! > 10000: 7! = 5040 (too small), 8! = 40320 ✓, so n + 1 = 8, n = …"
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 28, Practice 2",
@@ -2598,7 +3049,18 @@ const rows = [
     "k": "fill",
     "a": [
       "Order 7",
-      "Order7"
+      "Order7",
+      "7",
+      "n = 7",
+      "n=7",
+      "p₇",
+      "p_7",
+      "p7",
+      "7th order",
+      "7thorder",
+      "seventh order",
+      "seventhorder",
+      "7th"
     ]
   },
   {
@@ -2610,7 +3072,7 @@ const rows = [
     "q": "Estimate ln(1.5) using p₃ centered at 1, and bound the error.",
     "why": "From the earlier lesson, p₃(x) = (x−1) − (x−1)²/2 + (x−1)³/3.\nAt x = 1.5: 0.5 − 0.125 + 0.04167 = 0.41667 (true value 0.405465)\nf⁴(x) = −6/x⁴, and on [1, 1.5] the largest magnitude is at x = 1, so M = 6.\n|R₃| ≤ 6(0.5)⁴/4! = 6(0.0625)/24 = 0.015625, and the actual error 0.0112 respects it.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Use the remainder bound |Rₙ| ≤ M|x − a|ⁿ⁺¹/(n+1)!, where M bounds |f⁽ⁿ⁺¹⁾| between a and x.",
       "From the earlier lesson, p₃(x) = (x−1) − (x−1)²/2 + (x−1)³/3.",
       "At x = 1.5: 0.5 − 0.125 + 0.04167 = 0.41667 (true value 0.405465)"
     ],
@@ -2633,10 +3095,10 @@ const rows = [
     "lesson": 28,
     "t": 2,
     "tag": "Core",
-    "q": "Estimate e^0.3 to within 10⁻⁵. How many terms?",
+    "q": "What order Maclaurin polynomial for eˣ is needed to estimate e^0.3 within 10⁻⁵?",
     "why": "On [0, 0.3], fⁿ⁺¹(t) = eᵗ ≤ e^0.3 < 1.35, so take M = 1.35.\n|Rₙ| ≤ 1.35(0.3)ⁿ⁺¹/(n+1)!\nn = 3: 1.35(0.0081)/24 = 4.6×10⁻⁴ too big\nn = 4: 1.35(0.00243)/120 = 2.7×10⁻⁵ too big\nn = 5: 1.35(0.000729)/720 = 1.4×10⁻⁶ ✓\nOrder 5. These are solved by testing values, since factorials block an algebraic solve.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Use the remainder bound |Rₙ| ≤ M|x − a|ⁿ⁺¹/(n+1)!, where M bounds |f⁽ⁿ⁺¹⁾| between a and x.",
       "On [0, 0.3], fⁿ⁺¹(t) = eᵗ ≤ e^0.3 < 1.35, so take M = 1.35.",
       "|Rₙ| ≤ 1.35(0.3)ⁿ⁺¹/(n+1)!"
     ],
@@ -2648,7 +3110,18 @@ const rows = [
     "k": "fill",
     "a": [
       "Order 5.",
-      "Order5."
+      "Order5.",
+      "5",
+      "n = 5",
+      "n=5",
+      "p₅",
+      "p_5",
+      "p5",
+      "5th order",
+      "5thorder",
+      "fifth order",
+      "fifthorder",
+      "5th"
     ]
   },
   {
@@ -2657,10 +3130,10 @@ const rows = [
     "lesson": 28,
     "t": 3,
     "tag": "Exam level",
-    "q": "Use p₂ for f(x) = x^(1/3) at a = 8 to estimate 8.5^(1/3), with an error bound.",
-    "why": "f(8) = 2, f′ = (1/3)x^(−2/3) so f′(8) = 1/12, f″ = −(2/9)x^(−5/3) so f″(8) = −2/288 = −1/144\np₂(x) = 2 + (x−8)/12 − (x−8)²/288\nAt 8.5: 2 + 0.041667 − 0.000868 = 2.040799 (true value 2.040828)\nf⃗ = (10/27)x^(−8/3), largest on [8,8.5] at x = 8: M = (10/27)(1/256) ≈ 0.001447\n|R₂| ≤ 0.001447(0.5)³/6 ≈ 3.0 × 10⁻⁵",
+    "q": "Use the order 2 Taylor polynomial p₂ of f(x) = x^(1/3) centered at a = 8 to estimate 8.5^(1/3).",
+    "why": "f(8) = 2, f′ = (1/3)x^(−2/3) so f′(8) = 1/12, f″ = −(2/9)x^(−5/3) so f″(8) = −2/288 = −1/144\np₂(x) = 2 + (x−8)/12 − (x−8)²/288\nAt 8.5: 2 + 0.041667 − 0.000868 = 2.040799 (true value 2.040828)\nf‴ = (10/27)x^(−8/3), largest on [8,8.5] at x = 8: M = (10/27)(1/256) ≈ 0.001447\n|R₂| ≤ 0.001447(0.5)³/6 ≈ 3.0 × 10⁻⁵",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Use the remainder bound |Rₙ| ≤ M|x − a|ⁿ⁺¹/(n+1)!, where M bounds |f⁽ⁿ⁺¹⁾| between a and x.",
       "f(8) = 2, f′ = (1/3)x^(−2/3) so f′(8) = 1/12, f″ = −(2/9)x^(−5/3) so f″(8) = −2/288 = −1/144",
       "p₂(x) = 2 + (x−8)/12 − (x−8)²/288"
     ],
@@ -2671,7 +3144,12 @@ const rows = [
     "variation": 1,
     "k": "fill",
     "a": [
-      "2.040799"
+      "2.040799",
+      "2.0408",
+      "2.04080",
+      "2.0407986",
+      "2.041",
+      "2351/1152"
     ]
   },
   {
@@ -2680,12 +3158,12 @@ const rows = [
     "lesson": 28,
     "t": 3,
     "tag": "Exam level",
-    "q": "For what x does the order 3 Maclaurin polynomial of sin x approximate sin x within 0.001?",
-    "why": "|R₃| ≤ |x|⁴/4! = |x|⁴/24 < 0.001\n|x|⁴ < 0.024 ⇒ |x| < 0.024^(1/4) ≈ 0.394\nSo on roughly (−0.394, 0.394). Solving for the interval rather than for n is a common variant.",
+    "q": "The Lagrange bound for the order 3 Maclaurin polynomial of sin x is |R₃(x)| ≤ |x|⁴/4!. For which x does this bound guarantee an error below 0.001?",
+    "why": "|R₃| ≤ |x|⁴/4! = |x|⁴/24 < 0.001\n|x|⁴ < 0.024 ⇒ |x| < 0.024^(1/4) ≈ 0.394\nSo the bound guarantees the accuracy on roughly (−0.394, 0.394). Solving for the interval rather than for n is a common variant.\nThe true accuracy reaches further: for sine p₃ = p₄, and the R₄ bound |x|⁵/5! < 0.001 already gives |x| < 0.654. The question asks what the |x|⁴/4! bound guarantees.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Use the remainder bound |Rₙ| ≤ M|x − a|ⁿ⁺¹/(n+1)!, where M bounds |f⁽ⁿ⁺¹⁾| between a and x.",
       "|R₃| ≤ |x|⁴/4! = |x|⁴/24 < 0.001",
-      "|x|⁴ < 0.024 ⇒ |x| < 0.024^(1/4) ≈ 0.394"
+      "|x|⁴ < 0.024 ⇒ |x| < 0.024^(1/4) ≈ …"
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 28, Practice 6",
@@ -2694,6 +3172,20 @@ const rows = [
     "variation": 1,
     "k": "fill",
     "a": [
+      "|x| < 0.394",
+      "|x|<0.394",
+      "|x| < 0.39",
+      "|x|<0.39",
+      "|x| < 0.3936",
+      "|x|<0.3936",
+      "−0.394 < x < 0.394",
+      "−0.394<x<0.394",
+      "-0.394 < x < 0.394",
+      "-0.394<x<0.394",
+      "(−0.394, 0.394)",
+      "(−0.394,0.394)",
+      "(-0.394, 0.394)",
+      "(-0.394,0.394)",
       "0.394"
     ]
   },
@@ -2706,7 +3198,7 @@ const rows = [
     "q": "Explain why the error bound uses an unknown c yet still gives a guaranteed answer.",
     "why": "Taylor's theorem says Rₙ(x) = fⁿ⁺¹(c)(x−a)ⁿ⁺¹/(n+1)! for some c strictly between a and x. You cannot find that c, and you never need to.\nThe move is to find M with |fⁿ⁺¹(t)| ≤ M for every t in the interval. Since c is in that interval, |fⁿ⁺¹(c)| ≤ M automatically, so |Rₙ| ≤ M|x−a|ⁿ⁺¹/(n+1)!.\nTrading an unknown value for a known ceiling is what converts an existence statement into a usable numeric guarantee. Overestimating M is always safe, only slightly wasteful.",
     "hints": [
-      "Break the problem into a setup, a calculation, and a reason the method applies.",
+      "Use the remainder bound |Rₙ| ≤ M|x − a|ⁿ⁺¹/(n+1)!, where M bounds |f⁽ⁿ⁺¹⁾| between a and x.",
       "Taylor's theorem says Rₙ(x) = fⁿ⁺¹(c)(x−a)ⁿ⁺¹/(n+1)! for some c strictly between a and x. You cannot find that c, and you never need to.",
       "The move is to find M with |fⁿ⁺¹(t)| ≤ M for every t in the interval. Since c is in that interval, |fⁿ⁺¹(c)| ≤ M automatically, so |Rₙ| ≤ M|x−a|ⁿ⁺¹/(n+1)!."
     ],
@@ -2732,9 +3224,9 @@ const rows = [
     "q": "Find the radius of convergence of Σ xᵏ/k.",
     "why": "|aₖ₊₁/aₖ| = |x|ᵏ⁺¹/(k+1) · k/|x|ᵏ = |x|k/(k+1) → |x|\nConverges when |x| < 1, so R = 1.",
     "hints": [
-      "Start from the definition or formula introduced in this lesson.",
+      "Apply the Ratio Test to get |x − a| < R, then test each endpoint separately with an ordinary series test.",
       "|aₖ₊₁/aₖ| = |x|ᵏ⁺¹/(k+1) · k/|x|ᵏ = |x|k/(k+1) → |x|",
-      "Converges when |x| < 1, so R = 1."
+      "Converges when |x| < 1, so R = …"
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 29, Practice 1",
@@ -2754,10 +3246,10 @@ const rows = [
     "lesson": 29,
     "t": 1,
     "tag": "Warm-up",
-    "q": "Find the interval of convergence for the series above.",
+    "q": "Find the interval of convergence of Σ(k=1 to ∞) xᵏ/k.",
     "why": "Interior: (−1, 1). Now the endpoints.\nx = 1: Σ1/k, the harmonic series, diverges.\nx = −1: Σ(−1)ᵏ/k, alternating harmonic, converges by the AST.\nInterval: [−1, 1)\nAsymmetric intervals are normal.",
     "hints": [
-      "Start from the definition or formula introduced in this lesson.",
+      "Apply the Ratio Test to get |x − a| < R, then test each endpoint separately with an ordinary series test.",
       "Interior: (−1, 1). Now the endpoints.",
       "x = 1: Σ1/k, the harmonic series, diverges."
     ],
@@ -2771,7 +3263,13 @@ const rows = [
       "[−1, 1)",
       "[-1, 1)",
       "[−1,1)",
-      "[-1,1)"
+      "[-1,1)",
+      "−1 ≤ x < 1",
+      "−1≤x<1",
+      "-1 <= x < 1",
+      "-1<=x<1",
+      "-1 ≤ x < 1",
+      "-1≤x<1"
     ]
   },
   {
@@ -2783,7 +3281,7 @@ const rows = [
     "q": "Find the interval of convergence for Σ (x + 3)ᵏ/(k² 2ᵏ).",
     "why": "Ratio: |x+3|ᵏ⁺¹/((k+1)²2ᵏ⁺¹) · k²2ᵏ/|x+3|ᵏ = (|x+3|/2)(k/(k+1))² → |x+3|/2\nNeed |x+3| < 2, so R = 2 and the center is −3: interior (−5, −1).\nx = −1: Σ2ᵏ/(k²2ᵏ) = Σ1/k², converges.\nx = −5: Σ(−2)ᵏ/(k²2ᵏ) = Σ(−1)ᵏ/k², converges absolutely.\nInterval: [−5, −1]",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Apply the Ratio Test to get |x − a| < R, then test each endpoint separately with an ordinary series test.",
       "Ratio: |x+3|ᵏ⁺¹/((k+1)²2ᵏ⁺¹) · k²2ᵏ/|x+3|ᵏ = (|x+3|/2)(k/(k+1))² → |x+3|/2",
       "Need |x+3| < 2, so R = 2 and the center is −3: interior (−5, −1)."
     ],
@@ -2797,7 +3295,11 @@ const rows = [
       "[−5, −1]",
       "[-5, -1]",
       "[−5,−1]",
-      "[-5,-1]"
+      "[-5,-1]",
+      "−5 ≤ x ≤ −1",
+      "−5≤x≤−1",
+      "-5 <= x <= -1",
+      "-5<=x<=-1"
     ]
   },
   {
@@ -2809,7 +3311,7 @@ const rows = [
     "q": "Find R for Σ k! xᵏ and for Σ xᵏ/k!.",
     "why": "Σk!xᵏ: ratio = (k+1)|x| → ∞ unless x = 0. So R = 0, converging only at x = 0.\nΣxᵏ/k!: ratio = |x|/(k+1) → 0 for every x. So R = ∞, converging everywhere.\nThese are the two extreme cases, and factorial placement decides which you get.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Apply the Ratio Test to get |x − a| < R, then test each endpoint separately with an ordinary series test.",
       "Σk!xᵏ: ratio = (k+1)|x| → ∞ unless x = 0. So R = 0, converging only at x = 0.",
       "Σxᵏ/k!: ratio = |x|/(k+1) → 0 for every x. So R = ∞, converging everywhere."
     ],
@@ -2835,7 +3337,7 @@ const rows = [
     "q": "Find the interval of convergence for Σ (−1)ᵏ (2x − 1)ᵏ/√k.",
     "why": "Ratio: |2x−1|√(k/(k+1)) → |2x − 1|\nNeed |2x − 1| < 1 ⇒ −1 < 2x − 1 < 1 ⇒ 0 < x < 1. Center 1/2, R = 1/2.\nx = 1: Σ(−1)ᵏ/√k converges by the AST.\nx = 0: 2x − 1 = −1, giving Σ(−1)ᵏ(−1)ᵏ/√k = Σ1/√k, a p-series with p = 1/2, diverges.\nInterval: (0, 1]\nWhen the variable has a coefficient, solve carefully for x; the radius in x is half the radius in (2x−1).",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Apply the Ratio Test to get |x − a| < R, then test each endpoint separately with an ordinary series test.",
       "Ratio: |2x−1|√(k/(k+1)) → |2x − 1|",
       "Need |2x − 1| < 1 ⇒ −1 < 2x − 1 < 1 ⇒ 0 < x < 1. Center 1/2, R = 1/2."
     ],
@@ -2847,7 +3349,11 @@ const rows = [
     "k": "fill",
     "a": [
       "(0, 1]",
-      "(0,1]"
+      "(0,1]",
+      "0 < x ≤ 1",
+      "0<x≤1",
+      "0 < x <= 1",
+      "0<x<=1"
     ]
   },
   {
@@ -2859,9 +3365,9 @@ const rows = [
     "q": "Find R for Σ (3x)ᵏ/k³.",
     "why": "Ratio: 3|x|(k/(k+1))³ → 3|x|\nConverges when 3|x| < 1, so |x| < 1/3 and R = 1/3.\nBoth endpoints give Σ±1/k³, which converge, so the interval is [−1/3, 1/3].",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Apply the Ratio Test to get |x − a| < R, then test each endpoint separately with an ordinary series test.",
       "Ratio: 3|x|(k/(k+1))³ → 3|x|",
-      "Converges when 3|x| < 1, so |x| < 1/3 and R = 1/3."
+      "Converges when 3|x| < 1, so |x| < 1/3 and R = …"
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 29, Practice 6",
@@ -2884,7 +3390,7 @@ const rows = [
     "q": "A power series Σcₖ(x − 2)ᵏ converges at x = 5 and diverges at x = −2. What can you say about convergence at x = 0 and x = 6?",
     "why": "Convergence at x = 5 means R ≥ 3. Divergence at x = −2 means R ≤ 4.\nSo 3 ≤ R ≤ 4, and the interval of convergence contains (−1, 5) and is contained in [−2, 6].\nx = 0 is distance 2 from the center, which is inside the guaranteed interior, so it converges.\nx = 6 is distance 4, which may be inside or outside depending on R, so the behavior there is undetermined.\nDistance from the center is the only thing that matters.",
     "hints": [
-      "Break the problem into a setup, a calculation, and a reason the method applies.",
+      "Apply the Ratio Test to get |x − a| < R, then test each endpoint separately with an ordinary series test.",
       "Convergence at x = 5 means R ≥ 3. Divergence at x = −2 means R ≤ 4.",
       "So 3 ≤ R ≤ 4, and the interval of convergence contains (−1, 5) and is contained in [−2, 6]."
     ],
@@ -2910,7 +3416,7 @@ const rows = [
     "q": "Find a power series for 1/(1 + 3x) and its radius.",
     "why": "1/(1 − (−3x)) = Σ(−3x)ᵏ = Σ(−1)ᵏ3ᵏxᵏ\nConverges when |3x| < 1, so R = 1/3.",
     "hints": [
-      "Start from the definition or formula introduced in this lesson.",
+      "Start from 1/(1 − u) = Σuᵏ for |u| < 1, then substitute, multiply, differentiate or integrate term by term.",
       "1/(1 − (−3x)) = Σ(−3x)ᵏ = Σ(−1)ᵏ3ᵏxᵏ",
       "Converges when |3x| < 1, so R = 1/3."
     ],
@@ -2936,8 +3442,8 @@ const rows = [
     "q": "Find a power series for 1/(5 − x).",
     "why": "Factor out 5 to expose the required 1: 1/(5(1 − x/5)) = (1/5)Σ(x/5)ᵏ = Σxᵏ/5ᵏ⁺¹, valid for |x| < 5.",
     "hints": [
-      "Start from the definition or formula introduced in this lesson.",
-      "Factor out 5 to expose the required 1: 1/(5(1 − x/5)) = (1/5)Σ(x/5)ᵏ = Σxᵏ/5ᵏ⁺¹, valid for |x| < 5.",
+      "Start from 1/(1 − u) = Σuᵏ for |u| < 1, then substitute, multiply, differentiate or integrate term by term.",
+      "Factor out 5 to expose the required 1: 1/(5(1 − x/5)) = (1/5)Σ(x/5)ᵏ = …",
       "Carry the calculation through carefully and check the result against the original conditions."
     ],
     "code": "",
@@ -2945,11 +3451,13 @@ const rows = [
     "family": "field-manual-L30-P02",
     "familyName": "Power series II: building new series from old - practice 2",
     "variation": 1,
-    "k": "fill",
-    "a": [
-      "Σxᵏ/5ᵏ⁺¹",
-      "Σx^k/5^(k+1)"
-    ]
+    "k": "mcq",
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "a": 0,
+    "selfCheck": true
   },
   {
     "id": "k9-fm-L30-P04",
@@ -2960,7 +3468,7 @@ const rows = [
     "q": "Find a power series for ln(1 − x) by integration.",
     "why": "1/(1−x) = Σxᵏ. Integrating gives −ln(1−x) = Σxᵏ⁺¹/(k+1) + C.\nAt x = 0 both sides are 0, so C = 0.\nln(1 − x) = −Σ(k=0) xᵏ⁺¹/(k+1) = −x − x²/2 − x³/3 − …, for −1 ≤ x < 1",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Start from 1/(1 − u) = Σuᵏ for |u| < 1, then substitute, multiply, differentiate or integrate term by term.",
       "1/(1−x) = Σxᵏ. Integrating gives −ln(1−x) = Σxᵏ⁺¹/(k+1) + C.",
       "At x = 0 both sides are 0, so C = 0."
     ],
@@ -2969,13 +3477,13 @@ const rows = [
     "family": "field-manual-L30-P04",
     "familyName": "Power series II: building new series from old - practice 4",
     "variation": 1,
-    "k": "fill",
-    "a": [
-      "−Σ(k=0) xᵏ⁺¹/(k+1)",
-      "-Σ(k=0) x^(k+1)/(k+1)",
-      "−Σ(k=0)xᵏ⁺¹/(k+1)",
-      "-Σ(k=0)x^(k+1)/(k+1)"
-    ]
+    "k": "mcq",
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "a": 0,
+    "selfCheck": true
   },
   {
     "id": "k9-fm-L30-P06",
@@ -2986,7 +3494,7 @@ const rows = [
     "q": "Use a series to evaluate ∫₀^0.5 dx/(1 + x⁴) to four decimal places.",
     "why": "1/(1+x⁴) = Σ(−1)ᵏx⁴ᵏ\n∫₀^0.5 = Σ(−1)ᵏ(0.5)⁴ᵏ⁺¹/(4k+1) = 0.5 − 0.5⁵/5 + 0.5⁹/9 − …\n= 0.5 − 0.00625 + 0.000217 − 0.0000094\n≈ 0.4940\nIt alternates, so the error after four terms is under the fifth term, about 4×10⁻⁷.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Start from 1/(1 − u) = Σuᵏ for |u| < 1, then substitute, multiply, differentiate or integrate term by term.",
       "1/(1+x⁴) = Σ(−1)ᵏx⁴ᵏ",
       "∫₀^0.5 = Σ(−1)ᵏ(0.5)⁴ᵏ⁺¹/(4k+1) = 0.5 − 0.5⁵/5 + 0.5⁹/9 − …"
     ],
@@ -2997,7 +3505,10 @@ const rows = [
     "variation": 1,
     "k": "fill",
     "a": [
-      "0.4940"
+      "0.4940",
+      "0.494",
+      "0.49396",
+      "0.493958"
     ]
   },
   {
@@ -3009,7 +3520,7 @@ const rows = [
     "q": "Find the sum of Σ(k=1 to ∞) k/2ᵏ.",
     "why": "Start from Σ(k=1) k xᵏ⁻¹ = 1/(1−x)². Multiply by x:\nΣ(k=1) k xᵏ = x/(1−x)²\nAt x = 1/2: (1/2)/(1/4) = 2\nRecognizing a numerical series as a known power series evaluated at a point is the standard method for summing anything with a k in the numerator.",
     "hints": [
-      "Break the problem into a setup, a calculation, and a reason the method applies.",
+      "Start from 1/(1 − u) = Σuᵏ for |u| < 1, then substitute, multiply, differentiate or integrate term by term.",
       "Start from Σ(k=1) k xᵏ⁻¹ = 1/(1−x)². Multiply by x:",
       "Σ(k=1) k xᵏ = x/(1−x)²"
     ],
@@ -3032,20 +3543,22 @@ const rows = [
     "q": "Write the Maclaurin series for e^(3x).",
     "why": "Substitute 3x into Σxᵏ/k!:\nΣ(3x)ᵏ/k! = Σ3ᵏxᵏ/k!, valid for all x.",
     "hints": [
-      "Start from the definition or formula introduced in this lesson.",
+      "Build from known Maclaurin series (eˣ, sin x, cos x, 1/(1 − x)) by substituting, multiplying or dividing, rather than differentiating over and over.",
       "Substitute 3x into Σxᵏ/k!:",
-      "Σ(3x)ᵏ/k! = Σ3ᵏxᵏ/k!, valid for all x."
+      "Valid for all x."
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 31, Practice 1",
     "family": "field-manual-L31-P01",
     "familyName": "Taylor series - practice 1",
     "variation": 1,
-    "k": "fill",
-    "a": [
-      "Σ(3x)ᵏ/k! = Σ3ᵏxᵏ/k!",
-      "Σ(3x)ᵏ/k!=Σ3ᵏxᵏ/k!"
-    ]
+    "k": "mcq",
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "a": 0,
+    "selfCheck": true
   },
   {
     "id": "k9-fm-L31-P03",
@@ -3056,20 +3569,22 @@ const rows = [
     "q": "Find the Maclaurin series for x² e^(−x²).",
     "why": "e^u = Σuᵏ/k! with u = −x² gives Σ(−1)ᵏx²ᵏ/k!.\nMultiply by x²: Σ(−1)ᵏx²ᵏ⁺²/k!, all x.\nSubstituting into a known series is always faster than differentiating this function repeatedly.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Build from known Maclaurin series (eˣ, sin x, cos x, 1/(1 − x)) by substituting, multiplying or dividing, rather than differentiating over and over.",
       "e^u = Σuᵏ/k! with u = −x² gives Σ(−1)ᵏx²ᵏ/k!.",
-      "Multiply by x²: Σ(−1)ᵏx²ᵏ⁺²/k!, all x."
+      "Substituting into a known series is always faster than differentiating this function repeatedly."
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 31, Practice 3",
     "family": "field-manual-L31-P03",
     "familyName": "Taylor series - practice 3",
     "variation": 1,
-    "k": "fill",
-    "a": [
-      "Σ(−1)ᵏx²ᵏ⁺²/k!",
-      "Σ(-1)^k x^(2k+2)/k!"
-    ]
+    "k": "mcq",
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "a": 0,
+    "selfCheck": true
   },
   {
     "id": "k9-fm-L31-P04",
@@ -3078,24 +3593,24 @@ const rows = [
     "t": 2,
     "tag": "Core",
     "q": "Find the Maclaurin series for sin(x)/x and state its value at x = 0.",
-    "why": "sin x = x − x³/3! + x⁵/5! − …\nDivide by x: 1 − x²/3! + x⁴/5! − … = Σ(−1)ᵏx²ᵏ/(2k+1)!\nAt x = 0 the series gives 1, which is the removable-singularity value and matches lim sin x/x = 1.",
+    "why": "sin x = x − x³/3! + x⁵/5! − …\nDivide by x: 1 − x²/3! + x⁴/5! − … = Σ(−1)ᵏx²ᵏ/(2k+1)!\nAt x = 0 the series gives 1, which is the removable-singularity value and matches lim(x→0) (sin x)/x = 1.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Build from known Maclaurin series (eˣ, sin x, cos x, 1/(1 − x)) by substituting, multiplying or dividing, rather than differentiating over and over.",
       "sin x = x − x³/3! + x⁵/5! − …",
-      "Divide by x: 1 − x²/3! + x⁴/5! − … = Σ(−1)ᵏx²ᵏ/(2k+1)!"
+      "At x = 0 the series gives 1, which is the removable-singularity value and matches lim(x→0) (sin x)/x = 1."
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 31, Practice 4",
     "family": "field-manual-L31-P04",
     "familyName": "Taylor series - practice 4",
     "variation": 1,
-    "k": "fill",
-    "a": [
-      "1 − x²/3! + x⁴/5! − … = Σ(−1)ᵏx²ᵏ/(2k+1)!",
-      "1 - x^2/3! + x^4/5! - … = Σ(-1)^k x^(2k)/(2k+1)!",
-      "1−x²/3!+x⁴/5!−…=Σ(−1)ᵏx²ᵏ/(2k+1)!",
-      "1-x^2/3!+x^4/5!-…=Σ(-1)^k x^(2k)/(2k+1)!"
-    ]
+    "k": "mcq",
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "a": 0,
+    "selfCheck": true
   },
   {
     "id": "k9-fm-L31-P05",
@@ -3106,22 +3621,22 @@ const rows = [
     "q": "Find the Taylor series for f(x) = 1/x centered at a = 1.",
     "why": "Write 1/x = 1/(1 + (x−1)) = 1/(1 − (−(x−1)))\n= Σ(−(x−1))ᵏ = Σ(−1)ᵏ(x − 1)ᵏ, valid for |x − 1| < 1, that is 0 < x < 2.\nForcing the expression into the geometric form beats computing derivatives.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Build from known Maclaurin series (eˣ, sin x, cos x, 1/(1 − x)) by substituting, multiplying or dividing, rather than differentiating over and over.",
       "Write 1/x = 1/(1 + (x−1)) = 1/(1 − (−(x−1)))",
-      "= Σ(−(x−1))ᵏ = Σ(−1)ᵏ(x − 1)ᵏ, valid for |x − 1| < 1, that is 0 < x < 2."
+      "= Σ(−(x−1))ᵏ = …"
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 31, Practice 5",
     "family": "field-manual-L31-P05",
     "familyName": "Taylor series - practice 5",
     "variation": 1,
-    "k": "fill",
-    "a": [
-      "Σ(−1)ᵏ(x − 1)ᵏ",
-      "Σ(-1)^k(x - 1)^k",
-      "Σ(−1)ᵏ(x−1)ᵏ",
-      "Σ(-1)^k(x-1)^k"
-    ]
+    "k": "mcq",
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "a": 0,
+    "selfCheck": true
   },
   {
     "id": "k9-fm-L31-P07",
@@ -3132,7 +3647,7 @@ const rows = [
     "q": "Find the Maclaurin series for f(x) = eˣ sin x through the x⁴ term.",
     "why": "Multiply the two series and collect by degree.\neˣ = 1 + x + x²/2 + x³/6 + x⁴/24\nsin x = x − x³/6\nx¹: 1·x = x\nx²: x·x = x²\nx³: (x²/2)(x) + (1)(−x³/6) = x³/2 − x³/6 = x³/3\nx⁴: (x³/6)(x) + (x)(−x³/6) = x⁴/6 − x⁴/6 = 0\nx + x² + x³/3 + 0·x⁴ + …\nMultiplying series is legal inside the common interval of convergence, and it is far easier than taking four derivatives of a product.",
     "hints": [
-      "Break the problem into a setup, a calculation, and a reason the method applies.",
+      "Build from known Maclaurin series (eˣ, sin x, cos x, 1/(1 − x)) by substituting, multiplying or dividing, rather than differentiating over and over.",
       "Multiply the two series and collect by degree.",
       "eˣ = 1 + x + x²/2 + x³/6 + x⁴/24"
     ],
@@ -3141,13 +3656,13 @@ const rows = [
     "family": "field-manual-L31-P07",
     "familyName": "Taylor series - practice 7",
     "variation": 1,
-    "k": "fill",
-    "a": [
-      "x + x² + x³/3 + 0·x⁴ + …",
-      "x + x^2 + x^3/3 + 0*x^4 + …",
-      "x+x²+x³/3+0·x⁴+…",
-      "x+x^2+x^3/3+0*x^4+…"
-    ]
+    "k": "mcq",
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "a": 0,
+    "selfCheck": true
   },
   {
     "id": "k10-fm-L32-P01",
@@ -3158,9 +3673,9 @@ const rows = [
     "q": "Use series to find lim(x→0) (1 − cos x)/x².",
     "why": "1 − cos x = x²/2 − x⁴/24 + …\nDivide by x²: 1/2 − x²/24 + … → 1/2",
     "hints": [
-      "Start from the definition or formula introduced in this lesson.",
+      "Replace each function with enough terms of its Maclaurin series, simplify, then take the limit, integrate term by term, or match a known series.",
       "1 − cos x = x²/2 − x⁴/24 + …",
-      "Divide by x²: 1/2 − x²/24 + … → 1/2"
+      "Divide by x²: 1/2 − x²/24 + … → …"
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 32, Practice 1",
@@ -3169,7 +3684,10 @@ const rows = [
     "variation": 1,
     "k": "fill",
     "a": [
-      "1/2"
+      "1/2",
+      "0.5",
+      "½",
+      ".5"
     ]
   },
   {
@@ -3181,8 +3699,8 @@ const rows = [
     "q": "Use series to find lim(x→0) (eˣ − 1)/x.",
     "why": "eˣ − 1 = x + x²/2 + …, so the quotient is 1 + x/2 + … → 1",
     "hints": [
-      "Start from the definition or formula introduced in this lesson.",
-      "eˣ − 1 = x + x²/2 + …, so the quotient is 1 + x/2 + … → 1",
+      "Replace each function with enough terms of its Maclaurin series, simplify, then take the limit, integrate term by term, or match a known series.",
+      "eˣ − 1 = x + x²/2 + …, so the quotient is 1 + x/2 + … → …",
       "Carry the calculation through carefully and check the result against the original conditions."
     ],
     "code": "",
@@ -3202,9 +3720,9 @@ const rows = [
     "t": 2,
     "tag": "Core",
     "q": "Find lim(x→0) (tan x − x)/x³ using series.",
-    "why": "tan x = x + x³/3 + 2x⁵/15 + … (from dividing the sine series by the cosine series)\ntan x − x = x³/3 + …\nDivide by x³: 1/3 + … → 1/3\nL'H∘pital would need three rounds of differentiation on a quotient of increasingly ugly expressions.",
+    "why": "tan x = x + x³/3 + 2x⁵/15 + … (from dividing the sine series by the cosine series)\ntan x − x = x³/3 + …\nDivide by x³: 1/3 + … → 1/3\nL'Hôpital would need three rounds of differentiation on a quotient of increasingly ugly expressions.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Replace each function with enough terms of its Maclaurin series, simplify, then take the limit, integrate term by term, or match a known series.",
       "tan x = x + x³/3 + 2x⁵/15 + … (from dividing the sine series by the cosine series)",
       "tan x − x = x³/3 + …"
     ],
@@ -3215,7 +3733,9 @@ const rows = [
     "variation": 1,
     "k": "fill",
     "a": [
-      "1/3"
+      "1/3",
+      "0.333",
+      "0.3333"
     ]
   },
   {
@@ -3224,10 +3744,10 @@ const rows = [
     "lesson": 32,
     "t": 2,
     "tag": "Core",
-    "q": "Approximate ∫₀¹ e^(−x²) dx using four terms and bound the error.",
+    "q": "Approximate ∫₀¹ e^(−x²) dx using the first four nonzero terms of its Maclaurin series.",
     "why": "e^(−x²) = 1 − x² + x⁴/2 − x⁶/6 + x⁸/24 − …\n∫₀¹ = 1 − 1/3 + 1/10 − 1/42 + …\n= 1 − 0.33333 + 0.1 − 0.02381 = 0.74286\nAlternating, so the error is under the next term 1/216 ≈ 0.00463. True value is 0.74682.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Replace each function with enough terms of its Maclaurin series, simplify, then take the limit, integrate term by term, or match a known series.",
       "e^(−x²) = 1 − x² + x⁴/2 − x⁶/6 + x⁸/24 − …",
       "∫₀¹ = 1 − 1/3 + 1/10 − 1/42 + …"
     ],
@@ -3238,7 +3758,11 @@ const rows = [
     "variation": 1,
     "k": "fill",
     "a": [
-      "0.74286"
+      "0.74286",
+      "0.7429",
+      "0.743",
+      "0.742857",
+      "26/35"
     ]
   },
   {
@@ -3250,9 +3774,9 @@ const rows = [
     "q": "Evaluate Σ(k=0 to ∞) (−1)ᵏπ²ᵏ⁺¹/(4²ᵏ⁺¹(2k+1)!).",
     "why": "Odd powers with (2k+1)! and alternating signs is the sine series, with x²ᵏ⁺¹ = (π/4)²ᵏ⁺¹.\nSo the sum is sin(π/4) = √2/2\nMatch the factorial and the parity of the exponent first, then read off x.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Replace each function with enough terms of its Maclaurin series, simplify, then take the limit, integrate term by term, or match a known series.",
       "Odd powers with (2k+1)! and alternating signs is the sine series, with x²ᵏ⁺¹ = (π/4)²ᵏ⁺¹.",
-      "So the sum is sin(π/4) = √2/2"
+      "So the sum is sin(π/4) = …"
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 32, Practice 5",
@@ -3262,7 +3786,13 @@ const rows = [
     "k": "fill",
     "a": [
       "√2/2",
-      "sqrt(2)/2"
+      "sqrt(2)/2",
+      "1/√2",
+      "1/sqrt(2)",
+      "sin(π/4)",
+      "sin(pi/4)",
+      "0.7071",
+      "0.707"
     ]
   },
   {
@@ -3272,9 +3802,9 @@ const rows = [
     "t": 4,
     "tag": "Stretch",
     "q": "Use series to find lim(x→0) (sin x − x + x³/6)/x⁵.",
-    "why": "sin x = x − x³/6 + x⁵/120 − x⁷/5040 + …\nsin x − x + x³/6 = x⁵/120 − x⁷/5040 + …\nDivide by x⁵: 1/120 − x²/5040 + … → 1/120\nThis would take five applications of L'H∘pital. Carry enough terms that the lowest surviving power matches the denominator.",
+    "why": "sin x = x − x³/6 + x⁵/120 − x⁷/5040 + …\nsin x − x + x³/6 = x⁵/120 − x⁷/5040 + …\nDivide by x⁵: 1/120 − x²/5040 + … → 1/120\nThis would take five applications of L'Hôpital. Carry enough terms that the lowest surviving power matches the denominator.",
     "hints": [
-      "Break the problem into a setup, a calculation, and a reason the method applies.",
+      "Replace each function with enough terms of its Maclaurin series, simplify, then take the limit, integrate term by term, or match a known series.",
       "sin x = x − x³/6 + x⁵/120 − x⁷/5040 + …",
       "sin x − x + x³/6 = x⁵/120 − x⁷/5040 + …"
     ],
@@ -3297,9 +3827,9 @@ const rows = [
     "q": "Convert (r, θ) = (6, 5π/6) to rectangular coordinates.",
     "why": "x = 6cos(5π/6) = 6(−√3/2) = −3√3\ny = 6sin(5π/6) = 6(1/2) = 3\n(−3√3, 3), which is in the second quadrant as expected for an angle of 150 degrees.",
     "hints": [
-      "Start from the definition or formula introduced in this lesson.",
-      "x = 6cos(5π/6) = 6(−√3/2) = −3√3",
-      "y = 6sin(5π/6) = 6(1/2) = 3"
+      "Use x = r cosθ, y = r sinθ, r² = x² + y² and tanθ = y/x, and check which quadrant the point is in. Multiplying an equation by r often helps.",
+      "x = 6cos(5π/6) = 6(−√3/2) = …",
+      "y = 6sin(5π/6) = 6(1/2) = …"
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 33, Practice 1",
@@ -3311,7 +3841,19 @@ const rows = [
       "(−3√3, 3)",
       "(-3sqrt(3), 3)",
       "(−3√3,3)",
-      "(-3sqrt(3),3)"
+      "(-3sqrt(3),3)",
+      "(-3√3, 3)",
+      "(-3√3,3)",
+      "(−5.196, 3)",
+      "(−5.196,3)",
+      "(-5.196, 3)",
+      "(-5.196,3)",
+      "(-5.2, 3)",
+      "(-5.2,3)",
+      "(-3*sqrt(3), 3)",
+      "(-3*sqrt(3),3)",
+      "(-3sqrt3, 3)",
+      "(-3 sqrt(3), 3)"
     ]
   },
   {
@@ -3323,9 +3865,9 @@ const rows = [
     "q": "Convert (x, y) = (0, −4) to polar with r > 0 and 0 ≤ θ < 2π.",
     "why": "r = 4, and the point lies on the negative y-axis, so θ = 3π/2.\n(4, 3π/2)\nArctangent is undefined here since x = 0, so read the angle off the sketch.",
     "hints": [
-      "Start from the definition or formula introduced in this lesson.",
-      "r = 4, and the point lies on the negative y-axis, so θ = 3π/2.",
-      "(4, 3π/2)"
+      "Use x = r cosθ, y = r sinθ, r² = x² + y² and tanθ = y/x, and check which quadrant the point is in. Multiplying an equation by r often helps.",
+      "r = 4, and the point lies on the negative y-axis, so θ = …",
+      "Arctangent is undefined here since x = 0, so read the angle off the sketch."
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 33, Practice 2",
@@ -3349,7 +3891,7 @@ const rows = [
     "q": "Give three other representations of the point (3, π/4).",
     "why": "Add 2π: (3, 9π/4)\nSubtract 2π: (3, −7π/4)\nNegate r and add π: (−3, 5π/4)\nAll name the same point. Negative r means face the direction θ and walk backwards.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Use x = r cosθ, y = r sinθ, r² = x² + y² and tanθ = y/x, and check which quadrant the point is in. Multiplying an equation by r often helps.",
       "Add 2π: (3, 9π/4)",
       "Subtract 2π: (3, −7π/4)"
     ],
@@ -3375,7 +3917,7 @@ const rows = [
     "q": "Convert r = 6sinθ to rectangular form and identify the curve.",
     "why": "Multiply both sides by r: r² = 6r sinθ\nx² + y² = 6y\nx² + y² − 6y + 9 = 9\nx² + (y − 3)² = 9\nA circle of radius 3 centered at (0, 3), tangent to the x-axis at the origin.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Use x = r cosθ, y = r sinθ, r² = x² + y² and tanθ = y/x, and check which quadrant the point is in. Multiplying an equation by r often helps.",
       "Multiply both sides by r: r² = 6r sinθ",
       "x² + y² = 6y"
     ],
@@ -3384,11 +3926,13 @@ const rows = [
     "family": "field-manual-L33-P05",
     "familyName": "Polar coordinates I - practice 5",
     "variation": 1,
-    "k": "fill",
-    "a": [
-      "A circle of radius 3 centered at (0, 3)",
-      "Acircleofradius3centeredat(0,3)"
-    ]
+    "k": "mcq",
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "a": 0,
+    "selfCheck": true
   },
   {
     "id": "k10-fm-L33-P07",
@@ -3399,7 +3943,7 @@ const rows = [
     "q": "Convert r = 1/(1 − cosθ) to rectangular form and identify the curve.",
     "why": "r(1 − cosθ) = 1 ⇒ r − r cosθ = 1 ⇒ r = 1 + x\nSquare both sides: x² + y² = 1 + 2x + x²\ny² = 1 + 2x, or x = (y² − 1)/2, a parabola opening to the right with vertex (−1/2, 0).\nIsolating r before squaring keeps the algebra clean. Conic sections in polar form always look like this.",
     "hints": [
-      "Break the problem into a setup, a calculation, and a reason the method applies.",
+      "Use x = r cosθ, y = r sinθ, r² = x² + y² and tanθ = y/x, and check which quadrant the point is in. Multiplying an equation by r often helps.",
       "r(1 − cosθ) = 1 ⇒ r − r cosθ = 1 ⇒ r = 1 + x",
       "Square both sides: x² + y² = 1 + 2x + x²"
     ],
@@ -3408,17 +3952,13 @@ const rows = [
     "family": "field-manual-L33-P07",
     "familyName": "Polar coordinates I - practice 7",
     "variation": 1,
-    "k": "fill",
-    "a": [
-      "x = (y² − 1)/2, a parabola",
-      "x = (y^2 - 1)/2, a parabola",
-      "x=(y²−1)/2,aparabola",
-      "x=(y^2-1)/2,aparabola",
-      "(y² − 1)/2, a parabola",
-      "(y^2 - 1)/2, a parabola",
-      "(y²−1)/2,aparabola",
-      "(y^2-1)/2,aparabola"
-    ]
+    "k": "mcq",
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "a": 0,
+    "selfCheck": true
   },
   {
     "id": "k10-fm-L34-P02",
@@ -3429,8 +3969,8 @@ const rows = [
     "q": "Identify the curve r = 2 + 2sinθ.",
     "why": "The form a(1 + sinθ) with a = 2, so it is a cardioid with its cusp on the y-axis, at θ = −π/2 where r = 0. Maximum r = 4 at θ = π/2.",
     "hints": [
-      "Start from the definition or formula introduced in this lesson.",
-      "The form a(1 + sinθ) with a = 2, so it is a cardioid with its cusp on the y-axis, at θ = −π/2 where r = 0. Maximum r = 4 at θ = π/2.",
+      "Compare with the standard forms (circles, cardioids, limaçons, roses). Slopes come from dy/dx = (r′sinθ + r cosθ)/(r′cosθ − r sinθ). For intersections, check the origin separately.",
+      "The form a(1 + sinθ) with a = 2.",
       "Carry the calculation through carefully and check the result against the original conditions."
     ],
     "code": "",
@@ -3440,7 +3980,8 @@ const rows = [
     "variation": 1,
     "k": "fill",
     "a": [
-      "cardioid"
+      "cardioid",
+      "a cardioid"
     ]
   },
   {
@@ -3449,12 +3990,12 @@ const rows = [
     "lesson": 34,
     "t": 2,
     "tag": "Core",
-    "q": "Identify r = 1 + 3cosθ and find where it passes through the origin.",
-    "why": "Since a = 1 < b = 3, this is a limaçon with an inner loop.\nr = 0 when cosθ = −1/3, so θ = arccos(−1/3) ≈ 1.911 and θ ≈ 4.373 radians.\nThose two angles bound the inner loop.",
+    "q": "Identify the curve r = 1 + 3cosθ.",
+    "why": "Since a = 1 < b = 3, this is a limaçon with an inner loop.\nIt passes through the origin where r = 0: cosθ = −1/3, so θ = arccos(−1/3) ≈ 1.911 and θ ≈ 4.373 radians.\nThose two angles bound the inner loop.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
-      "Since a = 1 < b = 3, this is a limaçon with an inner loop.",
-      "r = 0 when cosθ = −1/3, so θ = arccos(−1/3) ≈ 1.911 and θ ≈ 4.373 radians."
+      "Compare with the standard forms (circles, cardioids, limaçons, roses). Slopes come from dy/dx = (r′sinθ + r cosθ)/(r′cosθ − r sinθ). For intersections, check the origin separately.",
+      "Since a = 1 < b = 3.",
+      "It passes through the origin where r = 0: cosθ = −1/3, so θ = arccos(−1/3) ≈ 1.911 and θ ≈ 4.373 radians."
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 34, Practice 3",
@@ -3464,7 +4005,33 @@ const rows = [
     "k": "fill",
     "a": [
       "limaçon with an inner loop",
-      "limaçonwithaninnerloop"
+      "limaçonwithaninnerloop",
+      "limacon with an inner loop",
+      "limaconwithaninnerloop",
+      "limaçon with inner loop",
+      "limaçonwithinnerloop",
+      "limacon with inner loop",
+      "limaconwithinnerloop",
+      "a limaçon with an inner loop",
+      "alimaçonwithaninnerloop",
+      "a limacon with an inner loop",
+      "alimaconwithaninnerloop",
+      "inner loop limaçon",
+      "innerlooplimaçon",
+      "inner loop limacon",
+      "innerlooplimacon",
+      "inner-loop limaçon",
+      "inner-looplimaçon",
+      "inner-loop limacon",
+      "inner-looplimacon",
+      "limaçon with a loop",
+      "limaçonwithaloop",
+      "limacon with a loop",
+      "limaconwithaloop",
+      "looped limaçon",
+      "loopedlimaçon",
+      "looped limacon",
+      "loopedlimacon"
     ]
   },
   {
@@ -3476,7 +4043,7 @@ const rows = [
     "q": "Find the slope of r = 2 + 2cosθ at θ = π/2.",
     "why": "r(π/2) = 2, r′ = −2sinθ so r′(π/2) = −2.\ndy/dx = (r′sinθ + r cosθ)/(r′cosθ − r sinθ)\n= ((−2)(1) + (2)(0))/((−2)(0) − (2)(1)) = (−2)/(−2) = 1",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Compare with the standard forms (circles, cardioids, limaçons, roses). Slopes come from dy/dx = (r′sinθ + r cosθ)/(r′cosθ − r sinθ). For intersections, check the origin separately.",
       "r(π/2) = 2, r′ = −2sinθ so r′(π/2) = −2.",
       "dy/dx = (r′sinθ + r cosθ)/(r′cosθ − r sinθ)"
     ],
@@ -3499,7 +4066,7 @@ const rows = [
     "q": "Find all points on r = 2cosθ where the tangent line is horizontal.",
     "why": "r′ = −2sinθ.\ndy/dθ = r′sinθ + r cosθ = −2sin²θ + 2cos²θ = 2cos2θ\nSet to 0: cos2θ = 0 ⇒ 2θ = π/2, 3π/2 ⇒ θ = π/4, 3π/4\nCheck the denominator is nonzero there: dx/dθ = −2sin2θ = −2 ≠ 0 at θ = π/4. ✓\nPoints: (√2, π/4) and (−√2, 3π/4), which in rectangular form are (1, 1) and (1, −1).",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Compare with the standard forms (circles, cardioids, limaçons, roses). Slopes come from dy/dx = (r′sinθ + r cosθ)/(r′cosθ − r sinθ). For intersections, check the origin separately.",
       "r′ = −2sinθ.",
       "dy/dθ = r′sinθ + r cosθ = −2sin²θ + 2cos²θ = 2cos2θ"
     ],
@@ -3508,13 +4075,13 @@ const rows = [
     "family": "field-manual-L34-P05",
     "familyName": "Polar coordinates II: graphs and tangent lines - practice 5",
     "variation": 1,
-    "k": "fill",
-    "a": [
-      "(√2, π/4) and (−√2, 3π/4)",
-      "(sqrt(2), pi/4) and (-sqrt(2), 3pi/4)",
-      "(√2,π/4)and(−√2,3π/4)",
-      "(sqrt(2),pi/4)and(-sqrt(2),3pi/4)"
-    ]
+    "k": "mcq",
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "a": 0,
+    "selfCheck": true
   },
   {
     "id": "k10-fm-L34-P06",
@@ -3522,10 +4089,10 @@ const rows = [
     "lesson": 34,
     "t": 3,
     "tag": "Exam level",
-    "q": "Find all intersection points of r = 1 and r = 2cosθ.",
+    "q": "How many intersection points do the curves r = 1 and r = 2cosθ have?",
     "why": "Algebraically: 1 = 2cosθ ⇒ cosθ = 1/2 ⇒ θ = ±π/3.\nPoints: (1, π/3) and (1, −π/3).\nCheck the origin separately: r = 1 never equals 0, so the circle r = 1 does not pass through the origin and there is no hidden intersection there.\nTwo intersection points.\nAlways test the origin separately, since the two curves can reach it at different θ values and the algebra will not catch it.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Compare with the standard forms (circles, cardioids, limaçons, roses). Slopes come from dy/dx = (r′sinθ + r cosθ)/(r′cosθ − r sinθ). For intersections, check the origin separately.",
       "Algebraically: 1 = 2cosθ ⇒ cosθ = 1/2 ⇒ θ = ±π/3.",
       "Points: (1, π/3) and (1, −π/3)."
     ],
@@ -3536,6 +4103,12 @@ const rows = [
     "variation": 1,
     "k": "fill",
     "a": [
+      "2",
+      "two",
+      "2 points",
+      "two points",
+      "2 intersection points",
+      "two intersection points",
       "Two intersection points.",
       "Twointersectionpoints."
     ]
@@ -3547,22 +4120,24 @@ const rows = [
     "t": 4,
     "tag": "Stretch",
     "q": "Explain why r = cos(3θ) has 3 petals rather than 6.",
-    "why": "The period of cos3θ is 2π/3, so as θ runs from 0 to 2π the pattern repeats three times. But over the interval (π/3, 2π/3), r is negative, and a negative r plots the point in the opposite direction, which lands exactly on top of a petal already drawn.\nConcretely, the petal traced for θ in (π/3, 2π/3) with r < 0 coincides with the petal traced for θ in (4π/3, 5π/3) with r > 0. Half the petals are duplicates, leaving 3 distinct petals.\nWith even n, the negative-r petals fall in gaps rather than on existing petals, so all 2n survive.",
+    "why": "The period of cos3θ is 2π/3, so as θ runs from 0 to 2π the graph is traced in six arcs, three with r > 0 and three with r < 0. A negative r plots the point in the opposite direction.\nConcretely, on (π/6, π/2) we have r < 0, so those points land in the directions θ + π, between 7π/6 and 3π/2. That is exactly the petal r > 0 traces for θ in (7π/6, 3π/2). In general cos(3(θ + π)) = −cos3θ, so the point plotted at θ + π is the same point as the one at θ: the second half of the trip retraces the first. Half the arcs are duplicates, leaving 3 distinct petals.\nWith even n, cos(n(θ + π)) = cos nθ, so the point at θ + π is the reflection through the origin instead; the petals traced with r < 0 fall in the gaps between the others instead of on top of them, so all 2n survive.",
     "hints": [
-      "Break the problem into a setup, a calculation, and a reason the method applies.",
-      "The period of cos3θ is 2π/3, so as θ runs from 0 to 2π the pattern repeats three times. But over the interval (π/3, 2π/3), r is negative, and a negative r plots the point in the opposite direction, which lands exactly on top of a petal already drawn.",
-      "Concretely, the petal traced for θ in (π/3, 2π/3) with r < 0 coincides with the petal traced for θ in (4π/3, 5π/3) with r > 0. Half the petals are duplicates, leaving 3 distinct petals."
+      "Compare with the standard forms (circles, cardioids, limaçons, roses). Slopes come from dy/dx = (r′sinθ + r cosθ)/(r′cosθ − r sinθ). For intersections, check the origin separately.",
+      "The period of cos3θ is 2π/3, so as θ runs from 0 to 2π the graph is traced in six arcs, three with r > 0 and three with r < 0. A negative r plots the point in the opposite direction.",
+      "Concretely, on (π/6, π/2) we have r < 0, so those points land in the directions θ + π, between 7π/6 and 3π/2. That is exactly the petal r > 0 traces for θ in (7π/6, 3π/2). In general cos(3(θ + π)) = −cos3θ, so the point plotted at θ + π is the same point as the one at θ: the second half of the trip retraces the first. Half the arcs are duplicates, leaving 3 distinct petals."
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 34, Practice 7",
     "family": "field-manual-L34-P07",
     "familyName": "Polar coordinates II: graphs and tangent lines - practice 7",
     "variation": 1,
-    "k": "fill",
-    "a": [
-      "3 distinct petals",
-      "3distinctpetals"
-    ]
+    "k": "mcq",
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "a": 0,
+    "selfCheck": true
   },
   {
     "id": "k94-fm-L35-P01",
@@ -3573,8 +4148,8 @@ const rows = [
     "q": "Find the area enclosed by r = 3.",
     "why": "A = ½∫₀^(2π) 9 dθ = ½(9)(2π) = 9π\nWhich is πr² for a circle of radius 3, as it must be.",
     "hints": [
-      "Start from the definition or formula introduced in this lesson.",
-      "A = ½∫₀^(2π) 9 dθ = ½(9)(2π) = 9π",
+      "Area is ½∫r² dθ between the angles where the region starts and ends, often where r = 0 or where two curves meet.",
+      "A = ½∫₀^(2π) 9 dθ = ½(9)(2π) = …",
       "Which is πr² for a circle of radius 3, as it must be."
     ],
     "code": "",
@@ -3597,8 +4172,8 @@ const rows = [
     "q": "Find the area enclosed by one petal of r = 2sin(2θ).",
     "why": "r = 0 when sin2θ = 0, so θ = 0 and θ = π/2 bound one petal.\nA = ½∫₀^(π/2) 4sin²2θ dθ = 2∫₀^(π/2)(1 − cos4θ)/2 dθ\n= [θ − sin4θ/4]₀^(π/2) = π/2",
     "hints": [
-      "Start from the definition or formula introduced in this lesson.",
-      "r = 0 when sin2θ = 0, so θ = 0 and θ = π/2 bound one petal.",
+      "Area is ½∫r² dθ between the angles where the region starts and ends, often where r = 0 or where two curves meet.",
+      "r = 0 when sin2θ = 0, so θ = 0 and θ = …",
       "A = ½∫₀^(π/2) 4sin²2θ dθ = 2∫₀^(π/2)(1 − cos4θ)/2 dθ"
     ],
     "code": "",
@@ -3621,7 +4196,7 @@ const rows = [
     "q": "Find the area enclosed by the cardioid r = 1 + cosθ.",
     "why": "A = ½∫₀^(2π) (1 + cosθ)² dθ = ½∫₀^(2π)(1 + 2cosθ + cos²θ)dθ\n∫₀^(2π)1 dθ = 2π, ∫₀^(2π)2cosθ dθ = 0, ∫₀^(2π)cos²θ dθ = π\nA = ½(2π + 0 + π) = 3π/2",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Area is ½∫r² dθ between the angles where the region starts and ends, often where r = 0 or where two curves meet.",
       "A = ½∫₀^(2π) (1 + cosθ)² dθ = ½∫₀^(2π)(1 + 2cosθ + cos²θ)dθ",
       "∫₀^(2π)1 dθ = 2π, ∫₀^(2π)2cosθ dθ = 0, ∫₀^(2π)cos²θ dθ = π"
     ],
@@ -3645,7 +4220,7 @@ const rows = [
     "q": "Find the area of the region inside r = 3sinθ and outside r = 1 + sinθ.",
     "why": "Intersect: 3sinθ = 1 + sinθ ⇒ sinθ = 1/2 ⇒ θ = π/6, 5π/6.\nOn that interval 3sinθ is larger (test θ = π/2: 3 vs 2).\nA = ½∫_{π/6}^{5π/6} [9sin²θ − (1+sinθ)²] dθ\n= ½∫ [9sin²θ − 1 − 2sinθ − sin²θ] dθ = ½∫[8sin²θ − 2sinθ − 1]dθ\n8sin²θ = 4 − 4cos2θ, so the integrand is 3 − 4cos2θ − 2sinθ\n= ½[3θ − 2sin2θ + 2cosθ]_{π/6}^{5π/6}\n= ½[(5π/2 + √3 − √3) − (π/2 − √3 + √3)] = ½(2π) = π",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Area is ½∫r² dθ between the angles where the region starts and ends, often where r = 0 or where two curves meet.",
       "Intersect: 3sinθ = 1 + sinθ ⇒ sinθ = 1/2 ⇒ θ = π/6, 5π/6.",
       "On that interval 3sinθ is larger (test θ = π/2: 3 vs 2)."
     ],
@@ -3669,9 +4244,9 @@ const rows = [
     "q": "Find the area inside one loop of r² = 4cos2θ.",
     "why": "r = 0 when cos2θ = 0, so 2θ = ±π/2 and θ = ±π/4 bound the right loop.\nA = ½∫_{−π/4}^{π/4} 4cos2θ dθ = 2[sin2θ/2]_{−π/4}^{π/4} = [sin2θ]_{−π/4}^{π/4} = 1 − (−1) = 2\nSince the equation gives r² directly, no squaring step is needed.",
     "hints": [
-      "Identify the governing formula or convergence test before doing the algebra.",
+      "Area is ½∫r² dθ between the angles where the region starts and ends, often where r = 0 or where two curves meet.",
       "r = 0 when cos2θ = 0, so 2θ = ±π/2 and θ = ±π/4 bound the right loop.",
-      "A = ½∫_{−π/4}^{π/4} 4cos2θ dθ = 2[sin2θ/2]_{−π/4}^{π/4} = [sin2θ]_{−π/4}^{π/4} = 1 − (−1) = 2"
+      "A = ½∫_{−π/4}^{π/4} 4cos2θ dθ = 2[sin2θ/2]_{−π/4}^{π/4} = [sin2θ]_{−π/4}^{π/4} = 1 − (−1) = …"
     ],
     "code": "",
     "source": "Calculus II Field Manual, Lesson 35, Practice 5",
@@ -3690,9 +4265,9 @@ const rows = [
     "t": 4,
     "tag": "Stretch",
     "q": "Find the area inside both r = 1 and r = 2cosθ.",
-    "why": "The curves meet at θ = ±π/3. Inside means taking whichever curve is smaller at each angle.\nFor |θ| < π/3, 2cosθ > 1, so the circle r = 1 is the inner boundary.\nFor π/3 < θ < π/2, 2cosθ < 1, so r = 2cosθ bounds the region.\nA = 2[ ½∫₀^(π/3) 1 dθ + ½∫_{π/3}^{π/2} 4cos²θ dθ ]\n= π/3 + 2∫_{π/3}^{π/2}(1 + cos2θ)dθ = π/3 + 2[θ + sin2θ/2]_{π/3}^{π/2}\n= π/3 + 2[(π/2) − (π/3 + √3/4)] = π/3 + π/3 − π/3... carefully: = π/3 + (π − 2π/3 − √3/2) = 2π/3 − √3/2 ≈ 1.228\nRegions inside two curves nearly always require splitting at the intersection angle, because the binding curve changes.",
+    "why": "The curves meet at θ = ±π/3. Inside means taking whichever curve is smaller at each angle.\nFor |θ| < π/3, 2cosθ > 1, so the circle r = 1 is the inner boundary.\nFor π/3 < θ < π/2, 2cosθ < 1, so r = 2cosθ bounds the region.\nA = 2[ ½∫₀^(π/3) 1 dθ + ½∫_{π/3}^{π/2} 4cos²θ dθ ]\n= π/3 + 2∫_{π/3}^{π/2}(1 + cos2θ)dθ = π/3 + 2[θ + sin2θ/2]_{π/3}^{π/2}\n= π/3 + 2[(π/2) − (π/3 + √3/4)] = π/3 + 2(π/6 − √3/4) = 2π/3 − √3/2 ≈ 1.228\nRegions inside two curves nearly always require splitting at the intersection angle, because the binding curve changes.",
     "hints": [
-      "Break the problem into a setup, a calculation, and a reason the method applies.",
+      "Area is ½∫r² dθ between the angles where the region starts and ends, often where r = 0 or where two curves meet.",
       "The curves meet at θ = ±π/3. Inside means taking whichever curve is smaller at each angle.",
       "For |θ| < π/3, 2cosθ > 1, so the circle r = 1 is the inner boundary."
     ],
@@ -3711,7 +4286,9 @@ const rows = [
       "2pi/3 - sqrt(3)/2",
       "2π/3−√3/2",
       "2pi/3-sqrt(3)/2",
-      "1.228"
+      "1.228",
+      "1.23",
+      "1.2284"
     ]
   }
 ];

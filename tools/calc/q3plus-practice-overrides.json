@@ -1,0 +1,1440 @@
+{
+  "k3-fm-L07-P04": {
+    "why": "The shell radius is the distance from x to the axis: x − (−1) = x + 1.\nV = 2π∫₁³ (x+1)(1/x) dx = 2π∫₁³ (1 + 1/x) dx = 2π[x + ln x]₁³\n= 2π(3 + ln3 − 1) = 2π(2 + ln 3) ≈ 19.47\nShifting the axis changes only the radius factor, never the height.",
+    "a": [
+      "2π(2 + ln 3) ≈ 19.47",
+      "2π(2+ln3)≈19.47",
+      "2pi(2 + ln 3) ~ 19.47",
+      "2pi(2+ln3)~19.47",
+      "2π(2 + ln 3)",
+      "2π(2+ln3)",
+      "2pi(2 + ln 3)",
+      "2pi(2+ln3)",
+      "2π(2 + ln(3))",
+      "2π(2+ln(3))",
+      "2pi(2 + ln(3))",
+      "2pi(2+ln(3))",
+      "4π + 2π ln 3",
+      "4π+2πln3",
+      "4pi + 2pi ln 3",
+      "4pi+2piln3",
+      "4π + 2πln(3)",
+      "4π+2πln(3)",
+      "4pi + 2piln(3)",
+      "4pi+2piln(3)",
+      "19.47",
+      "19.469",
+      "19.5"
+    ]
+  },
+  "k3-fm-L07-P06": {
+    "k": "mcq",
+    "a": 0,
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "selfCheck": true,
+    "$hintKeys": [
+      "768π/7"
+    ]
+  },
+  "k3-fm-L07-P07": {
+    "a": [
+      "64√2π/3 ≈ 94.8",
+      "64√2π/3≈94.8",
+      "64sqrt(2)pi/3 ~ 94.8",
+      "64sqrt(2)pi/3~94.8",
+      "64√2π/3",
+      "64sqrt(2)pi/3",
+      "64π√2/3",
+      "64pisqrt(2)/3",
+      "(64√2/3)π",
+      "(64sqrt(2)/3)pi",
+      "94.8",
+      "94.78",
+      "64sqrt(2)*pi/3",
+      "64*sqrt(2)*pi/3",
+      "64pi*sqrt(2)/3",
+      "64 pi sqrt(2)/3"
+    ]
+  },
+  "k3-fm-L08-P02": {
+    "k": "mcq",
+    "a": 0,
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "selfCheck": true,
+    "$hintKeys": [
+      "∫₀^π √(1 + cos²x) dx"
+    ]
+  },
+  "k3-fm-L08-P04": {
+    "why": "f′ = 1/(2√x), (f′)² = 1/(4x)\nS = 2π∫₁⁴ √x · √(1 + 1/(4x)) dx = 2π∫₁⁴ √(x + 1/4) dx\n= 2π[(2/3)(x + 1/4)^(3/2)]₁⁴ = (4π/3)[(17/4)^(3/2) − (5/4)^(3/2)]\n= (π/6)(17√17 − 5√5) = (4π/3)(8.762 − 1.398) ≈ 30.85\nPulling √x inside the radical is the simplification that makes this integrable.",
+    "a": [
+      "(π/6)(17√17 − 5√5) ≈ 30.85",
+      "(π/6)(17√17−5√5)≈30.85",
+      "(pi/6)(17sqrt(17) - 5sqrt(5)) ~ 30.85",
+      "(pi/6)(17sqrt(17)-5sqrt(5))~30.85",
+      "(π/6)(17√17 − 5√5)",
+      "(π/6)(17√17−5√5)",
+      "(pi/6)(17sqrt(17) - 5sqrt(5))",
+      "(pi/6)(17sqrt(17)-5sqrt(5))",
+      "π(17√17 − 5√5)/6",
+      "π(17√17−5√5)/6",
+      "pi(17sqrt(17) - 5sqrt(5))/6",
+      "pi(17sqrt(17)-5sqrt(5))/6",
+      "30.85",
+      "30.8",
+      "30.846"
+    ]
+  },
+  "k3-fm-L08-P05": {
+    "a": [
+      "(π/27)(145^(3/2) − 1) ≈ 203.0",
+      "(π/27)(145^(3/2)−1)≈203.0",
+      "(pi/27)(145^(3/2) - 1) ~ 203.0",
+      "(pi/27)(145^(3/2)-1)~203.0",
+      "(π/27)(145^(3/2) − 1)",
+      "(π/27)(145^(3/2)−1)",
+      "(pi/27)(145^(3/2) - 1)",
+      "(pi/27)(145^(3/2)-1)",
+      "(π/27)(145√145 − 1)",
+      "(π/27)(145√145−1)",
+      "(pi/27)(145sqrt(145) - 1)",
+      "(pi/27)(145sqrt(145)-1)",
+      "π(145√145 − 1)/27",
+      "π(145√145−1)/27",
+      "pi(145sqrt(145) - 1)/27",
+      "pi(145sqrt(145)-1)/27",
+      "203.0",
+      "203",
+      "203.04"
+    ]
+  },
+  "k3-fm-L09-P01": {
+    "a": [
+      "28 kg",
+      "28kg",
+      "28"
+    ]
+  },
+  "k3-fm-L09-P02": {
+    "a": [
+      "k = 40 N/m",
+      "k=40N/m",
+      "40 N/m",
+      "40N/m",
+      "40",
+      "k = 40",
+      "k=40"
+    ]
+  },
+  "k3-fm-L09-P03": {
+    "q": "A force of 20 N stretches a spring 0.5 m beyond its natural length (so k = 40 N/m). Find the work to stretch it from 0.5 m to 1.2 m beyond natural length.",
+    "why": "W = ∫_{0.5}^{1.2} 40x dx = [20x²]_{0.5}^{1.2} = 20(1.44 − 0.25) = 23.8 J\nThe work formula ½k(b² − a²) gives the same thing: 20(1.44 − 0.25). Note the work is not proportional to distance; stretching farther costs progressively more.",
+    "a": [
+      "23.8 J",
+      "23.8J",
+      "23.8"
+    ]
+  },
+  "k3-fm-L09-P04": {
+    "a": [
+      "2400 ft·lb",
+      "2400ft·lb",
+      "2400 ft*lb",
+      "2400ft*lb",
+      "2400 ft-lb",
+      "2400ft-lb",
+      "2400 lb·ft",
+      "2400lb·ft",
+      "2400 lb*ft",
+      "2400lb*ft",
+      "2400 foot-pounds",
+      "2400foot-pounds",
+      "2400",
+      "2,400"
+    ]
+  },
+  "k3-fm-L09-P05": {
+    "q": "A 40 ft chain weighing 3 lb/ft hangs from a winch, with a 60 lb weight attached at the bottom. Find the total work to wind it all up.",
+    "why": "The chain: with y the distance below the winch, a slice weighs 3 dy and rises y, so W = ∫₀⁴⁰ 3y dy = [3y²/2]₀⁴⁰ = 2400 ft·lb.\nThe weight is a single object lifted the full 40 ft: 60(40) = 2400 ft·lb.\nTotal: 4800 ft·lb\nPoint masses are multiplication, distributed masses are integration. Add the two contributions.",
+    "a": [
+      "4800 ft·lb",
+      "4800ft·lb",
+      "4800 ft*lb",
+      "4800ft*lb",
+      "4800 ft-lb",
+      "4800ft-lb",
+      "4800 lb·ft",
+      "4800lb·ft",
+      "4800 lb*ft",
+      "4800lb*ft",
+      "4800 foot-pounds",
+      "4800foot-pounds",
+      "4800",
+      "4,800"
+    ]
+  },
+  "k3-fm-L09-P06": {
+    "q": "A rod on [0,2] m has density ρ(x) = x² + 1 kg/m. Find the position of its center of mass.",
+    "a": [
+      "9/7 ≈ 1.29 m",
+      "9/7 ~ 1.29 m",
+      "9/7≈1.29m",
+      "9/7~1.29m",
+      "9/7",
+      "1.29 m",
+      "1.29m",
+      "9/7 m",
+      "9/7m",
+      "1.29",
+      "1.286",
+      "x = 9/7",
+      "x=9/7",
+      "x = 1.29",
+      "x=1.29"
+    ]
+  },
+  "k3-fm-L09-P07": {
+    "a": [
+      "225 ft·lb",
+      "225ft·lb",
+      "225 ft*lb",
+      "225ft*lb",
+      "225 ft-lb",
+      "225ft-lb",
+      "225 lb·ft",
+      "225lb·ft",
+      "225 lb*ft",
+      "225lb*ft",
+      "225 foot-pounds",
+      "225foot-pounds",
+      "225"
+    ]
+  },
+  "k91-fm-L10-P01": {
+    "k": "mcq",
+    "a": 0,
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "selfCheck": true,
+    "$hintKeys": [
+      "∫₀⁶ 1000(9.8)(4π)(6 − y) dy"
+    ]
+  },
+  "k91-fm-L10-P02": {
+    "q": "A cylindrical tank of radius 2 m and height 6 m holds water to a depth of 4 m. Find the work needed to pump all of the water out over the top. (Water: 1000 kg/m³, g = 9.8 m/s².)",
+    "why": "Put y = 0 at the bottom. Each slice has area π(2)² = 4π and is lifted 6 − y to the top, so its weight per unit height is 1000(9.8)(4π) = 39200π. The water only fills 0 ≤ y ≤ 4, so the upper limit is 4, not 6.\nW = ∫₀⁴ 39200π(6 − y) dy = 39200π[6y − y²/2]₀⁴ = 39200π(16) ≈ 1.97 × 10⁶ J\nIntegrate over the water, not over the tank. This is the most commonly missed detail in the section.",
+    "a": [
+      "1.97 × 10⁶ J",
+      "1.97 × 10⁶",
+      "1.97 × 10⁶J",
+      "1.97×10⁶",
+      "1.97×10⁶ J",
+      "1.97×10⁶J",
+      "1.97 × 10^6",
+      "1.97 × 10^6 J",
+      "1.97 × 10^6J",
+      "1.97×10^6",
+      "1.97×10^6 J",
+      "1.97×10^6J",
+      "1.97 x 10^6",
+      "1.97 x 10^6 J",
+      "1.97 x 10^6J",
+      "1.97x10^6",
+      "1.97x10^6 J",
+      "1.97x10^6J",
+      "1.97 * 10^6",
+      "1.97 * 10^6 J",
+      "1.97 * 10^6J",
+      "1.97*10^6",
+      "1.97*10^6 J",
+      "1.97*10^6J",
+      "1.97 x 10⁶",
+      "1.97 x 10⁶ J",
+      "1.97 x 10⁶J",
+      "1.97x10⁶",
+      "1.97x10⁶ J",
+      "1.97x10⁶J",
+      "1.97e6",
+      "1.97e6 J",
+      "1.97e6J",
+      "1970000",
+      "1970000 J",
+      "1,970,000",
+      "1,970,000 J",
+      "1970407",
+      "1970407 J",
+      "627200π",
+      "627200pi",
+      "627200π J",
+      "627200πJ",
+      "627200pi J",
+      "627200piJ",
+      "627,200π"
+    ]
+  },
+  "k91-fm-L10-P03": {
+    "a": [
+      "3.69 × 10⁵ J",
+      "3.69 × 10⁵",
+      "3.69 × 10⁵J",
+      "3.69×10⁵",
+      "3.69×10⁵ J",
+      "3.69×10⁵J",
+      "3.69 × 10^5",
+      "3.69 × 10^5 J",
+      "3.69 × 10^5J",
+      "3.69×10^5",
+      "3.69×10^5 J",
+      "3.69×10^5J",
+      "3.69 x 10^5",
+      "3.69 x 10^5 J",
+      "3.69 x 10^5J",
+      "3.69x10^5",
+      "3.69x10^5 J",
+      "3.69x10^5J",
+      "3.69 * 10^5",
+      "3.69 * 10^5 J",
+      "3.69 * 10^5J",
+      "3.69*10^5",
+      "3.69*10^5 J",
+      "3.69*10^5J",
+      "3.69 x 10⁵",
+      "3.69 x 10⁵ J",
+      "3.69 x 10⁵J",
+      "3.69x10⁵",
+      "3.69x10⁵ J",
+      "3.69x10⁵J",
+      "3.69e5",
+      "3.69e5 J",
+      "3.69e5J",
+      "369000",
+      "369000 J",
+      "369,000",
+      "369451",
+      "369451 J",
+      "117600π",
+      "117600pi",
+      "117600π J",
+      "117600πJ",
+      "117600pi J",
+      "117600piJ"
+    ]
+  },
+  "k91-fm-L10-P04": {
+    "why": "Put y = 0 at the center of the sphere, so y runs from −3 to 3.\nRadius of the slice: √(9 − y²), so A(y) = π(9 − y²).\nDistance lifted to the top of the tank: 3 − y.\nW = ∫₋₃³ 9800π(9 − y²)(3 − y) dy\nCentering the coordinate at the sphere's center makes the radius formula clean. Putting y = 0 at the bottom works too but produces (y−3)² inside.",
+    "k": "mcq",
+    "a": 0,
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "selfCheck": true,
+    "$hintKeys": [
+      "∫₋³³ 9800π(9 − y²)(3 − y) dy"
+    ]
+  },
+  "k91-fm-L10-P05": {
+    "a": [
+      "3744 ft·lb",
+      "3744ft·lb",
+      "3744 ft*lb",
+      "3744ft*lb",
+      "3744 ft-lb",
+      "3744ft-lb",
+      "3744 lb·ft",
+      "3744lb·ft",
+      "3744 lb*ft",
+      "3744lb*ft",
+      "3744 foot-pounds",
+      "3744foot-pounds",
+      "3744",
+      "3,744"
+    ]
+  },
+  "k91-fm-L10-P06": {
+    "why": "Let d measure depth below the surface, 0 to 10.\nF = ∫₀¹⁰ 1000(9.8)(d)(20) dd = 196000[d²/2]₀¹⁰ = 196000(50) = 9.8 × 10⁶ N\nCheck: this is the pressure at the plate's centroid (depth 5 m) times its area, 9800(5)(200) = 9.8 × 10⁶ N. That shortcut holds for any flat plate, not just rectangles, because pressure grows linearly with depth; for a rectangle the centroid is simply at mid-depth.",
+    "a": [
+      "9.8 × 10⁶ N",
+      "9.8 × 10⁶",
+      "9.8 × 10⁶N",
+      "9.8×10⁶",
+      "9.8×10⁶ N",
+      "9.8×10⁶N",
+      "9.8 × 10^6",
+      "9.8 × 10^6 N",
+      "9.8 × 10^6N",
+      "9.8×10^6",
+      "9.8×10^6 N",
+      "9.8×10^6N",
+      "9.8 x 10^6",
+      "9.8 x 10^6 N",
+      "9.8 x 10^6N",
+      "9.8x10^6",
+      "9.8x10^6 N",
+      "9.8x10^6N",
+      "9.8 * 10^6",
+      "9.8 * 10^6 N",
+      "9.8 * 10^6N",
+      "9.8*10^6",
+      "9.8*10^6 N",
+      "9.8*10^6N",
+      "9.8 x 10⁶",
+      "9.8 x 10⁶ N",
+      "9.8 x 10⁶N",
+      "9.8x10⁶",
+      "9.8x10⁶ N",
+      "9.8x10⁶N",
+      "9.8e6",
+      "9.8e6 N",
+      "9.8e6N",
+      "9800000 N",
+      "9800000N",
+      "9800000",
+      "9,800,000 N",
+      "9,800,000"
+    ]
+  },
+  "k91-fm-L10-P07": {
+    "a": [
+      "58800 N",
+      "58800N",
+      "58800",
+      "58,800 N",
+      "58,800N",
+      "58,800",
+      "5.88 × 10⁴",
+      "5.88 × 10⁴ N",
+      "5.88 × 10⁴N",
+      "5.88×10⁴",
+      "5.88×10⁴ N",
+      "5.88×10⁴N",
+      "5.88 × 10^4",
+      "5.88 × 10^4 N",
+      "5.88 × 10^4N",
+      "5.88×10^4",
+      "5.88×10^4 N",
+      "5.88×10^4N",
+      "5.88 x 10^4",
+      "5.88 x 10^4 N",
+      "5.88 x 10^4N",
+      "5.88x10^4",
+      "5.88x10^4 N",
+      "5.88x10^4N",
+      "5.88 * 10^4",
+      "5.88 * 10^4 N",
+      "5.88 * 10^4N",
+      "5.88*10^4",
+      "5.88*10^4 N",
+      "5.88*10^4N",
+      "5.88 x 10⁴",
+      "5.88 x 10⁴ N",
+      "5.88 x 10⁴N",
+      "5.88x10⁴",
+      "5.88x10⁴ N",
+      "5.88x10⁴N",
+      "5.88e4",
+      "5.88e4 N",
+      "5.88e4N"
+    ]
+  },
+  "k4-fm-L12-P02": {
+    "k": "mcq",
+    "a": 0,
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "selfCheck": true,
+    "$hintKeys": [
+      "x/2 − sin(2x)/4 + C"
+    ]
+  },
+  "k4-fm-L13-P03": {
+    "k": "mcq",
+    "a": 0,
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "selfCheck": true,
+    "$hintKeys": [
+      "sec¹¹x/11 − 2sec⁹x/9 + sec⁷x/7 + C"
+    ]
+  },
+  "k4-fm-L13-P07": {
+    "k": "mcq",
+    "a": 0,
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "selfCheck": true,
+    "$hintKeys": [
+      "½sec x tan x + ½ln|sec x + tan x| + C"
+    ]
+  },
+  "k4-fm-L14-P02": {
+    "k": "mcq",
+    "a": 0,
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "selfCheck": true,
+    "$hintKeys": [
+      "arcsin(x/2) + C"
+    ]
+  },
+  "k4-fm-L14-P07": {
+    "k": "mcq",
+    "a": 0,
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "selfCheck": true,
+    "$hintKeys": [
+      "(x²+9)^(5/2)/5 − 3(x²+9)^(3/2) + C"
+    ]
+  },
+  "k5-fm-L15-P07": {
+    "k": "mcq",
+    "a": 0,
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "selfCheck": true,
+    "$hintKeys": [
+      "½arctan x + x/(2(x²+1)) + C"
+    ]
+  },
+  "k5-fm-L16-P07": {
+    "why": "Partial fractions: 1/(x² − 1) = ½[1/(x − 1) − 1/(x + 1)], so the antiderivative is ½ln|(x − 1)/(x + 1)| + C.\n[(1/2)ln((x−1)/(x+1))]₂³ = ½[ln(2/4) − ln(1/3)] = ½[ln(1/2) + ln3] = ½ln(3/2) ≈ 0.203\nPositive, as it should be: on [2,3] the integrand 1/(x²−1) is positive. Getting a negative value here would signal a sign error in the decomposition.",
+    "a": [
+      "½ln(3/2) ≈ 0.203",
+      "1/2ln(3/2) ~ 0.203",
+      "½ln(3/2)≈0.203",
+      "1/2ln(3/2)~0.203",
+      "½ln(3/2)",
+      "1/2ln(3/2)",
+      "0.203",
+      "(1/2)ln(3/2)",
+      "ln(3/2)/2",
+      "(1/2)ln(1.5)",
+      "0.5ln(1.5)",
+      "1/2 ln(3/2)",
+      "0.2027"
+    ]
+  },
+  "k5-fm-L17-P02": {
+    "k": "mcq",
+    "a": 0,
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "selfCheck": true,
+    "$hintKeys": [
+      "(5/2)arctan(x/2) + C"
+    ]
+  },
+  "k5-fm-L17-P04": {
+    "k": "mcq",
+    "a": 0,
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "selfCheck": true,
+    "$hintKeys": [
+      "(2/5)ln|x+1| + (3/10)ln(x²+4) − (3/10)arctan(x/2) + C"
+    ]
+  },
+  "k5-fm-L17-P06": {
+    "q": "For each integral, name the first technique you would use, without solving: (a) ∫x√(x−1)dx (b) ∫x²eˣdx (c) ∫dx/(x²−4) (d) ∫√(4−x²)dx (e) ∫sin⁵x cos²x dx (f) ∫(x³+1)/x² dx"
+  },
+  "k5-fm-L17-P07": {
+    "why": "Factor fully: x⁴ − 1 = (x−1)(x+1)(x²+1).\n1/(x⁴−1) = A/(x−1) + B/(x+1) + (Cx+D)/(x²+1)\nx = 1: 1 = A(2)(2) ⇒ A = 1/4\nx = −1: 1 = B(−2)(2) ⇒ B = −1/4\nExpanding and matching x³ coefficients: 0 = A + B + C ⇒ C = 0\nConstants: 1 = A − B − D = 1/4 + 1/4 − D, so D = −1/2\n= (1/4)ln|x−1| − (1/4)ln|x+1| − (1/2)arctan x + C\nFactor as far as possible over the reals first. Leaving x⁴−1 as (x²−1)(x²+1) misses that x²−1 factors further.",
+    "k": "mcq",
+    "a": 0,
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "selfCheck": true,
+    "$hintKeys": [
+      "(1/4)ln|x−1| − (1/4)ln|x+1| − (1/2)arctan x + C"
+    ]
+  },
+  "k6-fm-L18-P01": {
+    "why": "= lim(b→∞) ∫₁ᵇ x⁻³dx = lim [−1/(2x²)]₁ᵇ = lim(−1/(2b²) + 1/2) = 1/2, converges\nAlso immediate from the p-rule: p = 3 > 1.",
+    "a": [
+      "1/2, converges",
+      "1/2,converges",
+      "1/2",
+      "0.5",
+      "½",
+      "converges to 1/2",
+      "convergesto1/2",
+      "converges to 0.5",
+      "convergesto0.5",
+      "0.5, converges",
+      "0.5,converges",
+      "1/2 (converges)",
+      "1/2(converges)"
+    ]
+  },
+  "k6-fm-L18-P02": {
+    "why": "p = 1/2 ≤ 1, so it diverges.\nConfirming: lim[2√x]₁ᵇ = lim(2√b − 2) = ∞",
+    "a": [
+      "diverges",
+      "divergent",
+      "diverge",
+      "it diverges",
+      "the series diverges",
+      "no",
+      "does not converge",
+      "doesn't converge",
+      "diverges to ∞",
+      "diverges to infinity"
+    ]
+  },
+  "k6-fm-L18-P03": {
+    "why": "This is Type 2: the integrand blows up at x = 0, the lower limit.\n= lim(t→0⁺) ∫ₜ¹ x^(−1/2)dx = lim [2√x]ₜ¹ = lim(2 − 2√t) = 2, converges\nNotice the reversal: p = 1/2 diverges on [1,∞) but converges on (0,1]. Near a spike, small p is fine; in a tail, large p is what you need.",
+    "a": [
+      "2, converges",
+      "2,converges",
+      "2",
+      "converges to 2",
+      "convergesto2",
+      "2 (converges)",
+      "2(converges)"
+    ]
+  },
+  "k6-fm-L18-P04": {
+    "why": "Integration by parts first: ∫xe^(−x)dx = −xe^(−x) − e^(−x) = −(x+1)e^(−x)\nlim(b→∞)[−(x+1)e^(−x)]₀ᵇ = lim(−(b+1)e^(−b) + 1)\n(b+1)e^(−b) → 0 since exponentials beat polynomials.\n= 1, converges",
+    "a": [
+      "1, converges",
+      "1,converges",
+      "1",
+      "converges to 1",
+      "convergesto1",
+      "1 (converges)",
+      "1(converges)"
+    ]
+  },
+  "k6-fm-L18-P05": {
+    "q": "Evaluate ∫₋₁² dx/x² or explain why it fails.",
+    "why": "The integrand blows up at x = 0, which is inside the interval, so the integral must be split.\n∫₀² dx/x² = lim(t→0⁺)[−1/x]ₜ² = lim(−1/2 + 1/t) = ∞\nSince one half diverges, the whole thing diverges.\nEvaluating blindly gives [−1/x]₋₁² = −1/2 − 1 = −3/2, a negative answer for a positive integrand. That absurdity is the tell.",
+    "a": [
+      "diverges",
+      "divergent",
+      "diverge",
+      "it diverges",
+      "the series diverges",
+      "does not converge",
+      "doesn't converge",
+      "diverges to ∞",
+      "diverges to infinity",
+      "∞",
+      "infinity"
+    ]
+  },
+  "k6-fm-L18-P06": {
+    "a": [
+      "converges",
+      "convergent",
+      "converge",
+      "it converges",
+      "the series converges",
+      "yes"
+    ]
+  },
+  "k6-fm-L18-P07": {
+    "a": [
+      "p > 1",
+      "p>1",
+      "(1, ∞)",
+      "(1,∞)",
+      "(1, infinity)",
+      "(1,infinity)",
+      "1 < p",
+      "1<p"
+    ]
+  },
+  "k6-fm-L18-P08": {
+    "why": "First: lim(b→∞)[arctan x]₀ᵇ = π/2 − 0 = π/2\nSecond: split at 0. The left half gives 0 − (−π/2) = π/2. Both halves converge, so the total is π.\nBoth pieces must converge independently. Here they do, so the answer is legitimate, unlike ∫₋∞^∞ x dx where each half is infinite."
+  },
+  "k6-fm-L19-P02": {
+    "q": "Write out S₁, S₂, S₃, S₄ for Σ(k=1) 1/2ᵏ."
+  },
+  "k6-fm-L19-P05": {
+    "why": "Sum = lim Sₙ = 3\nFor n ≥ 2, aₙ = Sₙ − Sₙ₋₁ = (3n+1)/(n+4) − (3n−2)/(n+3)\n= [(3n+1)(n+3) − (3n−2)(n+4)]/((n+4)(n+3))\n= [(3n²+10n+3) − (3n²+10n−8)]/((n+4)(n+3)) = 11/((n+4)(n+3))\nThe first term has no S₀ to subtract: a₁ = S₁ = 4/5, while the formula would give 11/20. So aₙ = 11/((n+4)(n+3)) for n ≥ 2, with a₁ = 4/5.\nThe relationship aₙ = Sₙ − Sₙ₋₁ is the bridge between the two objects, and it works in both directions."
+  },
+  "k92-fm-L20-P03": {
+    "why": "Compare growth rates: any power of ln n loses to any positive power of n.\nOr apply L'Hôpital twice on (ln x)²/x: (2 ln x)/x, then 2/x → 0.\nLimit is 0."
+  },
+  "k92-fm-L20-P04": {
+    "why": "Rewrite as sin(1/n)/(1/n) and let t = 1/n → 0.\nlim(t→0) (sin t)/t = 1\nRecognizing a Calc I limit inside a sequence is the trick here."
+  },
+  "k92-fm-L20-P05": {
+    "a": [
+      "converges",
+      "convergent",
+      "converge",
+      "it converges",
+      "the series converges",
+      "yes",
+      "converges to 0",
+      "it converges to 0"
+    ]
+  },
+  "k7-fm-L21-P01": {
+    "q": "Find the sum of Σ(k=0 to ∞) 5(2/3)ᵏ."
+  },
+  "k7-fm-L21-P02": {
+    "q": "Does Σ(k=1 to ∞) 3(5/4)ᵏ converge?",
+    "a": [
+      "diverges",
+      "divergent",
+      "diverge",
+      "it diverges",
+      "the series diverges",
+      "no",
+      "does not converge",
+      "doesn't converge"
+    ]
+  },
+  "k7-fm-L21-P03": {
+    "q": "Find the sum of Σ(k=3 to ∞) 2ᵏ/5ᵏ⁻¹.",
+    "why": "Rewrite: 2ᵏ/5ᵏ⁻¹ = 5 · (2/5)ᵏ. First term at k = 3 is 5(2/5)³ = 5(8/125) = 8/25, and r = 2/5.\nSum = (8/25)/(1 − 2/5) = (8/25)/(3/5) = 8/15\nUse first term over one minus ratio rather than memorizing index-shifted formulas."
+  },
+  "k7-fm-L21-P06": {
+    "a": [
+      "40 ft",
+      "40ft",
+      "40"
+    ]
+  },
+  "k7-fm-L21-P07": {
+    "q": "For what values of x does Σ(k=0 to ∞) (x − 2)ᵏ/3ᵏ converge, and what is the sum?"
+  },
+  "k7-fm-L22-P02": {
+    "a": [
+      "converges",
+      "convergent",
+      "converge",
+      "it converges",
+      "the series converges",
+      "yes"
+    ]
+  },
+  "k7-fm-L22-P03": {
+    "why": "f(x) = x/(x²+1) is positive and continuous on [1,∞). Its derivative is (1 − x²)/(x²+1)² < 0 for x > 1, so it is decreasing. All three conditions hold.\n∫₁^∞ x/(x²+1)dx = lim ½ln(x²+1)|₁ᵇ = ∞\nThe integral diverges, so the series diverges.\nNote the terms do go to 0, so the Divergence Test was useless here.",
+    "a": [
+      "diverges",
+      "divergent",
+      "diverge",
+      "it diverges",
+      "the series diverges"
+    ]
+  },
+  "k7-fm-L22-P04": {
+    "why": "Integral Test with u = ln x: ∫₂^∞ dx/(x ln x) = lim ln(ln x)|₂ᵇ = ∞.\nDiverges.\nContrast with Σ1/(n(ln n)²), which converges. The logarithm barely fails to save it at the first power.",
+    "a": [
+      "Diverges.",
+      "diverges",
+      "divergent",
+      "diverge",
+      "it diverges",
+      "the series diverges",
+      "no",
+      "does not converge",
+      "doesn't converge"
+    ]
+  },
+  "k7-fm-L22-P05": {
+    "a": [
+      "n = 15 terms",
+      "n=15terms",
+      "15 terms",
+      "15terms",
+      "15",
+      "n = 15",
+      "n=15"
+    ]
+  },
+  "k7-fm-L22-P06": {
+    "k": "mcq",
+    "a": 0,
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "selfCheck": true,
+    "$hintKeys": [
+      "1.193 ≤ S ≤ 1.218"
+    ]
+  },
+  "k7-fm-L22-P07": {
+    "why": "f(x) = 1/(x(ln x)ᵖ) is positive, continuous, decreasing on [2,∞) for p > 0.\nSubstitute u = ln x, du = dx/x: ∫₂^∞ dx/(x(ln x)ᵖ) = ∫ₗₙ₂^∞ du/uᵖ\nThat is a p-integral, converging exactly when p > 1.\nSo the series converges if and only if p > 1. For p ≤ 0 the terms still go to 0, so the Divergence Test settles nothing; compare instead: for n ≥ 3, ln n > 1 makes (ln n)ᵖ ≤ 1, so 1/(n(ln n)ᵖ) ≥ 1/n, and Σ1/n diverges.",
+    "a": [
+      "p > 1",
+      "p>1",
+      "if and only if p > 1",
+      "ifandonlyifp>1",
+      "p > 1 only",
+      "p>1only",
+      "(1, ∞)",
+      "(1,∞)",
+      "(1, infinity)",
+      "(1,infinity)",
+      "1 < p",
+      "1<p"
+    ]
+  },
+  "k7-fm-L23-P01": {
+    "a": [
+      "converges",
+      "convergent",
+      "converge",
+      "it converges",
+      "the series converges"
+    ]
+  },
+  "k7-fm-L23-P03": {
+    "a": [
+      "converges",
+      "convergent",
+      "converge",
+      "it converges",
+      "the series converges"
+    ]
+  },
+  "k7-fm-L23-P05": {
+    "why": "Bounded numerator: 2 ≤ 3 + sin n ≤ 4, so aₙ ≤ 4/n³.\nΣ4/n³ converges (p = 3), so by direct comparison the series converges.\nLimit comparison with bₙ = 1/n³ does not work here: the ratio aₙ/bₙ = 3 + sin n oscillates and has no limit. Direct comparison is the right tool for a bounded oscillating factor.",
+    "a": [
+      "converges",
+      "convergent",
+      "converge",
+      "it converges",
+      "the series converges"
+    ]
+  },
+  "k7-fm-L23-P07": {
+    "a": [
+      "converges",
+      "convergent",
+      "converge",
+      "it converges",
+      "the series converges"
+    ]
+  },
+  "k8-fm-L24-P02": {
+    "a": [
+      "Absolutely convergent.",
+      "Absolutelyconvergent.",
+      "absolutely convergent",
+      "converges absolutely",
+      "absolutely converges",
+      "absolutely",
+      "absolute convergence"
+    ]
+  },
+  "k8-fm-L24-P04": {
+    "why": "Need aₙ₊₁ = 1/(n+1)⁴ < 0.0005 ⇒ (n+1)⁴ > 2000 ⇒ n + 1 > 6.69 ⇒ n ≥ 6.\nUse 6 terms: 1 − 1/16 + 1/81 − 1/256 + 1/625 − 1/1296 ≈ 0.9468\nThe alternating error bound is the easiest in the course: the error is smaller than the first omitted term."
+  },
+  "k8-fm-L25-P01": {
+    "a": [
+      "Converges absolutely.",
+      "converges absolutely",
+      "absolutely convergent",
+      "absolutely converges",
+      "converges",
+      "convergent",
+      "converge",
+      "it converges",
+      "the series converges"
+    ]
+  },
+  "k8-fm-L25-P02": {
+    "a": [
+      "Converges.",
+      "converges",
+      "convergent",
+      "converge",
+      "it converges",
+      "the series converges",
+      "converges absolutely",
+      "absolutely convergent",
+      "absolutely converges"
+    ]
+  },
+  "k8-fm-L25-P04": {
+    "a": [
+      "Diverges.",
+      "diverges",
+      "divergent",
+      "diverge",
+      "it diverges",
+      "the series diverges"
+    ]
+  },
+  "k8-fm-L25-P05": {
+    "a": [
+      "Converges absolutely.",
+      "converges absolutely",
+      "absolutely convergent",
+      "absolutely converges",
+      "converges",
+      "convergent",
+      "converge",
+      "it converges",
+      "the series converges"
+    ]
+  },
+  "k8-fm-L25-P07": {
+    "a": [
+      "converges",
+      "convergent",
+      "converge",
+      "it converges",
+      "the series converges",
+      "converges absolutely",
+      "absolutely convergent",
+      "absolutely converges"
+    ]
+  },
+  "k8-fm-L26-P01": {
+    "a": [
+      "Ratio Test",
+      "RatioTest",
+      "the ratio test",
+      "ratio"
+    ]
+  },
+  "k8-fm-L26-P02": {
+    "a": [
+      "Limit Comparison",
+      "LimitComparison",
+      "limit comparison test",
+      "the limit comparison test",
+      "LCT",
+      "limit comparison with 1/n²",
+      "limit comparison with 1/n^2"
+    ]
+  },
+  "k8-fm-L26-P03": {
+    "q": "Classify each series (each sum starts at n = 1) and name the test: (a) Σ(−1)ⁿ/√(n+1) (b) Σ(n/(n+4))ⁿ (c) Σ3/(2ⁿ) (d) Σ1/(n^0.9)"
+  },
+  "k8-fm-L26-P04": {
+    "q": "Use the Ratio Test to determine whether Σ (n!)²/(2n)! converges.",
+    "a": [
+      "Converges.",
+      "converges",
+      "convergent",
+      "converge",
+      "it converges",
+      "the series converges",
+      "converges absolutely",
+      "absolutely convergent",
+      "absolutely converges"
+    ]
+  },
+  "k8-fm-L26-P07": {
+    "a": [
+      "converges",
+      "convergent",
+      "converge",
+      "it converges",
+      "the series converges"
+    ]
+  },
+  "k93-fm-L27-P01": {
+    "q": "Use the linear approximation of f(x) = √x at a = 9 to estimate √9.1.",
+    "a": [
+      "3.01667",
+      "3.0167",
+      "3.017",
+      "3.016667",
+      "3.0166667",
+      "181/60",
+      "3 + 1/60",
+      "3+1/60"
+    ]
+  },
+  "k93-fm-L27-P02": {
+    "q": "Find the Maclaurin polynomial of order 3 for f(x) = eˣ.",
+    "why": "Every derivative is eˣ, equal to 1 at 0.\np₃(x) = 1 + x + x²/2 + x³/6",
+    "k": "mcq",
+    "a": 0,
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "selfCheck": true,
+    "$hintKeys": [
+      "1 + x + x²/2 + x³/6"
+    ]
+  },
+  "k93-fm-L27-P03": {
+    "k": "mcq",
+    "a": 0,
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "selfCheck": true,
+    "$hintKeys": [
+      "(x−1) − (x−1)²/2 + (x−1)³/3"
+    ]
+  },
+  "k93-fm-L27-P04": {
+    "q": "Use the order 2 Taylor polynomial p₂(x) of f(x) = cos x centered at a = π/3 to estimate cos(1.1).",
+    "a": [
+      "0.4536",
+      "0.45357",
+      "0.454"
+    ]
+  },
+  "k9-fm-L28-P02": {
+    "q": "What order Maclaurin polynomial for sin x does the remainder bound require to approximate sin(1) within 0.0001?",
+    "a": [
+      "Order 7",
+      "Order7",
+      "7",
+      "n = 7",
+      "n=7",
+      "p₇",
+      "p_7",
+      "p7",
+      "7th order",
+      "7thorder",
+      "seventh order",
+      "seventhorder",
+      "7th"
+    ],
+    "$hintKeys": [
+      "7"
+    ]
+  },
+  "k9-fm-L28-P04": {
+    "q": "What order Maclaurin polynomial for eˣ is needed to estimate e^0.3 within 10⁻⁵?",
+    "a": [
+      "Order 5.",
+      "Order5.",
+      "5",
+      "n = 5",
+      "n=5",
+      "p₅",
+      "p_5",
+      "p5",
+      "5th order",
+      "5thorder",
+      "fifth order",
+      "fifthorder",
+      "5th"
+    ]
+  },
+  "k9-fm-L28-P05": {
+    "q": "Use the order 2 Taylor polynomial p₂ of f(x) = x^(1/3) centered at a = 8 to estimate 8.5^(1/3).",
+    "a": [
+      "2.040799",
+      "2.0408",
+      "2.04080",
+      "2.0407986",
+      "2.041",
+      "2351/1152"
+    ]
+  },
+  "k9-fm-L28-P06": {
+    "q": "The Lagrange bound for the order 3 Maclaurin polynomial of sin x is |R₃(x)| ≤ |x|⁴/4!. For which x does this bound guarantee an error below 0.001?",
+    "why": "|R₃| ≤ |x|⁴/4! = |x|⁴/24 < 0.001\n|x|⁴ < 0.024 ⇒ |x| < 0.024^(1/4) ≈ 0.394\nSo the bound guarantees the accuracy on roughly (−0.394, 0.394). Solving for the interval rather than for n is a common variant.\nThe true accuracy reaches further: for sine p₃ = p₄, and the R₄ bound |x|⁵/5! < 0.001 already gives |x| < 0.654. The question asks what the |x|⁴/4! bound guarantees.",
+    "a": [
+      "|x| < 0.394",
+      "|x|<0.394",
+      "|x| < 0.39",
+      "|x|<0.39",
+      "|x| < 0.3936",
+      "|x|<0.3936",
+      "−0.394 < x < 0.394",
+      "−0.394<x<0.394",
+      "-0.394 < x < 0.394",
+      "-0.394<x<0.394",
+      "(−0.394, 0.394)",
+      "(−0.394,0.394)",
+      "(-0.394, 0.394)",
+      "(-0.394,0.394)",
+      "0.394"
+    ]
+  },
+  "k9-fm-L29-P01": {
+    "q": "Find the radius of convergence of Σ xᵏ/k.",
+    "why": "|aₖ₊₁/aₖ| = |x|ᵏ⁺¹/(k+1) · k/|x|ᵏ = |x|k/(k+1) → |x|\nConverges when |x| < 1, so R = 1."
+  },
+  "k9-fm-L29-P02": {
+    "q": "Find the interval of convergence of Σ(k=1 to ∞) xᵏ/k.",
+    "why": "Interior: (−1, 1). Now the endpoints.\nx = 1: Σ1/k, the harmonic series, diverges.\nx = −1: Σ(−1)ᵏ/k, alternating harmonic, converges by the AST.\nInterval: [−1, 1)\nAsymmetric intervals are normal.",
+    "a": [
+      "[−1, 1)",
+      "[-1, 1)",
+      "[−1,1)",
+      "[-1,1)",
+      "−1 ≤ x < 1",
+      "−1≤x<1",
+      "-1 <= x < 1",
+      "-1<=x<1",
+      "-1 ≤ x < 1",
+      "-1≤x<1"
+    ]
+  },
+  "k9-fm-L29-P03": {
+    "q": "Find the interval of convergence for Σ (x + 3)ᵏ/(k² 2ᵏ).",
+    "why": "Ratio: |x+3|ᵏ⁺¹/((k+1)²2ᵏ⁺¹) · k²2ᵏ/|x+3|ᵏ = (|x+3|/2)(k/(k+1))² → |x+3|/2\nNeed |x+3| < 2, so R = 2 and the center is −3: interior (−5, −1).\nx = −1: Σ2ᵏ/(k²2ᵏ) = Σ1/k², converges.\nx = −5: Σ(−2)ᵏ/(k²2ᵏ) = Σ(−1)ᵏ/k², converges absolutely.\nInterval: [−5, −1]",
+    "a": [
+      "[−5, −1]",
+      "[-5, -1]",
+      "[−5,−1]",
+      "[-5,-1]",
+      "−5 ≤ x ≤ −1",
+      "−5≤x≤−1",
+      "-5 <= x <= -1",
+      "-5<=x<=-1"
+    ]
+  },
+  "k9-fm-L29-P04": {
+    "q": "Find R for Σ k! xᵏ and for Σ xᵏ/k!.",
+    "why": "Σk!xᵏ: ratio = (k+1)|x| → ∞ unless x = 0. So R = 0, converging only at x = 0.\nΣxᵏ/k!: ratio = |x|/(k+1) → 0 for every x. So R = ∞, converging everywhere.\nThese are the two extreme cases, and factorial placement decides which you get."
+  },
+  "k9-fm-L29-P05": {
+    "q": "Find the interval of convergence for Σ (−1)ᵏ (2x − 1)ᵏ/√k.",
+    "why": "Ratio: |2x−1|√(k/(k+1)) → |2x − 1|\nNeed |2x − 1| < 1 ⇒ −1 < 2x − 1 < 1 ⇒ 0 < x < 1. Center 1/2, R = 1/2.\nx = 1: Σ(−1)ᵏ/√k converges by the AST.\nx = 0: 2x − 1 = −1, giving Σ(−1)ᵏ(−1)ᵏ/√k = Σ1/√k, a p-series with p = 1/2, diverges.\nInterval: (0, 1]\nWhen the variable has a coefficient, solve carefully for x; the radius in x is half the radius in (2x−1).",
+    "a": [
+      "(0, 1]",
+      "(0,1]",
+      "0 < x ≤ 1",
+      "0<x≤1",
+      "0 < x <= 1",
+      "0<x<=1"
+    ]
+  },
+  "k9-fm-L29-P06": {
+    "q": "Find R for Σ (3x)ᵏ/k³."
+  },
+  "k9-fm-L29-P07": {
+    "q": "A power series Σcₖ(x − 2)ᵏ converges at x = 5 and diverges at x = −2. What can you say about convergence at x = 0 and x = 6?"
+  },
+  "k9-fm-L30-P01": {
+    "why": "1/(1 − (−3x)) = Σ(−3x)ᵏ = Σ(−1)ᵏ3ᵏxᵏ\nConverges when |3x| < 1, so R = 1/3."
+  },
+  "k9-fm-L30-P02": {
+    "why": "Factor out 5 to expose the required 1: 1/(5(1 − x/5)) = (1/5)Σ(x/5)ᵏ = Σxᵏ/5ᵏ⁺¹, valid for |x| < 5.",
+    "k": "mcq",
+    "a": 0,
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "selfCheck": true,
+    "$hintKeys": [
+      "Σxᵏ/5ᵏ⁺¹"
+    ]
+  },
+  "k9-fm-L30-P04": {
+    "why": "1/(1−x) = Σxᵏ. Integrating gives −ln(1−x) = Σxᵏ⁺¹/(k+1) + C.\nAt x = 0 both sides are 0, so C = 0.\nln(1 − x) = −Σ(k=0) xᵏ⁺¹/(k+1) = −x − x²/2 − x³/3 − …, for −1 ≤ x < 1",
+    "k": "mcq",
+    "a": 0,
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "selfCheck": true,
+    "$hintKeys": [
+      "−Σ(k=0) xᵏ⁺¹/(k+1)"
+    ]
+  },
+  "k9-fm-L30-P06": {
+    "why": "1/(1+x⁴) = Σ(−1)ᵏx⁴ᵏ\n∫₀^0.5 = Σ(−1)ᵏ(0.5)⁴ᵏ⁺¹/(4k+1) = 0.5 − 0.5⁵/5 + 0.5⁹/9 − …\n= 0.5 − 0.00625 + 0.000217 − 0.0000094\n≈ 0.4940\nIt alternates, so the error after four terms is under the fifth term, about 4×10⁻⁷.",
+    "a": [
+      "0.4940",
+      "0.494",
+      "0.49396",
+      "0.493958"
+    ]
+  },
+  "k9-fm-L30-P07": {
+    "q": "Find the sum of Σ(k=1 to ∞) k/2ᵏ.",
+    "why": "Start from Σ(k=1) k xᵏ⁻¹ = 1/(1−x)². Multiply by x:\nΣ(k=1) k xᵏ = x/(1−x)²\nAt x = 1/2: (1/2)/(1/4) = 2\nRecognizing a numerical series as a known power series evaluated at a point is the standard method for summing anything with a k in the numerator."
+  },
+  "k9-fm-L31-P01": {
+    "why": "Substitute 3x into Σxᵏ/k!:\nΣ(3x)ᵏ/k! = Σ3ᵏxᵏ/k!, valid for all x.",
+    "k": "mcq",
+    "a": 0,
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "selfCheck": true,
+    "$hintKeys": [
+      "Σ(3x)ᵏ/k! = Σ3ᵏxᵏ/k!"
+    ]
+  },
+  "k9-fm-L31-P03": {
+    "why": "e^u = Σuᵏ/k! with u = −x² gives Σ(−1)ᵏx²ᵏ/k!.\nMultiply by x²: Σ(−1)ᵏx²ᵏ⁺²/k!, all x.\nSubstituting into a known series is always faster than differentiating this function repeatedly.",
+    "k": "mcq",
+    "a": 0,
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "selfCheck": true,
+    "$hintKeys": [
+      "Σ(−1)ᵏx²ᵏ⁺²/k!"
+    ]
+  },
+  "k9-fm-L31-P04": {
+    "why": "sin x = x − x³/3! + x⁵/5! − …\nDivide by x: 1 − x²/3! + x⁴/5! − … = Σ(−1)ᵏx²ᵏ/(2k+1)!\nAt x = 0 the series gives 1, which is the removable-singularity value and matches lim(x→0) (sin x)/x = 1.",
+    "k": "mcq",
+    "a": 0,
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "selfCheck": true,
+    "$hintKeys": [
+      "1 − x²/3! + x⁴/5! − … = Σ(−1)ᵏx²ᵏ/(2k+1)!"
+    ]
+  },
+  "k9-fm-L31-P05": {
+    "why": "Write 1/x = 1/(1 + (x−1)) = 1/(1 − (−(x−1)))\n= Σ(−(x−1))ᵏ = Σ(−1)ᵏ(x − 1)ᵏ, valid for |x − 1| < 1, that is 0 < x < 2.\nForcing the expression into the geometric form beats computing derivatives.",
+    "k": "mcq",
+    "a": 0,
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "selfCheck": true,
+    "$hintKeys": [
+      "Σ(−1)ᵏ(x − 1)ᵏ"
+    ]
+  },
+  "k9-fm-L31-P07": {
+    "q": "Find the Maclaurin series for f(x) = eˣ sin x through the x⁴ term.",
+    "why": "Multiply the two series and collect by degree.\neˣ = 1 + x + x²/2 + x³/6 + x⁴/24\nsin x = x − x³/6\nx¹: 1·x = x\nx²: x·x = x²\nx³: (x²/2)(x) + (1)(−x³/6) = x³/2 − x³/6 = x³/3\nx⁴: (x³/6)(x) + (x)(−x³/6) = x⁴/6 − x⁴/6 = 0\nx + x² + x³/3 + 0·x⁴ + …\nMultiplying series is legal inside the common interval of convergence, and it is far easier than taking four derivatives of a product.",
+    "k": "mcq",
+    "a": 0,
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "selfCheck": true,
+    "$hintKeys": [
+      "x + x² + x³/3 + 0·x⁴ + …"
+    ]
+  },
+  "k10-fm-L32-P01": {
+    "a": [
+      "1/2",
+      "0.5",
+      "½",
+      ".5"
+    ]
+  },
+  "k10-fm-L32-P02": {
+    "q": "Use series to find lim(x→0) (eˣ − 1)/x.",
+    "why": "eˣ − 1 = x + x²/2 + …, so the quotient is 1 + x/2 + … → 1"
+  },
+  "k10-fm-L32-P03": {
+    "a": [
+      "1/3",
+      "0.333",
+      "0.3333"
+    ]
+  },
+  "k10-fm-L32-P04": {
+    "q": "Approximate ∫₀¹ e^(−x²) dx using the first four nonzero terms of its Maclaurin series.",
+    "a": [
+      "0.74286",
+      "0.7429",
+      "0.743",
+      "0.742857",
+      "26/35"
+    ]
+  },
+  "k10-fm-L32-P05": {
+    "q": "Evaluate Σ(k=0 to ∞) (−1)ᵏπ²ᵏ⁺¹/(4²ᵏ⁺¹(2k+1)!).",
+    "why": "Odd powers with (2k+1)! and alternating signs is the sine series, with x²ᵏ⁺¹ = (π/4)²ᵏ⁺¹.\nSo the sum is sin(π/4) = √2/2\nMatch the factorial and the parity of the exponent first, then read off x.",
+    "a": [
+      "√2/2",
+      "sqrt(2)/2",
+      "1/√2",
+      "1/sqrt(2)",
+      "sin(π/4)",
+      "sin(pi/4)",
+      "0.7071",
+      "0.707"
+    ]
+  },
+  "k10-fm-L33-P01": {
+    "a": [
+      "(−3√3, 3)",
+      "(-3sqrt(3), 3)",
+      "(−3√3,3)",
+      "(-3sqrt(3),3)",
+      "(-3√3, 3)",
+      "(-3√3,3)",
+      "(−5.196, 3)",
+      "(−5.196,3)",
+      "(-5.196, 3)",
+      "(-5.196,3)",
+      "(-5.2, 3)",
+      "(-5.2,3)",
+      "(-3*sqrt(3), 3)",
+      "(-3*sqrt(3),3)",
+      "(-3sqrt3, 3)",
+      "(-3 sqrt(3), 3)"
+    ],
+    "$hintKeys": [
+      "−3√3",
+      "3"
+    ]
+  },
+  "k10-fm-L33-P02": {
+    "$hintKeys": [
+      "3π/2"
+    ]
+  },
+  "k10-fm-L33-P05": {
+    "k": "mcq",
+    "a": 0,
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "selfCheck": true,
+    "$hintKeys": [
+      "A circle of radius 3 centered at (0, 3)"
+    ]
+  },
+  "k10-fm-L33-P07": {
+    "k": "mcq",
+    "a": 0,
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "selfCheck": true,
+    "$hintKeys": [
+      "x = (y² − 1)/2, a parabola"
+    ]
+  },
+  "k10-fm-L34-P02": {
+    "a": [
+      "cardioid",
+      "a cardioid"
+    ]
+  },
+  "k10-fm-L34-P03": {
+    "q": "Identify the curve r = 1 + 3cosθ.",
+    "why": "Since a = 1 < b = 3, this is a limaçon with an inner loop.\nIt passes through the origin where r = 0: cosθ = −1/3, so θ = arccos(−1/3) ≈ 1.911 and θ ≈ 4.373 radians.\nThose two angles bound the inner loop.",
+    "a": [
+      "limaçon with an inner loop",
+      "limaçonwithaninnerloop",
+      "limacon with an inner loop",
+      "limaconwithaninnerloop",
+      "limaçon with inner loop",
+      "limaçonwithinnerloop",
+      "limacon with inner loop",
+      "limaconwithinnerloop",
+      "a limaçon with an inner loop",
+      "alimaçonwithaninnerloop",
+      "a limacon with an inner loop",
+      "alimaconwithaninnerloop",
+      "inner loop limaçon",
+      "innerlooplimaçon",
+      "inner loop limacon",
+      "innerlooplimacon",
+      "inner-loop limaçon",
+      "inner-looplimaçon",
+      "inner-loop limacon",
+      "inner-looplimacon",
+      "limaçon with a loop",
+      "limaçonwithaloop",
+      "limacon with a loop",
+      "limaconwithaloop",
+      "looped limaçon",
+      "loopedlimaçon",
+      "looped limacon",
+      "loopedlimacon"
+    ]
+  },
+  "k10-fm-L34-P05": {
+    "k": "mcq",
+    "a": 0,
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "selfCheck": true,
+    "$hintKeys": [
+      "(√2, π/4) and (−√2, 3π/4)"
+    ]
+  },
+  "k10-fm-L34-P06": {
+    "q": "How many intersection points do the curves r = 1 and r = 2cosθ have?",
+    "a": [
+      "2",
+      "two",
+      "2 points",
+      "two points",
+      "2 intersection points",
+      "two intersection points",
+      "Two intersection points.",
+      "Twointersectionpoints."
+    ]
+  },
+  "k10-fm-L34-P07": {
+    "why": "The period of cos3θ is 2π/3, so as θ runs from 0 to 2π the graph is traced in six arcs, three with r > 0 and three with r < 0. A negative r plots the point in the opposite direction.\nConcretely, on (π/6, π/2) we have r < 0, so those points land in the directions θ + π, between 7π/6 and 3π/2. That is exactly the petal r > 0 traces for θ in (7π/6, 3π/2). In general cos(3(θ + π)) = −cos3θ, so the point plotted at θ + π is the same point as the one at θ: the second half of the trip retraces the first. Half the arcs are duplicates, leaving 3 distinct petals.\nWith even n, cos(n(θ + π)) = cos nθ, so the point at θ + π is the reflection through the origin instead; the petals traced with r < 0 fall in the gaps between the others instead of on top of them, so all 2n survive.",
+    "k": "mcq",
+    "a": 0,
+    "c": [
+      "I got it",
+      "I need to review it"
+    ],
+    "selfCheck": true,
+    "$hintKeys": [
+      "3 distinct petals"
+    ]
+  },
+  "k94-fm-L35-P04": {
+    "why": "Intersect: 3sinθ = 1 + sinθ ⇒ sinθ = 1/2 ⇒ θ = π/6, 5π/6.\nOn that interval 3sinθ is larger (test θ = π/2: 3 vs 2).\nA = ½∫_{π/6}^{5π/6} [9sin²θ − (1+sinθ)²] dθ\n= ½∫ [9sin²θ − 1 − 2sinθ − sin²θ] dθ = ½∫[8sin²θ − 2sinθ − 1]dθ\n8sin²θ = 4 − 4cos2θ, so the integrand is 3 − 4cos2θ − 2sinθ\n= ½[3θ − 2sin2θ + 2cosθ]_{π/6}^{5π/6}\n= ½[(5π/2 + √3 − √3) − (π/2 − √3 + √3)] = ½(2π) = π"
+  },
+  "k94-fm-L35-P05": {
+    "why": "r = 0 when cos2θ = 0, so 2θ = ±π/2 and θ = ±π/4 bound the right loop.\nA = ½∫_{−π/4}^{π/4} 4cos2θ dθ = 2[sin2θ/2]_{−π/4}^{π/4} = [sin2θ]_{−π/4}^{π/4} = 1 − (−1) = 2\nSince the equation gives r² directly, no squaring step is needed."
+  },
+  "k94-fm-L35-P07": {
+    "why": "The curves meet at θ = ±π/3. Inside means taking whichever curve is smaller at each angle.\nFor |θ| < π/3, 2cosθ > 1, so the circle r = 1 is the inner boundary.\nFor π/3 < θ < π/2, 2cosθ < 1, so r = 2cosθ bounds the region.\nA = 2[ ½∫₀^(π/3) 1 dθ + ½∫_{π/3}^{π/2} 4cos²θ dθ ]\n= π/3 + 2∫_{π/3}^{π/2}(1 + cos2θ)dθ = π/3 + 2[θ + sin2θ/2]_{π/3}^{π/2}\n= π/3 + 2[(π/2) − (π/3 + √3/4)] = π/3 + 2(π/6 − √3/4) = 2π/3 − √3/2 ≈ 1.228\nRegions inside two curves nearly always require splitting at the intersection angle, because the binding curve changes.",
+    "a": [
+      "2π/3 − √3/2 ≈ 1.228",
+      "2pi/3 - sqrt(3)/2 ~ 1.228",
+      "2π/3−√3/2≈1.228",
+      "2pi/3-sqrt(3)/2~1.228",
+      "2π/3 − √3/2",
+      "2pi/3 - sqrt(3)/2",
+      "2π/3−√3/2",
+      "2pi/3-sqrt(3)/2",
+      "1.228",
+      "1.23",
+      "1.2284"
+    ]
+  }
+}

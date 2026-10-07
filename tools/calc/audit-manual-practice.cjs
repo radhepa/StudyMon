@@ -18,7 +18,7 @@ const NAMED = {
   alpha:'α', beta:'β', rho:'ρ', tau:'τ', epsilon:'ε', Delta:'Δ', Sigma:'Σ',
   radic:'√', sum:'Σ', int:'∫', hellip:'…', asymp:'≈', plusmn:'±', sect:'§',
   frac12:'½', frac14:'¼', sup1:'¹', sup2:'²', sup3:'³', prime:'′', Prime:'″',
-  deg:'°', perp:'⊥', parallel:'∥', lang:'⟨', rang:'⟩', ocirc:'∘', ccedil:'ç', rsquo:'’', laquo:'«'
+  deg:'°', perp:'⊥', parallel:'∥', lang:'⟨', rang:'⟩', ocirc:'ô', ccedil:'ç', rsquo:'’', laquo:'«'
 };
 
 function scriptChars(text, table) {
