@@ -3,7 +3,11 @@
    These are the faults a reader cannot see but a player runs into: an answer
    index pointing past the end of the choice list, two identical choices where
    one of them is "correct", the same question asked twice with two different
-   answers, or a chapter whose answers all sit in the same position. */
+   answers, or a chapter whose answers all sit in the same position.
+
+   It checks the banks as players get them: dump-questions.cjs runs the
+   curriculum regrouping and the curriculum-notes.js corrections too, so a
+   correction that swaps in a new choice list is checked with its real answer. */
 const { window: w } = require('./dump-questions.cjs');
 
 const all = [];
@@ -21,6 +25,39 @@ const seen = new Map();
 for (const q of all) {
   if (seen.has(q.id)) bad(q, `duplicate id, also in ${seen.get(q.id)}`);
   else seen.set(q.id, `${q.bank} ch${q.ch}`);
+}
+
+/* Text a player reads. A control character is almost always a JS escape that
+   went wrong: '\0' in a source string is a real NUL, not backslash-zero, and
+   shows up as nothing at all (*s=='' instead of *s=='\0'). Newlines and tabs
+   are fine in code. */
+const CONTROL = /[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]/;
+/* Choices are shuffled on screen, so prose must name a choice by its content,
+   never by letter or position ("option B", "both A and C", "the last option"). */
+const LETTER_REF = [
+  /\b(?:option|choice)s?\s+\(?[A-F]\)?(?![\w'])/i,
+  /\b(?:both|either|neither)\s+\(?[A-F]\)?\s+(?:and|or|nor)\s+\(?[A-F]\)?(?![\w'])/,
+  /\bthe\s+(?:first|second|third|fourth|last|previous|next)\s+(?:option|choice)s?\b/i,
+];
+function texts(q) {
+  const out = [['question', q.q], ['code', q.code], ['explanation', q.why]];
+  (q.hints || []).forEach((h, i) => out.push(['hint ' + i, h]));
+  if (q.k === 'mcq' && Array.isArray(q.c)) q.c.forEach((c, i) => out.push(['choice ' + i, c]));
+  if (q.k === 'fill' && Array.isArray(q.a)) q.a.forEach((a, i) => out.push(['accepted answer ' + i, a]));
+  return out.filter(([, s]) => s != null && s !== '');
+}
+for (const q of all) {
+  for (const [where, s] of texts(q)) {
+    const m = CONTROL.exec(String(s));
+    if (m) bad(q, `${where} contains control character U+${m[0].charCodeAt(0).toString(16).padStart(4, '0')} (write a backslash-zero for players as '\\\\0' in the source)`);
+    if (where === 'code' || where.startsWith('accepted')) continue;
+    for (const re of LETTER_REF) {
+      const hit = re.exec(String(s));
+      if (hit) { soft(q, `${where} names a choice by letter or position (${JSON.stringify(hit[0])}); choices are shuffled`); break; }
+    }
+  }
+  if (q.k === 'fill' && q.match !== undefined && q.match !== 'exact' && q.match !== 'tokens')
+    bad(q, `unknown fill match mode ${JSON.stringify(q.match)} (quiz.js knows 'exact' and 'tokens')`);
 }
 
 for (const q of all) {
@@ -57,7 +94,8 @@ for (const q of all) {
     if (!Array.isArray(q.a) || !q.a.length) bad(q, 'fill with no accepted answers');
     else {
       if (q.a.some(x => !String(x).trim())) bad(q, 'fill has an empty accepted answer');
-      const n = q.a.map(norm);
+      // 'exact' and 'tokens' matching keep case, so "1u" and "1U" are two answers there
+      const n = q.a.map(q.match ? x => String(x).trim() : norm);
       if (new Set(n).size !== n.length) soft(q, 'fill lists the same answer twice');
     }
     if (q.c) soft(q, 'fill also carries a choice list');

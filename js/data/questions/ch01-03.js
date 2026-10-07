@@ -173,7 +173,7 @@ window.QBANK[2] = [
   { id: 'c2-01', t: 1, k: 'mcq', tag: 'Recall',
     q: 'Which of these is a VALID C identifier?',
     c: [ '_count', 'my-total','2names', 'double'], a: 0,
-    why: '"2names" starts with a digit, "my-total" contains a hyphen, and "double" is a keyword. Underscore is a legal first character (though leading underscores are reserved for the system).' },
+    why: '"2names" starts with a digit, "my-total" contains a hyphen, and "double" is a keyword. Underscore is a legal first character, though many names that start with an underscore are reserved for the compiler and library, so avoid them in your own code.' },
   { id: 'c2-02', t: 1, k: 'mcq', tag: 'Recall',
     q: 'Which conversion code prints an integer with printf?',
     c: ['%c', '%d', '%f', '%s'], a: 1,
@@ -277,7 +277,7 @@ window.QBANK[2] = [
   { id: 'c2-21', t: 3, k: 'fill', tag: 'Trace',
     code: 'printf("%s", "Hello");\nprintf("%c", \'!\');',
     q: 'Exactly what characters appear on the screen?',
-    a: ['hello!', 'Hello!'],
+    a: ['Hello!'], match: 'exact',
     why: 'The two calls print back to back with no newline between them, giving Hello!' },
   { id: 'c2-22', t: 3, k: 'mcq', tag: 'Concept',
     q: 'What is wrong with: char grade = "A";',
@@ -322,7 +322,7 @@ window.QBANK[2] = [
         'char a[4] = "cat";  and  char b[4];',
         'char a = \'c\';  and  char b[] = "c";',
         'int x;  and  char y;'], a: 1,
-    why: 'Both are four chars. "cat" needs four bytes because of the terminator, so the three-element array in option A is one byte smaller and, as a string, unterminated.' }
+    why: 'Both are four chars. "cat" needs four bytes because of the terminator, so char b[3] = {\'c\',\'a\',\'t\'} is one byte smaller and, as a string, unterminated.' }
 ];
 
 window.QBANK[3] = [

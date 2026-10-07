@@ -3,17 +3,19 @@
 (function(){
 window.CURRICULUM_CORRECTIONS=[];
 var by={};Object.values(QBANK).flat().forEach(q=>by[q.id]=q);
-function fix(id,fields){if(!by[id])throw Error('Unknown question '+id);Object.assign(by[id],fields);CURRICULUM_CORRECTIONS.push(id);}
+/* A new choice list must carry its own answer index: the source's a: belongs to
+   the old list (and an answer-balancing pass may have moved it). */
+function fix(id,fields){if(!by[id])throw Error('Unknown question '+id);if(fields.c&&fields.a===undefined)throw Error('Correction for '+id+' replaces its choices without an answer index');Object.assign(by[id],fields);CURRICULUM_CORRECTIONS.push(id);}
 fix('c1-05',{why:'Preprocessing handles directives, conditional inclusion and macro expansion on preprocessing tokens before translation continues.'});
 fix('c1-55',{why:'Macro replacement happens before type checking. The expanded C expression is still checked by the compiler; a macro itself is not a typed variable.'});
-fix('c2-08',{q:'An automatic local int declared without an initializer has:',c:['A guaranteed zero value','A guaranteed NULL value','An indeterminate value that must not be read before initialization','A mandatory compile-time error'],why:'Do not treat an uninitialized int as a predictable collection of old bytes. Reading it can cause undefined behavior.'});
+fix('c2-08',{q:'An automatic local int declared without an initializer has:',c:['A guaranteed zero value','A guaranteed NULL value','An indeterminate value','A mandatory compile-time error'],a:2,why:'Give it a value before reading it. Do not treat an uninitialized int as a predictable collection of old bytes. Reading it can cause undefined behavior.'});
 fix('c2-25',{why:'A const object has a declared type and cannot be modified through that name. Macro replacement creates tokens whose resulting expressions are then type-checked.'});
-fix('c2-27',{c:['char a[4]="cat"; and char b[3]={\'c\',\'a\',\'t\'};','char a[4]="cat"; and char b[4];','char a=\'c\'; and char b[]="c";','int a[3]; and int b[4];']});
+fix('c2-27',{c:['char a[4]="cat"; and char b[3]={\'c\',\'a\',\'t\'};','char a[4]="cat"; and char b[4];','char a=\'c\'; and char b[]="c";','int a[3]; and int b[4];'],a:1});
 fix('c2-38',{q:'In the ordinary hosted C programs used in this course, which function is the entry point?',why:'Hosted C defines program startup through main. Freestanding systems, such as some embedded environments, can use an implementation-defined entry point.'});
 fix('c2-50',{code:'printf("%zu", sizeof("abc"));'});
 fix('c4-23',{why:'C passes the pointer arguments by value. Writing through those pointers stores results into the caller\'s objects.'});
 fix('c4-51',{q:'Complete the phrase: C passes every argument, including a pointer argument, by ___.',a:['value','by value','pass by value'],why:'A function receives a copy of each argument value. A copied pointer can still provide access to a caller-owned object.'});
-fix('c5-22',{c:['if (1 <= x <= 10)','if (x >= 1 && x <= 10)','if (x >= 1 || x <= 10)','if (1 < x < 10)'],why:'Use two comparisons joined by &&. In 1<=x<=10, the first comparison produces 0 or 1, which is always <=10.'});
+fix('c5-22',{c:['if (1 <= x <= 10)','if (x >= 1 && x <= 10)','if (x >= 1 || x <= 10)','if (1 < x < 10)'],a:1,why:'Use two comparisons joined by &&. In 1<=x<=10, the first comparison produces 0 or 1, which is always <=10.'});
 fix('c6-03',{q:'When designing a typical counter-controlled loop, which three components should you plan?',why:'Plan the initial state, continuation test and progress step. C also permits loops with omitted clauses or other exit mechanisms.'});
 fix('c6-20',{why:'At i=2, continue skips the body-local increment, so i stays 2. A for loop runs its iteration expression on continue, but still needs a correct progress rule.'});
 fix('c7-15',{q:'Assuming str is a writable char array, which listed call reads a bounded line, including spaces?',why:'fgets receives the array capacity and the stream. Check its return value and handle a line longer than the buffer; gets is not available in C11 and later.'});
