@@ -86,6 +86,7 @@ const SUITES=[
   ['calculus problems', 'tools/check-calc-problems.cjs'],
   ['calculus review',   'tools/check-calc-review.cjs'],
   ['question format',   'tools/check-question-format.cjs'],
+  ['play-test fixes',   'tools/check-playtest-fixes.cjs'],
   ['autograder',        'tools/check-autograder.cjs'],
   ['midterm lab cross-check', 'tools/check-midterm-labs.cjs'],
   ['lab cutscenes',     'tools/check-lab-scenes.cjs'],

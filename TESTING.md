@@ -33,6 +33,7 @@ node tools/check-maths.cjs
 | `check-evolution.cjs` | branching choices, refusal mid battle and below level, chain walking |
 | `check-autograder.cjs` | a correct submission passes and pays once, a one byte difference fails, errors and timeouts pay nothing |
 | `check-world-state.cjs` | Phase 7 world facts resolve from the save branches that own them, evaluating them never writes, discovery stamps and letter enclosures happen once through reloads, imports and junk saves |
+| `check-playtest-fixes.cjs` | glitches a play test found stay fixed: keyboard answers match the letters on screen, Enter shows the explanation, one pick per turn, the battle frames its controls above the nav dock without snapping, no ferry before a partner, Escape on a finished screen goes on to the map, imports reject unknown species and back up the game they replace |
 | `check-rumors.cjs` | rumors are deterministic and read-only until heard, reliable ones are true and reachable, biased ones read as someone's view, resolved ones retire; Kern's EXP Share arrives from the walkable town chat exactly once |
 | `check-mail.cjs` | letters arrive only when a save opens or the mailbox is opened, three at a time, never expire, enclosures are granted once, returning notes need a few days away and cost nothing |
 | `check-vignettes.cjs` | item memories never interrupt, show from the bag only for curated items, resume after a reload, and are refused mid-battle |
