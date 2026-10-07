@@ -65,7 +65,8 @@ var RADIO = {
   ambOn: false,
   amb: null,
   mix: {},
-  panelOpen: false
+  panelOpen: false,
+  resume: null
 };
 
 /* ---- settings --------------------------------------------------------------- */
@@ -809,6 +810,38 @@ function radioResetMix() {
   radioRefresh();
 }
 
+/* ---- master transport: one button for music + rain together ------------------- */
+
+function radioAnythingOn() {
+  return RADIO.musicOn || RADIO.ambOn;
+}
+
+/* Stops both at once and remembers what was playing, so the same button's
+   next press brings back exactly what it stopped rather than guessing. */
+function radioStopAll() {
+  RADIO.resume = { music: RADIO.musicOn, amb: RADIO.ambOn };
+  if (RADIO.musicOn) radioPause();
+  if (RADIO.ambOn) radioToggleAmbience();
+  radioRefresh();
+}
+
+function radioPlayAll() {
+  var resume = RADIO.resume;
+  RADIO.resume = null;
+  if (resume && (resume.music || resume.amb)) {
+    if (resume.music && !RADIO.musicOn) radioPlay();
+    if (resume.amb && !RADIO.ambOn) radioToggleAmbience();
+  } else if (!RADIO.musicOn) {
+    radioPlay();
+  }
+  radioRefresh();
+}
+
+function radioToggleAll() {
+  if (radioAnythingOn()) radioStopAll();
+  else radioPlayAll();
+}
+
 /* ---- panel ---------------------------------------------------------------------- */
 
 var RADIO_SAVE_TIMER = 0;
@@ -848,8 +881,16 @@ function radioPanelHTML() {
   var preset = radioAmbience(RADIO.ambId) || RADIO_AMBIENCES[0];
   var mix = radioMix(preset);
 
+  var anyOn = radioAnythingOn();
   return '<div class="radio-head"><h2 id="radio-title"><span aria-hidden="true">📻</span> StudyMon Radio</h2>' +
     '<button type="button" class="radio-close" onclick="radioClosePanel(true)" aria-label="Close radio">×</button></div>' +
+
+    '<div class="radio-master">' +
+      '<button type="button" class="radio-stopall' + (anyOn ? ' live' : '') + '" onclick="radioToggleAll()" ' +
+        'aria-label="' + (anyOn ? 'Stop music and rain' : 'Play') + '">' +
+        (anyOn ? '⏹ Stop All' : '▶ Play') + '</button>' +
+      '<span class="radio-master-hint">' + (anyOn ? 'Stops music and rain together' : 'Starts your radio back up') + '</span>' +
+    '</div>' +
 
     '<section class="radio-sec" aria-labelledby="radio-music-h">' +
       '<h3 id="radio-music-h">Music</h3>' +

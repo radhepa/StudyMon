@@ -33,8 +33,12 @@ function check(name, ok, detail) {
   console.log((ok ? 'PASS  ' : 'FAIL  ') + name + (detail ? '  [' + detail + ']' : ''));
 }
 
+/* Hoisted so the browser is closed however the run ends; an open headless
+   Edge keeps this process (and check-all.cjs) alive forever. */
+let browser = null;
+
 (async () => {
-  const browser = await chromium.launch({ headless: true, executablePath: 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe' });
+  browser = await chromium.launch({ headless: true, executablePath: 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe' });
   const page = await browser.newPage();
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
@@ -162,4 +166,5 @@ function check(name, ok, detail) {
   const passed = results.filter(result => result.ok).length;
   console.log(passed + '/' + results.length + ' checks passed');
   if (passed !== results.length) process.exitCode = 1;
-})().catch(error => { console.error(error); process.exitCode = 1; });
+})().catch(error => { console.error(error); process.exitCode = 1; })
+  .finally(() => browser && browser.close());

@@ -242,7 +242,8 @@ function sandboxRenderDex() {
   var type = $('#sbx-type').value;
   var number = /^\d+$/.test(query) ? parseInt(query, 10) : 0;
   var rows = DEX.filter(function (d) {
-    if (type && d.types.indexOf(type) < 0) return false;
+    if (type === 'originals') { if (!d.custom) return false; }
+    else if (type && d.types.indexOf(type) < 0) return false;
     if (!query) return true;
     if (number) return String(d.id).indexOf(String(number)) === 0;
     return d.name.indexOf(query.replace(/\s+/g, '-')) >= 0 || titleCase(d.name).toLowerCase().indexOf(query) >= 0;

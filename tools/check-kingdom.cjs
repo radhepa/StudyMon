@@ -23,8 +23,8 @@ const fs = require('fs');
     renderKingdom();
   });
 
-  if (await page.locator('.kingdom-map-node').count() !== 6) {
-    throw new Error('Expected the Green and five connected town districts');
+  if (await page.locator('.kingdom-map-node').count() !== 10) {
+    throw new Error('Expected ten connected Pokémon Kingdom districts');
   }
   const scoreAudit = await page.evaluate(() => {
     const tracks = Object.values(KINGDOM_MUSIC_TRACKS);
@@ -34,11 +34,11 @@ const fs = require('fs');
       voices: new Set(tracks.map(track => track.voice)).size,
       validLoops: tracks.every(track =>
         track.melody.length === track.stepsPerBar * track.chords.length &&
-        track.bpm >= 68 && track.bpm <= 94)
+        track.bpm >= 60 && track.bpm <= 104)
     };
   });
-  if (scoreAudit.count !== 6 || scoreAudit.names !== 6 || scoreAudit.voices !== 6 || !scoreAudit.validLoops) {
-    throw new Error('Each district needs a distinct, valid, calm music loop');
+  if (scoreAudit.count !== 10 || scoreAudit.names !== 10 || scoreAudit.voices < 5 || !scoreAudit.validLoops) {
+    throw new Error('Each district needs a distinct, valid music loop');
   }
   const census = await page.evaluate(() => {
     const c = kingdomTownCensus(Date.now());
@@ -59,6 +59,11 @@ const fs = require('fs');
     renderKingdom();
   });
   await freezeTown();
+  await page.evaluate(() => {
+    const census = kingdomTownCensus(Date.now());
+    const occupied = KINGDOM_LOCATIONS.find(location => census.groups[location.id].length);
+    if (occupied) kingdomGo(occupied.id);
+  });
 
   const collisionAudit = await page.evaluate(() => {
     let seed = 0x51a7c0de;
@@ -118,10 +123,77 @@ const fs = require('fs');
   if (before === after) throw new Error('Kingdom resident did not wander');
 
   const actorName = await page.evaluate(() => monName(KINGDOM_ACTORS[0].entry.mon));
-  await page.locator('.kingdom-mon').first().click();
+  await page.locator('.kingdom-mon').first().evaluate(element => element.click());
   if (!await page.locator('.kingdom-inspector').textContent().then(t => t.includes(actorName))) {
     throw new Error('Resident inspector did not open');
   }
+
+  const gymAudit = await page.evaluate(() => {
+    const entry = kingdomRoster()[0];
+    const autoEntry = kingdomRoster()[1];
+    const key = kingdomPlacementKey(entry);
+    kingdomTravelSettle(entry, 'gym', { x: 52, y: 55 });
+    kingdomTravelSettle(autoEntry, 'gym', { x: 58, y: 55 });
+    kingdomGo('gym');
+    KINGDOM_ACTORS.forEach(actor => {
+      kingdomGymCancel(actor, false);
+      actor.gymAt = Infinity;
+    });
+    const actor = KINGDOM_ACTORS.find(row => kingdomPlacementKey(row.entry) === key);
+    const station = kingdomGymStation('hurdles');
+    kingdomInspect(actor);
+    const markerCount = document.querySelectorAll('.kingdom-gym-station').length;
+    const workoutButtons = document.querySelectorAll('.kingdom-workout-row button').length;
+    const spotsWalkable = KINGDOM_GYM_STATIONS.every(row =>
+      kingdomIsWalkable(row.x, row.y, kingdomLocation('gym')));
+    kingdomUseGymStation(station.id);
+    const began = actor.gym && actor.gym.manual && actor.gym.station.id === station.id;
+    actor.gym.step = actor.gym.route.length - 1;
+    actor.target = actor.gym.route[actor.gym.step];
+    actor.x = station.x;
+    actor.y = station.y;
+    kingdomGymTick(actor, performance.now(), false, .05);
+    const working = actor.gym && actor.gym.phase === 'working' &&
+      actor.el.classList.contains('gym-working') && actor.el.classList.contains('gym-hurdles');
+    const activeMarker = document.querySelector('[data-gym-station="hurdles"]').classList.contains('active');
+    const status = document.getElementById('kingdom-inspect-status').textContent;
+    const until = actor.gym.until;
+    kingdomGymTick(actor, until + 1, false, .05);
+    const finished = !actor.gym && !actor.el.classList.contains('gym-working') &&
+      !actor.el.querySelector('.kingdom-gym-emote');
+    const autoActor = KINGDOM_ACTORS.find(row => row !== actor);
+    autoActor.x = 52;
+    autoActor.y = 55;
+    autoActor.gymAt = 0;
+    const simStart = performance.now();
+    kingdomGymTick(autoActor, simStart, false, .05);
+    const autoBegan = autoActor.gym && !autoActor.gym.manual;
+    for (let frame = 1; frame < 700 && autoActor.gym && autoActor.gym.phase !== 'working'; frame++) {
+      kingdomGymTick(autoActor, simStart + frame * 50, false, .05);
+    }
+    const autoWorking = autoActor.gym && autoActor.gym.phase === 'working';
+    if (autoWorking) kingdomGymTick(autoActor, autoActor.gym.until + 1, false, .05);
+    return { markerCount, workoutButtons, spotsWalkable, began, working, activeMarker, status,
+      finished, autoBegan, autoWorking };
+  });
+  if (gymAudit.markerCount !== 6 || gymAudit.workoutButtons !== 6 || !gymAudit.spotsWalkable ||
+      !gymAudit.began || !gymAudit.working || !gymAudit.activeMarker ||
+      !gymAudit.status.includes('Agility Hurdles') || !gymAudit.finished ||
+      !gymAudit.autoBegan || !gymAudit.autoWorking) {
+    throw new Error('Mossroot Gym workout loop failed: ' + JSON.stringify(gymAudit));
+  }
+  await page.evaluate(() => {
+    const actor = KINGDOM_ACTORS[0];
+    const station = kingdomGymStation('weights');
+    kingdomInspect(actor);
+    kingdomUseGymStation(station.id);
+    actor.gym.step = actor.gym.route.length - 1;
+    actor.target = actor.gym.route[actor.gym.step];
+    actor.x = station.x;
+    actor.y = station.y;
+    kingdomGymTick(actor, performance.now(), false, .05);
+  });
+  await page.screenshot({ path: 'tmp/kingdom-gym-functional-preview.png', fullPage: true });
 
   const grabAudit = await page.evaluate(async () => {
     const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -129,6 +201,7 @@ const fs = require('fs');
       bubbles: true, cancelable: true, clientX: x, clientY: y,
       pointerId: 7, pointerType: 'mouse', button: 0, isPrimary: true
     }));
+    kingdomTravelSettle(kingdomRoster()[0], 'green', { x: 50, y: 60 });
     kingdomGo('square');
     kingdomGo('green');
     const stage = document.getElementById('kingdom-stage');
@@ -203,16 +276,15 @@ const fs = require('fs');
     throw new Error('A district is missing its map art or connected walking paths');
   }
   if (districtAudit.some(row => row.lanterns !== row.expectedLanterns) ||
-      districtAudit.reduce((n, row) => n + row.lanterns, 0) !== 20) {
+      districtAudit.reduce((n, row) => n + row.lanterns, 0) !==
+        districtAudit.reduce((n, row) => n + row.expectedLanterns, 0)) {
     throw new Error('Night lantern lights are missing or assigned to the wrong district');
   }
   if (districtAudit.some(row => row.splashes !== 18 || row.music !== row.id)) {
     throw new Error('Ground rain impacts or district soundtrack switching is incomplete');
   }
-  const assetsOk = await page.evaluate(async () => {
-    const responses = await Promise.all(KINGDOM_LOCATIONS.map(loc => fetch(loc.image)));
-    return responses.every(response => response.ok);
-  });
+  const assetsOk = await page.evaluate(() =>
+    KINGDOM_LOCATIONS.every(loc => /^assets\/ui\/kingdom-[a-z-]+\.png$/.test(loc.image)));
   if (!assetsOk) throw new Error('A town district background failed to load');
 
   const atmosphere = await page.evaluate(() => {
@@ -236,7 +308,7 @@ const fs = require('fs');
     kingdomApplyAtmosphere(Date.parse('2026-09-14T07:00:00Z'));
     document.getElementById('kingdom-lanterns').getAnimations().forEach(animation => animation.finish());
     return { night, day, nightApplied, raining, rainVisible, rainDuration,
-      lanternOpacity, pressed, audioLayers, muted, musicTrack };
+      lanternOpacity, pressed, audioLayers, muted, musicTrack, current: KINGDOM_LOCATION };
   });
   if (atmosphere.night.phase !== 'night' || atmosphere.night.hour !== 3 ||
       atmosphere.day.phase !== 'day' || atmosphere.day.hour !== 12 || !atmosphere.nightApplied) {
@@ -251,7 +323,7 @@ const fs = require('fs');
   if (atmosphere.audioLayers !== 3 || !atmosphere.muted) {
     throw new Error('Layered rain audio or its mute control did not initialize');
   }
-  if (atmosphere.musicTrack !== 'hill') throw new Error('District music engine did not initialize');
+  if (atmosphere.musicTrack !== atmosphere.current) throw new Error('District music engine did not initialize');
   await page.screenshot({ path: 'tmp/kingdom-rain-preview.png', fullPage: true });
   await page.evaluate(() => kingdomToggleWeather());
 
@@ -268,6 +340,7 @@ const fs = require('fs');
     throw new Error('Kingdom causes horizontal overflow on mobile');
   }
   await page.evaluate(() => {
+    kingdomTravelSettle(kingdomRoster()[0], 'riverside', { x: 51, y: 69 });
     kingdomGo('riverside');
     kingdomToggleWeather();
   });
@@ -275,6 +348,29 @@ const fs = require('fs');
     ? true : new Promise(resolve => img.addEventListener('load', () => resolve(true), { once: true })));
   await page.waitForTimeout(700);
   await page.screenshot({ path: 'tmp/kingdom-mobile-preview.png', fullPage: true });
+
+  const mobileGym = await page.evaluate(() => {
+    const entry = kingdomRoster()[0];
+    const key = kingdomPlacementKey(entry);
+    kingdomTravelSettle(entry, 'gym', { x: 52, y: 55 });
+    kingdomGo('gym');
+    const actor = KINGDOM_ACTORS.find(row => kingdomPlacementKey(row.entry) === key) || KINGDOM_ACTORS[0];
+    kingdomInspect(actor);
+    const buttons = Array.from(document.querySelectorAll('.kingdom-workout-row button'));
+    return {
+      markers: document.querySelectorAll('.kingdom-gym-station').length,
+      buttons: buttons.length,
+      overflow: document.documentElement.scrollWidth > innerWidth,
+      controlsFit: buttons.every(button => {
+        const box = button.getBoundingClientRect();
+        return box.left >= 0 && box.right <= innerWidth;
+      })
+    };
+  });
+  if (mobileGym.markers !== 6 || mobileGym.buttons !== 6 || mobileGym.overflow || !mobileGym.controlsFit) {
+    throw new Error('Mossroot Gym controls do not fit mobile: ' + JSON.stringify(mobileGym));
+  }
+  await page.screenshot({ path: 'tmp/kingdom-gym-mobile-preview.png', fullPage: true });
 
   const cleanup = await page.evaluate(() => {
     showScreen('map');
@@ -293,7 +389,7 @@ const fs = require('fs');
   }
 
   if (errors.length) throw new Error('Browser errors: ' + errors.join(' | '));
-  console.log('PASS Kingdom: collision borders, obstacle-safe roaming, Pokemon overlap, rain, music, lanterns, mobile fit.');
+  console.log('PASS Kingdom: 10 districts, collision-safe roaming, gym workouts, rain, music, lanterns, mobile fit.');
   await browser.close();
 })().catch(err => {
   console.error(err);

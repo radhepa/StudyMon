@@ -32,6 +32,14 @@ node tools/check-maths.cjs
 | `check-progression.cjs` | catching, dex recording, experience, and reward routing to the box when the party is full |
 | `check-evolution.cjs` | branching choices, refusal mid battle and below level, chain walking |
 | `check-autograder.cjs` | a correct submission passes and pays once, a one byte difference fails, errors and timeouts pay nothing |
+| `check-world-state.cjs` | Phase 7 world facts resolve from the save branches that own them, evaluating them never writes, discovery stamps and letter enclosures happen once through reloads, imports and junk saves |
+| `check-rumors.cjs` | rumors are deterministic and read-only until heard, reliable ones are true and reachable, biased ones read as someone's view, resolved ones retire; Kern's EXP Share arrives from the walkable town chat exactly once |
+| `check-mail.cjs` | letters arrive only when a save opens or the mailbox is opened, three at a time, never expire, enclosures are granted once, returning notes need a few days away and cost nothing |
+| `check-vignettes.cjs` | item memories never interrupt, show from the bag only for curated items, resume after a reload, and are refused mid-battle |
+| `check-walkins.cjs` | walk-in scenes: one per place, nobody in two at once, thread stages in order with gaps, resume after stepping away, no friendship change, later talk reacts |
+| `check-relationship-web.cjs` | the "Who knows whom" web covers every cast bible, leader and thread edge, never names an unmet person, reveals deeper lines only once earned, and fits desktop and phone (pass a folder to save screenshots) |
+| `check-batch-chart-exchange.cjs`, `check-batch-stack-ridge.cjs` | each Phase 7 content batch end to end, plus a review of all Phase 7 text for duplicates, repeated sentences and course vocabulary |
+| `check-phase7-matrix.cjs` | competing triggers, reloads mid-scene, region travel, imports, duplicate claims, resolved rumors, hidden relationships, old saves and a late-game sweep, with desktop and phone passes over every Phase 7 surface (pass a folder to save screenshots) |
 
 ## Writing more
 
@@ -49,6 +57,20 @@ loops forever. `B.turnResolving` stays true until the next question, so it
 cannot gate the next move either. Query the buttons and click them, and skip
 disabled ones: fainted and active Pokemon are correctly disabled in the switch
 menu, and clicking them does nothing.
+
+## Side quest cutscenes on laptops
+
+`node tools/check-lab-direction.cjs --screenshots` walks every opening and ending
+with real buttons and keyboard input at 1440×900, 1366×768 and 1280×720. It checks
+dialogue and reward bounds, missing assets, replay state, Back, typewriter layout,
+focus restoration, reduced motion and hint-dependent endings. Completion fixtures
+make every ending reachable; `node tools/check-lab-scenes.cjs` separately proves a
+real graded submission pays once before the closing scene.
+
+Representative screenshots and the traversal report are saved under
+`output/lab-direction/`. `node tools/preview-lab-direction.cjs after` takes a smaller
+set of visual samples. Inspect the images for art and dialogue pacing as well as
+running the checks. Both tools use isolated browser storage.
 
 ## Portraits
 

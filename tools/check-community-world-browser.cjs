@@ -33,7 +33,7 @@ let browser;
       const scene = HUMAN_WORLD_SCENES[id];
       const firstSpawn = Object.keys(scene.spawns)[0];
       humanGo(id, firstSpawn);
-      const background = document.getElementById('human-stage').style.backgroundImage;
+      const background = document.getElementById('human-camera-world').style.backgroundImage;
       if (!background.includes(scene.image.split('/').pop())) sceneFailures.push(id + ': background');
       const expectedHomes = COMMUNITY_HOMES.filter(home => home.scene === id).length;
       const actualHomes = document.querySelectorAll('.human-home').length;

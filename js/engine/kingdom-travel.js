@@ -214,7 +214,14 @@ function kingdomTownRoute(from, to, rand) {
   while (queue.length) {
     var id = queue.shift();
     if (id === to) break;
-    var next = kingdomLocation(id).neighbors.slice().sort(function () { return rand() - .5; });
+    var next = kingdomLocation(id).neighbors.slice();
+    /* A real shuffle stays reproducible as the road graph grows. A random sort
+       comparator can consume a different number of samples for the same list,
+       which made otherwise identical town histories drift by milliseconds. */
+    for (var i = next.length - 1; i > 0; i--) {
+      var j = Math.floor(rand() * (i + 1));
+      var swap = next[i]; next[i] = next[j]; next[j] = swap;
+    }
     next.forEach(function (n) {
       if (!(n in prev)) { prev[n] = id; queue.push(n); }
     });

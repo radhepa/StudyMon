@@ -106,7 +106,7 @@ function check(name, ok, detail) {
   });
 
   check('the three original StudyMon extend the roster',
-    result.dexLength === 1031 && result.names.join(',') === 'papyrunt,codexal,lexidrake',
+    result.dexLength >= 1031 && result.names.join(',') === 'papyrunt,codexal,lexidrake',
     result.dexLength + ' / ' + result.names.join(','));
   check('the family gains Dragon on its middle evolution',
     result.types[0].join(',') === 'psychic' &&

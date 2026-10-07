@@ -86,6 +86,28 @@ function wildGuestLessons(n) {
   return guests && guests.length ? guests : null;
 }
 
+/* A revision route that wants the "ten per problem type" rule enforced (see
+   calc-questions-tenfold.js) instead of drawing on every question ever written
+   for its chapters. Keeps only questions that belong to a family - a question
+   with none is not part of the rule yet, so it is left out rather than shown
+   once - and takes the first `perType` variations of each. */
+function curatedFamilyPool(pool, perType) {
+  var byFamily = {}, order = [];
+  pool.forEach(function (q) {
+    if (!q.family) return;
+    if (!byFamily[q.family]) { byFamily[q.family] = []; order.push(q.family); }
+    byFamily[q.family].push(q);
+  });
+  var out = [];
+  order.forEach(function (fam) {
+    byFamily[fam].slice()
+      .sort(function (a, b) { return (a.variation || 0) - (b.variation || 0); })
+      .slice(0, perType)
+      .forEach(function (q) { out.push(q); });
+  });
+  return out;
+}
+
 function srsOf(qid) {
   return S.srs[qid] || null;
 }
@@ -215,9 +237,9 @@ function pickWithReviewPlan(pool, band, tier, ex, plan) {
    asked. Tier is widened if that tier is empty for the chapters in play. A
    subject with a review plan takes the exposure-first path instead, and never
    draws a retired question. */
-function pickQuestion(chapters, tier, excludeIds, guestLessons) {
+function pickQuestion(chapters, tier, excludeIds, guestLessons, poolOverride) {
   var plan = reviewPlan();
-  var pool = questionsFor(chapters, guestLessons);
+  var pool = (poolOverride && poolOverride.length) ? poolOverride : questionsFor(chapters, guestLessons);
   if (!pool.length) pool = allQuestions();
   var ex = excludeIds || {};
   if (plan) {

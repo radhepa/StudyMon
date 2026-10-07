@@ -7,13 +7,15 @@ var KINGDOM_LOCATIONS = [
     id: 'green', icon: '🌿', name: 'Kingdom Green', short: 'Green',
     image: 'assets/ui/kingdom-meadow.png',
     description: 'The wild meadow at the town gate, where forest paths meet the water.',
-    neighbors: ['square', 'riverside'],
+    neighbors: ['square', 'riverside', 'orchard', 'springs'],
     /* Town-map position, and each path out: the first point is open ground,
        the last is past the picture's edge. */
-    map: { x: 45, y: 58 },
+    map: { x: 40, y: 51 },
     gates: {
       square: [[66, 36], [70, 27], [73, 18], [76, 9], [78, -4]],
-      riverside: [[22, 57], [19, 49], [19, 42], [14, 37], [6, 36], [-6, 35]]
+      riverside: [[22, 57], [19, 49], [19, 42], [14, 37], [6, 36], [-6, 35]],
+      orchard: [[38, 85], [35, 92], [32, 108]],
+      springs: [[83, 70], [91, 68], [100, 66], [106, 65]]
     },
     walk: { x: 50, y: 63, rx: 35, ry: 21 },
     lanterns: [],
@@ -57,7 +59,7 @@ var KINGDOM_LOCATIONS = [
     image: 'assets/ui/kingdom-lantern-square.png',
     description: 'The warm town center, gathered around an old lantern tree and fountain.',
     neighbors: ['green', 'market', 'hearth'],
-    map: { x: 45, y: 20 },
+    map: { x: 38, y: 18 },
     gates: {
       green: [[50, 80], [50, 90], [49, 97], [49, 108]],
       market: [[14, 38], [8, 36], [2, 35], [-6, 35]],
@@ -110,11 +112,12 @@ var KINGDOM_LOCATIONS = [
     id: 'market', icon: '🫐', name: 'Berry Market', short: 'Market',
     image: 'assets/ui/kingdom-berry-market.png',
     description: 'A cheerful ring of berry stalls, shaded tables, and little resting nooks.',
-    neighbors: ['square', 'riverside'],
-    map: { x: 14, y: 22 },
+    neighbors: ['square', 'riverside', 'orchard'],
+    map: { x: 10, y: 18 },
     gates: {
       square: [[57, 40], [60, 33], [64, 29.5], [72, 29], [79, 28], [81, 20], [81, 9], [82, -4]],
-      riverside: [[62, 76], [68, 84], [71, 92], [72, 108]]
+      riverside: [[62, 76], [68, 84], [71, 92], [72, 108]],
+      orchard: [[30, 82], [24, 90], [18, 100], [16, 108]]
     },
     walk: { x: 50, y: 61, rx: 32, ry: 19 },
     lanterns: [
@@ -165,12 +168,13 @@ var KINGDOM_LOCATIONS = [
     id: 'riverside', icon: '🌊', name: 'Riverside Walk', short: 'River',
     image: 'assets/ui/kingdom-riverside-walk.png',
     description: 'The river promenade, footbridge, and moss-roof water-wheel workshop.',
-    neighbors: ['green', 'market', 'hill'],
-    map: { x: 22, y: 80 },
+    neighbors: ['green', 'market', 'hill', 'orchard'],
+    map: { x: 18, y: 84 },
     gates: {
       market: [[36, 42], [28, 40], [20, 35], [12, 31], [5, 28], [-6, 26]],
       green: [[89, 52], [93, 44], [93, 34], [91, 24], [89, 14], [87, 6], [86, -4]],
-      hill: [[80, 78], [88, 78], [95, 78], [106, 78]]
+      hill: [[80, 78], [88, 78], [95, 78], [106, 78]],
+      orchard: [[35, 88], [29, 95], [24, 108]]
     },
     walk: { x: 56, y: 66, rx: 32, ry: 18 },
     lanterns: [],
@@ -212,11 +216,13 @@ var KINGDOM_LOCATIONS = [
     id: 'hearth', icon: '🏡', name: 'Hearthside Lane', short: 'Hearthside',
     image: 'assets/ui/kingdom-hearthside-lane.png',
     description: 'The cottage lane, with garden fences, warm chimneys, and a shared firepit.',
-    neighbors: ['square', 'hill'],
-    map: { x: 84, y: 22 },
+    neighbors: ['square', 'hill', 'gym', 'springs'],
+    map: { x: 67, y: 18 },
     gates: {
       square: [[30, 44], [22, 48], [14, 54], [7, 59], [-6, 61]],
-      hill: [[66, 62], [68, 72], [72, 82], [79, 88], [85, 95], [87, 108]]
+      hill: [[66, 62], [68, 72], [72, 82], [79, 88], [85, 95], [87, 108]],
+      gym: [[47, 10], [47, 4], [47, -6]],
+      springs: [[92, 42], [98, 43], [106, 44]]
     },
     walk: { x: 52, y: 62, rx: 34, ry: 19 },
     lanterns: [
@@ -259,11 +265,13 @@ var KINGDOM_LOCATIONS = [
     id: 'hill', icon: '🔔', name: 'Moonbell Hill', short: 'Hill',
     image: 'assets/ui/kingdom-moonbell-hill.png',
     description: 'A quiet garden terrace above town, watched over by the little bell pavilion.',
-    neighbors: ['hearth', 'riverside'],
-    map: { x: 72, y: 80 },
+    neighbors: ['hearth', 'riverside', 'springs', 'observatory'],
+    map: { x: 50, y: 84 },
     gates: {
       riverside: [[24, 55], [16, 48], [13, 40], [9, 33], [4, 28], [-6, 26]],
-      hearth: [[76, 52], [84, 51], [92, 54], [97, 56], [106, 57]]
+      hearth: [[76, 52], [84, 51], [92, 54], [97, 56], [106, 57]],
+      springs: [[50, 85], [48, 94], [46, 108]],
+      observatory: [[70, 86], [74, 94], [76, 108]]
     },
     walk: { x: 52, y: 62, rx: 34, ry: 19 },
     lanterns: [
@@ -305,6 +313,204 @@ var KINGDOM_LOCATIONS = [
         { type: 'ellipse', name: 'southeast rocks', x: 83, y: 95, rx: 4, ry: 5 }
       ]
     }
+  },
+  {
+    id: 'gym', icon: '🏋️', name: 'Mossroot Gym', short: 'Gym',
+    image: 'assets/ui/kingdom-mossroot-gym.png',
+    description: 'An open-air training yard with climbing walls, agility lanes, and stone weights.',
+    neighbors: ['hearth', 'springs'],
+    map: { x: 90, y: 32 },
+    gates: {
+      hearth: [[10, 32], [4, 32], [-6, 32]],
+      springs: [[31, 82], [28, 91], [25, 100], [23, 108]]
+    },
+    walk: { x: 52, y: 53, rx: 33, ry: 21 },
+    lanterns: [
+      { x: 35.0, y: 17.5 }, { x: 84.8, y: 26.0 },
+      { x: 10.0, y: 75.0 }, { x: 95.0, y: 49.0 }
+    ],
+    nav: {
+      home: [52, 55],
+      areas: [
+        [[0, 27], [11, 27], [13, 22], [24, 22], [28, 27], [43, 27], [47, 23],
+          [68, 23], [72, 28], [80, 28], [84, 23], [95, 23], [95, 27], [100, 27],
+          [100, 78], [94, 82], [88, 89], [79, 100], [61, 100], [54, 94], [38, 94],
+          [31, 100], [18, 100], [14, 93], [8, 88], [0, 85]]
+      ],
+      blocks: [
+        { type: 'poly', name: 'climbing wall', points: [[10, 4], [29, 4], [35, 12], [33, 31],
+          [27, 37], [16, 34], [10, 27]] },
+        { type: 'rect', name: 'training pavilion', x1: 35, y1: 0, x2: 72, y2: 26 },
+        { type: 'rect', name: 'rope wall', x1: 77, y1: 2, x2: 94, y2: 29 },
+        { type: 'poly', name: 'rings and balance logs', points: [[12, 37], [27, 37], [31, 46],
+          [31, 66], [22, 70], [11, 62]] },
+        { type: 'rect', name: 'agility hurdles', x1: 69, y1: 31, x2: 88, y2: 48 },
+        { type: 'rect', name: 'training dummies', x1: 75, y1: 49, x2: 91, y2: 68 },
+        { type: 'poly', name: 'stone weights', points: [[38, 68], [66, 66], [74, 76],
+          [72, 91], [60, 94], [39, 90], [34, 80]] },
+        { type: 'ellipse', name: 'southwest boulders', x: 21, y: 91, rx: 8, ry: 7 },
+        { type: 'ellipse', name: 'southeast boulders', x: 87, y: 88, rx: 8, ry: 8 }
+      ]
+    }
+  },
+  {
+    id: 'orchard', icon: '🍎', name: 'Honeywind Orchard', short: 'Orchard',
+    image: 'assets/ui/kingdom-honeywind-orchard.png',
+    description: 'A breezy working orchard of berry trees, beehives, and a mossy windmill.',
+    neighbors: ['market', 'green', 'riverside'],
+    map: { x: 12, y: 53 },
+    gates: {
+      market: [[40, 20], [43, 12], [47, 5], [49, -6]],
+      green: [[93, 35], [100, 35], [106, 35]],
+      riverside: [[40, 84], [40, 94], [40, 108]]
+    },
+    walk: { x: 55, y: 58, rx: 34, ry: 22 },
+    lanterns: [{ x: 51.1, y: 18.8 }],
+    nav: {
+      home: [55, 60],
+      areas: [
+        [[0, 34], [8, 34], [11, 26], [28, 26], [31, 20], [37, 20], [37, 0],
+          [58, 0], [58, 20], [74, 20], [78, 26], [93, 26], [100, 29], [100, 90],
+          [93, 90], [88, 100], [70, 100], [65, 92], [36, 92], [29, 100], [10, 100],
+          [10, 91], [4, 85], [0, 84]]
+      ],
+      bridges: [
+        [[8, 43], [20, 43], [23, 49], [20, 56], [8, 56], [6, 49]]
+      ],
+      blocks: [
+        { type: 'poly', name: 'windmill', points: [[5, 0], [35, 0], [36, 20], [30, 30],
+          [15, 30], [7, 24]] },
+        { type: 'poly', name: 'north orchard', points: [[58, 0], [100, 0], [100, 25],
+          [88, 28], [76, 22], [62, 25]] },
+        { type: 'rect', name: 'cider press', x1: 74, y1: 9, x2: 95, y2: 32 },
+        { type: 'ellipse', name: 'center berry tree', x: 56, y: 24, rx: 12, ry: 11 },
+        { type: 'rect', name: 'beehives', x1: 78, y1: 40, x2: 94, y2: 59 },
+        { type: 'poly', name: 'southwest orchard', points: [[5, 55], [29, 54], [38, 67],
+          [38, 91], [28, 100], [5, 100]] },
+        { type: 'poly', name: 'southeast orchard', points: [[89, 57], [100, 55], [100, 100],
+          [87, 100], [84, 86]] },
+        { type: 'poly', name: 'irrigation rill', points: [[0, 25], [10, 28], [14, 37],
+          [11, 46], [13, 58], [9, 67], [0, 70]] },
+        { type: 'ellipse', name: 'south boulder', x: 69, y: 90, rx: 6, ry: 6 }
+      ]
+    }
+  },
+  {
+    id: 'springs', icon: '♨️', name: 'Emberstone Springs', short: 'Springs',
+    image: 'assets/ui/kingdom-emberstone-springs.png',
+    description: 'A warm mineral-spring garden with quiet pools, steam, and a firelit rest circle.',
+    neighbors: ['green', 'hearth', 'gym', 'hill', 'observatory'],
+    map: { x: 68, y: 52 },
+    gates: {
+      green: [[10, 70], [3, 70], [-6, 70]],
+      hearth: [[14, 16], [14, 7], [14, -6]],
+      gym: [[94, 72], [100, 70], [106, 70]],
+      hill: [[42, 84], [39, 94], [36, 108]],
+      observatory: [[72, 84], [78, 94], [82, 108]]
+    },
+    walk: { x: 58, y: 66, rx: 32, ry: 21 },
+    lanterns: [
+      { x: 10.0, y: 16.0 }, { x: 39.8, y: 14.7 }, { x: 55.0, y: 38.0 },
+      { x: 93.0, y: 51.0 }, { x: 88.0, y: 78.0 }
+    ],
+    nav: {
+      home: [58, 68],
+      areas: [
+        [[12, 0], [22, 0], [22, 34], [37, 34], [43, 31], [62, 31], [68, 35],
+          [80, 36], [88, 30], [100, 28], [100, 78], [93, 80], [84, 87], [82, 100],
+          [68, 100], [64, 92], [45, 92], [40, 100], [30, 100], [28, 92], [17, 88],
+          [10, 82], [0, 80], [0, 63], [10, 62], [12, 52], [23, 46], [25, 35], [12, 35]]
+      ],
+      bridges: [
+        [[12, 0], [17, 0], [18, 28], [28, 34], [28, 39], [18, 38], [12, 35]]
+      ],
+      blocks: [
+        { type: 'rect', name: 'rest pavilion', x1: 16, y1: 0, x2: 47, y2: 26 },
+        { type: 'poly', name: 'upper spring', points: [[57, 0], [90, 0], [94, 20], [88, 33],
+          [64, 34], [56, 24]] },
+        { type: 'poly', name: 'west spring', points: [[0, 24], [19, 24], [25, 35], [22, 51],
+          [12, 57], [0, 54]] },
+        { type: 'poly', name: 'east spring', points: [[85, 34], [100, 31], [100, 66],
+          [91, 67], [82, 55]] },
+        { type: 'ellipse', name: 'fire circle', x: 49, y: 43, rx: 9, ry: 8 },
+        { type: 'ellipse', name: 'west garden rock', x: 26, y: 56, rx: 4, ry: 5 },
+        { type: 'ellipse', name: 'east garden rock', x: 76, y: 57, rx: 5, ry: 6 },
+        { type: 'ellipse', name: 'southwest boulder', x: 18, y: 88, rx: 7, ry: 7 },
+        { type: 'ellipse', name: 'south boulder', x: 68, y: 91, rx: 7, ry: 7 }
+      ]
+    }
+  },
+  {
+    id: 'observatory', icon: '🔭', name: 'Starglass Observatory', short: 'Star',
+    image: 'assets/ui/kingdom-starglass-observatory.png',
+    description: 'A high astronomy terrace of brass telescopes, starflowers, and reflecting water.',
+    neighbors: ['hill', 'springs'],
+    map: { x: 82, y: 84 },
+    gates: {
+      hill: [[18, 68], [8, 68], [-6, 68]],
+      springs: [[94, 30], [98, 20], [99, 10], [99, -6]]
+    },
+    walk: { x: 51, y: 63, rx: 34, ry: 21 },
+    lanterns: [
+      { x: 23.0, y: 12.0 }, { x: 49.0, y: 13.0 }, { x: 61.0, y: 30.0 },
+      { x: 93.0, y: 16.0 }, { x: 94.0, y: 48.0 }, { x: 76.0, y: 78.0 }
+    ],
+    nav: {
+      home: [51, 64],
+      areas: [
+        [[0, 47], [12, 45], [18, 38], [28, 34], [40, 32], [60, 32], [70, 35],
+          [82, 30], [90, 24], [100, 24], [100, 58], [92, 62], [88, 78], [82, 84],
+          [80, 100], [67, 100], [63, 92], [30, 92], [24, 86], [18, 76], [8, 72], [0, 72]]
+      ],
+      blocks: [
+        { type: 'poly', name: 'observatory', points: [[19, 0], [49, 0], [50, 23], [44, 34],
+          [26, 34], [18, 24]] },
+        { type: 'rect', name: 'viewing deck', x1: 50, y1: 0, x2: 70, y2: 27 },
+        { type: 'poly', name: 'crescent pool', points: [[66, 15], [88, 13], [91, 28], [87, 43],
+          [72, 45], [63, 36]] },
+        { type: 'ellipse', name: 'west flower terrace', x: 28, y: 35, rx: 9, ry: 7 },
+        { type: 'ellipse', name: 'east flower terrace', x: 78, y: 40, rx: 7, ry: 7 },
+        { type: 'ellipse', name: 'southwest rocks', x: 13, y: 73, rx: 7, ry: 7 },
+        { type: 'ellipse', name: 'southeast rocks', x: 84, y: 78, rx: 7, ry: 7 }
+      ]
+    }
+  }
+];
+
+/* Mossroot Gym is recreation, not a hidden stat system. Residents choose these
+   stations on their own, or the player can direct an inspected Pokemon. The
+   approach point is walkable ground beside the equipment; the marker sits on
+   the painted prop itself. */
+var KINGDOM_GYM_STATIONS = [
+  {
+    id: 'climb', icon: '🧗', name: 'Climbing Wall', short: 'Climb', motion: 'climb',
+    x: 37, y: 39, markerX: 24, markerY: 18,
+    action: 'scaling the climbing wall', finish: 'reaches the top and hops down proudly'
+  },
+  {
+    id: 'bags', icon: '🥊', name: 'Hanging Bags', short: 'Bags', motion: 'bags',
+    x: 52, y: 30, markerX: 53, markerY: 18,
+    action: 'working the hanging bags', finish: 'finishes a sharp set on the bags'
+  },
+  {
+    id: 'balance', icon: '🪵', name: 'Balance Logs', short: 'Balance', motion: 'balance',
+    x: 34, y: 56, markerX: 22, markerY: 53,
+    action: 'practicing careful balance', finish: 'sticks the landing on the balance logs'
+  },
+  {
+    id: 'hurdles', icon: '⚡', name: 'Agility Hurdles', short: 'Hurdles', motion: 'hurdles',
+    x: 65, y: 42, markerX: 79, markerY: 38,
+    action: 'running the agility hurdles', finish: 'clears the last hurdle cleanly'
+  },
+  {
+    id: 'spar', icon: '🎯', name: 'Training Dummies', short: 'Spar', motion: 'spar',
+    x: 71, y: 58, markerX: 83, markerY: 57,
+    action: 'sparring with the training dummies', finish: 'lands one last precise strike'
+  },
+  {
+    id: 'weights', icon: '🏋️', name: 'Stone Weights', short: 'Weights', motion: 'weights',
+    x: 55, y: 63, markerX: 55, markerY: 80,
+    action: 'lifting the stone weights', finish: 'sets the weights down with a satisfied thump'
   }
 ];
 
@@ -358,6 +564,34 @@ var KINGDOM_MUSIC_TRACKS = {
     melody: kingdomMusicPattern(
       '0 . . 3 . 4 . . | 6 . 4 . 2 . . . | 1 . 3 . 5 . 3 . | 2 . . 1 . 0 . . | ' +
       '0 . 2 . 4 . 7 . | 6 . . 5 . 3 . . | 4 . 2 . 3 . 1 . | 0 . . . 2 . 0 .')
+  },
+  gym: {
+    name: 'Rootbound Rhythm', bpm: 104, root: 69, stepsPerBar: 8,
+    scale: [0, 2, 3, 5, 7, 8, 10], chords: [0, 4, 0, 5, 3, 4, 5, 0], voice: 'pluck',
+    melody: kingdomMusicPattern(
+      '0 0 2 . 3 2 4 . | 5 . 4 3 . 2 0 . | 0 2 3 5 . 3 2 . | 4 . 5 4 2 . 1 . | ' +
+      '0 2 4 . 5 4 3 . | 2 . 3 5 . 4 2 . | 1 3 4 6 . 4 3 . | 2 1 0 . 2 . 0 .')
+  },
+  orchard: {
+    name: 'Honeywind Harvest', bpm: 88, root: 74, stepsPerBar: 8,
+    scale: [0, 2, 4, 5, 7, 9, 10], chords: [0, 3, 5, 4, 1, 3, 4, 0], voice: 'flute',
+    melody: kingdomMusicPattern(
+      '0 . 2 4 . 2 1 . | 0 2 . 3 5 . 3 . | 4 . 5 7 . 5 4 . | 3 2 . 1 . 2 0 . | ' +
+      '0 . 2 4 5 . 4 . | 3 . 5 6 . 4 2 . | 1 3 . 4 2 . 1 . | 0 . 2 . 1 . 0 .')
+  },
+  springs: {
+    name: 'Emberwater Rest', bpm: 64, root: 67, stepsPerBar: 8,
+    scale: [0, 2, 3, 5, 7, 9, 10], chords: [0, 3, 5, 4, 0, 1, 3, 0], voice: 'glass',
+    melody: kingdomMusicPattern(
+      '0 . . 2 . . 3 . | 5 . . 4 . 2 . . | 1 . 3 . 5 . 4 . | 2 . . 1 . 0 . . | ' +
+      '0 . 2 . 4 . 5 . | 6 . . 4 . 3 . . | 2 . 4 . 3 . 1 . | 0 . . 2 . 0 . .')
+  },
+  observatory: {
+    name: 'Starglass Nocturne', bpm: 60, root: 72, stepsPerBar: 8,
+    scale: [0, 2, 4, 6, 7, 9, 11], chords: [0, 5, 3, 1, 4, 3, 5, 0], voice: 'chime',
+    melody: kingdomMusicPattern(
+      '0 . . 4 . . 6 . | 7 . . 6 . 4 . . | 2 . 5 . 4 . 2 . | 1 . . 3 . 0 . . | ' +
+      '0 . 2 . 6 . 7 . | 9 . . 7 . 6 . . | 5 . 3 . 4 . 2 . | 1 . . 2 . 0 . .')
   }
 };
 
@@ -614,6 +848,20 @@ function kingdomWeatherHtml(location) {
   return h + '</div></div>';
 }
 
+function kingdomGymStationsHtml(location) {
+  if (location.id !== 'gym') return '';
+  var h = '<div id="kingdom-gym-stations" class="kingdom-gym-stations" aria-label="Workout stations">';
+  KINGDOM_GYM_STATIONS.forEach(function (station) {
+    var mobileX = station.markerX * 2.222222 - 61.111111;
+    h += '<button type="button" class="kingdom-gym-station" data-gym-station="' + station.id +
+      '" style="--x:' + station.markerX + '%;--mx:' + mobileX.toFixed(2) + '%;--y:' + station.markerY +
+      '%" onclick="event.stopPropagation();kingdomUseGymStation(\'' + station.id + '\')"' +
+      ' aria-label="Use ' + esc(station.name) + '" title="' + esc(station.name) + '">' +
+      '<span aria-hidden="true">' + station.icon + '</span><small>' + esc(station.short) + '</small></button>';
+  });
+  return h + '</div>';
+}
+
 function renderKingdom() {
   var root = $('#s-kingdom');
   if (!root || !S) return;
@@ -642,7 +890,9 @@ function renderKingdom() {
       ' Pokémon residents">' +
       '<div class="kingdom-bar"><span id="kingdom-glade" class="kingdom-glade">' + location.icon + ' ' +
       here + ' here</span><span id="kingdom-story" class="kingdom-story" aria-live="polite">' +
-      'This corner of town is peaceful.</span></div>' +
+      (location.id === 'gym' ? 'Choose a Pokémon, then tap a workout station.' :
+        'This corner of town is peaceful.') + '</span></div>' +
+      kingdomGymStationsHtml(location) +
       '<div id="kingdom-daylight" class="kingdom-daylight" aria-hidden="true"></div>' +
       kingdomLanternHtml(location) +
       kingdomWeatherHtml(location) +
@@ -804,12 +1054,14 @@ function kingdomSync(initial) {
   if (clock) clock.textContent = kingdomClockText(now);
   kingdomDrawMapWalkers(census, now);
   kingdomRefreshInspector();
+  kingdomRefreshGymStations();
 }
 
 /* Sets an actor walking one leg, exactly as its itinerary has it. A leave leg
    starts from where the Pokemon was standing (leg.at), so walking off on
    screen and being redrawn later give the same position at the same moment. */
 function kingdomStartTrip(actor, where) {
+  kingdomGymCancel(actor, false);
   var leg = where.leg;
   var trip = { kind: leg.kind, from: leg.from, to: leg.to, leg: leg };
   trip.points = kingdomSceneRoute(leg.loc, leg.from, leg.to, leg.at);
@@ -918,7 +1170,8 @@ function kingdomAddActor(entry, position, location, salt) {
   var actor = {
     entry: entry, key: kingdomPlacementKey(entry), el: button, rand: rand, location: location,
     x: point.x, y: point.y, target: kingdomPoint(rand, location), trip: null,
-    speed: 2.7 + rand() * 2.6, pauseUntil: 0, nextTurn: 0
+    speed: 2.7 + rand() * 2.6, pauseUntil: 0, nextTurn: 0, gym: null,
+    gymAt: location.id === 'gym' ? performance.now() + 900 + rand() * 4200 : Infinity
   };
   button.onclick = function () { kingdomInspect(actor); };
   stage.appendChild(button);
@@ -945,6 +1198,7 @@ function kingdomTick(now) {
       if (!kingdomTripStep(a, clock)) kingdomFinishTrip(a);
       continue;
     }
+    if (kingdomGymTick(a, now, still, dt)) continue;
     if (still || now < a.pauseUntil) {
       a.el.classList.remove('walking');
       kingdomPaint(a);
@@ -994,11 +1248,11 @@ function kingdomFindFriends(now) {
   var start = Math.floor(Math.random() * KINGDOM_ACTORS.length);
   for (var offset = 0; offset < KINGDOM_ACTORS.length; offset++) {
     var a = KINGDOM_ACTORS[(start + offset) % KINGDOM_ACTORS.length];
-    if (now < a.pauseUntil || a.trip) continue;
+    if (now < a.pauseUntil || a.trip || a.gym) continue;
     var best = null, bestD = 999;
     for (var j = 0; j < KINGDOM_ACTORS.length; j++) {
       var b = KINGDOM_ACTORS[j];
-      if (a === b || now < b.pauseUntil || b.trip) continue;
+      if (a === b || now < b.pauseUntil || b.trip || b.gym) continue;
       var dx = a.x - b.x, dy = a.y - b.y;
       var d = dx * dx + dy * dy;
       if (d < bestD) { bestD = d; best = b; }
@@ -1033,8 +1287,223 @@ function kingdomSocial(a, b, now) {
   kingdomSay(monName(a.entry.mon) + ' and ' + monName(b.entry.mon) + moment.line, 'chatter');
 }
 
+function kingdomGymStation(id) {
+  for (var i = 0; i < KINGDOM_GYM_STATIONS.length; i++) {
+    if (KINGDOM_GYM_STATIONS[i].id === id) return KINGDOM_GYM_STATIONS[i];
+  }
+  return null;
+}
+
+function kingdomGymOccupant(stationId, except) {
+  for (var i = 0; i < KINGDOM_ACTORS.length; i++) {
+    var actor = KINGDOM_ACTORS[i];
+    if (actor !== except && actor.gym && actor.gym.station.id === stationId) return actor;
+  }
+  return null;
+}
+
+function kingdomGymStateKey(actor) {
+  return actor && actor.gym ? actor.gym.phase + ':' + actor.gym.station.id : 'idle';
+}
+
+function kingdomGymClearVisual(actor) {
+  if (!actor || !actor.el) return;
+  actor.el.classList.remove('gym-working', 'gym-climb', 'gym-bags', 'gym-balance',
+    'gym-hurdles', 'gym-spar', 'gym-weights');
+  var emote = actor.el.querySelector('.kingdom-emote');
+  if (emote) emote.remove();
+}
+
+function kingdomGymEmote(actor, text) {
+  var old = actor.el.querySelector('.kingdom-emote');
+  if (old) old.remove();
+  var emote = document.createElement('span');
+  emote.className = 'kingdom-emote kingdom-gym-emote';
+  emote.textContent = text;
+  actor.el.appendChild(emote);
+}
+
+function kingdomRefreshGymStations() {
+  $$('.kingdom-gym-station').forEach(function (button) {
+    var station = kingdomGymStation(button.getAttribute('data-gym-station'));
+    var occupant = station && kingdomGymOccupant(station.id, null);
+    var working = !!(occupant && occupant.gym.phase === 'working');
+    var selected = occupant && occupant === KINGDOM_INSPECTED;
+    button.classList.toggle('busy', !!occupant);
+    button.classList.toggle('active', working);
+    button.classList.toggle('selected', !!selected);
+    button.setAttribute('aria-disabled', String(!!occupant && !selected));
+    button.title = occupant ? station.name + ' — ' + monName(occupant.entry.mon) +
+      (working ? ' is working out' : ' is on the way') : station.name;
+  });
+}
+
+function kingdomGymCancel(actor, cooldown) {
+  if (!actor) return;
+  kingdomGymClearVisual(actor);
+  actor.gym = null;
+  if (actor.location && actor.location.id === 'gym') {
+    actor.gymAt = cooldown === false ? Infinity : performance.now() + 9000 + actor.rand() * 9000;
+  } else {
+    actor.gymAt = Infinity;
+  }
+  kingdomRefreshGymStations();
+  kingdomRefreshInspector();
+}
+
+function kingdomGymBegin(actor, stationId, manual) {
+  var station = kingdomGymStation(stationId);
+  if (!actor || !station || actor.trip || actor.location.id !== 'gym') return false;
+  var occupant = kingdomGymOccupant(station.id, actor);
+  if (occupant) return false;
+  if (actor.gym && actor.gym.station.id === station.id) return true;
+
+  kingdomGymClearVisual(actor);
+  var dx = actor.x - station.x, dy = actor.y - station.y;
+  var route = Math.sqrt(dx * dx + dy * dy) < 18 ? [] :
+    [{ x: actor.location.nav.home[0], y: actor.location.nav.home[1] }];
+  route.push({ x: station.x, y: station.y });
+  actor.gym = {
+    station: station, phase: 'approach', manual: !!manual,
+    route: route, step: 0, startedAt: performance.now(), blocked: 0
+  };
+  actor.target = route[0];
+  actor.pauseUntil = 0;
+  actor.nextTurn = Infinity;
+  actor.el.classList.add('walking');
+  kingdomSay(monName(actor.entry.mon) + ' is heading to the ' + station.name + '.',
+    manual ? 'news' : 'chatter');
+  kingdomRefreshGymStations();
+  kingdomRefreshInspector();
+  return true;
+}
+
+function kingdomGymStartWorkout(actor, now) {
+  var gym = actor.gym;
+  if (!gym) return;
+  gym.phase = 'working';
+  gym.until = now + (gym.manual ? 6800 : 5000 + actor.rand() * 3600);
+  actor.pauseUntil = gym.until;
+  actor.el.classList.remove('walking', 'greeting');
+  actor.el.classList.add('gym-working', 'gym-' + gym.station.motion);
+  kingdomGymEmote(actor, gym.station.icon);
+  kingdomSay(monName(actor.entry.mon) + ' is ' + gym.station.action + '!', gym.manual ? 'news' : 'chatter');
+  kingdomRefreshGymStations();
+  kingdomRefreshInspector();
+}
+
+function kingdomGymFinish(actor, now) {
+  var gym = actor.gym;
+  if (!gym) return;
+  var message = monName(actor.entry.mon) + ' ' + gym.station.finish + '.';
+  kingdomGymClearVisual(actor);
+  actor.gym = null;
+  actor.gymAt = now + 11000 + actor.rand() * 12000;
+  actor.pauseUntil = now + 900;
+  actor.target = kingdomPoint(actor.rand, actor.location);
+  actor.nextTurn = now + 4000;
+  kingdomSay(message, gym.manual ? 'news' : 'chatter');
+  kingdomRefreshGymStations();
+  kingdomRefreshInspector();
+}
+
+/* Returns true while this frame belongs to a gym approach or workout. */
+function kingdomGymTick(actor, now, still, dt) {
+  if (actor.location.id !== 'gym') return false;
+  dt = typeof dt === 'number' ? dt : .05;
+  if (!actor.gym && now >= actor.gymAt) {
+    var free = KINGDOM_GYM_STATIONS.filter(function (station) {
+      return !kingdomGymOccupant(station.id, actor);
+    });
+    if (free.length) {
+      kingdomGymBegin(actor, free[Math.floor(actor.rand() * free.length)].id, false);
+    } else {
+      actor.gymAt = now + 2200 + actor.rand() * 1800;
+    }
+  }
+  var gym = actor.gym;
+  if (!gym) return false;
+  if (gym.phase === 'working') {
+    if (now >= gym.until) kingdomGymFinish(actor, now);
+    else {
+      actor.el.classList.remove('walking');
+      kingdomPaint(actor);
+      return true;
+    }
+    return false;
+  }
+
+  var target = gym.route[gym.step];
+  var dx = target.x - actor.x, dy = target.y - actor.y;
+  var dist = Math.sqrt(dx * dx + dy * dy);
+  if (dist < .8 || still) {
+    actor.x = target.x;
+    actor.y = target.y;
+    gym.step++;
+    if (gym.step >= gym.route.length) {
+      kingdomPaint(actor);
+      kingdomGymStartWorkout(actor, now);
+      return true;
+    }
+    actor.target = gym.route[gym.step];
+    kingdomPaint(actor);
+    return true;
+  }
+
+  actor.el.classList.add('walking');
+  var move = Math.min(dist, actor.speed * dt);
+  var moved = kingdomTryStep(actor, actor.x + dx / dist * move, actor.y + dy / dist * move);
+  if (moved) {
+    gym.blocked = 0;
+    if (Math.abs(dx) > .15) actor.el.style.setProperty('--face', dx < 0 ? '-1' : '1');
+  } else {
+    gym.blocked++;
+    /* Equipment can sit between a resident and the central lane. A short
+       sidestep gives the ordinary collision system another clean approach. */
+    if (gym.blocked > 18) {
+      var sidestep = kingdomPoint(actor.rand, actor.location);
+      gym.route.splice(gym.step, 0, sidestep);
+      gym.blocked = 0;
+      actor.target = sidestep;
+    }
+  }
+  kingdomPaint(actor);
+  return true;
+}
+
+function kingdomUseGymStation(stationId) {
+  var station = kingdomGymStation(stationId);
+  var actor = KINGDOM_INSPECTED;
+  if (!station || KINGDOM_LOCATION !== 'gym') return;
+  if (!actor || KINGDOM_ACTORS.indexOf(actor) < 0 || actor.location.id !== 'gym') {
+    kingdomSay('Choose a Pokémon in the gym first, then pick a workout station.');
+    toast('Choose a Pokémon in Mossroot Gym first.');
+    return;
+  }
+  if (actor.trip || KINGDOM_CARRY) return;
+  var occupant = kingdomGymOccupant(station.id, actor);
+  if (occupant) {
+    var busy = monName(occupant.entry.mon) + ' is using the ' + station.name + ' right now.';
+    kingdomSay(busy);
+    toast(busy);
+    return;
+  }
+  if (actor.gym && actor.gym.station.id === station.id) {
+    toast(monName(actor.entry.mon) + ' is already using the ' + station.name + '.');
+    return;
+  }
+  if (kingdomGymBegin(actor, station.id, true)) {
+    toast(monName(actor.entry.mon) + ' is heading to the ' + station.name + '.');
+  }
+}
+
 /* What a Pokemon is up to, in words, for the inspector. */
 function kingdomTravelLine(actor) {
+  if (actor.gym) {
+    return actor.gym.phase === 'working' ?
+      'Working out at the ' + actor.gym.station.name + ': ' + actor.gym.station.action + '.' :
+      'Heading to the ' + actor.gym.station.name + ' for a workout.';
+  }
   var st = actor.entry.state;
   var now = Date.now();
   if (!st) return 'Spending time in ' + actor.location.name + '.';
@@ -1051,12 +1520,14 @@ function kingdomTravelLine(actor) {
 function kingdomInspect(actor) {
   KINGDOM_INSPECTED = actor;
   KINGDOM_ACTORS.forEach(function (a) { a.el.classList.toggle('selected', a === actor); });
-  if (!actor.trip) {
+  if (!actor.trip && (!actor.gym || actor.gym.phase !== 'working')) {
     actor.pauseUntil = performance.now() + 3200;
     actor.el.classList.remove('walking');
   }
-  actor.el.classList.add('greeting');
-  setTimeout(function () { if (actor.el) actor.el.classList.remove('greeting'); }, 850);
+  if (!actor.gym || actor.gym.phase !== 'working') {
+    actor.el.classList.add('greeting');
+    setTimeout(function () { if (actor.el) actor.el.classList.remove('greeting'); }, 850);
+  }
   playCry(actor.entry.mon.id);
   var m = actor.entry.mon, d = dexOf(m.id);
   var home = actor.entry.where === 'party' ? 'Traveling in your party' : 'Living in the PC';
@@ -1067,9 +1538,13 @@ function kingdomInspect(actor) {
     '<div><h3>' + esc(monName(m)) + (m.shiny ? ' ✦' : '') + '</h3><div>' + typePills(d.types) + '</div>' +
     '<p>Level ' + m.lvl + ' · ' + esc(d.genus) + ' · ' + home + '<br><span id="kingdom-inspect-status">' +
     esc(kingdomTravelLine(actor)) + '</span></p><div id="kingdom-inspect-moves" data-travelling="' +
-    travelling + '">' + kingdomMoveButtonsHtml(actor, travelling) + '</div></div>' +
+    travelling + '" data-gym="' + kingdomGymStateKey(actor) + '">' +
+    kingdomMoveButtonsHtml(actor, travelling) + '</div></div>' +
     '<button class="kingdom-close" onclick="kingdomClearInspect()" aria-label="Close Pokémon details">×</button>';
-  kingdomSay(monName(m) + (actor.trip ? ' waved on its way past!' : ' came over to say hello!'));
+  kingdomRefreshGymStations();
+  kingdomSay(actor.gym && actor.gym.phase === 'working' ?
+    monName(m) + ' is ' + actor.gym.station.action + '!' :
+    monName(m) + (actor.trip ? ' waved on its way past!' : ' came over to say hello!'));
 }
 
 function kingdomRefreshInspector() {
@@ -1079,8 +1554,11 @@ function kingdomRefreshInspector() {
   status.textContent = kingdomTravelLine(actor);
   var moves = $('#kingdom-inspect-moves');
   var travelling = !!(actor.entry.state && actor.entry.state.trip);
-  if (moves && moves.getAttribute('data-travelling') !== String(travelling)) {
+  var gymKey = kingdomGymStateKey(actor);
+  if (moves && (moves.getAttribute('data-travelling') !== String(travelling) ||
+      moves.getAttribute('data-gym') !== gymKey)) {
     moves.setAttribute('data-travelling', String(travelling));
+    moves.setAttribute('data-gym', gymKey);
     moves.innerHTML = kingdomMoveButtonsHtml(actor, travelling);
   }
 }
@@ -1093,7 +1571,20 @@ function kingdomMoveButtonsHtml(actor, travelling) {
     h += '<button type="button" onclick="kingdomMoveInspected(\'' + loc.id + '\')">' +
       loc.icon + ' ' + esc(loc.short) + '</button>';
   });
-  return h + '</div>';
+  h += '</div>';
+  if (actor.location.id === 'gym') {
+    h += '<div class="kingdom-move-row kingdom-workout-row"><span>Work out</span>';
+    KINGDOM_GYM_STATIONS.forEach(function (station) {
+      var occupant = kingdomGymOccupant(station.id, actor);
+      var current = actor.gym && actor.gym.station.id === station.id;
+      h += '<button type="button" onclick="kingdomUseGymStation(\'' + station.id + '\')"' +
+        (occupant ? ' disabled title="' + esc(monName(occupant.entry.mon)) + ' is using this station"' : '') +
+        (current ? ' class="active" aria-pressed="true"' : '') + '>' + station.icon + ' ' +
+        esc(station.short) + '</button>';
+    });
+    h += '</div>';
+  }
+  return h;
 }
 
 /* Button alternative to carrying: the Pokemon sets off on foot, right now. */
@@ -1102,12 +1593,14 @@ function kingdomMoveInspected(locationId) {
   if (!actor || KINGDOM_ACTORS.indexOf(actor) < 0 || KINGDOM_CARRY || actor.trip) return;
   var target = kingdomLocation(locationId);
   if (!kingdomTravelSend(actor.entry, target.id, [actor.x, actor.y])) return;
+  kingdomGymCancel(actor, false);
   actor.pauseUntil = 0;
   kingdomSync();
   toast(monName(actor.entry.mon) + ' is walking to ' + target.name + '.');
 }
 
 function kingdomRemoveActor(actor, keepElement) {
+  kingdomGymCancel(actor, false);
   var i = KINGDOM_ACTORS.indexOf(actor);
   if (i >= 0) KINGDOM_ACTORS.splice(i, 1);
   if (!keepElement && actor.el && actor.el.parentNode) actor.el.remove();
@@ -1121,6 +1614,7 @@ function kingdomRefreshCounts() {
 function kingdomClearInspect() {
   KINGDOM_INSPECTED = null;
   KINGDOM_ACTORS.forEach(function (a) { a.el.classList.remove('selected'); });
+  kingdomRefreshGymStations();
   var box = $('#kingdom-inspector');
   if (!box) return;
   box.className = 'panel kingdom-inspector kingdom-welcome';
@@ -1552,6 +2046,7 @@ function kingdomStagePointerDown(ev) {
 
 function kingdomBeginHold(actor, ev) {
   kingdomCancelHold(true);
+  kingdomGymCancel(actor, true);
   actor.pauseUntil = Infinity;
   actor.el.classList.remove('walking');
   actor.el.classList.add('holding');

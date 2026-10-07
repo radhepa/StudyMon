@@ -2,7 +2,7 @@ const {chromium}=require('./playwright.cjs');
 const fs=require('fs');
 (async()=>{const b=await chromium.launch({headless:true,executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'});try{
 const p=await b.newPage({viewport:{width:1440,height:1000}}),errors=[];p.on('pageerror',e=>errors.push(e.message));p.on('dialog',d=>d.dismiss());await p.goto('http://127.0.0.1:8780/');
-async function seed(subject,screen){await p.evaluate(({subject,screen})=>{if(B)B=null;cancelCJob();closeModal();S=freshSave();bindProgress('c');S.settings.sound=false;S.party=[makeMon(255,20),makeMon(25,15)];S.box=[makeMon(133,20)];S.money=5000;switchSubject(subject);document.querySelector('#nav').style.display='';document.querySelector('#nav [data-scr="'+screen+'"]').click();},{subject,screen});}
+async function seed(subject,screen){await p.evaluate(({subject,screen})=>{if(B)B=null;cancelCJob();closeModal();S=freshSave();bindProgress('c');S.settings.sound=false;S.party=[makeMon(255,20),makeMon(25,15)];S.box=[makeMon(133,20)];S.money=5000;switchSubject(subject);document.querySelector('#nav').style.display='';if(screen==='friends')openFriends();else document.querySelector('#nav [data-scr="'+screen+'"]').click();},{subject,screen});}
 let clicks=0;const snapshots=[];
 for(const subject of ['c','calc'])for(const screen of ['map','party','kingdom','dex','study','stats','human','friends','quests']){
  await seed(subject,screen);
@@ -10,6 +10,7 @@ for(const subject of ['c','calc'])for(const screen of ['map','party','kingdom','
  for(let i=0;i<buttons.length;i++){
   const info=buttons[i];if(/export|import|reset|delete|download|new game/i.test(info.text+' '+info.handler))continue;
   await seed(subject,screen);const target=p.locator('#s-'+screen+' button:visible:not(:disabled)').nth(i);if(!await target.count())continue;
+  if(screen==='human')await target.evaluate(el=>{if(!el.closest('#human-camera-world')||!window.HUMAN_PLAYER)return;const x=parseFloat(el.style.left),y=parseFloat(el.style.top);if(!Number.isFinite(x)||!Number.isFinite(y))return;HUMAN_PLAYER.x=x;HUMAN_PLAYER.y=y;humanPaint(HUMAN_PLAYER,true);});
   try{await target.click({timeout:2000});clicks++;}catch(e){errors.push(subject+'/'+screen+'/'+info.text+': '+e.message.slice(0,140));}
  }
  await seed(subject,screen);await p.setViewportSize({width:390,height:844});

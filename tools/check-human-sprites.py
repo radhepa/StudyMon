@@ -10,8 +10,20 @@ SPRITES = ROOT / "assets" / "humans" / "overworld"
 FRAME_SIZE = (140, 120)
 BASELINE = 115
 SOURCE_CELL_SIZE = (400, 420)
-HEIGHTS = {"ren": 78, "opal": 80, "player": 90, "rowan": 90, "bell": 96,
-           "wren": 100, "ada": 100, "kern": 100, "tam": 100, "gus": 102}
+HEIGHTS = {
+    "ren": 78, "pim": 78,
+    "opal": 80, "ari": 80, "flo": 80,
+    "player": 90, "rowan": 90, "tilda": 90,
+    "bell": 96, "kip": 96, "juno": 96, "quill": 96,
+    "coral": 98,
+    "wren": 100, "ada": 100, "kern": 100, "tam": 100,
+    "mo": 100, "nel": 100, "sasha": 100, "wisp": 100,
+    "holt": 100, "wynn": 100,
+    "perl": 100,
+    "gus": 102, "dax": 102, "rook": 102, "bram": 102,
+    "oz": 102, "sal": 102, "nemo": 102, "skiff": 102, "wade": 102,
+    "brine": 104, "burl": 104,
+}
 
 
 def visible_bbox(image: Image.Image):
@@ -54,4 +66,5 @@ for name, height in HEIGHTS.items():
                     f"{name} {direction} {index}: legs do not animate"
                 )
 
-print("PASS: 10 safely padded sheets, 120 uncropped frames, proportional baselines, and pixel-locked vertical upper bodies")
+print(f"PASS: {len(HEIGHTS)} safely padded sheets, {len(HEIGHTS) * 12} uncropped frames, "
+      "proportional baselines, and pixel-locked vertical upper bodies")

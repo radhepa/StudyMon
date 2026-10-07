@@ -74,6 +74,21 @@ body.human-world-active #nav {
   cursor: crosshair;
   touch-action: manipulation;
 }
+.human-camera-world {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  transform-origin: 0 0;
+  background-color: #69a844;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  image-rendering: auto;
+  will-change: transform;
+}
 .human-stage:focus-visible { box-shadow: inset 0 0 0 3px #ffe584; }
 .human-stage::after {
   content: '';
@@ -123,7 +138,10 @@ body.human-world-active #nav {
    inside the frame carries the age scale: children 78-80, teens 90, adults 100. */
 .human-player, .human-npc {
   position: absolute;
-  height: clamp(50px, 12.5%, 96px);
+  /* The definitive maps lock the player at 32x48 px on a 1254 px canvas.
+     A player occupies 90 px of the 120 px sprite frame, so a 5.1% frame
+     renders the visible figure at 3.825% of the map height: exactly 48 px. */
+  height: 5.1%;
   width: auto;
   /* Keep the interactive body narrower than the transparent animation canvas.
      The artwork may overflow, but a passerby cannot steal a nearby door click. */
@@ -136,6 +154,9 @@ body.human-world-active #nav {
   box-shadow: none;
   pointer-events: none;
   will-change: left, top;
+}
+.human-stage.indoors .human-player, .human-stage.indoors .human-npc {
+  height: clamp(50px, 12.5%, 96px);
 }
 .human-npc { transition: opacity .18s ease; }
 .human-npc.hopping { opacity: 0; }
@@ -153,7 +174,9 @@ body.human-world-active #nav {
   width: auto; height: 100%; display: block;
   aspect-ratio: 7 / 6;
   object-fit: contain;
-  image-rendering: pixelated;
+  /* The follow camera sizes this layer at its final display dimensions.
+     Smooth sampling keeps the detailed painted map crisp at fractional zoom. */
+  image-rendering: auto;
   filter: drop-shadow(0 2px 1px #13231a99);
   transform: translateX(-50%) scaleX(var(--face, 1));
   pointer-events: none;
@@ -444,7 +467,7 @@ body.human-dialogue-open #nav {
   .human-hud b { font-size: 10px; }
   .human-frame { padding: 3px; border-width: 3px; border-radius: 11px; }
   .human-stage { min-height: 220px; }
-  .human-player, .human-npc { height: clamp(44px, 14%, 70px); }
+  .human-stage.indoors .human-player, .human-stage.indoors .human-npc { height: clamp(44px, 14%, 70px); }
   .human-hotspot, .human-activity-object { min-width: 25px; }
   .human-dialogue { left: 2%; right: 2%; bottom: 2%; grid-template-columns: 95px minmax(0, 1fr); min-height: 46%; }
   .human-dialogue-portrait { max-height: 150px; margin-top: -35px; }

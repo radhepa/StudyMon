@@ -28,13 +28,13 @@ window.ENCOUNTERS = {
   1: [[396,"common"],[821,"common"],[187,"common"],[16,"common"],[519,"common"],[278,"uncommon"],[661,"uncommon"],[447,"uncommon"],[66,"uncommon"],[56,"rare"],[852,"rare"],[759,"rare"]],
   2: [[270,"common"],[420,"common"],[548,"common"],[46,"common"],[957,"common"],[1012,"uncommon"],[495,"uncommon"],[252,"uncommon"],[81,"uncommon"],[679,"rare"],[948,"rare"],[331,"rare"]],
   3: [[290,"common"],[599,"common"],[736,"common"],[850,"common"],[597,"common"],[48,"uncommon"],[540,"uncommon"],[588,"uncommon"],[595,"uncommon"],[1026,"uncommon"],[1029,"uncommon"],[304,"rare"],[347,"rare"],[303,"rare"]],
-  4: [[938,"common"],[179,"common"],[309,"common"],[669,"common"],[439,"common"],[926,"uncommon"],[170,"uncommon"],[684,"uncommon"],[682,"uncommon"],[417,"rare"],[312,"rare"],[184,"rare"]],
-  5: [[361,"common"],[582,"common"],[238,"common"],[854,"common"],[92,"common"],[996,"uncommon"],[974,"uncommon"],[425,"uncommon"],[608,"uncommon"],[93,"rare"],[886,"rare"],[124,"rare"]],
-  6: [[216,"common"],[667,"common"],[83,"common"],[137,"common"],[735,"common"],[22,"uncommon"],[531,"uncommon"],[277,"uncommon"],[1011,"uncommon"],[398,"rare"],[521,"rare"],[832,"rare"]],
-  7: [[269,"common"],[2,"common"],[502,"common"],[752,"common"],[457,"common"],[99,"uncommon"],[545,"uncommon"],[454,"uncommon"],[199,"uncommon"],[419,"rare"],[748,"rare"],[34,"rare"]],
-  8: [[168,"common"],[510,"common"],[49,"common"],[920,"common"],[332,"common"],[560,"uncommon"],[110,"uncommon"],[89,"uncommon"],[73,"uncommon"],[970,"rare"],[3,"rare"],[727,"rare"]],
-  9: [[528,"common"],[122,"common"],[956,"common"],[687,"common"],[97,"common"],[576,"uncommon"],[579,"uncommon"],[344,"uncommon"],[858,"uncommon"],[475,"rare"],[121,"rare"],[103,"rare"]],
-  10: [[358,"common"],[678,"common"],[547,"common"],[606,"common"],[80,"common"],[65,"uncommon"],[282,"uncommon"],[981,"uncommon"],[196,"uncommon"],[936,"rare"],[468,"rare"],[376,"rare"]],
+  4: [[938,"common"],[179,"common"],[309,"common"],[669,"common"],[439,"common"],[926,"uncommon"],[170,"uncommon"],[684,"uncommon"],[682,"uncommon"],[1039,"uncommon"],[417,"rare"],[312,"rare"],[184,"rare"]],
+  5: [[361,"common"],[582,"common"],[238,"common"],[854,"common"],[92,"common"],[996,"uncommon"],[974,"uncommon"],[425,"uncommon"],[608,"uncommon"],[1035,"uncommon"],[93,"rare"],[886,"rare"],[124,"rare"]],
+  6: [[216,"common"],[667,"common"],[83,"common"],[137,"common"],[735,"common"],[22,"uncommon"],[531,"uncommon"],[277,"uncommon"],[1011,"uncommon"],[1037,"uncommon"],[1046,"uncommon"],[398,"rare"],[521,"rare"],[832,"rare"]],
+  7: [[269,"common"],[2,"common"],[502,"common"],[752,"common"],[457,"common"],[99,"uncommon"],[545,"uncommon"],[454,"uncommon"],[199,"uncommon"],[1042,"uncommon"],[419,"rare"],[748,"rare"],[34,"rare"]],
+  8: [[168,"common"],[510,"common"],[49,"common"],[920,"common"],[332,"common"],[560,"uncommon"],[110,"uncommon"],[89,"uncommon"],[73,"uncommon"],[1038,"uncommon"],[970,"rare"],[3,"rare"],[727,"rare"]],
+  9: [[528,"common"],[122,"common"],[956,"common"],[687,"common"],[97,"common"],[576,"uncommon"],[579,"uncommon"],[344,"uncommon"],[858,"uncommon"],[1032,"uncommon"],[475,"rare"],[121,"rare"],[103,"rare"]],
+  10: [[358,"common"],[678,"common"],[547,"common"],[606,"common"],[80,"common"],[65,"uncommon"],[282,"uncommon"],[981,"uncommon"],[196,"uncommon"],[1044,"uncommon"],[936,"rare"],[468,"rare"],[376,"rare"]],
   91: [[349,"common"],[194,"common"],[261,"common"],[960,"common"],[827,"common"],[846,"common"],[509,"common"],[833,"common"],[339,"common"],[535,"common"],[116,"common"],[633,"common"],[747,"common"],[90,"common"],[318,"common"],[580,"common"],[688,"common"],[341,"common"],[912,"common"],[7,"common"],[79,"uncommon"],[118,"uncommon"],[370,"uncommon"],[692,"uncommon"],[456,"uncommon"],[228,"uncommon"],[72,"uncommon"],[942,"uncommon"],[366,"uncommon"],[458,"uncommon"],[559,"uncommon"],[140,"uncommon"],[564,"uncommon"],[629,"uncommon"],[536,"uncommon"],[198,"uncommon"],[215,"rare"],[964,"rare"],[550,"rare"],[359,"rare"],[594,"rare"],[978,"rare"],[962,"rare"],[442,"rare"],[452,"rare"],[883,"rare"],[943,"rare"],[861,"rare"]]
  }
 };

@@ -195,6 +195,8 @@ function renderTown() {
   h += '<div class="town-grid">';
   if (typeof ferryHere === 'function' && ferryHere()) h += ferryCard();
   companionsAt(TOWN_LOC).forEach(function (t) { h += companionCard(t); });
+  if (typeof leadersAt === 'function') leadersAt(TOWN_LOC).forEach(function (leader) { h += leaderTownCard(leader); });
+  if (typeof walkinCardHtml === 'function') h += walkinCardHtml(TOWN_LOC);
   list.forEach(function (p) {
     var beaten = !!S.town.beaten[p.id];
     var taken = !!S.town.gifts[p.id];
@@ -273,13 +275,14 @@ function talkTo(id) {
   if (p.kind === 'talk') {
     var talkAward = fr ? awardFriendship(p.id, 'talk', { source: 'town', countMeeting: true }) : null;
     var grant = claimTownGrant(p);
+    var rumor = typeof rumorAsideHtml === 'function' ? rumorAsideHtml(p.id, { location: TOWN_LOC }) : '';
     saveGame();
     modal('<h2>' + esc(p.name) + '</h2><span class="friend-role">' + esc(p.cls) + '</span>' +
       '<p class="scene-prose">' + esc(p.say) + '</p>' +
       (talkAward ? '<p class="small">' + esc(talkAward.message) + '</p>' : '') +
       (p.tip ? '<div class="note" style="text-align:left;margin-top:12px"><b>Worth remembering.</b><br>' +
         esc(p.tip) + '</div>' : '') + (grant ?
-        '<p class="friend-change">Received ' + grant.amount + ' ' + esc(grant.item.name) + '.</p>' : '') +
+        '<p class="friend-change">Received ' + grant.amount + ' ' + esc(grant.item.name) + '.</p>' : '') + rumor +
       '<button class="primary" onclick="closeModal();renderTown()">Back</button>');
     return;
   }

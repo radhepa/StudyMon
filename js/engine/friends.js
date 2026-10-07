@@ -27,7 +27,7 @@ function castMember(id) {
   if (!meta || !source) return null;
   var companion = meta.sourceKind === 'companion';
   return { id: meta.id, name: meta.name, role: meta.role,
-           bio: source.bio || source.say || source.intro || meta.justification,
+           bio: (typeof leaderBio === 'function' && leaderBio(meta.id)) || source.bio || source.say || source.intro || meta.justification,
            colour: source.color || '#8e6845', companion: companion,
            befriendable: meta.befriendable, tier: meta.tier,
            subject: meta.homeSubject, sourceKind: meta.sourceKind,
@@ -421,7 +421,7 @@ function friendActivityGate(id,action,context) {
   if(!m.befriendable)return {allowed:false,reason:'not-befriendable',wait:0};
   if(!f||!f.met)return {allowed:false,reason:'not-met',wait:0};
   if(action==='outing'&&(!m.companion||!friendStageAtLeast(f,'friend')))return {allowed:false,reason:'activity-stage',wait:0};
-  if(action==='battle'&&!(m.companion||(m.source.team&&m.source.team.length)))return {allowed:false,reason:'activity-unavailable',wait:0};
+  if(action==='battle'&&!(m.companion||(m.source.team&&m.source.team.length)||m.sourceKind==='gym-leader'||m.sourceKind==='boss'))return {allowed:false,reason:'activity-unavailable',wait:0};
   var family=action==='scene-choice'&&context.kind==='outing'?'outing':action;
   var cooldown=friendshipCooldownAction(family),wait=cooldown?friendWait(f,cooldown):0;
   if(wait)return {allowed:false,reason:'cooldown',wait:wait};
@@ -512,8 +512,9 @@ function friendArt(t){
     return '<img class="trainer-portrait" style="--head-shift:'+((window.TRAINER_HEAD_SHIFT||{})[m.id]||0)+'%" src="'+TRAINER_PORTRAITS[m.id]+'" alt="'+esc(m.name)+'">'+
            '<img class="trainer-partner" src="'+artUrl(p)+'" alt="'+esc(titleCase(dexOf(p).name))+'">';
   }
-  var mon = (m.source.team && m.source.team.length) ? m.source.team[0] : null;
-  var art = (window.FOLK_PORTRAITS || {})[m.id];
+  var isLeader = m.sourceKind === 'gym-leader' || m.sourceKind === 'boss';
+  var mon = (m.source.team && m.source.team.length) ? m.source.team[0] : isLeader && m.source.ace ? m.source.ace : null;
+  var art = (window.FOLK_PORTRAITS || {})[m.id] || (isLeader ? (window.LEADER_PORTRAITS || {})[m.name] : null);
   var face = art
     ? '<img class="trainer-portrait" style="--head-shift:'+((window.FOLK_HEAD_SHIFT||{})[m.id]||0)+'%" src="'+art+'" alt="'+esc(m.name)+'">'
     : '<div class="folk-disc" aria-hidden="true">'+esc(m.name.charAt(0))+'</div>';
@@ -522,7 +523,7 @@ function friendArt(t){
 }
 function openFriends(){showScreen('friends');renderFriends();}
 function renderFriends(){
-  syncFriendStory();var h='<h2>People around town</h2><p class="muted">A few familiar faces between routes. Stop for a chat, arrange a practice match, or make plans for the afternoon.</p>';
+  syncFriendStory();var h='<h2>People around town</h2><p class="muted">A few familiar faces between routes. Stop for a chat, arrange a practice match, or make plans for the afternoon.</p>'+(typeof relationshipWebButtonHtml==='function'?relationshipWebButtonHtml():'');
   if(S.friendScene&&castMember(S.friendScene.id)){
     var rsc=sceneBeats(S.friendScene.id,S.friendScene.kind,S.friendScene.sceneId);
     var resumeBeat=rsc?rsc.beats.findIndex(function(beat){return beat.id===S.friendScene.beatId;}):0;
@@ -538,7 +539,7 @@ function renderFriends(){
        '<p>You have not made a friend so far. Everyone starts as a stranger in the region , '+
        'battle them, talk to them, rest at their Centre, and when someone reaches a full heart '+
        'they move in here.</p><p class="small">'+known+' of '+cast+' people met.</p>'+
-       '<button class="primary" onclick="openTown()">Go and meet someone</button></div>';
+       (TOWN_UI_ENABLED ? '<button class="primary" onclick="openTown()">Go and meet someone</button>' : '') + '</div>';
   }
   h+='<div class="friends-grid">';
   roster.forEach(function(id){
@@ -564,7 +565,7 @@ function openFriend(id){
   if(!f.met){awardFriendship(id,'meet',{source:'detail'});syncFriendStory();saveGame();}
   showScreen('friends');
   var t=m.source,cap=castEventCount(id),n=friendEventRules(id).filter(function(rule){return completedHeartEventId(id,rule.eventId,f.events);}).length,nextInfo=nextFriendEvent(id);
-  var detailDialogue=typeof selectCharacterDialogue==='function'?selectCharacterDialogue(id,{firstMeeting:firstVisit}):null;
+  var detailDialogue=(typeof selectCharacterDialogue==='function'?selectCharacterDialogue(id,{firstMeeting:firstVisit}):null)||(typeof leaderGreeting==='function'&&isLeaderId(id)?(leaderGreeting(id)||leaderSocialLine(id)):null);
   var g=nextInfo?castGate(id,nextInfo.rule.eventId):null,nextScene=nextInfo&&nextInfo.scene,ready=!!nextInfo&&nextInfo.gate.allowed;
 
   var h='<button class="ghost" onclick="renderFriends()">Back to your friends</button>'+
@@ -601,6 +602,7 @@ function openFriend(id){
   }
   h+='</div>';
 
+  if (typeof leaderFriendPanel === 'function') h += leaderFriendPanel(id);
   if (typeof renderGiftPanel === 'function') h += renderGiftPanel(id);
 
   h+='<section class="panel friend-journal"><h3>Your story with '+esc(m.name)+'</h3>';
@@ -609,7 +611,8 @@ function openFriend(id){
     var badgeNow=subjectBadgeCountFor(g.subject),locked=nextInfo.gate.reasons.join(', ');
     h+='<p>Next: <b>'+esc(nextTitle||'')+'</b>. Needs '+esc(friendStage(g.rule.points).label)+', '+g.hearts+' hearts and '+g.badges+' '+esc(g.subject.toUpperCase())+' gym badges. You have '+friendHearts(f)+' hearts and '+badgeNow+' badges.</p>'+
        '<button class="primary" '+(ready?'':'disabled')+' onclick="startFriendScene(\''+id+'\',\'event\',\''+(nextScene?nextScene.id:'')+'\')">'+(ready?'See heart event':'Keep getting to know each other')+'</button>';
-  } else h+='<p>You have shared every heart event with '+esc(m.name)+'.</p>';
+  } else if(!cap) h+='<p>No shared memories yet. Conversations, gifts and rematches are how this friendship grows for now.</p>';
+  else h+='<p>You have shared every heart event with '+esc(m.name)+'.</p>';
   h+='<ol class="memory-list">';
   friendEventRules(id).forEach(function(rule){
     var memoryScene=sceneBeats(id,'event',rule.eventId),title=memoryScene&&memoryScene.title;
@@ -622,7 +625,7 @@ function openFriend(id){
   h+='</ol></section>';
   $('#s-friends').innerHTML=h;
 }
-function talkFriend(id){var m=castMember(id);if(!m)return;var t=m.source,f=friendship(id);if(!f||!f.met)return;var result=awardFriendship(id,'talk',{source:'friend',countMeeting:true});var authored=typeof selectCharacterDialogue==='function'?selectCharacterDialogue(id):null;var line=authored?authored.text:(m.companion?t.talk[Math.max(0,f.talks-1)%t.talk.length]:(t.tip||t.say));if(result.accepted)saveGame();modal('<h2>'+esc(m.name)+'</h2><p class="scene-prose">'+esc(line)+'</p><p class="small">'+esc(result.message)+'</p><button class="primary" onclick="closeModal();openFriend(\''+id+'\')">See you around</button>');}
+function talkFriend(id){var m=castMember(id);if(!m)return;var t=m.source,f=friendship(id);if(!f||!f.met)return;var result=awardFriendship(id,'talk',{source:'friend',countMeeting:true});var authored=(typeof selectCharacterDialogue==='function'?selectCharacterDialogue(id):null)||(typeof leaderSocialLine==='function'?leaderSocialLine(id):null);var line=authored?authored.text:(m.companion?t.talk[Math.max(0,f.talks-1)%t.talk.length]:(t.tip||t.say));var rumor=typeof rumorAsideHtml==='function'?rumorAsideHtml(id):'';if(result.accepted||rumor)saveGame();modal('<h2>'+esc(m.name)+'</h2><p class="scene-prose">'+esc(line)+'</p><p class="small">'+esc(result.message)+'</p>'+rumor+'<button class="primary" onclick="closeModal();openFriend(\''+id+'\')">See you around</button>');}
 function chooseOuting(id){var m=castMember(id);if(!m||!m.companion)return;var t=m.source,gate=friendActivityGate(id,'outing');if(!gate.allowed)return;if(S.friendScene){renderFriendScene();return;}var h='<h2>Where to?</h2><p>'+t.name+' has some time this afternoon.</p><div class="outing-options">';t.outings.forEach(function(e,i){var scene=sceneBeats(id,'outing',i);h+='<button onclick="closeModal();startFriendScene(\''+id+'\',\'outing\',\''+scene.id+'\')">'+esc(e[0])+'<small>'+esc(e[1])+'</small></button>';});h+='</div><button class="ghost" onclick="closeModal()">Another time</button>';modal(h);}
 function startFriendScene(id,kind,sceneRef){
   var m=castMember(id);if(!m)return;var t=m.source;var f=friendship(id);if(!f||!f.met)return;

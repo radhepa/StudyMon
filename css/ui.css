@@ -41,7 +41,8 @@
 
 /* Gyms, the Elite Four and practice matches reuse the clearing with a shift in
    light, so each battle type still reads differently. */
-#battlefield.bf-gym    { filter: saturate(.86) hue-rotate(-8deg) brightness(.94); }
+#battlefield.bf-gym,
+#battlefield.bf-rematch { filter: saturate(.86) hue-rotate(-8deg) brightness(.94); }
 #battlefield.bf-elite  { filter: saturate(.72) hue-rotate(200deg) brightness(.72) contrast(1.12); }
 #battlefield.bf-trainer{ filter: saturate(1.05) brightness(1.05); }
 
@@ -545,24 +546,14 @@ button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visi
 
 .chip.region-chip {
   cursor: pointer;
+  font-size: 13px;
+  padding: 7px 10px;
   border-color: #6f7f86;
   color: #3f5a63;
   font-weight: 600;
 }
 .chip.region-chip:hover { background: #e2edf0; }
 .chip.region-chip:focus-visible { outline: 2px solid #4f6d78; outline-offset: 2px; }
-
-/* TEMP: pier-is-gone region warp chip. Delete this block together with
-   js/engine/temp-calc-warp.js. */
-.chip.temp-warp-chip {
-  cursor: pointer;
-  border-color: #b8742c;
-  color: #8a5318;
-  font-weight: 700;
-  border-style: dashed;
-}
-.chip.temp-warp-chip:hover { background: #fbeedc; }
-.chip.temp-warp-chip:focus-visible { outline: 2px solid #b8742c; outline-offset: 2px; }
 
 /* Destination list inside the ferry modal. */
 .ferry-list { display: grid; gap: 12px; margin: 18px 0 16px; }
@@ -781,6 +772,40 @@ button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visi
 }
 .routecell.have figcaption { color: #3d2a1c; font-weight: 600; }
 
+.caught-ball {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: linear-gradient(#ee1515 50%, #fff 50%);
+  border: 1.5px solid #1c1c1c;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .35);
+}
+.caught-ball::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1.5px;
+  background: #1c1c1c;
+  transform: translateY(-50%);
+}
+.caught-ball::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  background: #fff;
+  border: 1.3px solid #1c1c1c;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
 .rar {
   position: absolute;
   top: 3px;
@@ -810,10 +835,9 @@ button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visi
 /* Exam-only chapters in the Notes chapter picker: no gym, no number of their own. */
 .row.tight .exam-ch { color: #7c4a3a; font-weight: 700; }
 
-/* The bottom nav holds seven destinations. A six-column grid left Friends alone
-   on its own row; four columns gives a deliberate 4 + 3 instead. */
+/* The seven bottom-nav destinations fit in a 4 + 3 layout on phones. */
 @media (max-width: 620px) {
-  #nav { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
+  nav#nav { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
 }
 
 /* Painted faces for gym leaders and bosses.

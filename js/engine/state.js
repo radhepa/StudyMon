@@ -25,6 +25,9 @@ function freshSave() {
     worldFlags: {},       // compact stable story flags used by social prerequisites
     dialogueFlags: {},    // stable choice-id/outcome-id pairs for later contextual dialogue
     sideQuests: { version: 3, records: {} },
+    leaders: { version: 1, records: {} },         // Phase 6: post-defeat visits and rematch history, never badge ownership
+    questFraming: { version: 1, records: {} },   // Phase 6: hint-opened flag and coarse outcome per framed lab
+    world: { version: 1, known: {}, seen: {}, resolved: {}, rewarded: {} },   // Phase 7: "<kind>:<id>" -> activity-clock stamp; facts themselves stay in their own branches
     trainer: 'TRAINER',
     started: Date.now(),
     party: [],
@@ -191,6 +194,9 @@ function activateSave(save) {
     ensureFriends();
     ensureBag();
     ensureTown();
+    if (typeof ensureLeaders === 'function') ensureLeaders();
+    if (typeof ensureQuestFraming === 'function') ensureQuestFraming();
+    if (typeof ensureWorldState === 'function') ensureWorldState();
   } catch (e) {
     S = previous;
     throw e;
@@ -226,6 +232,8 @@ function loadGame() {
        If storage cannot preserve the backup, the main save is left untouched. */
     preserveLegacyInstalledSave(raw, o);
     activateSave(normalizeSave(o));
+    /* Opening a save is one of the two moments mail is delivered (Phase 7). */
+    if (typeof mailOnOpening === 'function') mailOnOpening();
     saveGame();
     return true;
   } catch (e) { return false; }

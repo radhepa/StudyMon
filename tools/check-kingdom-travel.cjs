@@ -22,7 +22,7 @@ const BASE = process.argv[2] || 'http://127.0.0.1:8793';
     S = freshSave();
     S.party = [makeMon(1, 12), makeMon(25, 18), makeMon(4, 10)];
     S.box = [];
-    for (let i = 0; i < 35; i++) S.box.push(makeMon(i + 2, 5 + (i % 20)));
+    for (let i = 0; i < 35; i++) S.box.push(makeMon(100 + i, 5 + (i % 20)));
     localStorage.removeItem(KINGDOM_TRAVEL_KEY);
     KINGDOM_TRAVEL = null;
     showScreen('kingdom');

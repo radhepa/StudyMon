@@ -1,0 +1,56 @@
+/* Phase 7: living-world reactivity (rumors, mail, vignettes, walk-ins, the
+   relationship web). Colours lean on currentColor and translucency so the same
+   rules read on the dark modal and the parchment theme. */
+
+.rumor-aside {
+  margin: 12px 0; padding: 10px 12px;
+  border-left: 4px solid currentColor; border-radius: 6px;
+  background: rgba(127, 127, 127, .10);
+  text-align: left; font-size: 14px; line-height: 1.45;
+}
+.rumor-aside b { font-weight: 700; }
+.rumor-aside.rumor-biased { border-left-style: dashed; }
+.rumor-aside.rumor-flavor { border-left-style: dotted; opacity: .92; }
+.human-dialogue-copy .rumor-aside { margin: 8px 0; font-size: 13px; }
+
+/* Mail (Slice 3). */
+.mail-chip { cursor: pointer; }
+.mailbox { text-align: left; }
+.mail-list { list-style: none; padding: 0; margin: 12px 0; display: grid; gap: 8px; }
+.mail-row button { width: 100%; display: grid; gap: 2px; text-align: left; }
+.mail-row .mail-kind { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; opacity: .75; }
+.mail-row small { opacity: .8; }
+.mail-unopened b::before { content: '● '; }
+.letter { text-align: left; }
+.letter .letter-sign { font-style: italic; text-align: right; margin-top: 8px; }
+.letter-postcard { border-left: 4px dotted currentColor; padding-left: 12px; }
+
+/* Item vignettes (Slice 4). */
+.bag-item .vignette-button { margin-top: 6px; font-size: 13px; min-height: 36px; padding: 6px 12px; }
+.bag-item .vignette-resolved { opacity: .8; }
+.vignette { text-align: left; }
+
+/* Item vignettes (Slice 4). */
+.bag-item .vignette-button { margin-top: 6px; font-size: 13px; min-height: 36px; padding: 6px 12px; }
+.bag-item .vignette-resolved { opacity: .8; }
+.vignette { text-align: left; }
+
+/* Walk-ins (Slice 5). */
+.town-card.walkin-card { border-style: dotted; }
+.walkin-scene { text-align: left; }
+
+/* Relationship web (Slice 6). */
+.web-button { margin: 0 0 16px; }
+.relationship-web { text-align: left; max-width: 640px; }
+.web-clusters { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px 10px; margin: 8px 0; }
+.web-graph { border-radius: 8px; background: rgba(127, 127, 127, .06); }
+.web-graph { width: 100%; height: auto; display: block; }
+.web-line { stroke: currentColor; stroke-width: 2; opacity: .55; }
+.web-line.web-public { stroke-dasharray: 5 5; opacity: .45; }
+.web-node { fill: currentColor; }
+.web-name { fill: currentColor; font-size: 12px; }
+.web-key-public { border-bottom: 2px dashed currentColor; }
+.web-key-deep { border-bottom: 2px solid currentColor; }
+.web-list { padding-left: 18px; display: grid; gap: 8px; }
+.web-list li { overflow-wrap: anywhere; }
+.web-deep { font-style: italic; opacity: .9; }

@@ -17,6 +17,8 @@ function toast(msg) {
   _toastT = setTimeout(function () { t.classList.remove('on'); }, 2600);
 }
 
+/* Keep town content and saves intact while its navigation is hidden. */
+var TOWN_UI_ENABLED = false;
 var CUR = 'title';
 function showScreen(name) {
   if(name !== 'quests' && typeof cancelCJob === 'function') cancelCJob();
@@ -41,9 +43,8 @@ function renderTopbar() {
   $('#topbar').innerHTML =
     '<span class="logo">StudyMon</span>' +
     (typeof radioChip === 'function' ? radioChip() : '') +
+    (typeof pokedoroChip === 'function' ? pokedoroChip() : '') +
     (typeof regionChip === 'function' ? regionChip() : '') +
-    /* TEMP: one-click warp while the pier is rebuilt - see js/engine/temp-calc-warp.js */
-    (typeof tempCalcWarpChip === 'function' ? tempCalcWarpChip() : '') +
     '<span class="chip">◆ <b>' + badgeCount() + '</b>/' + CHAPTERS.length + ' badges</span>' +
     '<span class="chip">₵ <b>' + money().toLocaleString() + '</b></span>' +
     '<span class="chip">● <b>' + (itemCount('great') + itemCount('ultra')) + '</b> good balls</span>' +
@@ -251,6 +252,67 @@ function showResult(won, msg, extra, acc) {
 
 function renderTitle() {
   $('#continuebtn').style.display = hasSave() ? '' : 'none';
+  renderTitleMons();
+}
+
+/* Placeholder lineup for a trainer with no save yet, or nothing caught. */
+var TITLE_MONS_FALLBACK = [4, 255, 155, 94, 297, 380, 149];
+
+/* A fresh 7 every time the title shows: distinct species pulled from the
+   save's party and PC, read straight out of localStorage so this never has
+   to load (and thus mutate) S just to paint the title screen. */
+function renderTitleMons() {
+  var el = document.querySelector('.title-mons');
+  if (!el) return;
+  var pool = titleMonPool();
+  var pick = pool.length ? shuffle(pool).slice(0, 7) : TITLE_MONS_FALLBACK.slice();
+  while (pool.length && pick.length < 7) pick.push(pool[Math.floor(Math.random() * pool.length)]);
+  el.innerHTML = titleMonsHtml(pick);
+}
+
+/* Sprite frames are all the same 96x96 canvas, but the creature drawn inside
+   varies hugely in how much of it it fills (a coiled Rayquaza vs a compact
+   Voltorb) - shown at one fixed size they read as wildly different sizes.
+   Scale each toward this lineup's own median fill, so the seven read as one
+   consistent set no matter which seven got drawn, without the row blowing
+   past the panel width the way scaling to a fixed global target could. */
+function titleMonsHtml(ids) {
+  var spans = ids.map(titleMonSpan);
+  var sorted = spans.slice().sort(function (a, b) { return a - b; });
+  var target = sorted[Math.floor(sorted.length / 2)];
+  return ids.map(function (id, i) {
+    var scale = Math.max(0.8, Math.min(1.5, target / spans[i]));
+    var px = Math.round(68 * scale);
+    return '<img src="' + spriteUrl(id) + '" alt="" style="width:' + px + 'px;height:' + px + 'px">';
+  }).join('');
+}
+
+function titleMonSpan(id) {
+  var row = window.SPRITE_SEAT_DATA && window.SPRITE_SEAT_DATA.front && window.SPRITE_SEAT_DATA.front[id];
+  return (row && row[2]) || 0.6;   // ~population median, a safe default if data is missing
+}
+
+function titleMonPool() {
+  try {
+    var raw = localStorage.getItem(SAVE_KEY);
+    if (!raw) return [];
+    var o = JSON.parse(raw);
+    var ids = [].concat(o.party || [], o.box || [])
+      .map(function (m) { return m && m.id; })
+      .filter(function (id) { return typeof id === 'number' && dexOf(id); });
+    var seen = {}, out = [];
+    ids.forEach(function (id) { if (!seen[id]) { seen[id] = true; out.push(id); } });
+    return out;
+  } catch (e) { return []; }
+}
+
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
 }
 
 function newGame() {
@@ -347,8 +409,11 @@ function renderMap() {
         '</div></div>' +
         '<div class="acts">' +
         '<button ' + (blocker ? 'disabled' : '') + ' onclick="goWild(' + c.n + ')">Wild battle</button>' +
-        '<button class="' + (got || blocker ? '' : 'primary') + '" ' + (blocker ? 'disabled' : '') +
-          ' onclick="goGym(' + c.n + ')">' + (got ? 'Rematch gym' : 'Gym') + '</button>' +
+        (got
+          ? '<button onclick="openLeader(\'' + leaderForGym(c.n) + '\')">Visit ' +
+            esc(String(c.leader).split(' ')[0]) + '</button>'
+          : '<button class="' + (blocker ? '' : 'primary') + '" ' + (blocker ? 'disabled' : '') +
+            ' onclick="goGym(' + c.n + ')">Gym</button>') +
         '<button class="ghost" onclick="goStudy(' + c.n + ')">Notes</button>' +
         '<button class="ghost" onclick="openRouteInfo(' + c.n + ')">Route info</button>' +
         '</div></div>';
@@ -392,11 +457,14 @@ function renderMap() {
       '<div class="acts">' +
       (examCh ? '<button class="ghost" onclick="goWildExam(\'' + e.id + '\')">Revision route</button>' +
         '<button class="ghost" onclick="openRouteInfo(' + examCh.n + ')">Route info</button>' : '') +
-      '<button class="' + (open && !beat ? 'primary' : '') + '" ' + (open ? '' : 'disabled') +
-      ' onclick="goElite(\'' + e.id + '\')">' + (beat ? 'Rematch' : 'Challenge') + '</button></div></div>';
+      (beat
+        ? '<button onclick="openLeader(\'' + leaderForBoss(e.id) + '\')">Visit ' + esc(String(e.name).split(' ')[0]) + '</button>'
+        : '<button class="' + (open ? 'primary' : '') + '" ' + (open ? '' : 'disabled') +
+          ' onclick="goElite(\'' + e.id + '\')">Challenge</button>') + '</div></div>';
   });
 
-  h += '</div><div class="panel town-invite"><h3>Take a break in town</h3><p>Rowan and the others are around. Stop for a chat, make plans, or try a practice match.</p><button onclick="openFriends()">Visit your friends</button></div>';
+  h += '</div>';
+  if (TOWN_UI_ENABLED) h += '<div class="panel town-invite"><h3>Take a break in town</h3><p>Rowan and the others are around. Stop for a chat, make plans, or try a practice match.</p><button onclick="openFriends()">Visit your friends</button></div>';
   $('#s-map').innerHTML = h;
   renderTopbar();
 }
@@ -420,7 +488,11 @@ function goWildExam(id) {
   if (!examCh) return;
   if (!partyAlive()) { toast('Everyone has fainted. Visit the Poké Center.'); return; }
   clearLog();
-  startBattle({ kind: 'wild', chapters: e.chapters, foes: [wildFor(examCh)], title: e.route, chapter: examCh });
+  startBattle({
+    kind: 'wild', chapters: e.chapters,
+    pool: e.revisionPerType ? routeQuestions(examCh.n) : null,
+    foes: [wildFor(examCh)], title: e.route, chapter: examCh
+  });
 }
 
 function goGym(n) {
@@ -428,6 +500,9 @@ function goGym(n) {
   if (!c) return;
   var blocker = gymBlockedBy(n);
   if (blocker) { toast('Sit ' + blocker.epithet + ' first. ' + blocker.name + ' is waiting.'); return; }
+  /* Phase 6: once the badge is yours the leader is a person you visit, and any
+     further match is an optional rematch rather than a replay of the badge fight. */
+  if (S.badges[n] && typeof openLeader === 'function') { openLeader(leaderForGym(n)); return; }
   if (!partyAlive()) { toast('Everyone has fainted. Visit the Poké Center.'); return; }
   var dialogue = GYM_DIALOGUE[n];
   var line = S.badges[n] ? dialogue.rematch : dialogue.intro;
@@ -448,6 +523,7 @@ function beginGymBattle(n) {
   var blocker = gymBlockedBy(n);
   if (blocker) { closeModal(); toast('Sit ' + blocker.epithet + ' first. ' + blocker.name + ' is waiting.'); return; }
   if (!partyAlive()) { closeModal(); toast('Everyone has fainted. Visit the Poké Center.'); return; }
+  if (S.badges[n] && typeof startLeaderRematch === 'function') { startLeaderRematch(leaderForGym(n)); return; }
   closeModal();
   clearLog();
   startBattle({
@@ -489,6 +565,7 @@ function openRouteInfo(n) {
       var label = have || met ? titleCase(d.name) : '???';
       h += '<figure class="routecell ' + (have ? 'have' : met ? 'met' : 'unknown') + '">' +
         '<img src="' + spriteUrl(r.id) + '" alt="' + esc(label) + '">' +
+        (have ? '<span class="caught-ball" title="Caught" aria-hidden="true"></span>' : '') +
         '<figcaption>' + esc(label) + '</figcaption>' +
         '<span class="rar r-' + r.rarity + '">' + r.rarity + '</span>' +
         '</figure>';
@@ -514,7 +591,10 @@ function routeQuestions(n) {
   var c = chapterByNumber(n);
   var chapters = (c && c.examOnly) ? examWildChapters(c) : [n];
   var guests = (c && c.examOnly) ? null : wildGuestLessons(n);
-  return questionsFor(chapters, guests).sort(function (a, b) {
+  var pool = questionsFor(chapters, guests);
+  var exam = c && c.examOnly && (ELITE || []).filter(function (x) { return x.id === c.exam; })[0];
+  if (exam && exam.revisionPerType) pool = curatedFamilyPool(pool, exam.revisionPerType);
+  return pool.sort(function (a, b) {
     return (Number(a.lesson || 0) - Number(b.lesson || 0)) ||
       (Number(a.t || 0) - Number(b.t || 0)) || String(a.id).localeCompare(String(b.id));
   });
@@ -591,6 +671,7 @@ function goElite(id) {
     toast('That needs ' + bossAfter(e) + ' badges. You have ' + badgeCount() + '.');
     return;
   }
+  if (bossBeaten(e) && typeof openLeader === 'function') { openLeader(leaderForBoss(e.id)); return; }
   if (!partyAlive()) { toast('Everyone has fainted. Visit the Poké Center.'); return; }
   clearLog();
   startBattle({
@@ -1062,15 +1143,21 @@ function renderStats() {
     '<button class="primary" onclick="drillReview()" ' + (due ? '' : 'disabled') + '>⟳ Review ' + due + ' now</button>' +
     '</div></div>';
 
-  var tp = townProgress();
-  h += '<div class="panel dark" style="margin-top:14px"><h3 style="color:var(--accent)">Around the region</h3>' +
-    '<div class="statgrid" style="margin:0 0 4px">' +
-    box(tp.met + '/' + tp.total, 'People met') +
-    box(tp.beaten + '/' + tp.trainers, 'Trainers beaten') +
-    box('₵ ' + money().toLocaleString(), 'Money') +
-    '</div>' +
-    '<div class="row" style="margin-top:10px"><button class="primary" onclick="openTown()">Visit the region</button>' +
-    '<button onclick="openShop()">Poké Mart</button></div></div>';
+  if (TOWN_UI_ENABLED) {
+    var tp = townProgress();
+    h += '<div class="panel dark" style="margin-top:14px"><h3 style="color:var(--accent)">Around the region</h3>' +
+      '<div class="statgrid" style="margin:0 0 4px">' +
+      box(tp.met + '/' + tp.total, 'People met') +
+      box(tp.beaten + '/' + tp.trainers, 'Trainers beaten') +
+      box('₵ ' + money().toLocaleString(), 'Money') +
+      '</div>' +
+      '<div class="row" style="margin-top:10px"><button class="primary" onclick="openTown()">Visit the region</button>' +
+      '<button onclick="openShop()">Poké Mart</button></div></div>';
+  } else {
+    h += '<div class="panel dark" style="margin-top:14px"><h3 style="color:var(--accent)">Poké Mart</h3>' +
+      '<p class="small">Stock up on Poké Balls, potions and battle supplies.</p>' +
+      '<button onclick="openShop()">Poké Mart</button></div>';
+  }
 
   h += '<div class="panel dark" style="margin-top:14px"><h3 style="color:var(--accent)">Mock exam</h3>' +
     '<p class="small">A shuffled paper drawn from every chapter in ' + esc(subjectDef().region) +

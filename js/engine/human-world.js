@@ -1,5 +1,5 @@
 /* Bootstrap Town living world.
-   A fixed-camera, DOM-sprite prototype layered over generated pixel-art scenes.
+   A player-following camera over generated pixel-art scenes.
    Existing shops, battles, healing, friendship and save data remain authoritative. */
 
 var HUMAN_RAF = 0;
@@ -19,6 +19,8 @@ var HUMAN_SAVE_AT = 0;
 var HUMAN_MUSIC_ON = true;
 var HUMAN_MUSIC_AUDIO = null;
 var HUMAN_MUSIC_TOKEN = 0;
+var HUMAN_CAMERA = { x: 0, y: 0, zoom: 1 };
+var HUMAN_OUTDOOR_CAMERA_ZOOM = 1.85;
 
 function humanMusicPattern(text) {
   return text.trim().split(/\s+/).filter(function (token) { return token !== '|'; }).map(function (token) {
@@ -65,6 +67,39 @@ function humanWeatherForDay(day) {
 function humanScene() {
   ensureHumanWorld();
   return HUMAN_WORLD_SCENES[S.humanWorld.scene] || HUMAN_WORLD_SCENES.square;
+}
+
+function humanMapHeightRatio(scene) {
+  var parts = String((scene && scene.aspectRatio) || '16 / 9').match(/([\d.]+)\s*\/\s*([\d.]+)/);
+  if (!parts || !Number(parts[1]) || !Number(parts[2])) return 9 / 16;
+  return Number(parts[2]) / Number(parts[1]);
+}
+
+function humanCameraZoom(scene) {
+  if (!scene || scene.indoors) return 1;
+  var zoom = Number(scene.cameraZoom || HUMAN_OUTDOOR_CAMERA_ZOOM);
+  return isFinite(zoom) ? Math.max(1, zoom) : HUMAN_OUTDOOR_CAMERA_ZOOM;
+}
+
+function humanUpdateCamera() {
+  var stage = $('#human-stage'), world = $('#human-camera-world');
+  if (!stage || !world || !HUMAN_PLAYER) return;
+  var zoom = humanCameraZoom(humanScene());
+  /* Size the map at its final zoomed dimensions instead of enlarging a
+     pre-rasterized layer with transform: scale(). This keeps the background
+     art sharp while preserving the exact authored percentage coordinates. */
+  world.style.width = (zoom * 100).toFixed(3) + '%';
+  var viewW = stage.clientWidth, viewH = stage.clientHeight;
+  var worldW = world.offsetWidth, worldH = world.offsetHeight;
+  if (!viewW || !viewH || !worldW || !worldH) return;
+  var focusX = HUMAN_PLAYER.x / 100 * worldW;
+  var focusY = HUMAN_PLAYER.y / 100 * worldH;
+  var minX = Math.min(0, viewW - worldW * zoom);
+  var minY = Math.min(0, viewH - worldH * zoom);
+  var x = Math.max(minX, Math.min(0, viewW / 2 - focusX));
+  var y = Math.max(minY, Math.min(0, viewH / 2 - focusY));
+  HUMAN_CAMERA.x = x; HUMAN_CAMERA.y = y; HUMAN_CAMERA.zoom = zoom;
+  world.style.transform = 'translate3d(' + x.toFixed(2) + 'px,' + y.toFixed(2) + 'px,0)';
 }
 
 function humanTimeText(minute) {
@@ -118,9 +153,9 @@ function renderHumanWorld() {
     '<div class="human-frame"><div id="human-stage" class="human-stage phase-' + humanPhase(S.humanWorld.minute) +
       (scene.indoors ? ' indoors' : '') + (S.humanWorld.weather === 'rain' && !scene.indoors ? ' weather-rain' : '') +
       '" tabindex="0" role="application" aria-label="' + esc(scene.name) + '. Use arrow keys or WASD to move; E, Space, or Enter to interact.">' +
+      '<div id="human-camera-world" class="human-camera-world"><div id="human-world-layer"></div><div id="human-activity-layer"></div>' +
+      '<div id="human-player" class="human-player walking" aria-label="You"><img alt=""></div></div>' +
       '<div class="human-daylight" aria-hidden="true"></div><div class="human-rain" aria-hidden="true"></div>' +
-      '<div id="human-world-layer"></div><div id="human-activity-layer"></div>' +
-      '<div id="human-player" class="human-player walking" aria-label="You"><img alt=""></div>' +
       '<div id="human-prompt" class="human-prompt" aria-live="polite"></div>' +
       '<div id="human-dialogue" class="human-dialogue" aria-live="polite"></div>' +
     '</div></div>' +
@@ -135,9 +170,12 @@ function renderHumanWorld() {
       '<div id="human-directory-list"></div></details>';
 
   var stage = $('#human-stage');
-  stage.style.backgroundImage = 'url("' + scene.image + '")';
-  stage.style.backgroundSize = scene.imageSize || 'cover';
-  stage.style.backgroundPosition = scene.imagePosition || 'center';
+  var world = $('#human-camera-world');
+  stage.style.aspectRatio = scene.viewportAspectRatio || '16 / 9';
+  world.style.backgroundImage = 'url("' + scene.image + '")';
+  world.style.backgroundSize = scene.imageSize || 'cover';
+  world.style.backgroundPosition = scene.imagePosition || 'center';
+  world.style.aspectRatio = scene.aspectRatio || '16 / 9';
   humanRenderPortalsAndObjects(scene);
   humanPlacePlayer(scene);
   humanRenderActors();
@@ -145,6 +183,7 @@ function renderHumanWorld() {
   humanRenderDirectory();
   humanUpdateAtmosphere();
   humanUpdateObjective();
+  humanUpdateCamera();
   HUMAN_LAST = performance.now();
   HUMAN_AMBIENT_AT = HUMAN_LAST + 5000;
   HUMAN_SAVE_AT = HUMAN_LAST + 12000;
@@ -171,6 +210,7 @@ function humanWorldStop(savePosition) {
   }
   HUMAN_PLAYER = null;
   HUMAN_ACTORS = [];
+  HUMAN_CAMERA = { x: 0, y: 0, zoom: 1 };
 }
 
 function humanMusicMidi(degree, shift) {
@@ -779,9 +819,9 @@ function humanTryMove(entity, nextX, nextY) {
   return false;
 }
 
-/* Screen-space gap between two feet positions, in stage-width percent. */
+/* Screen-space gap between two feet positions, in map-width percent. */
 function humanGap(ax, ay, bx, by) {
-  var dx = ax - bx, dy = (ay - by) * 9 / 16;
+  var dx = ax - bx, dy = (ay - by) * humanMapHeightRatio(humanScene());
   return Math.sqrt(dx * dx + dy * dy);
 }
 
@@ -842,7 +882,7 @@ function humanMovePlayer(now, dt) {
       // Routes are authored orthogonally. This also protects old saves or a
       // fallback waypoint from ever creating visible diagonal motion.
       if (Math.abs(dx) > .01 && Math.abs(dy) > .01) {
-        if (Math.abs(dx) >= Math.abs(dy) * 9 / 16) dy = 0;
+        if (Math.abs(dx) >= Math.abs(dy) * humanMapHeightRatio(humanScene())) dy = 0;
         else dx = 0;
       }
     }
@@ -902,7 +942,7 @@ function humanMoveActors(now, dt) {
     var gap = humanGap(actor.x, actor.y, next.x, next.y);
     var following = S.humanWorld.activity && S.humanWorld.activity.id === 'bellRound' && actor.id === 'postie';
     var vx = next.x - actor.x, vy = next.y - actor.y;
-    var horizontal = Math.abs(vx) > Math.abs(vy) * 9 / 16;
+    var horizontal = Math.abs(vx) > Math.abs(vy) * humanMapHeightRatio(humanScene());
     if (horizontal) vy = 0; else vx = 0;
     gap = humanGap(actor.x, actor.y, actor.x + vx, actor.y + vy);
     var step = Math.min(gap, (following ? HUMAN_NPC_FOLLOW_SPEED : HUMAN_NPC_SPEED) * dt), t = gap ? step / gap : 1;
@@ -951,6 +991,7 @@ function humanPaint(entity, player) {
   entity.el.style.top = entity.y.toFixed(2) + '%';
   entity.el.style.zIndex = String(100 + Math.round(entity.y));
   entity.el.classList.toggle('carrying', !!(player && S.humanWorld.activity && S.humanWorld.activity.carrying));
+  if (player) humanUpdateCamera();
 }
 
 function humanAdvanceMinute() {
@@ -1007,7 +1048,7 @@ function humanUpdateAtmosphere() {
 }
 
 function humanStagePoint(event) {
-  var rect = $('#human-stage').getBoundingClientRect();
+  var rect = $('#human-camera-world').getBoundingClientRect();
   return { x: (event.clientX - rect.left) / rect.width * 100, y: (event.clientY - rect.top) / rect.height * 100 };
 }
 
@@ -1102,7 +1143,8 @@ function humanUpdateNearby() {
   HUMAN_NEARBY = bestD < 7 ? best : null;
   if (HUMAN_NEARBY && HUMAN_NEARBY.type === 'npc' && !HUMAN_NEARBY.value.path.length) {
     // Someone standing still turns to face you as you come close.
-    var who = HUMAN_NEARBY.value, fx = HUMAN_PLAYER.x - who.x, fy = (HUMAN_PLAYER.y - who.y) * 9 / 16;
+    var who = HUMAN_NEARBY.value, fx = HUMAN_PLAYER.x - who.x,
+      fy = (HUMAN_PLAYER.y - who.y) * humanMapHeightRatio(humanScene());
     var facing = Math.abs(fx) > Math.abs(fy) ? (fx < 0 ? 'left' : 'right') : (fy < 0 ? 'up' : 'down');
     if (facing !== who.direction) humanSetSprite(who, who.npc.sprite, facing, who.npc.front);
   }
@@ -1126,7 +1168,8 @@ function humanOpenDialogue(id) {
   HUMAN_MOVE_TARGET = null; HUMAN_PENDING = null;
   ensureTown(); ensureFriends();
   var folk = townsfolkById(id), fr = friendship(id);
-  if (!fr.met) { fr.met = true; changeFriendship(id, npc.companion ? 35 : 20); syncFriendStory(); }
+  /* Shop and service people are not befriendable, so friendship() is null. */
+  if (fr && !fr.met) { fr.met = true; changeFriendship(id, npc.companion ? 35 : 20); syncFriendStory(); }
   if (folk) S.town.met[id] = true;
   saveGame();
   HUMAN_DIALOGUE = { npcId: id };
@@ -1162,12 +1205,12 @@ function humanDialogueMenu(id, line) {
   humanDialoguePage(npc.name, npc.role, line || (folk ? folk.say : ''), actions, portrait);
 }
 
-function humanDialoguePage(name, role, text, buttons, portrait, note) {
+function humanDialoguePage(name, role, text, buttons, portrait, note, extraHtml) {
   var box = $('#human-dialogue'); if (!box) return;
   document.body.classList.add('human-dialogue-open');
   box.innerHTML = (portrait ? '<img class="human-dialogue-portrait" src="' + portrait + '" alt="">' : '') +
     '<div class="human-dialogue-copy"><span>' + esc(role || '') + '</span><h3>' + esc(name) + '</h3>' +
-    '<p>' + esc(text) + '</p>' + (note ? '<small>' + esc(note) + '</small>' : '') +
+    '<p>' + esc(text) + '</p>' + (note ? '<small>' + esc(note) + '</small>' : '') + (extraHtml || '') +
     '<div class="human-dialogue-actions">' + buttons + '</div></div>';
   box.classList.add('on');
   var first = box.querySelector('button'); if (first) first.focus({ preventScroll: true });
@@ -1212,12 +1255,17 @@ function humanChat(id) {
   if (typeof journalTalk === 'function') journalTalk(id);
   if (npc.companion) {
     var trainer = TRAINERS.find(function (t) { return t.id === id; });
-    if (trainer && trainer.talk && trainer.talk.length) line = trainer.talk[fr.talks % trainer.talk.length];
-  } else if (folk && folk.tip && fr.talks % 2) line = folk.tip;
-  if (!friendWait(fr, 'Talk')) { gain = changeFriendship(id, npc.companion ? 15 : 12); fr.lastTalk = S.clock; fr.talks++; }
+    if (trainer && trainer.talk && trainer.talk.length && fr) line = trainer.talk[fr.talks % trainer.talk.length];
+  } else if (folk && folk.tip && fr && fr.talks % 2) line = folk.tip;
+  if (fr && !friendWait(fr, 'Talk')) { gain = changeFriendship(id, npc.companion ? 15 : 12); fr.lastTalk = S.clock; fr.talks++; }
+  /* Unique town grants (Kern's EXP Share) come from an ordinary chat here too,
+     through the same receipt as the directory talk, so neither path can repeat it. */
+  var grant = folk && folk.grant && typeof claimTownGrant === 'function' ? claimTownGrant(folk) : null;
+  var extra = (grant ? '<p class="friend-change">Received ' + grant.amount + ' ' + esc(grant.item.name) + '.</p>' : '') +
+    (typeof rumorAsideHtml === 'function' ? rumorAsideHtml(id, { location: 'town' }) : '');
   // Conversation pauses the town clock; only normal play advances the schedule.
   saveGame();
-  humanDialoguePage(npc.name, npc.role, line, '<button class="primary" onclick="humanDialogueBack()">Keep talking</button><button class="ghost" onclick="humanCloseDialogue()">See you</button>', humanPortrait(id), gain ? 'Friendship +' + gain : 'A comfortable, ordinary conversation.');
+  humanDialoguePage(npc.name, npc.role, line, '<button class="primary" onclick="humanDialogueBack()">Keep talking</button><button class="ghost" onclick="humanCloseDialogue()">See you</button>', humanPortrait(id), gain ? 'Friendship +' + gain : 'A comfortable, ordinary conversation.', extra);
 }
 
 function humanHeal(id) {
@@ -1423,6 +1471,9 @@ document.addEventListener('keyup', function (event) {
 });
 
 window.addEventListener('blur', function () { HUMAN_KEYS = {}; });
+window.addEventListener('resize', function () {
+  if (CUR === 'human') humanUpdateCamera();
+});
 
 document.addEventListener('click', function (event) {
   if (CUR !== 'human' || HUMAN_DIALOGUE || !event.target.closest('#human-stage')) return;

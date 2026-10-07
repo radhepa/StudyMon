@@ -117,6 +117,38 @@ family({ chapter:1, lesson:4, slug:'cross-area-volume', name:'Area and volume fr
     hints:['Parallelogram area is |u cross v|.','These axis-aligned vectors make u cross v = (0,0,'+area+').','Volume is |(u cross v) dot w|.'] };
 });
 
+/* Gym 2 - areas between curves and volumes by slicing. Added so lessons 5 and
+   6 join the ten-per-type rule too; before this they had no family at all,
+   which would have dropped them from a curated revision pool entirely. */
+family({ chapter:2, lesson:5, slug:'area-dx', name:'Area between curves, integrating in x', section:'6.1' }, function (i) {
+  var n=i+2, top=frac(n*n,2), bot=frac(n*n,3), ans=frac(n*n,6);
+  return { q:'Find the area between y = x (top) and y = x^2/'+n+' (bottom), from x = 0 to x = '+n+'.', correct:ans,
+    wrong:[top,bot,String(n)],
+    why:'A = integral_0^'+n+' (x - x^2/'+n+') dx = [x^2/2 - x^3/(3*'+n+')]_0^'+n+' = '+top+' - '+bot+' = '+ans+'.',
+    hints:['Check a point strictly between 0 and '+n+' to confirm which curve is on top.','Area = integral of (top - bottom) dx over the interval.','Integrate x - x^2/'+n+' term by term, then evaluate at '+n+'.'] };
+});
+family({ chapter:2, lesson:5, slug:'area-dy', name:'Area between curves, integrating in y', section:'6.1' }, function (i) {
+  var c=i+2, right=frac(c*c*c,2), left=frac(c*c*c,3), ans=frac(c*c*c,6);
+  return { q:'Find the area enclosed by x = '+c+'y (right) and x = y^2 (left), for 0 <= y <= '+c+'.', correct:ans,
+    wrong:[right,left,String(c*c)],
+    why:'For 0 <= y <= '+c+', '+c+'y >= y^2, so A = integral_0^'+c+' ('+c+'y - y^2) dy = ['+c+'y^2/2 - y^3/3]_0^'+c+' = '+right+' - '+left+' = '+ans+'.',
+    hints:['Decide which curve is farther right by testing a y strictly between 0 and '+c+'.','Area = integral of (right - left) dy.','Integrate '+c+'y - y^2 term by term, then evaluate at '+c+'.'] };
+});
+family({ chapter:2, lesson:6, slug:'disk-x-axis', name:'Disk method about the x-axis', section:'6.2' }, function (i) {
+  var h=i+2, ans=frac(h*h,2)+'pi';
+  return { q:'The region under y = sqrt(x), from x = 0 to x = '+h+', is revolved about the x-axis. Find the volume.', correct:ans,
+    wrong:[h*h+'pi',frac(h*h,3)+'pi',frac(h,2)+'pi'],
+    why:'V = pi integral_0^'+h+' (sqrt(x))^2 dx = pi integral_0^'+h+' x dx = pi[x^2/2]_0^'+h+' = '+ans+'.',
+    hints:['Disk volume is pi times the integral of the radius squared.','Here the radius at x is sqrt(x), so the radius squared is just x.','Integrate x from 0 to '+h+', then multiply by pi.'] };
+});
+family({ chapter:2, lesson:6, slug:'washer-between-curves', name:'Washer method between two curves', section:'6.2' }, function (i) {
+  var n=i+2, outer=frac(n*n*n,3), inner=frac(n*n*n,5), ans=frac(2*n*n*n,15)+'pi';
+  return { q:'The region between y = x (outer) and y = x^2/'+n+' (inner), from x = 0 to x = '+n+', is revolved about the x-axis. Find the volume.', correct:ans,
+    wrong:[frac(n*n*n,15)+'pi',outer+'pi',inner+'pi'],
+    why:'V = pi integral_0^'+n+' (x^2 - (x^2/'+n+')^2) dx = pi integral_0^'+n+' (x^2 - x^4/'+(n*n)+') dx = pi('+outer+' - '+inner+') = '+ans+'.',
+    hints:['Washer volume is pi times the integral of outer^2 minus inner^2.','Square each curve before subtracting - (x - x^2/'+n+')^2 is NOT x^2 - (x^2/'+n+')^2.','Integrate x^2 - x^4/'+(n*n)+' from 0 to '+n+', then multiply by pi.'] };
+});
+
 /* Gym 3 and the first exam route - shells, length, work, fluids, parts. */
 family({ chapter:3, lesson:7, slug:'shells-standard', name:'Cylindrical shells about a coordinate axis', section:'6.2' }, function (i) {
   var h=i+2, coeff=frac(h*h*h,3);

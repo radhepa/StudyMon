@@ -178,7 +178,8 @@ function renderBagSummary() {
       h += '<article class="bag-item"><div><strong>' + esc(item.name) + '</strong>' +
         '<span> × ' + itemCount(key) + '</span><p class="small">' + esc(item.description || '') + '</p></div>' +
         (partyUse ? '<button ' + (!itemCount(key) ? 'disabled ' : '') +
-          'onclick="openBagItem(\'' + key + '\')">Use</button>' : '') + '</article>';
+          'onclick="openBagItem(\'' + key + '\')">Use</button>' : '') +
+        (typeof vignetteButtonHtml === 'function' ? vignetteButtonHtml(key) : '') + '</article>';
       });
       h += '</div></div>';
     });
@@ -309,6 +310,7 @@ function openShop(keeperId) {
 
 function renderShop() {
   ensureBag();
+  var townReturn = TOWN_UI_ENABLED;
   var keeper = SHOP_KEEPER && typeof townsfolkById === 'function' ? townsfolkById(SHOP_KEEPER) : null;
   var h = '<div class="section-intro"><span class="eyebrow">POKé MART</span>' +
     '<h2>' + (keeper ? esc(keeper.name) + '’s counter' : 'The counter') + '</h2>' +
@@ -348,8 +350,8 @@ function renderShop() {
   h += '<p class="muted" style="margin-top:16px">Prize money comes from battles. Wild Pokémon pay a little, ' +
     'trainers around the region pay more, and gym leaders pay best.</p>' +
     '<div class="row" style="margin-top:12px"><button class="ghost" onclick="' +
-    (typeof humanWorldHasReturn === 'function' && humanWorldHasReturn() ? 'humanWorldReturn()' : 'openTown()') +
-    '">Back to ' + (typeof humanWorldHasReturn === 'function' && humanWorldHasReturn() ? 'Bootstrap Town' : 'the region') + '</button></div>';
+    (townReturn ? (typeof humanWorldHasReturn === 'function' && humanWorldHasReturn() ? 'humanWorldReturn()' : 'openTown()') : 'showScreen(\'map\');renderMap()') +
+    '">Back to ' + (townReturn ? (typeof humanWorldHasReturn === 'function' && humanWorldHasReturn() ? 'Bootstrap Town' : 'the region') : 'the map') + '</button></div>';
 
   $('#s-shop').innerHTML = h;
   renderTopbar();

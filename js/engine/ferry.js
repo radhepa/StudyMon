@@ -1,9 +1,8 @@
 /* The ferry.
 
    Two regions, one trainer, and something has to carry you between them. The
-   berth sits in the first location of each subject - the practice field at
-   Bootstrap Town has a jetty, Origin Harbour is a harbour - and it is open from
-   the first day.
+   topbar crossing opens the destination's gym and battle map, and it is open
+   from the first day. The town berths remain available in the retained content.
 
    That last part is deliberate and should stay that way. StudyMon is a study tool
    for real classes with real exam dates. Gating the calculus region behind C
@@ -90,17 +89,18 @@ function sailTo(id) {
   saveGame();
 
   closeModal();
-  openTown(TOWN_LOC);
-  renderTopbar();
-  toast(first ? 'You land at ' + LOCATIONS[0].name + '. ' + def.region + '.'
+  showScreen('map');
+  renderMap();
+  toast(first ? 'Welcome to ' + def.region + '.'
               : 'Back in ' + def.region + '.');
 }
 
-/* Topbar chip: says where you are, and is the second way to reach the ferry so
-   you are never more than one click from the crossing. */
+/* One compact topbar button sails directly to the other region. */
 function regionChip() {
-  var d = subjectDef();
-  if (Object.keys(SUBJECTS).length < 2) return '';
-  return '<button class="chip region-chip" onclick="openFerry()" ' +
-    'title="Sail to another region">⚓ ' + esc(d.short || d.name) + '</button>';
+  var dests = ferryDestinations();
+  if (!dests.length) return '';
+  var d = dests[0], label = esc('Ferry to ' + d.region);
+  return '<button type="button" class="chip region-chip" onclick="sailTo(\'' + d.id + '\')" ' +
+    'title="' + label + '" aria-label="' + label + '">' +
+    '<span aria-hidden="true">⛴</span> Ferry</button>';
 }

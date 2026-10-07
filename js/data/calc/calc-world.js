@@ -252,6 +252,11 @@ window.CALC_ELITE = [
     types: ['water', 'dark'], ace: 321,
     after: 3, lessons: [1,2,3,4,5,6,7,8,9,10,11], only: [10, 11],
     chapters: [1, 2, 3, 91],
+    // Cuts the revision route's practice pool down to 3 questions per
+    // "ten per problem type" family (see calc-questions-tenfold.js) instead
+    // of every question ever written for chapters 1-3 and 91 - a pool meant
+    // to be finished the night before the exam, not worked through in full.
+    revisionPerType: 3,
     route: 'Revision Route I - The Long Reservoir',
     intro: 'Eleven lessons, fifty minutes. Two of them were never on a quiz, so this is the first time anyone has asked you about pumping a tank or trading an integral away. Begin.',
     rematch: 'Again? The reservoir has not moved and neither have I.'

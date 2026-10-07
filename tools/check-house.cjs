@@ -1,6 +1,5 @@
 /* The house: the journal on the desk, the collection chest, the aquarium and
-   the terrarium - plus the temporary region-warp chip that stands in for the
-   pier while Bootstrap Town is rebuilt.
+   the terrarium - plus the topbar ferry between regions.
 
    The point of this suite is that every one of those is reached by walking up
    to a piece of furniture and pressing E, so it drives the real hotspots rather
@@ -179,24 +178,24 @@ const { chromium } = require('./playwright.cjs');
      cases.viv.skin && cases.viv.residents === 0 && cases.viv.empty, cases.viv);
   ok('every resident sits inside the glass', cases.inside);
 
-  /* ---- the temporary warp chip ------------------------------------------- */
+  /* ---- the topbar ferry --------------------------------------------------- */
   const warp = await page.evaluate(() => {
     closeModal();
     showScreen('map'); renderMap();
     const before = activeSubject();
-    const chip = document.querySelector('.temp-warp-chip');
+    const chip = document.querySelector('#topbar .region-chip');
     if (!chip) return { missing: true };
-    const outLabel = chip.textContent;
+    const outLabel = chip.getAttribute('aria-label');
     chip.click();
     const there = activeSubject();
-    const back = document.querySelector('.temp-warp-chip');
-    const backLabel = back && back.textContent;
+    const back = document.querySelector('#topbar .region-chip');
+    const backLabel = back && back.getAttribute('aria-label');
     if (back) back.click();
     return { before, outLabel, there, backLabel, home: activeSubject() };
   });
   ok('the topbar carries a one-click crossing to the calculus region',
-     !warp.missing && warp.before === 'c' && /Calc/.test(warp.outLabel) && warp.there === 'calc', warp);
-  ok('and the same chip brings you back', /C/.test(warp.backLabel || '') && warp.home === 'c', warp);
+     !warp.missing && warp.before === 'c' && /Converging Isles/.test(warp.outLabel) && warp.there === 'calc', warp);
+  ok('and the same ferry button brings you back', /C-Region/.test(warp.backLabel || '') && warp.home === 'c', warp);
 
   /* ---- persistence ------------------------------------------------------- */
   const persisted = await page.evaluate(() => {
@@ -216,7 +215,7 @@ const { chromium } = require('./playwright.cjs');
 
   if (errors.length) throw new Error('Browser errors: ' + errors.join(' | '));
   console.log('PASS: the journal, the collection chest, both display cases, the ' +
-              'temporary crossing chip, and all of it through the real hotspots');
+              'ferry button, and all of it through the real hotspots');
   await browser.close();
 })().catch(err => { console.error(err); process.exit(1); });
 

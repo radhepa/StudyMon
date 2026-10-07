@@ -150,6 +150,16 @@ function addFixedEncounter(region, route, entry) {
 }
 addFixedEncounter(k, 3, [1026, 'uncommon']);
 addFixedEncounter(k, 3, [1029, 'uncommon']);
+/* The Isles originals are first stages only, and only past Evening Exam I
+   (which stands after gym 3), so none can turn up before the exam is sat. */
+addFixedEncounter(k, 4, [1039, 'uncommon']);   // Drenchic - the electric route
+addFixedEncounter(k, 5, [1035, 'uncommon']);   // Cryoad - ghost/ice
+addFixedEncounter(k, 6, [1037, 'uncommon']);   // Tallybara - sequences, it counts
+addFixedEncounter(k, 6, [1046, 'uncommon']);   // Tumblerook
+addFixedEncounter(k, 7, [1042, 'uncommon']);   // Fernip
+addFixedEncounter(k, 8, [1038, 'uncommon']);   // Kilnscarab
+addFixedEncounter(k, 9, [1032, 'uncommon']);   // Budloth
+addFixedEncounter(k, 10, [1044, 'uncommon']);  // Cairnkid
 
 const every = new Set();
 [c, k].forEach(r => Object.values(r).forEach(t => t.forEach(x => every.add(x[0]))));

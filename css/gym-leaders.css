@@ -1,0 +1,33 @@
+/* Phase 6: the leader hub (post-defeat visits and optional rematches). It sits
+   inside the same modal as the gym greeting, so it inherits .gym-greeting. */
+
+.leader-hub .leader-face-disc {
+  display: grid; place-items: center;
+  width: 96px; height: 96px; margin: 0 auto 8px;
+  border-radius: 50%;
+  background: var(--panel-2, #efe3c8);
+  color: var(--ink, #3b2a1a);
+  font-size: 40px; font-weight: 700;
+}
+.leader-hub .leader-where { margin: 2px 0 8px; font-size: 14px; opacity: .85; }
+.leader-hub .leader-actions { justify-content: center; margin: 10px 0 4px; }
+.leader-hub .leader-rematch {
+  margin: 14px 0 10px; padding: 12px 14px;
+  border: 1px solid rgba(0, 0, 0, .12); border-radius: 10px;
+  text-align: left;
+}
+.leader-hub .leader-rematch h3 { margin: 0 0 6px; font-size: 16px; }
+.leader-hub .leader-invite { font-style: italic; margin: 0 0 8px; }
+.leader-hub .leader-wait { color: var(--red, #a33); }
+.leader-hub .leader-rematch button { margin-top: 6px; }
+.leader-friend-panel button { margin-top: 6px; }
+.town-card.leader-card { border-style: dashed; }
+
+/* Quest framing (Phase 6 Slices 5-6). */
+.sq-framing { margin: 12px 0; }
+.sq-framing .scene-prose { margin: 6px 0 0; }
+
+@media (max-width: 520px) {
+  .leader-hub .leader-actions { flex-direction: column; }
+  .leader-hub .leader-actions button { width: 100%; }
+}

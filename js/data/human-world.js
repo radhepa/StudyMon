@@ -110,8 +110,8 @@ var HUMAN_CAVERN_HOLLOW_NAV = {
 window.HUMAN_WORLD_SCENES = {
   square: {
     id: 'square', name: 'Bootstrap Town', subtitle: 'Town Square · outdoors',
-    image: 'assets/ui/bootstrap-town-exterior-v1.png',
-    imagePosition: 'center', imageSize: 'cover', indoors: false,
+    image: 'assets/ui/bootstrap-town-scene-1-town-center-definitive-v2-2x.png',
+    imagePosition: 'center', imageSize: 'cover', aspectRatio: '1 / 1', indoors: false,
     spawns: {
       southGate: [50, 88], centerDoor: [22, 30], martDoor: [52.5, 30],
       labDoor: [75.5, 29.5], homeDoor: [9, 45], residenceDoor: [85.9, 51.7],
@@ -187,7 +187,7 @@ window.HUMAN_WORLD_SCENES = {
   },
   residence: {
     id: 'residence', name: 'Cottage Row', subtitle: 'Several townsfolk rent rooms along this lane',
-    image: 'assets/ui/bootstrap-town-cottage-row-v2.png', imageSize: 'cover', imagePosition: 'center', indoors: false,
+    image: 'assets/ui/bootstrap-town-scene-1-town-center-definitive-v2-2x.png', imageSize: 'cover', imagePosition: 'center', aspectRatio: '1 / 1', indoors: false,
     spawns: { door: [50,86], square: [50,86], archive: [50,8] },
     nav: HUMAN_COTTAGE_ROW_NAV,
     portals: [
@@ -197,7 +197,7 @@ window.HUMAN_WORLD_SCENES = {
   },
   cafe: {
     id: 'cafe', name: 'Compiler Café District', subtitle: 'Coffee, study tables, and the town’s busiest crossroads',
-    image: 'assets/ui/bootstrap-town-compiler-cafe-v1.png', imageSize: 'cover', imagePosition: 'center', indoors: false,
+    image: 'assets/ui/bootstrap-town-scene-1-town-center-definitive-v2-2x.png', imageSize: 'cover', imagePosition: 'center', aspectRatio: '1 / 1', indoors: false,
     spawns: { west: [5,55], east: [95,55], south: [50,88] },
     nav: HUMAN_COMMUNITY_CROSS_NAV,
     portals: [
@@ -208,7 +208,7 @@ window.HUMAN_WORLD_SCENES = {
   },
   meadow: {
     id: 'meadow', name: 'Meadow Route', subtitle: 'Wildflowers, training paths, and the field shelter',
-    image: 'assets/ui/bootstrap-town-meadow-route-v1.png', imageSize: 'cover', imagePosition: 'center', indoors: false,
+    image: 'assets/ui/bootstrap-town-scene-2-meadow-riverlands-definitive-v2-2x.png', imageSize: 'cover', imagePosition: 'center', aspectRatio: '1 / 1', indoors: false,
     spawns: { north: [50,7], south: [50,90], west: [5,55], east: [95,55] },
     nav: HUMAN_COMMUNITY_CROSS_NAV,
     portals: [
@@ -220,7 +220,7 @@ window.HUMAN_WORLD_SCENES = {
   },
   pier: {
     id: 'pier', name: 'Riverside Pier', subtitle: 'Boats, repairs, fishing, and the working riverfront',
-    image: 'assets/ui/bootstrap-town-riverside-pier-v2.png', imageSize: 'cover', imagePosition: 'center', indoors: false,
+    image: 'assets/ui/bootstrap-town-scene-2-meadow-riverlands-definitive-v2-2x.png', imageSize: 'cover', imagePosition: 'center', aspectRatio: '1 / 1', indoors: false,
     spawns: { west: [5,55], east: [95,55], south: [50,90] },
     nav: HUMAN_COMMUNITY_CROSS_NAV,
     portals: [
@@ -231,7 +231,7 @@ window.HUMAN_WORLD_SCENES = {
   },
   ridge: {
     id: 'ridge', name: 'Stack Ridge', subtitle: 'Terraced paths and a highland training overlook',
-    image: 'assets/ui/bootstrap-town-stack-ridge-v1.png', imageSize: 'cover', imagePosition: 'center', indoors: false,
+    image: 'assets/ui/bootstrap-town-scene-4-stack-ridge-linden-grounds-definitive-v2-2x.png', imageSize: 'cover', imagePosition: 'center', aspectRatio: '1 / 1', indoors: false,
     spawns: { north: [50,7], south: [50,90], west: [5,55], east: [95,55] },
     nav: HUMAN_COMMUNITY_CROSS_NAV,
     portals: [
@@ -243,7 +243,7 @@ window.HUMAN_WORLD_SCENES = {
   },
   archive: {
     id: 'archive', name: 'The Archive District', subtitle: 'Library gardens, study houses, and quiet public rooms',
-    image: 'assets/ui/bootstrap-town-archive-v1.png', imageSize: 'cover', imagePosition: 'center', indoors: false,
+    image: 'assets/ui/bootstrap-town-scene-3-archive-upper-quarter-definitive-v2-2x.png', imageSize: 'cover', imagePosition: 'center', aspectRatio: '1 / 1', indoors: false,
     spawns: { north: [50,7], south: [50,90], west: [5,55], east: [95,55] },
     nav: HUMAN_COMMUNITY_CROSS_NAV,
     portals: [
@@ -254,7 +254,7 @@ window.HUMAN_WORLD_SCENES = {
   },
   linden: {
     id: 'linden', name: 'Linden Research Grounds', subtitle: 'Greenhouses, field instruments, and staff housing',
-    image: 'assets/ui/bootstrap-town-linden-grounds-v1.png', imageSize: 'cover', imagePosition: 'center', indoors: false,
+    image: 'assets/ui/bootstrap-town-scene-4-stack-ridge-linden-grounds-definitive-v2-2x.png', imageSize: 'cover', imagePosition: 'center', aspectRatio: '1 / 1', indoors: false,
     spawns: { north: [50,7], south: [50,90], west: [5,55], east: [95,55] },
     nav: HUMAN_COMMUNITY_CROSS_NAV,
     portals: [
@@ -264,7 +264,7 @@ window.HUMAN_WORLD_SCENES = {
   },
   cavern: {
     id: 'cavern', name: 'Null Cavern Settlement', subtitle: 'A safe, lantern-lit community at the cavern mouth',
-    image: 'assets/ui/bootstrap-town-null-cavern-v1.png', imageSize: 'cover', imagePosition: 'center', indoors: false,
+    image: 'assets/ui/bootstrap-town-scene-5-null-cavern-settlement-definitive-v2-2x.png', imageSize: 'cover', imagePosition: 'center', aspectRatio: '1 / 1', indoors: false,
     spawns: { cave: [50,12], south: [50,90], west: [5,55], east: [95,55] },
     nav: HUMAN_COMMUNITY_CROSS_NAV,
     portals: [
@@ -275,7 +275,7 @@ window.HUMAN_WORLD_SCENES = {
   },
   quarter: {
     id: 'quarter', name: 'Upper Quarter', subtitle: 'Homes, public training grounds, and neighborhood services',
-    image: 'assets/ui/bootstrap-town-upper-quarter-v1.png', imageSize: 'cover', imagePosition: 'center', indoors: false,
+    image: 'assets/ui/bootstrap-town-scene-3-archive-upper-quarter-definitive-v2-2x.png', imageSize: 'cover', imagePosition: 'center', aspectRatio: '1 / 1', indoors: false,
     spawns: { north: [50,7], south: [50,90], west: [5,55], east: [95,55] },
     nav: HUMAN_COMMUNITY_CROSS_NAV,
     portals: [
@@ -286,21 +286,21 @@ window.HUMAN_WORLD_SCENES = {
   },
   meadowHomes: {
     id: 'meadowHomes', name: 'Meadow Homesteads', subtitle: 'Gardens, orchards, and family cottages',
-    image: 'assets/ui/bootstrap-town-meadow-homesteads-v2.png', imageSize: 'cover', imagePosition: 'center', indoors: false,
+    image: 'assets/ui/bootstrap-town-scene-2-meadow-riverlands-definitive-v2-2x.png', imageSize: 'cover', imagePosition: 'center', aspectRatio: '1 / 1', indoors: false,
     spawns: { north: [50,7] },
     nav: HUMAN_MEADOW_HOMES_NAV,
     portals: [{ id: 'meadowRoad', label: 'Meadow Route', x: 50, y: 4, to: 'meadow', spawn: 'south' }]
   },
   riversideHomes: {
     id: 'riversideHomes', name: 'Riverside Row', subtitle: 'River households, workshops, and a shared washhouse',
-    image: 'assets/ui/bootstrap-town-riverside-row-v2.png', imageSize: 'cover', imagePosition: 'center', indoors: false,
+    image: 'assets/ui/bootstrap-town-scene-2-meadow-riverlands-definitive-v2-2x.png', imageSize: 'cover', imagePosition: 'center', aspectRatio: '1 / 1', indoors: false,
     spawns: { west: [5,50] },
     nav: HUMAN_RIVERSIDE_HOMES_NAV,
     portals: [{ id: 'pierRoad', label: 'Riverside Pier', x: 3, y: 50, to: 'pier', spawn: 'east' }]
   },
   hillHomes: {
     id: 'hillHomes', name: 'Hillcrest Terrace', subtitle: 'Highland cottages and a communal overlook',
-    image: 'assets/ui/bootstrap-town-hillcrest-terrace-v2.png', imageSize: 'cover', imagePosition: 'center', indoors: false,
+    image: 'assets/ui/bootstrap-town-scene-4-stack-ridge-linden-grounds-definitive-v2-2x.png', imageSize: 'cover', imagePosition: 'center', aspectRatio: '1 / 1', indoors: false,
     spawns: { west: [3,47], east: [97,47] },
     nav: HUMAN_HILLCREST_NAV,
     portals: [
@@ -311,7 +311,7 @@ window.HUMAN_WORLD_SCENES = {
   },
   cavernHomes: {
     id: 'cavernHomes', name: 'Cavern Hollow', subtitle: 'Guide lodges, rock homes, and the lamplighter’s lane',
-    image: 'assets/ui/bootstrap-town-cavern-hollow-v1.png', imageSize: 'cover', imagePosition: 'center', indoors: false,
+    image: 'assets/ui/bootstrap-town-scene-5-null-cavern-settlement-definitive-v2-2x.png', imageSize: 'cover', imagePosition: 'center', aspectRatio: '1 / 1', indoors: false,
     spawns: { west: [3,50] },
     nav: HUMAN_CAVERN_HOLLOW_NAV,
     portals: [

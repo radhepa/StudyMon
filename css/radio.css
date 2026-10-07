@@ -33,6 +33,11 @@
 .radio-head h2 { margin: 0; font: 900 21px 'Arial Black', 'Trebuchet MS', sans-serif; color: #5b3b22; letter-spacing: -.5px; }
 #radio-panel .radio-close { min-height: 34px; width: 36px; padding: 0; font-size: 22px; line-height: 1; }
 
+.radio-master { display: flex; align-items: center; gap: 10px; margin: 2px 0 10px; }
+#radio-panel .radio-stopall { min-width: 118px; font-weight: 700; }
+#radio-panel .radio-stopall.live { background: linear-gradient(#f3d6d1, #dfa79c); border-color: #96402f; color: #5b1f14; }
+.radio-master-hint { font-size: 12px; color: #7b6045; }
+
 .radio-sec { border-top: 2px dashed #b7976a; padding-top: 12px; margin-top: 12px; }
 .radio-sec h3 { margin: 0 0 8px; font: 700 16px Georgia, serif; color: #5b3b22; }
 .radio-sec-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }

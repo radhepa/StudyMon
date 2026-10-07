@@ -32,7 +32,18 @@ let browser;
     ada: humanNpcState('nurse').scene,
     bell: humanNpcState('postie').scene,
     rowan: humanNpcState('rowan').scene,
-    background: document.getElementById('human-stage').style.backgroundImage,
+    background: document.getElementById('human-camera-world').style.backgroundImage,
+    mapAspectRatio: document.getElementById('human-camera-world').style.aspectRatio,
+    viewportAspectRatio: document.getElementById('human-stage').style.aspectRatio,
+    cameraZoom: HUMAN_CAMERA.zoom,
+    cameraTransform: document.getElementById('human-camera-world').style.transform,
+    cameraImageRendering: getComputedStyle(document.getElementById('human-camera-world')).imageRendering,
+    horizontalMapFraction: document.getElementById('human-stage').getBoundingClientRect().width /
+      document.getElementById('human-camera-world').getBoundingClientRect().width,
+    verticalMapFraction: document.getElementById('human-stage').getBoundingClientRect().height /
+      document.getElementById('human-camera-world').getBoundingClientRect().height,
+    actorFramePercent: document.getElementById('human-player').offsetHeight /
+      document.getElementById('human-camera-world').offsetHeight * 100,
     musicName: HUMAN_MUSIC_TRACK.name,
     musicBars: HUMAN_MUSIC_TRACK.chords.length,
     musicSteps: HUMAN_MUSIC_TRACK.melody.length,
@@ -42,7 +53,35 @@ let browser;
   if (initial.wren !== 'mart' || initial.ada !== 'center' || initial.bell !== 'square' || initial.rowan !== 'square') {
     throw new Error('Morning schedule did not place the key cast correctly: ' + JSON.stringify(initial));
   }
-  if (!initial.background.includes('bootstrap-town-exterior')) throw new Error('Exterior art did not load');
+  if (!initial.background.includes('bootstrap-town-scene-1-town-center-definitive-v2-2x')) throw new Error('2x definitive Town Center art did not load');
+  if (initial.mapAspectRatio !== '1 / 1' || initial.viewportAspectRatio !== '16 / 9') throw new Error('Town map or camera viewport has the wrong aspect ratio');
+  if (Math.abs(initial.actorFramePercent - 5.1) > .08) throw new Error('Player is not proportional to the 32x48-on-1254 map scale: ' + JSON.stringify(initial));
+  if (initial.cameraZoom < 1.8 || initial.horizontalMapFraction > .56 || initial.verticalMapFraction > .34) {
+    throw new Error('Follow camera exposes too much of the map: ' + JSON.stringify(initial));
+  }
+  if (/scale\(/.test(initial.cameraTransform) || initial.cameraImageRendering === 'pixelated') {
+    throw new Error('Camera is raster-scaling the town art instead of rendering it at full quality: ' + JSON.stringify(initial));
+  }
+  const cameraFollow = await page.evaluate(() => {
+    const saved = { x: HUMAN_PLAYER.x, y: HUMAN_PLAYER.y };
+    HUMAN_PLAYER.x = 50; HUMAN_PLAYER.y = 50; humanPaint(HUMAN_PLAYER, true);
+    const stage = document.getElementById('human-stage').getBoundingClientRect();
+    let world = document.getElementById('human-camera-world').getBoundingClientRect();
+    const feet = { x: world.left + world.width * .5, y: world.top + world.height * .5 };
+    const pointer = humanStagePoint({ clientX: stage.left + stage.width / 2, clientY: stage.top + stage.height / 2 });
+    const beforeX = HUMAN_CAMERA.x;
+    HUMAN_PLAYER.x = 60; humanPaint(HUMAN_PLAYER, true);
+    const afterX = HUMAN_CAMERA.x;
+    HUMAN_PLAYER.x = saved.x; HUMAN_PLAYER.y = saved.y; humanPaint(HUMAN_PLAYER, true);
+    return {
+      centerError: Math.hypot(feet.x - (stage.left + stage.width / 2), feet.y - (stage.top + stage.height / 2)),
+      pointerError: Math.hypot(pointer.x - 50, pointer.y - 50),
+      cameraShift: afterX - beforeX
+    };
+  });
+  if (cameraFollow.centerError > 1 || cameraFollow.pointerError > .1 || cameraFollow.cameraShift > -10) {
+    throw new Error('Camera does not center, follow, or invert pointer coordinates correctly: ' + JSON.stringify(cameraFollow));
+  }
   if (initial.musicName !== 'Sunlit Steps' || initial.musicBars !== 16 || initial.musicSteps !== 128 || !initial.musicActive) {
     throw new Error('Bootstrap Town music did not start with one complete 16-bar theme: ' + JSON.stringify(initial));
   }
@@ -55,6 +94,12 @@ let browser;
 
   // Bell stands near the Mart at 08:00; the visible sprite may overlap the
   // doorway visually, but its transparent canvas must not steal the door click.
+  // Move the camera to the Mart first; the follow camera intentionally keeps
+  // offscreen doors outside the interactive viewport.
+  await page.evaluate(() => {
+    HUMAN_PLAYER.x = 52.5; HUMAN_PLAYER.y = 32;
+    humanPaint(HUMAN_PLAYER, true);
+  });
   await page.getByRole('button', { name: 'Enter Poké Mart' }).click({ timeout: 2000 });
   if (!await page.evaluate(() => HUMAN_PENDING && HUMAN_PENDING.type === 'portal' && HUMAN_PENDING.value.id === 'mart')) {
     throw new Error('Mart door click did not survive the nearby NPC hitbox');
@@ -146,8 +191,8 @@ let browser;
   const mart = await page.evaluate(() => ({
     scene: S.humanWorld.scene,
     actors: HUMAN_ACTORS.map(actor => actor.id),
-    size: document.getElementById('human-stage').style.backgroundSize,
-    position: document.getElementById('human-stage').style.backgroundPosition
+    size: document.getElementById('human-camera-world').style.backgroundSize,
+    position: document.getElementById('human-camera-world').style.backgroundPosition
   }));
   if (!mart.actors.includes('mart') || !mart.actors.includes('postie')) throw new Error('Wren or following Bell did not enter the Mart');
   if (mart.size !== '200% 200%' || mart.position !== '0% 0%') throw new Error('Mart atlas quadrant is wrong');

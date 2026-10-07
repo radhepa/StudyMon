@@ -15,6 +15,9 @@ HANDOFF-*.md
 CLAUDE-HANDOFF-*.md
 CLAUDE_HANDOFF_*.md
 IMPLEMENTATION-ROADMAP.md
+docs/*-handoff.md
+docs/StudyMon Fakemon Art Guide.pdf
+docs/StudyMon Fakemon Generation Protocol.pdf
 
 # Common local dependency and OS artifacts
 node_modules/

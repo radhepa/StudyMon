@@ -84,8 +84,15 @@
    paths the residents walk. */
 .kingdom-map-board {
   position: relative;
-  height: 178px;
+  height: 260px;
   margin: 2px 4px 4px;
+  border: 1px solid #a884514d;
+  border-radius: 12px;
+  background:
+    radial-gradient(circle at 40% 51%, #fff7d04d 0 8%, transparent 9%),
+    radial-gradient(circle at 68% 52%, #b6d27d38 0 11%, transparent 12%),
+    linear-gradient(135deg, #f0dca9aa, #d8b87866);
+  box-shadow: inset 0 0 24px #6b4b2824;
 }
 .kingdom-map-roads {
   position: absolute;
@@ -129,7 +136,7 @@
   align-items: center;
   gap: 5px;
   min-width: 0;
-  max-width: 30%;
+  max-width: 23%;
   padding: 5px 7px;
   border: 2px solid #68452a;
   border-radius: 9px;
@@ -164,6 +171,15 @@
   background: #ffe38a;
   border-color: #8a581e;
   outline: 2px solid #fff0a9;
+}
+
+.kingdom-map-node[data-kingdom-loc="gym"] { background: #f4d4ad; border-color: #8a4f2f; }
+.kingdom-map-node[data-kingdom-loc="orchard"] { background: #e8efad; border-color: #6d7432; }
+.kingdom-map-node[data-kingdom-loc="springs"] { background: #ccebd8; border-color: #3e7663; }
+.kingdom-map-node[data-kingdom-loc="observatory"] { background: #ddd8f0; border-color: #625780; }
+.kingdom-map-node.current[data-kingdom-loc] {
+  background: #ffe38a;
+  border-color: #8a581e;
 }
 
 .kingdom-location-head {
@@ -495,6 +511,13 @@
 }
 .kingdom-mon.walking img { animation: kingdom-step .42s steps(2, end) infinite; }
 .kingdom-mon.greeting img { animation: kingdom-greet .42s ease-in-out 2; }
+.kingdom-mon.gym-working img { transform-origin: 50% 82%; }
+.kingdom-mon.gym-working.gym-climb img { animation: kingdom-gym-climb .72s steps(4, end) infinite; }
+.kingdom-mon.gym-working.gym-bags img { animation: kingdom-gym-bags .5s ease-in-out infinite; }
+.kingdom-mon.gym-working.gym-balance img { animation: kingdom-gym-balance 1.25s ease-in-out infinite; }
+.kingdom-mon.gym-working.gym-hurdles img { animation: kingdom-gym-hurdles .82s ease-in-out infinite; }
+.kingdom-mon.gym-working.gym-spar img { animation: kingdom-gym-spar .56s steps(3, end) infinite; }
+.kingdom-mon.gym-working.gym-weights img { animation: kingdom-gym-weights 1.05s ease-in-out infinite; }
 .kingdom-party-mark {
   position: absolute;
   right: -1px;
@@ -537,6 +560,34 @@
   45% { translate: 0 -7px; rotate: -4deg; }
   70% { rotate: 4deg; }
 }
+@keyframes kingdom-gym-climb {
+  0%, 100% { translate: 0 3px; }
+  45% { translate: 0 -8px; }
+  70% { translate: 2px -5px; }
+}
+@keyframes kingdom-gym-bags {
+  0%, 100% { translate: -2px 0; rotate: -2deg; }
+  42% { translate: 6px -1px; rotate: 5deg; }
+  58% { translate: 2px 0; rotate: 0deg; }
+}
+@keyframes kingdom-gym-balance {
+  0%, 100% { translate: 0 -2px; rotate: -6deg; }
+  50% { translate: 0 -4px; rotate: 7deg; }
+}
+@keyframes kingdom-gym-hurdles {
+  0%, 100% { translate: -5px 1px; }
+  45% { translate: 0 -11px; }
+  70% { translate: 6px -1px; }
+}
+@keyframes kingdom-gym-spar {
+  0%, 100% { translate: -2px 0; rotate: -3deg; }
+  35% { translate: 6px 0; rotate: 5deg; }
+  65% { translate: 1px -3px; rotate: -2deg; }
+}
+@keyframes kingdom-gym-weights {
+  0%, 100% { translate: 0 3px; scale: 1 .92; }
+  45%, 65% { translate: 0 -5px; scale: 1.04 1.04; }
+}
 @keyframes kingdom-pop {
   from { opacity: 0; transform: translate(-50%, 6px) scale(.7); }
 }
@@ -563,6 +614,69 @@
   box-shadow: 0 3px 0 #27170d55;
   font: 700 11px/1.35 var(--read);
   backdrop-filter: blur(2px);
+}
+
+.kingdom-gym-stations {
+  position: absolute;
+  inset: 0;
+  z-index: 4500;
+  pointer-events: none;
+}
+.kingdom-gym-station {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  translate: -50% -50%;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  min-width: 0;
+  padding: 0;
+  border: 2px solid #68452a;
+  border-radius: 50%;
+  background: #fff2cfe8;
+  color: #513720;
+  box-shadow: 0 3px 0 #321f1455, 0 0 0 2px #fff1ad55;
+  pointer-events: auto;
+  backdrop-filter: blur(2px);
+  transition: translate .14s ease, filter .14s ease, background .14s ease;
+}
+.kingdom-gym-station > span { font-size: 16px; line-height: 1; }
+.kingdom-gym-station small {
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 5px);
+  translate: -50% 2px;
+  padding: 3px 6px;
+  border: 1px solid #65452c;
+  border-radius: 999px;
+  background: #fff8e8ed;
+  color: #4b3422;
+  font: 700 8px/1 var(--read);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .12s ease, translate .12s ease;
+}
+.kingdom-gym-station:hover,
+.kingdom-gym-station:focus-visible,
+.kingdom-gym-station.selected {
+  translate: -50% calc(-50% - 2px);
+  filter: drop-shadow(0 0 5px #fff4a8);
+}
+.kingdom-gym-station:hover small,
+.kingdom-gym-station:focus-visible small,
+.kingdom-gym-station.selected small { opacity: 1; translate: -50% 0; }
+.kingdom-gym-station.busy { background: #d9c9aaeb; }
+.kingdom-gym-station.active {
+  background: #ffe17eef;
+  box-shadow: 0 3px 0 #61401e66, 0 0 0 3px #fff1a888;
+  animation: kingdom-gym-beacon 1.2s ease-in-out infinite;
+}
+@keyframes kingdom-gym-beacon {
+  0%, 100% { filter: drop-shadow(0 0 1px #fff2a2); }
+  50% { filter: drop-shadow(0 0 7px #fff2a2); }
 }
 .kingdom-story {
   max-width: 55%;
@@ -619,9 +733,9 @@
   .kingdom-map-title { display: block; }
   .kingdom-map-title span { display: block; margin-top: 2px; }
   .kingdom-road-count { display: block; margin-top: 2px; }
-  .kingdom-map-board { height: 210px; margin: 2px 0 0; }
-  .kingdom-map-node { grid-template-columns: auto auto; gap: 1px 4px; padding: 4px 6px; max-width: none; }
-  .kingdom-map-node b { font-size: 10px; }
+  .kingdom-map-board { height: 310px; margin: 2px 0 0; }
+  .kingdom-map-node { grid-template-columns: auto auto; gap: 1px 3px; padding: 4px 5px; max-width: 92px; }
+  .kingdom-map-node b { font-size: 9px; }
   .kingdom-map-node > span { grid-row: span 2; font-size: 15px; }
   .kingdom-map-node small { grid-column: 2; grid-row: 2; width: fit-content; height: auto; padding: 1px 5px; border-radius: 999px; }
   .kingdom-map-walkers img { width: 24px; height: 24px; }
@@ -650,6 +764,8 @@
   .kingdom-lanterns i { left: var(--mx); width: var(--msize); }
   .kingdom-rain-splashes i { left: var(--smx); }
   .kingdom-mon { width: clamp(40px, 13%, 62px); }
+  .kingdom-gym-station { left: var(--mx); width: 31px; height: 31px; }
+  .kingdom-gym-station > span { font-size: 14px; }
   .kingdom-bar { top: 8px; left: 8px; right: 8px; align-items: flex-start; }
   .kingdom-story { max-width: 58%; font-size: 9px; white-space: normal; }
   .kingdom-glade { font-size: 9px; }
@@ -673,6 +789,9 @@
 .kingdom-stage,
 .kingdom-stage * {
   cursor: url("../assets/ui/kingdom-hand-open.svg") 16 16, grab !important;
+}
+.kingdom-stage .kingdom-gym-station {
+  cursor: pointer !important;
 }
 .kingdom-stage .kingdom-mon { touch-action: none; -webkit-touch-callout: none; user-select: none; }
 .kingdom-stage.hand-closed,
@@ -766,6 +885,17 @@ html.kingdom-carrying body { user-select: none; }
 }
 .kingdom-move-row span { color: #6b5033; font: 700 10px var(--read); }
 .kingdom-move-row button { padding: 5px 8px; font-size: 9px; }
+.kingdom-workout-row {
+  padding-top: 7px;
+  border-top: 1px solid #8c6c4138;
+}
+.kingdom-workout-row button.active {
+  border-color: #87611e;
+  background: #f8d96f;
+  color: #463116;
+  box-shadow: 0 2px 0 #5c421e55;
+}
+.kingdom-workout-row button:disabled { opacity: .48; cursor: not-allowed; }
 
 @keyframes kingdom-wiggle {
   0%, 100% { rotate: 0deg; }
@@ -793,7 +923,9 @@ html.kingdom-carrying body { user-select: none; }
 @media (prefers-reduced-motion: reduce) {
   .kingdom-mon.holding img,
   .kingdom-mon.dropped img,
-  .kingdom-carry img { animation: none !important; }
+  .kingdom-carry img,
+  .kingdom-mon.gym-working img,
+  .kingdom-gym-station.active { animation: none !important; }
 }
 
 /* Walking in from, or off along, a path. */

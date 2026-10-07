@@ -9,7 +9,8 @@ function battleLater(fn, ms) { var owner=B; return setTimeout(function(){if(B===
 var B = null;   // live battle
 
 function startBattle(cfg) {
-  // cfg: { kind:'wild'|'gym'|'elite', chapters:[n], foes:[mon], title, leader, chapter, elite }
+  // cfg: { kind:'wild'|'gym'|'elite'|'rematch', chapters:[n], foes:[mon], title, leader, chapter, elite,
+  //        rematch:{castId,tier,paid,prize}, questionFloor }
   var you = firstAlive();
   if (!you) { toast('Your whole party has fainted!'); return; }
 
@@ -23,6 +24,7 @@ function startBattle(cfg) {
     friendRewarded: false,
     chapters: cfg.chapters,
     guestLessons: cfg.guestLessons || null,
+    pool: cfg.pool || null,
     foes: cfg.foes,
     foeIx: 0,
     you: you,
@@ -31,6 +33,8 @@ function startBattle(cfg) {
     leader: cfg.leader || null,
     chapter: cfg.chapter || null,
     elite: cfg.elite || null,
+    rematch: cfg.rematch || null,          // Phase 6: optional leader rematch, never a badge fight
+    questionFloor: cfg.questionFloor || 0,  // rematch tier: no question easier than this
     over: false,
     asked: {},
     turn: 0,
@@ -110,7 +114,7 @@ function chooseMove(i) {
 
 function askQuestion(tier) {
   B.turnResolving = false;
-  var got = pickQuestion(B.chapters, tier, B.asked, B.guestLessons);
+  var got = pickQuestion(B.chapters, Math.max(tier, B.questionFloor || 0), B.asked, B.guestLessons, B.pool);
   B.qAnswered = false;
   B.q = got.q;
   B.qReview = got.review;
@@ -317,7 +321,7 @@ function foeFainted() {
   log('Foe ' + monName(f).toUpperCase() + ' fainted!');
 
   var gain = Math.floor((dexOf(f.id).bst / 6) * f.lvl / 4) + 12;
-  if (B.kind !== 'wild') gain = Math.floor(gain * 1.6);
+  if (B.kind !== 'wild') gain = Math.floor(gain * (B.kind === 'rematch' && typeof LEADER_REMATCH_EXP !== 'undefined' ? LEADER_REMATCH_EXP : 1.6));
   var evolutions = awardBattleXp(gain);
   if (evolutions.length) {
     for (var i = 0; i < evolutions.length; i++) {
@@ -468,7 +472,7 @@ function useBattleItem(key) {
 function usePotion(key) { return useBattleItem(key); }
 
 function runAway() {
-  if (B.kind !== 'wild') { toast('You cannot run from a Gym battle!'); return; }
+  if (B.kind !== 'wild') { toast(B.kind === 'rematch' ? 'A rematch is a promise. See it through.' : 'You cannot run from a Gym battle!'); return; }
   log('You got away safely.');
   B.over = true;
   showScreen('map'); renderMap();
@@ -590,7 +594,7 @@ function tryCatch(ballKey) {
 function askQuestionForCatch() {
   B.qAnswered = false;
   B.turnResolving = false;
-  var got = pickQuestion(B.chapters, 2, B.asked, B.guestLessons);
+  var got = pickQuestion(B.chapters, 2, B.asked, B.guestLessons, B.pool);
   B.q = got.q; B.qReview = got.review; B.asked[got.q.id] = true;
   renderQuestion();
   var card = $('#quiz .qcard');
@@ -640,11 +644,23 @@ function winBattle() {
   if (typeof journalWin === 'function') journalWin();
   var msg = '', extra = '';
 
+  /* A leader rematch settles on its own path: no badge, boss clear, receipt or
+     first-win bundle can be granted from here (js/engine/gym-leaders.js). */
+  if (B.kind === 'rematch') {
+    var rematchWon = settleLeaderRematch(true);
+    healParty();
+    syncFriendStory();
+    saveGame();
+    showLeaderRematchResult(true, rematchWon);
+    return;
+  }
+
   if (B.kind === 'gym') {
     var was = !!S.badges[B.chapter.n];
     S.badges[B.chapter.n] = true;
     if (!was && typeof journalBadge === 'function') journalBadge(B.chapter.badge);
     if (!was && typeof collectFirstBadge === 'function') collectFirstBadge();
+    if (!was && typeof leaderRecordFirstDefeat === 'function') leaderRecordFirstDefeat(leaderForGym(B.chapter.n));
     var gymBundle = ((GYM_ITEM_REWARDS[activeSubject()] || {})[B.chapter.n] || []);
     var gymItems = was ? null : claimReceiptItems('gym-reward:' + activeSubject() + ':' + B.chapter.n, gymBundle);
     addMoney(battlePrize('gym'));
@@ -654,6 +670,7 @@ function winBattle() {
   } else if (B.kind === 'elite') {
     var eliteWas = !!S.elite[B.elite.id];
     S.elite[B.elite.id] = true;
+    if (!eliteWas && typeof leaderRecordFirstDefeat === 'function') leaderRecordFirstDefeat(leaderForBoss(B.elite.id));
     if (((typeof isChampion === 'function') ? isChampion(B.elite) : B.elite.id === 'champ') &&
         typeof collectChampion === 'function') collectChampion();
     var eliteItems = eliteWas ? null : claimReceiptItems('boss-reward:' + activeSubject() + ':' + B.elite.id,
@@ -690,6 +707,12 @@ function loseBattle() {
   if (B.kind === 'npc') { finishNpcBattleResult(false); return; }
   B.over = true;
   healParty();
+  if (B.kind === 'rematch') {
+    var rematchLost = settleLeaderRematch(false);
+    saveGame();
+    showLeaderRematchResult(false, rematchLost);
+    return;
+  }
   saveGame();
   var acc = B.correctThisBattle + B.wrongThisBattle;
   showResult(false, 'Your team was defeated...',
@@ -719,8 +742,8 @@ function finishNpcBattleResult(won) {
     (r && r.items ? '<p class="friend-change">First-win supplies: ' + esc(itemBundleText(r.items)) + '.</p>' : '') +
     '<p class="small">Your party has been healed.</p>' +
     '<div class="row" style="justify-content:center;margin-top:12px">' +
-    '<button class="primary" onclick="closeModal();' +
+    (TOWN_UI_ENABLED ? '<button class="primary" onclick="closeModal();' +
       (typeof humanWorldHasReturn === 'function' && humanWorldHasReturn() ? 'humanWorldReturn()' : 'openTown()') + '">Back to ' +
-      (typeof humanWorldHasReturn === 'function' && humanWorldHasReturn() ? 'Bootstrap Town' : 'the region') + '</button>' +
+      (typeof humanWorldHasReturn === 'function' && humanWorldHasReturn() ? 'Bootstrap Town' : 'the region') + '</button>' : '') +
     '<button class="ghost" onclick="closeModal();showScreen(\'map\');renderMap()">To the map</button></div>');
 }
