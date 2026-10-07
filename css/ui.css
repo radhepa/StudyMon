@@ -864,3 +864,9 @@ button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visi
 #s-party .card .top img[src*="assets/sprites/shiny/"] {
   image-rendering: pixelated;
 }
+
+/* Title lineup: the row starts empty and invisible, and fades in once every
+   sprite has loaded, so the Pokemon never pop in one by one or swap after the
+   first paint. The row's min-height already holds its space. */
+.title-mons { transition: opacity .35s ease-out; }
+.title-mons.pending { opacity: 0; }

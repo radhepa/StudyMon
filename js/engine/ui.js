@@ -260,14 +260,34 @@ var TITLE_MONS_FALLBACK = [4, 255, 155, 94, 297, 380, 149];
 
 /* A fresh 7 every time the title shows: distinct species pulled from the
    save's party and PC, read straight out of localStorage so this never has
-   to load (and thus mutate) S just to paint the title screen. */
+   to load (and thus mutate) S just to paint the title screen.
+
+   The row stays invisible (.pending) until every sprite has loaded, then
+   fades in whole. The page ships it empty, so there is never a placeholder
+   lineup on screen to be swapped out. */
 function renderTitleMons() {
   var el = document.querySelector('.title-mons');
   if (!el) return;
   var pool = titleMonPool();
   var pick = pool.length ? shuffle(pool).slice(0, 7) : TITLE_MONS_FALLBACK.slice();
   while (pool.length && pick.length < 7) pick.push(pool[Math.floor(Math.random() * pool.length)]);
+  el.classList.add('pending');
   el.innerHTML = titleMonsHtml(pick);
+
+  var imgs = el.querySelectorAll('img'), left = imgs.length, shown = false;
+  var reveal = function () {
+    if (shown) return;
+    shown = true;
+    el.classList.remove('pending');
+  };
+  var settle = function () { if (--left <= 0) reveal(); };
+  Array.prototype.forEach.call(imgs, function (img) {
+    if (img.complete) { settle(); return; }
+    img.addEventListener('load', settle, { once: true });
+    img.addEventListener('error', settle, { once: true });
+  });
+  if (!imgs.length) reveal();
+  setTimeout(reveal, 1500);        // a slow sprite never holds the row back for long
 }
 
 /* Sprite frames are all the same 96x96 canvas, but the creature drawn inside

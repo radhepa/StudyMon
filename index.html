@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="css/polish.css?v=curriculum4-20260905">
 <link rel="stylesheet" href="css/parchment.css?v=curriculum4-20260905">
 <link rel="stylesheet" href="css/friends.css?v=curriculum4-20260905">
-<link rel="stylesheet" href="css/ui.css?v=navigation-ferry-20261006">
+<link rel="stylesheet" href="css/ui.css?v=title-boot-20261007">
 <link rel="stylesheet" href="css/side-quests.css">
 <link rel="stylesheet" href="css/lab-scenes.css?v=lab-direction-20260928">
 <link rel="stylesheet" href="css/kingdom.css?v=kingdom-expand-20260924b">
@@ -27,7 +27,7 @@
 
 <div id="app">
 
-  <div id="topbar"></div>
+  <div id="topbar" style="display:none"></div>
 
   <!-- ================= TITLE ================= -->
   <section id="s-title" class="screen on">
@@ -35,15 +35,7 @@
     <div class="big">StudyMon<span class="title-period">.</span></div><h1 class="title-headline">Study a little. Stay for a battle.</h1>
     <div class="book">Forouzan &amp; Afyouni · <i>Computer Science: A Structured Programming Approach in C</i> · 4th edition</div>
 
-    <div class="title-mons" aria-label="Your adventure companions">
-      <img src="assets/sprites/front/4.png" alt="">
-      <img src="assets/sprites/front/255.png" alt="">
-      <img src="assets/sprites/front/155.png" alt="">
-      <img src="assets/sprites/front/94.png" alt="">
-      <img src="assets/sprites/front/297.png" alt="">
-      <img src="assets/sprites/front/380.png" alt="">
-      <img src="assets/sprites/front/149.png" alt="">
-    </div>
+    <div class="title-mons pending" aria-label="Your adventure companions"></div>
 
     <div class="panel dark" style="max-width:620px;margin:0 auto 20px;text-align:left">
       <p style="font-size:14.5px;line-height:1.7;margin:0 0 10px">
@@ -197,7 +189,7 @@
 <script src="js/engine/question-format.js?v=isles-format-20261006"></script>
 <script src="js/engine/mons.js?v=curriculum4-20260905"></script>
 <script src="js/engine/quiz.js?v=revision-route1-20260922"></script>
-<script src="js/engine/ui.js?v=map-ferry-20261006"></script>
+<script src="js/engine/ui.js?v=title-boot-20261007"></script>
 <script src="js/engine/battle.js?v=map-ferry-20261006"></script>
 <script src="js/engine/shop.js?v=map-ferry-20261006"></script>
 <script src="js/engine/town.js?v=phase3-economy-20260911"></script>
