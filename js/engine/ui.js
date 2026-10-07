@@ -962,7 +962,7 @@ function renderDrill() {
       '<button class="primary" onclick="drillFill()">Check</button></div>';
   } else {
     h += '<div class="choices">';
-    var letters = ['A', 'B', 'C', 'D', 'E'];
+    var letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
     var choiceOrder = displayedChoiceOrder(D, q);
     for (var i = 0; i < choiceOrder.length; i++) {
       var sourceIndex = choiceOrder[i];

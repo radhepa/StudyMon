@@ -870,3 +870,7 @@ button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visi
    first paint. The row's min-height already holds its space. */
 .title-mons { transition: opacity .35s ease-out; }
 .title-mons.pending { opacity: 0; }
+
+/* Keep the spaces in answer choices. Several C questions test printf field
+   widths ("   42|" against "42|"), which collapsed whitespace made identical. */
+.choice .k + span { white-space: pre-wrap; }

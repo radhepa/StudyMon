@@ -153,7 +153,7 @@ function renderQuestion() {
       '<button class="primary" onclick="submitFill()">Attack</button></div>';
   } else {
     h += '<div class="choices">';
-    var letters = ['A', 'B', 'C', 'D', 'E'];
+    var letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
     var choiceOrder = displayedChoiceOrder(B, q);
     for (var i = 0; i < choiceOrder.length; i++) {
       var sourceIndex = choiceOrder[i];

@@ -8,7 +8,9 @@ function fleeToMap() {
   showScreen('map'); renderMap();
 }
 
-/* Keyboard: 1-4 or A-D answers, Enter continues. Makes drilling fast. */
+/* Keyboard: 1-6 or A-F answers, Enter continues. Makes drilling fast.
+   Choices are shuffled on screen while their ids keep the bank's order, so a
+   key picks the button in that position on screen, never #ch0 by id. */
 document.addEventListener('keydown', function (e) {
   if ($('#modal').classList.contains('on')) {
     if (e.key === 'Escape') { e.preventDefault(); closeModal(); }
@@ -17,13 +19,16 @@ document.addEventListener('keydown', function (e) {
   }
   var tag = (e.target.tagName || '').toLowerCase();
   if (tag === 'input' || tag === 'textarea') return;
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
 
   if (CUR !== 'battle' && CUR !== 'drill') return;
-  var prefix = CUR === 'drill' ? '#dch' : '#ch';
-  var map = { '1': 0, '2': 1, '3': 2, '4': 3, 'a': 0, 'b': 1, 'c': 2, 'd': 3 };
+  var scope = CUR === 'drill' ? '#s-drill' : '#quiz';
+  var map = { '1': 0, '2': 1, '3': 2, '4': 3, '5': 4, '6': 5,
+              'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'f': 5 };
   var k = e.key.toLowerCase();
   if (k in map) {
-    var el = $(prefix + map[k]);
+    var shown = $$(scope + ' .choices .choice').filter(function (b) { return b.offsetParent !== null; });
+    var el = shown[map[k]];
     if (el && !el.disabled) { e.preventDefault(); el.click(); return; }
     // no question showing: 1-4 pick a move instead
     if (CUR === 'battle' && '1234'.indexOf(e.key) >= 0) {
