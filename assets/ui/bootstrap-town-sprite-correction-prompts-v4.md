@@ -1,7 +1,7 @@
 # Bootstrap Town sprite correction — v4
 
-Generation mode: OpenAI built-in image generation, editing the existing v3
-character sheet as the visual reference. The ten untouched model outputs are
+Generation mode: image generation, editing the existing v3
+character sheet as the visual reference. The ten untouched generated sheets are
 archived as `assets/humans/overworld/*-walk-sheet-v4-generated.png`. The playable
 `*-walk-sheet-v4.png` files are deterministic safe-gutter repacks made by
 `tools/build-overworld-sprites-v4.py`.

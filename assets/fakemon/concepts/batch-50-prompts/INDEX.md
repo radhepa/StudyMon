@@ -1,6 +1,6 @@
 # Batch 50 — new StudyMon concepts
 
-50 brand-new, standalone Fakemon concepts (not evolution lines — each is its own creature). Built to match the exact house style established by the Papyrunt/Codexal/Lexidrake and Abyssqueak/Trenchmaw/Leviathorn lines, per `.codex/skills/studymon-fakemon/SKILL.md` and the battle-tested prompts in `abyssqueak-line-v2/PROMPTS.md`.
+50 brand-new, standalone Fakemon concepts (not evolution lines — each is its own creature). Built to match the exact house style established by the Papyrunt/Codexal/Lexidrake and Abyssqueak/Trenchmaw/Leviathorn lines, following the battle-tested prompts in `abyssqueak-line-v2/PROMPTS.md`.
 
 None of these were assigned real dex IDs or game data (stats/moves/evo) — they are visual concepts only, as requested. Type/BST-style integration can come later, per creature, once art is approved.
 
@@ -9,10 +9,10 @@ Deliberately avoided: paper/archive/scholarly themes (Papyrunt line) and deep-se
 ## How to use these prompts
 
 1. Open the file for the creature you want (grouped 10-per-file below).
-2. Copy the **Front-sprite prompt** block into the image generator (built-in `imagegen`, per the skill).
+2. Copy the **Front-sprite prompt** block into the image generator.
 3. Use the named reference species' official sprite as the technical-reference input image — silhouette/scale/pixel-density only. Never let it influence anatomy, markings, or color.
 4. Normalize the result: crop to the stated logical-pixel box, place on a genuine transparent 96×96 canvas, feet near y=91, hard-threshold alpha, quantize to the stated color count with no dithering.
-5. Run `python .codex/skills/studymon-fakemon/scripts/audit_sprites.py` before treating anything as final.
+5. Run the sprite audit before treating anything as final.
 6. Only after a front is approved, derive a rear three-quarter prompt from it (see `abyssqueak-line-v2/PROMPTS.md` for the exact rear-prompt pattern) — these 50 prompts cover fronts only.
 
 ## Roster
