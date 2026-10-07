@@ -78,12 +78,26 @@ function check(n,ok,d){results.push({n,ok});console.log((ok?'PASS  ':'FAIL  ')+n
       kSeriesWithB:bad(/Σ\(k=.*ᵇ/),
       // leftovers from pasting numbers into the generated questions
       coefOne:bad(/(^|[\s(=+\-\[])1(?=[a-zA-Z])/,true),
-      powOne:bad(/[A-Za-z)]\^1(?![\d.])/,true),
+      // n^1 is a leftover even at the end of a sentence (n^1.); only 1.5 is not
+      powOne:bad(/[A-Za-z)]\^1(?!\.?\d)/,true),
       varMinusParen:bad(/[A-Za-z] [-+] \(-?\d+(\.\d+)?\)/,true),
-      fracCoef:bad(/(^|[^\w)\/.^(])\d+\/\d+[a-zA-Z(]/,true)
+      fracCoef:bad(/(^|[^\w)\/.^(])\d+\/\d+[a-zA-Z(]/,true),
+      // a limit spelled out after ^ or _ (the typesetter takes one letter: ^infinity
+      // shows a raised i and then "nfinity"), "1 units", "cos(1 theta)", and a step
+      // that says the same thing twice ("= pi/12 = pi/12.", "leaving 2 = 2.")
+      wordLimit:bad(/[_^]infinity/,true),
+      oneCount:bad(/(^|[^\d.\/])1 (units|petals)\b|\(1 [a-z]/,true),
+      sameStep:bad(/(^|[\s(])(?<![-+*\/] )([^=\s]+) = \2(?=[.,;](\s|$)|$)/,true)
     };
     // every generated question offers four different choices
     o.cleanDistinct=allQuestions().filter(q=>/-ten-/.test(q.id)&&(q.c.length!==4||new Set(q.c).size!==4)).map(q=>q.id);
+    // ...that still look different once typeset (x^n/(n) and x^n/n do not), and
+    // every integral or evaluation bar shows both of its limits
+    const gen=allQuestions().filter(q=>/-ten-/.test(q.id));
+    o.cleanShown={
+      sameOnScreen:gen.filter(q=>new Set(q.c.map(c=>questionHtml(q,c).replace(/\s+/g,''))).size!==q.c.length).map(q=>q.id),
+      halfLimit:gen.filter(q=>[q.q,q.why].concat(q.c,q.hints||[]).some(s=>/class="ml-[ud]"><\/span>/.test(questionHtml(q,s)))).map(q=>q.id)
+    };
   });
 
   t('C untouched',()=>{
@@ -158,6 +172,10 @@ function check(n,ok,d){results.push({n,ok});console.log((ok?'PASS  ':'FAIL  ')+n
  check('generated questions read cleanly (no 1x, ^1, x - (-4) or 9/2pi)',
    cl.coefOne&&[cl.coefOne,cl.powOne,cl.varMinusParen,cl.fracCoef].every(a=>a.length===0)&&r.cleanDistinct.length===0,
    JSON.stringify({c:(cl.coefOne||[]).slice(0,2),p:(cl.powOne||[]).slice(0,2),v:(cl.varMinusParen||[]).slice(0,2),f:(cl.fracCoef||[]).slice(0,2),d:(r.cleanDistinct||[]).slice(0,2)}));
+ const cs=r.cleanShown||{};
+ check('generated questions typeset whole (both limits, no ^infinity, no "1 units", no step said twice, four choices that look different)',
+   cl.wordLimit&&[cl.wordLimit,cl.oneCount,cl.sameStep,cs.sameOnScreen,cs.halfLimit].every(a=>a&&a.length===0),
+   JSON.stringify({w:(cl.wordLimit||[]).slice(0,2),o:(cl.oneCount||[]).slice(0,2),s:(cl.sameStep||[]).slice(0,2),v:(cs.sameOnScreen||[]).slice(0,2),h:(cs.halfLimit||[]).slice(0,2)}));
  check('C questions render exactly as before', r.c&&r.c.texts>1000&&r.c.diff===0, JSON.stringify(r.c));
  const op=r.open||{};
  check('every Isles gym and route is open on a fresh save', op.gymsBlocked===0&&op.disabledButtons===0, JSON.stringify({g:op.gymsBlocked,d:op.disabledButtons}));

@@ -20,6 +20,12 @@ function frac(n, d) {
   var g = gcd(n, d); n /= g; d /= g;
   return d === 1 ? String(n) : n + '/' + d;
 }
+/* sqrt(n), or the whole number when n is a perfect square: the 3-4-5
+   triangle's length is 5, not sqrt(25). */
+function root(n) {
+  var r = Math.round(Math.sqrt(n));
+  return r * r === n ? String(r) : 'sqrt(' + n + ')';
+}
 /* The templates build text by pasting numbers in, which leaves the marks of
    that behind: 1x, 1pi, tan^1(x), x - (-4), arctan(x/1), "= 1/4 = 1/4". Write
    each one the way a person would, without changing what it says. Arithmetic
@@ -31,8 +37,9 @@ function tidy(text) {
     // a coefficient of one: 1x, 1pi, 1theta, 1e^(...), "1 ln(...)"
     .replace(/(^|[\s(=+\-*\/\[])1(?=[a-zA-Z])(?!\d)/g, '$1')
     .replace(new RegExp('(^|[\\s(=+\\-\\[])1 (?=(' + FUNC_NAMES + ')\\()', 'g'), '$1')
-    // a power of one: tan^1(x), u^1, n^1, (N+1)^1 - never a limit like _0^1
-    .replace(/([A-Za-z)])\^1(?![\d.])/g, '$1')
+    // a power of one: tan^1(x), u^1, n^1, (N+1)^1 - never a limit like _0^1.
+    // Only a digit (1.5, 10) blocks it, not a full stop ending the sentence.
+    .replace(/([A-Za-z)])\^1(?!\.?\d)/g, '$1')
     // x - (-4), x + (-4), x - (4), and x - (0) after a variable
     .replace(/\(([A-Za-z]) [-+] \(0\)\)/g, '$1')
     .replace(/\|([A-Za-z]) [-+] \(0\)\|/g, '|$1|')
@@ -44,13 +51,13 @@ function tidy(text) {
     // dividing by one
     .replace(/\(1\/1\) /g, '')
     .replace(/\(([A-Za-z])\/1\)/g, '($1)')
-    .replace(/\)\/1(?![\d.])/g, ')')
-    .replace(/([\w)])\/1(?![\d.])/g, '$1')
+    .replace(/\)\/1(?!\.?\d)/g, ')')
+    .replace(/([\w)])\/1(?!\.?\d)/g, '$1')
     // one to any power is one: "1^n x^n" is x^n
     .replace(/(^|[\s(=+\-])1\^(?:[a-z0-9]+|\([^()]*\)) ?(?=[a-zA-Z(])/g, '$1')
     // a lone variable needs no brackets: (x)^n, e^(x)
     .replace(/\(([A-Za-z])\)\^/g, '$1^')
-    .replace(/e\^\(([A-Za-z])\)/g, 'e^$1')
+    .replace(/\be\^\(([A-Za-z])\)/g, 'e^$1')
     // ln(1) is zero
     .replace(/(^|[\s(=])ln\(1\) \+ /g, '$1')
     .replace(/(^|[\s(=])ln\(1\) - /g, '$1-')
@@ -107,9 +114,11 @@ function family(meta, build) {
 /* Gym 1 - vectors. */
 family({ chapter:1, lesson:1, slug:'components-magnitude', name:'Components and magnitude', section:'12.2' }, function (i) {
   var a=i+2, b=i+3, n=a*a+b*b;
-  return { q:'Find the magnitude of v = ('+a+', -'+b+').', correct:'sqrt('+n+')',
-    wrong:['sqrt('+(a+b)+')', String(n), 'sqrt('+Math.abs(a*a-b*b)+')'],
-    why:'|v| = sqrt('+a+'^2 + (-'+b+')^2) = sqrt('+n+').',
+  // With b = a + 1, b^2 - a^2 is a + b, so that slip repeats sqrt(a + b);
+  // pick() drops the copy and the plain sum of components stands in.
+  return { q:'Find the magnitude of v = ('+a+', -'+b+').', correct:root(n),
+    wrong:[root(a+b), String(n), root(Math.abs(a*a-b*b)), String(a+b)],
+    why:'|v| = sqrt('+a+'^2 + (-'+b+')^2) = sqrt('+n+')'+(root(n)===String(Math.sqrt(n))?' = '+root(n):'')+'.',
     hints:['Square each component before adding.','The negative component becomes positive when squared.','Compute '+a+'^2 + '+b+'^2, then take the square root.'] };
 });
 family({ chapter:1, lesson:1, slug:'unit-scaled', name:'Unit direction and prescribed length', section:'12.2' }, function (i) {
@@ -121,8 +130,10 @@ family({ chapter:1, lesson:1, slug:'unit-scaled', name:'Unit direction and presc
 });
 family({ chapter:1, lesson:2, slug:'displacement-distance', name:'Displacement and distance in space', section:'12.1-12.2' }, function (i) {
   var a=i+1,b=i+2,c=i+3,n=a*a+b*b+c*c;
-  return { q:'A point moves from P = ('+i+', -'+i+', '+(i+1)+') by displacement ('+a+', '+b+', -'+c+'). What straight-line distance does it travel?', correct:'sqrt('+n+')',
-    wrong:[String(n),'sqrt('+(a+b+c)+')','sqrt('+Math.abs(a*a+b*b-c*c)+')'],
+  // String(-i) so the first start point reads (0, 0, 1), never -0. The last
+  // wrong value stands in where the sign slip lands on sqrt(a + b + c).
+  return { q:'A point moves from P = ('+i+', '+String(-i)+', '+(i+1)+') by displacement ('+a+', '+b+', -'+c+'). What straight-line distance does it travel?', correct:root(n),
+    wrong:[String(n),root(a+b+c),root(Math.abs(a*a+b*b-c*c)),String(a+b+c)],
     why:'Distance is the magnitude of the displacement: sqrt('+a+'^2 + '+b+'^2 + (-'+c+')^2) = sqrt('+n+').',
     hints:['The starting point is not needed once displacement is known.','Take the magnitude of the displacement vector.','Square '+a+', '+b+', and '+c+', add, and take the square root.'] };
 });
@@ -137,8 +148,10 @@ family({ chapter:1, lesson:2, slug:'sphere-equation', name:'Equations of spheres
 family({ chapter:1, lesson:3, slug:'dot-angle', name:'Dot product and angle classification', section:'12.3' }, function (i) {
   var a=i+1,b=(i%4)-1,d=a+2*b-3;
   var kind=d>0?'acute':d<0?'obtuse':'right';
+  // The forgot-the-2 slip can equal the answer, and "d; right" is the answer
+  // when d = 0; the right value with a wrong angle stands in when they do.
   return { q:'For u = ('+a+', 2, -1) and v = (1, '+b+', 3), compute u dot v and classify the angle.', correct:d+'; '+kind,
-    wrong:[(-d)+'; '+(d>0?'obtuse':'acute'),d+'; right',(a+2+b-3)+'; acute'],
+    wrong:[(-d)+'; '+(d>0?'obtuse':'acute'),d+'; right',(a+2+b-3)+'; acute',d+'; '+(d<0?'acute':'obtuse')],
     why:'u dot v = '+a+'(1) + 2('+b+') + (-1)(3) = '+d+'. A '+(d>0?'positive':d<0?'negative':'zero')+' dot product means the angle is '+kind+'.',
     hints:['Multiply matching components and add.','The dot product is '+a+' + 2('+b+') - 3.','Use the sign of the result: positive acute, zero right, negative obtuse.'] };
 });
@@ -159,7 +172,10 @@ family({ chapter:1, lesson:4, slug:'cross-product', name:'Cross products and ori
 family({ chapter:1, lesson:4, slug:'cross-area-volume', name:'Area and volume from cross products', section:'12.4' }, function (i) {
   var a=i+2,b=i+3,area=a*b;
   return { q:'Vectors u = ('+a+', 0, 0) and v = (0, '+b+', 0) span a parallelogram. Find its area and the volume after adding w = (0, 0, '+(i+1)+').', correct:area+' and '+(area*(i+1)),
-    wrong:[frac(area,2)+' and '+area*(i+1),area+' and '+area, String(area*(i+1))+' and '+area],
+    // With w = (0, 0, 1) the volume equals the area and the swap slips are the
+    // answer itself, so the tetrahedron (1/6) and half-everything slips follow.
+    wrong:[frac(area,2)+' and '+area*(i+1),area+' and '+area, String(area*(i+1))+' and '+area,
+      area+' and '+frac(area*(i+1),6),frac(area,2)+' and '+frac(area*(i+1),2)],
     why:'|u cross v| = |(0,0,'+area+')| = '+area+'. The scalar triple product with w has magnitude '+area+'*'+(i+1)+' = '+area*(i+1)+'.',
     hints:['Parallelogram area is |u cross v|.','These axis-aligned vectors make u cross v = (0,0,'+area+').','Volume is |(u cross v) dot w|.'] };
 });
@@ -169,15 +185,18 @@ family({ chapter:1, lesson:4, slug:'cross-area-volume', name:'Area and volume fr
    which would have dropped them from a curated revision pool entirely. */
 family({ chapter:2, lesson:5, slug:'area-dx', name:'Area between curves, integrating in x', section:'6.1' }, function (i) {
   var n=i+2, top=frac(n*n,2), bot=frac(n*n,3), ans=frac(n*n,6);
+  // n repeats n^2/2 or n^2/3 (n = 2, 3) or is the answer n^2/6 (n = 6);
+  // adding the two areas stands in then.
   return { q:'Find the area between y = x (top) and y = x^2/'+n+' (bottom), from x = 0 to x = '+n+'.', correct:ans,
-    wrong:[top,bot,String(n)],
+    wrong:[top,bot,String(n),frac(5*n*n,6)],
     why:'A = integral_0^'+n+' (x - x^2/'+n+') dx = [x^2/2 - x^3/(3*'+n+')]_0^'+n+' = '+top+' - '+bot+' = '+ans+'.',
     hints:['Check a point strictly between 0 and '+n+' to confirm which curve is on top.','Area = integral of (top - bottom) dx over the interval.','Integrate x - x^2/'+n+' term by term, then evaluate at '+n+'.'] };
 });
 family({ chapter:2, lesson:5, slug:'area-dy', name:'Area between curves, integrating in y', section:'6.1' }, function (i) {
   var c=i+2, right=frac(c*c*c,2), left=frac(c*c*c,3), ans=frac(c*c*c,6);
+  // c^2 can equal c^3/2, c^3/3 or the answer; adding the two stands in then.
   return { q:'Find the area enclosed by x = '+c+'y (right) and x = y^2 (left), for 0 <= y <= '+c+'.', correct:ans,
-    wrong:[right,left,String(c*c)],
+    wrong:[right,left,String(c*c),frac(5*c*c*c,6)],
     why:'For 0 <= y <= '+c+', '+c+'y >= y^2, so A = integral_0^'+c+' ('+c+'y - y^2) dy = ['+c+'y^2/2 - y^3/3]_0^'+c+' = '+right+' - '+left+' = '+ans+'.',
     hints:['Decide which curve is farther right by testing a y strictly between 0 and '+c+'.','Area = integral of (right - left) dy.','Integrate '+c+'y - y^2 term by term, then evaluate at '+c+'.'] };
 });
@@ -199,8 +218,9 @@ family({ chapter:2, lesson:6, slug:'washer-between-curves', name:'Washer method 
 /* Gym 3 and the first exam route - shells, length, work, fluids, parts. */
 family({ chapter:3, lesson:7, slug:'shells-standard', name:'Cylindrical shells about a coordinate axis', section:'6.2' }, function (i) {
   var h=i+2, coeff=frac(h*h*h,3);
+  // h^2 pi can repeat another choice (h = 2, 3); dropping the 2 of 2pi stands in.
   return { q:'Use shells to revolve the region under y = '+h+' - x on 0 <= x <= '+h+' about the y-axis. Find the volume.', correct:coeff+'pi',
-    wrong:[frac(2*h*h*h,3)+'pi',h*h+'pi',frac(h*h*h,2)+'pi'],
+    wrong:[frac(2*h*h*h,3)+'pi',h*h+'pi',frac(h*h*h,2)+'pi',frac(h*h*h,6)+'pi'],
     why:'V = 2pi integral from 0 to '+h+' of x('+h+' - x) dx = 2pi['+h+'x^2/2 - x^3/3]_0^'+h+' = '+coeff+'pi.',
     hints:['Shell radius is x and shell height is '+h+' - x.','Set up 2pi integral x('+h+' - x) dx from 0 to '+h+'.','Integrate '+h+'x - x^2, then apply the factor 2pi.'] };
 });
@@ -221,34 +241,41 @@ family({ chapter:3, lesson:8, slug:'arc-length-perfect-square', name:'Arc length
 family({ chapter:3, lesson:8, slug:'surface-revolution', name:'Surface area of revolution', section:'6.4' }, function (i) {
   var r=i+2, ans=4*r*r;
   return { q:'The upper semicircle y = sqrt('+r*r+' - x^2), -'+r+' <= x <= '+r+', is revolved about the x-axis. Find the surface area.', correct:ans+'pi',
-    wrong:[2*r*r+'pi',r*r+'pi',4*r+'pi'],
+    // 4r pi repeats r^2 pi or 2r^2 pi when r = 2 or 4; the sphere's volume stands in.
+    wrong:[2*r*r+'pi',r*r+'pi',4*r+'pi',frac(4*r*r*r,3)+'pi'],
     why:"S = 2pi integral y sqrt(1 + (y')^2) dx. Here y' = -x/sqrt("+r*r+' - x^2), and the product y sqrt(1 + (y\')^2) simplifies to '+r+'. Therefore S = 2pi integral_-'+r+'^'+r+' '+r+' dx = '+ans+'pi.',
     hints:['Use S = 2pi integral (radius)(arc-length factor) dx.','Differentiate the semicircle and simplify before integrating.','The radius factor times the square-root factor simplifies to the constant '+r+'.'] };
 });
 family({ chapter:3, lesson:9, slug:'mass-density', name:'Mass from a linear density', section:'6.6' }, function (i) {
   var a=i+1,b=(i%4)+1,L=i+2, ans=frac(2*a*L+b*L*L,2);
   return { q:'A rod occupies 0 <= x <= '+L+' and has density rho(x) = '+a+' + '+b+'x. Find its mass.', correct:ans,
-    wrong:[String(a+b*L),frac(a*L+b*L*L,2),String(a*L+b*L*L)],
+    // a + bL and (aL + bL^2)/2 coincide whenever L = 2; dropping the
+    // constant term's integral stands in then.
+    wrong:[String(a+b*L),frac(a*L+b*L*L,2),String(a*L+b*L*L),frac(b*L*L,2)],
     why:'Mass is integral_0^'+L+' ('+a+' + '+b+'x) dx = ['+a+'x + '+b+'x^2/2]_0^'+L+' = '+ans+'.',
     hints:['Mass is the integral of linear density.','Integrate the constant and x terms separately.','Evaluate '+a+'x + '+b+'x^2/2 at x = '+L+'.'] };
 });
 family({ chapter:3, lesson:9, slug:'spring-work', name:'Work against a spring', section:'6.5' }, function (i) {
   var k=i+2,a=(i%3)+1,b=a+i+2,ans=frac(k*(b*b-a*a),2);
   return { q:'A spring has force law F(x) = '+k+'x. Find the work required to stretch it from x = '+a+' to x = '+b+'.', correct:ans,
-    wrong:[String(k*(b-a)),frac(k*(b-a)*(b-a),2),String(k*(b*b-a*a))],
+    // k(b - a) and k(b - a)^2/2 coincide when b - a = 2; stretching from 0
+    // instead of from a stands in then.
+    wrong:[String(k*(b-a)),frac(k*(b-a)*(b-a),2),String(k*(b*b-a*a)),frac(k*b*b,2)],
     why:'W = integral_'+a+'^'+b+' '+k+'x dx = ('+k+'/2)('+b+'^2 - '+a+'^2) = '+ans+'.',
     hints:['Variable-force work is integral F(x) dx.','Use bounds '+a+' and '+b+' on integral '+k+'x dx.','Evaluate ('+k+'/2)(b^2 - a^2).'] };
 });
 family({ chapter:91, lesson:10, slug:'pumping-cylinder', name:'Pumping liquid from a cylindrical tank', section:'6.5' }, function (i) {
   var r=(i%3)+1,h=i+2,d=(i%4)+1,w=10*(i+1),coef=frac(w*r*r*(h*h+2*d*h),2);
   return { q:'A full vertical cylindrical tank has radius '+r+', height '+h+', and liquid weight-density '+w+'. Pump all liquid to an outlet '+d+' above the top. Find the work.', correct:coef+'pi',
-    wrong:[frac(w*r*r*h*h,2)+'pi',String(w*r*r*h*(h+d))+'pi',frac(w*r*(h*h+2*d*h),2)+'pi'],
+    // r instead of r^2 is no slip when r = 1; integrating the lift over the
+    // full height h + d stands in then.
+    wrong:[frac(w*r*r*h*h,2)+'pi',String(w*r*r*h*(h+d))+'pi',frac(w*r*(h*h+2*d*h),2)+'pi',frac(w*r*r*(h+d)*(h+d),2)+'pi'],
     why:'A slice at height y weighs '+w+'pi('+r+'^2)dy and rises '+h+' + '+d+' - y. Thus W = '+w+'pi('+r+'^2) integral_0^'+h+' ('+(h+d)+' - y)dy = '+coef+'pi.',
     hints:['Use horizontal slices of volume pi r^2 dy.','A slice at height y travels '+(h+d)+' - y.','Integrate weight-density times slice volume times lifting distance from 0 to '+h+'.'] };
 });
 family({ chapter:91, lesson:10, slug:'hydrostatic-force', name:'Hydrostatic force on a vertical plate', section:'6.5' }, function (i) {
   var width=i+2,a=(i%4)+1,h=(i%5)+2,w=10*(i+1),ans=frac(w*width*(2*a*h+h*h),2);
-  return { q:'A vertical rectangular plate is '+width+' units wide, with its top '+a+' units below a liquid surface and height '+h+'. The liquid weight-density is '+w+'. Find the total fluid force.', correct:String(ans),
+  return { q:'A vertical rectangular plate is '+width+' units wide, with its top '+a+(a===1?' unit':' units')+' below a liquid surface and height '+h+'. The liquid weight-density is '+w+'. Find the total fluid force.', correct:String(ans),
     wrong:[String(w*width*h),String(w*width*(a+h)),String(w*width*h*(a+h))],
     why:'At depth y, pressure is '+w+'y and strip area is '+width+' dy. Force = '+(w*width)+' integral_'+a+'^'+(a+h)+' y dy = '+ans+'.',
     hints:['Pressure equals weight-density times depth.','Use a horizontal strip of area '+width+' dy.','Integrate '+(w*width)+'y from depth '+a+' to '+(a+h)+'.'] };
@@ -266,8 +293,10 @@ family({ chapter:91, lesson:11, slug:'parts-polynomial-exponential', name:'Integ
 });
 family({ chapter:91, lesson:11, slug:'parts-logarithm', name:'Integration by parts with logarithms', section:'8.2' }, function (i) {
   var m=i+1,n=m+1;
+  // The middle slip stops after the first term of parts. (It used to be
+  // x^m/x + C, which is no slip anyone makes and read x/x + C at m = 1.)
   return { q:'Find an antiderivative of x^'+m+' ln(x), for x > 0.', correct:'x^'+n+' ln(x)/'+n+' - x^'+n+'/'+(n*n)+' + C',
-    wrong:['x^'+n+' ln(x)/'+n+' + x^'+n+'/'+(n*n)+' + C','x^'+m+'/x + C','x^'+n+' ln(x) - x^'+n+' + C'],
+    wrong:['x^'+n+' ln(x)/'+n+' + x^'+n+'/'+(n*n)+' + C','x^'+n+' ln(x)/'+n+' + C','x^'+n+' ln(x) - x^'+n+' + C'],
     why:'Let u = ln(x) and dv = x^'+m+' dx. Then v = x^'+n+'/'+n+', so integration by parts gives x^'+n+'ln(x)/'+n+' - (1/'+n+') integral x^'+m+' dx = x^'+n+'ln(x)/'+n+' - x^'+n+'/'+(n*n)+' + C.',
     hints:['Let the logarithm be u because differentiation simplifies it.','Integrating x^'+m+' gives x^'+n+'/'+n+'.','The remaining integral is (1/'+n+') integral x^'+m+' dx.'] };
 });
@@ -281,16 +310,18 @@ family({ chapter:4, lesson:12, slug:'sine-cosine-odd', name:'Odd powers of sine 
     hints:['Save the single cosine factor for du.','Use u = sin(x) and change the bounds.','Integrate u^'+p+' from 0 to 1.'] };
 });
 family({ chapter:4, lesson:12, slug:'sine-cosine-even', name:'Even powers and half-angle identities', section:'8.3' }, function (i) {
-  var a=i+1,ans=frac(a,4)+'pi';
-  return { q:'Evaluate integral_0^(pi/2) '+a+' sin^2(x) dx.', correct:ans,
+  // A coefficient of one is left out by hand: tidy() cannot see "1 sin^2(x)".
+  var a=i+1,ans=frac(a,4)+'pi',ka=(a===1?'':a+' ');
+  return { q:'Evaluate integral_0^(pi/2) '+ka+'sin^2(x) dx.', correct:ans,
     wrong:[frac(a,2)+'pi',String(a),frac(a,8)+'pi'],
-    why:'Use sin^2(x) = (1 - cos(2x))/2. Over 0 to pi/2 the cosine contribution is zero, so the result is '+a+'(pi/2)/2 = '+ans+'.',
+    why:'Use sin^2(x) = (1 - cos(2x))/2. Over 0 to pi/2 the cosine contribution is zero, so the result is '+(a===1?'':a)+'(pi/2)/2 = '+ans+'.',
     hints:['An even power calls for a half-angle identity.','Replace sin^2(x) with (1 - cos(2x))/2.','The cosine term integrates to zero over these bounds.'] };
 });
 family({ chapter:4, lesson:13, slug:'tangent-secant', name:'Tangent powers with secant squared', section:'8.3' }, function (i) {
   var m=i+1,ans=frac(1,m+1);
+  // At m = 1, 2/(m + 1) is 1/m; keeping the x-bound pi/4 for u stands in.
   return { q:'Evaluate integral_0^(pi/4) tan^'+m+'(x) sec^2(x) dx.', correct:ans,
-    wrong:[frac(1,m),frac(1,m+2),frac(2,m+1)],
+    wrong:[frac(1,m),frac(1,m+2),frac(2,m+1),'(pi/4)^'+(m+1)+'/'+(m+1)],
     why:'With u = tan(x), du = sec^2(x)dx and the bounds become 0 and 1. The result is integral_0^1 u^'+m+' du = '+ans+'.',
     hints:['sec^2(x) is the derivative of tan(x).','Use u = tan(x) and convert the limits.','Evaluate integral_0^1 u^'+m+' du.'] };
 });
@@ -304,16 +335,24 @@ family({ chapter:4, lesson:13, slug:'cotangent-cosecant', name:'Cotangent powers
 family({ chapter:4, lesson:14, slug:'circle-radical', name:'Substitution for sqrt(a squared minus x squared)', section:'8.4' }, function (i) {
   var a=i+2,ans=frac(a*a,4)+'pi';
   return { q:'Evaluate integral_0^'+a+' sqrt('+(a*a)+' - x^2) dx.', correct:ans,
-    wrong:[frac(a*a,2)+'pi',a+'pi',String(a*a)],
+    // a pi repeats a^2/2 pi or the answer when a = 2 or 4; the whole
+    // circle's area stands in then.
+    wrong:[frac(a*a,2)+'pi',a+'pi',String(a*a),a*a+'pi'],
     why:'Use x = '+a+'sin(theta), or recognize a quarter-circle of radius '+a+'. Its area is pi('+a+'^2)/4 = '+ans+'.',
     hints:['The radical matches sqrt(a^2 - x^2).','Use x = a sin(theta), with theta from 0 to pi/2.','The transformed integral is a^2 integral_0^(pi/2) cos^2(theta)dtheta.'] };
 });
 family({ chapter:4, lesson:14, slug:'plus-radical', name:'Substitution for sqrt(a squared plus x squared)', section:'8.4' }, function (i) {
   var a=(i%4)+1,n=i+1,ans='ln('+n+' + sqrt('+(n*n+1)+'))';
+  // At a = 1 there is no factor to cancel: the forgot-ln(a) slip is the
+  // answer, so integrating as if the numerator were x stands in for it.
   return { q:'Evaluate integral_0^'+(n*a)+' dx/sqrt(x^2 + '+(a*a)+').', correct:ans,
-    wrong:['arctan('+n+')',frac(n,a),'ln('+(n*a)+' + sqrt('+(n*n*a*a+a*a)+'))'],
-    why:'Let x = '+a+'tan(theta), or use the standard antiderivative ln(x + sqrt(x^2 + a^2)). The lower endpoint contributes ln('+a+'), which cancels the factor '+a+' from the upper logarithm, leaving '+ans+'.',
-    hints:['This is the sqrt(x^2 + a^2) form, so tangent substitution works.','Use x = '+a+'tan(theta), or the logarithmic antiderivative.','Factor '+a+' from the upper expression and subtract ln('+a+') from the lower bound.'] };
+    wrong:['arctan('+n+')',frac(n,a),'ln('+(n*a)+' + sqrt('+(n*n*a*a+a*a)+'))','sqrt('+(n*n+1)+') - 1'],
+    why:'Let x = '+a+'tan(theta), or use the standard antiderivative ln(x + sqrt(x^2 + a^2)). '+(a===1
+      ?'The lower endpoint contributes ln(1) = 0, leaving '+ans+'.'
+      :'The lower endpoint contributes ln('+a+'), which cancels the factor '+a+' from the upper logarithm, leaving '+ans+'.'),
+    hints:['This is the sqrt(x^2 + a^2) form, so tangent substitution works.','Use x = '+a+'tan(theta), or the logarithmic antiderivative.',(a===1
+      ?'Evaluate at x = '+n+' and x = 0; the lower bound gives ln(1) = 0.'
+      :'Factor '+a+' from the upper expression and subtract ln('+a+') from the lower bound.')] };
 });
 /* The usual slips on pi/(4b) - pi/(2b), b*pi/4, pi/4 - land on the answer or
    on each other when b is 1 or 2, so take the first three that are different
@@ -328,27 +367,39 @@ function distinctPiSlips(b) {
   return out;
 }
 family({ chapter:5, lesson:15, slug:'complete-square', name:'Completing the square before integration', section:'8.4' }, function (i) {
+  // Braced bounds: written integral_-1^2, tidy() reads "1^2 " as one to a
+  // power and deletes it, taking the bounds with it.
   var c=i-3,b=(i%4)+1,lo=c,hi=c+b,ans=frac(1,4*b)+'pi';
-  return { q:'Evaluate integral_'+lo+'^'+hi+' dx/((x - ('+c+'))^2 + '+(b*b)+').', correct:ans,
+  return { q:'Evaluate integral_{'+lo+'}^{'+hi+'} dx/((x - ('+c+'))^2 + '+(b*b)+').', correct:ans,
     wrong:distinctPiSlips(b),
-    why:'Set u = (x - ('+c+'))/'+b+'. Then dx = '+b+'du and the bounds are 0 to 1. The integral becomes (1/'+b+') integral_0^1 du/(1+u^2) = pi/'+(4*b)+' = '+ans+'.',
+    why:(b===1
+      ?'Set u = x - ('+c+'). Then dx = du and the bounds are 0 to 1. The integral becomes integral_0^1 du/(1+u^2) = arctan(1) = '+ans+'.'
+      :'Set u = (x - ('+c+'))/'+b+'. Then dx = '+b+'du and the bounds are 0 to 1. The integral becomes (1/'+b+') integral_0^1 du/(1+u^2) = (1/'+b+')(pi/4) = '+ans+'.'),
     hints:['The denominator is already a completed square plus b^2.','Scale with u = (x - center)/b.','The transformed bounds are 0 and 1, producing arctan(1) = pi/4.'] };
 });
 family({ chapter:5, lesson:15, slug:'definite-sec-substitution', name:'Definite secant substitution', section:'8.4' }, function (i) {
   var a=(i%4)+1,n=i+2,ans='ln('+n+' + sqrt('+(n*n-1)+'))';
   return { q:'Evaluate integral_'+a+'^'+(n*a)+' dx/sqrt(x^2 - '+(a*a)+').', correct:ans,
-    wrong:['arccos(1/'+n+')','ln('+(n*a)+' + sqrt('+(n*n*a*a-a*a)+'))','sqrt('+(n*n-1)+')'],
-    why:'Use x = '+a+'sec(theta). The antiderivative is ln(x + sqrt(x^2 - a^2)). Evaluating from '+a+' to '+(n*a)+' cancels ln('+a+') and leaves '+ans+'.',
-    hints:['sqrt(x^2 - a^2) suggests x = a sec(theta).','The transformed integrand is sec(theta).','After evaluating, factor out a inside the upper logarithm and cancel the lower ln(a).'] };
+    // At a = 1 the forgot-to-cancel-ln(a) slip is the answer; a sign slip
+    // inside the logarithm stands in for it.
+    wrong:['arccos(1/'+n+')','ln('+(n*a)+' + sqrt('+(n*n*a*a-a*a)+'))','sqrt('+(n*n-1)+')','ln('+n+' - sqrt('+(n*n-1)+'))'],
+    why:'Use x = '+a+'sec(theta). The antiderivative is ln(x + sqrt(x^2 - a^2)). '+(a===1
+      ?'Evaluating from 1 to '+n+', the lower bound gives ln(1) = 0, leaving '+ans+'.'
+      :'Evaluating from '+a+' to '+(n*a)+' cancels ln('+a+') and leaves '+ans+'.'),
+    hints:['sqrt(x^2 - a^2) suggests x = a sec(theta).','The transformed integrand is sec(theta).',(a===1
+      ?'Evaluate at both bounds; at x = 1 the logarithm is ln(1) = 0.'
+      :'After evaluating, factor out a inside the upper logarithm and cancel the lower ln(a).')] };
 });
 family({ chapter:5, lesson:16, slug:'distinct-linear-factors', name:'Partial fractions with distinct linear factors', section:'8.5' }, function (i) {
   var a=(i%4)+1,b=a+(i%5)+2,A=(i%3)+1,B=(i%4)+2,px=A+B,pc=A*b+B*a;
   var correct=A+'/(x + '+a+') + '+B+'/(x + '+b+')';
   return { q:'Decompose ('+px+'x + '+pc+')/((x + '+a+')(x + '+b+')) into partial fractions.', correct:correct,
     // When A = B, swapping them changes nothing, so a sign slip and an
-    // off-by-one stand in for the swaps.
+    // off-by-one stand in for the swap. Swapping the numerators and swapping
+    // the denominators give the same sum, so only one swap is offered; the
+    // other slip puts the roots on the wrong side (x - a for x + a).
     wrong:(A===B?[A+'/(x + '+a+') - '+B+'/(x + '+b+')',(A+1)+'/(x + '+a+') + '+(B-1)+'/(x + '+b+')',px+'/(x + '+a+') + '+pc+'/(x + '+b+')']
-      :[B+'/(x + '+a+') + '+A+'/(x + '+b+')',A+'/(x + '+b+') + '+B+'/(x + '+a+')',px+'/(x + '+a+') + '+pc+'/(x + '+b+')']),
+      :[B+'/(x + '+a+') + '+A+'/(x + '+b+')',A+'/(x - '+a+') + '+B+'/(x - '+b+')',px+'/(x + '+a+') + '+pc+'/(x + '+b+')']),
     why:'Writing A/(x + '+a+') + B/(x + '+b+') gives numerator A(x + '+b+') + B(x + '+a+'). Matching the constructed numerator yields A = '+A+' and B = '+B+', so the decomposition is '+correct+'.',
     hints:['Use one constant numerator over each distinct linear factor.','Clear denominators before matching coefficients.','Substitute x = -'+a+' and x = -'+b+' to isolate the constants.'] };
 });
@@ -383,11 +434,13 @@ family({ chapter:5, lesson:17, slug:'quadratic-numerator', name:'Integrals with 
 
 /* Gym 6 and the second exam route - improper integrals and sequences. */
 family({ chapter:6, lesson:18, slug:'infinite-bound', name:'Improper integrals with an infinite bound', section:'8.8' }, function (i) {
+  // The upper limit is the symbol: the typesetter takes one letter after ^, so
+  // ^infinity would read as a raised i followed by "nfinity".
   var p=i+2,ans=frac(1,p-1);
-  return { q:'Evaluate integral_1^infinity dx/x^'+p+'.', correct:ans,
+  return { q:'Evaluate integral_1^∞ dx/x^'+p+'.', correct:ans,
     wrong:[frac(1,p),frac(1,p+1),'Diverges'],
-    why:'Replace infinity by b and integrate x^-'+p+'. The limit is [x^'+(1-p)+'/'+(1-p)+']_1^b. Since p > 1, the b-term tends to 0, leaving 1/'+(p-1)+' = '+ans+'.',
-    hints:['Write the improper integral as a limit before evaluating.','Use the p-integral rule: it converges because p = '+p+' > 1.','The exact value of integral_1^infinity x^-p dx is 1/(p - 1).'] };
+    why:'Replace infinity by b and integrate x^-'+p+'. The limit is [x^'+(1-p)+'/'+(1-p)+']_1^b. Since p > 1, the b-term tends to 0, leaving 1/('+p+' - 1) = '+ans+'.',
+    hints:['Write the improper integral as a limit before evaluating.','Use the p-integral rule: it converges because p = '+p+' > 1.','The exact value of integral_1^∞ x^-p dx is 1/(p - 1).'] };
 });
 family({ chapter:6, lesson:18, slug:'infinite-discontinuity', name:'Improper integrals at a finite discontinuity', section:'8.8' }, function (i) {
   var n=i+2,exp=frac(n-1,n),ans=String(n);
@@ -400,7 +453,9 @@ family({ chapter:6, lesson:19, slug:'sequence-rational-limit', name:'Limits of r
   var a=i+2,b=i+1,c=(i%5)+1,d=i+3,ans=frac(a,c);
   return { q:'Find lim as n approaches infinity of ('+a+'n^2 + '+b+')/('+c+'n^2 + '+d+').', correct:ans,
     wrong:[frac(b,d),String(a-c),'infinity'],
-    why:'Divide numerator and denominator by n^2. The lower-order constants vanish, leaving '+a+'/'+c+' = '+ans+'.',
+    // Show a/c = ans only when the fraction actually reduces ("2/1 = 2" and
+    // "3/2 = 3/2" said nothing).
+    why:'Divide numerator and denominator by n^2. The lower-order constants vanish, leaving '+(c===1?ans:a+'/'+c+(gcd(a,c)===1?'':' = '+ans))+'.',
     hints:['Compare the highest powers in numerator and denominator.','Both have degree 2, so divide through by n^2.','The limit is the ratio of leading coefficients.'] };
 });
 family({ chapter:6, lesson:19, slug:'partial-sums-geometric', name:'Finite geometric partial sums', section:'10.2' }, function (i) {
@@ -428,8 +483,9 @@ family({ chapter:92, lesson:20, slug:'recurrence-fixed-point', name:'Limits of r
 /* Gyms 7 and 8 - series and convergence tests. */
 family({ chapter:7, lesson:21, slug:'geometric-infinite', name:'Infinite geometric series', section:'10.2' }, function (i) {
   var a=i+1,d=(i%5)+2,ans=frac(a*d,d-1);
+  // At d = 2, ad is the answer; a(1 - r) stands in then.
   return { q:'Find the sum of the infinite geometric series with first term '+a+' and ratio 1/'+d+'.', correct:ans,
-    wrong:[frac(a,d-1),frac(a*d,d+1),String(a*d)],
+    wrong:[frac(a,d-1),frac(a*d,d+1),String(a*d),frac(a*(d-1),d)],
     why:'Because |r| = 1/'+d+' < 1, the series converges. Its sum is a/(1-r) = '+a+'/(1 - 1/'+d+') = '+ans+'.',
     hints:['Check |r| < 1 before using the sum formula.','Use S = a/(1 - r).','Substitute a = '+a+' and r = 1/'+d+'.'] };
 });
@@ -475,13 +531,14 @@ family({ chapter:8, lesson:24, slug:'alternating-classification', name:'Alternat
   var ps=P[i][0],pv=P[i][1],pe=ps.indexOf('/')>=0?'('+ps+')':ps,kind=pv<=1?'Conditionally convergent':'Absolutely convergent';
   return { q:'Classify sum from n = 1 to infinity of (-1)^(n+1)/n^'+pe+'.', correct:kind,
     wrong:[kind==='Conditionally convergent'?'Absolutely convergent':'Conditionally convergent','Divergent because it alternates','Divergent by the nth-term test'],
-    why:'The alternating series converges because 1/n^'+pe+' decreases to 0. Its absolute-value series is a p-series with p = '+ps+', which '+(pv>1?'converges':'diverges')+'. Therefore the convergence is '+kind.toLowerCase()+'.',
+    why:'The alternating series converges because 1/n^'+pe+' decreases to 0. Its absolute-value series is a p-series with p = '+ps+', which '+(pv>1?'converges':'diverges')+'. Therefore the series is '+kind.toLowerCase()+'.',
     hints:['First apply the Alternating Series Test to the magnitudes.','Then test the absolute-value series separately.','The absolute-value series is a p-series with p = '+ps+'.'] };
 });
 family({ chapter:8, lesson:24, slug:'alternating-error', name:'Alternating-series error bounds', section:'10.6' }, function (i) {
   var p=(i%2)+1,m=i+3,N=m-1;
   return { q:'For sum (-1)^(n+1)/n^'+p+', how many terms guarantee an alternating-series error no greater than 1/'+Math.pow(m,p)+'?', correct:String(N),
-    wrong:[String(m),String(N+1),String(Math.max(1,N-1))],
+    // m is always N + 1, so pick() drops the copy and N + 2 fills the slot.
+    wrong:[String(m),String(N+1),String(Math.max(1,N-1)),String(N+2)],
     why:'The error after N terms is at most the first omitted magnitude, 1/(N+1)^'+p+'. We need 1/(N+1)^'+p+' <= 1/'+Math.pow(m,p)+', so N+1 >= '+m+' and the smallest N is '+N+'.',
     hints:['Use the magnitude of the first omitted term.','Set 1/(N+1)^'+p+' <= 1/'+Math.pow(m,p)+'.','Solve N + 1 >= '+m+'.'] };
 });
@@ -496,7 +553,7 @@ family({ chapter:8, lesson:25, slug:'root-test', name:'Root Test with nth powers
   var c=i+1,d=(i%5)+3,L=frac(c,d),kind=c<d?'converges absolutely':c>d?'diverges':'is inconclusive';
   return { q:'Apply the Root Test to sum from n = 1 to infinity of ('+c+'/'+d+')^n.', correct:'L = '+L+'; '+kind,
     wrong:['L = '+frac(d,c)+'; '+(c<d?'diverges':'converges'),'L = 0; converges absolutely','L = 1; is inconclusive'],
-    why:'The nth root of |('+c+'/'+d+')^n| is '+L+', so L = '+L+'. The Root Test therefore '+kind+'.',
+    why:'The nth root of |('+c+'/'+d+')^n| is '+L+', so L = '+L+'. '+(c===d?'The Root Test is therefore inconclusive.':'By the Root Test the series therefore '+kind+'.'),
     hints:['Take the nth root of the entire nth power.','The nth root cancels the exponent n.','Compare '+L+' with 1.'] };
 });
 family({ chapter:8, lesson:26, slug:'choose-a-test', name:'Choosing an efficient convergence test', section:'10.3-10.6' }, function (i) {
@@ -515,8 +572,11 @@ family({ chapter:8, lesson:26, slug:'mixed-verdicts', name:'Mixed convergence cl
   var cases=[
     ['sum 1/n','diverges'],['sum 1/n^2','converges absolutely'],['sum (-1)^(n+1)/n','converges conditionally'],
     ['sum (3/4)^n','converges absolutely'],['sum n/(n+1)','diverges'],['sum 1/(n ln(n)), n >= 2','diverges'],
-    ['sum (-1)^n/n^3','converges absolutely'],['sum 1/(n^2+5)','converges'],['sum 2^n/n!','converges absolutely'],['sum (1+1/n)^n','diverges']
+    ['sum (-1)^n/n^3','converges absolutely'],['sum 1/(n^2+5)','converges absolutely'],['sum 2^n/n!','converges absolutely'],['sum (1+1/n)^n','diverges']
   ],row=cases[i];
+  // Every verdict is one of the four offered: a convergent series of positive
+  // terms "converges absolutely" (a bare "converges" next to that choice
+  // would make two answers true).
   return { q:'Classify '+row[0]+'.', correct:row[1],
     wrong:['diverges','converges absolutely','converges conditionally','test is inconclusive'].filter(function(x){return x!==row[1];}),
     why:'The defining test for this standard form shows that the series '+row[1]+'. Check the term limit first, then use the structural test that matches the expression.',
@@ -526,15 +586,18 @@ family({ chapter:8, lesson:26, slug:'mixed-verdicts', name:'Mixed convergence cl
 /* Gym 9 and the third exam route - Taylor and power series. */
 family({ chapter:93, lesson:27, slug:'taylor-polynomial-exponential', name:'Taylor polynomials for exponentials', section:'10.8' }, function (i) {
   var k=i+1,quad=frac(k*k,2);
-  return { q:'Find the degree-2 Maclaurin polynomial for e^('+k+'x).', correct:'1 + '+k+'x + '+quad+'x^2',
+  // "degree 2", not "degree-2": the typesetter reads a hyphen before a digit
+  // as a minus sign.
+  return { q:'Find the Maclaurin polynomial of degree 2 for e^('+k+'x).', correct:'1 + '+k+'x + '+quad+'x^2',
     // At k = 1, "forgot to substitute kx" is the right answer.
     wrong:(k===1?['1 + x + x^2','1 + x - x^2/2','1 - x + x^2/2']:['1 + x + x^2/2','1 + '+k+'x + '+(k*k)+'x^2','1 + '+k+'x + '+frac(k,2)+'x^2']),
-    why:'Substitute '+k+'x into e^u = 1 + u + u^2/2! + ... . Keeping through degree 2 gives 1 + '+k+'x + '+k+'^2x^2/2 = 1 + '+k+'x + '+quad+'x^2.',
+    why:'Substitute '+k+'x into e^u = 1 + u + u^2/2! + ... . Keeping through degree 2 gives '+(k===1?'1 + x + x^2/2.'
+      :'1 + '+k+'x + '+k+'^2x^2/2 = 1 + '+k+'x + '+quad+'x^2.'),
     hints:['Start with the Maclaurin series for e^u.','Replace every u by '+k+'x.','Keep terms only through x^2 and simplify the factorial.'] };
 });
 family({ chapter:93, lesson:27, slug:'taylor-polynomial-log', name:'Taylor polynomials at a nonzero center', section:'10.8' }, function (i) {
   var a=i+1;
-  return { q:'Find the degree-2 Taylor polynomial for ln(x) centered at a = '+a+'.', correct:'ln('+a+') + (x - '+a+')/'+a+' - (x - '+a+')^2/'+(2*a*a),
+  return { q:'Find the Taylor polynomial of degree 2 for ln(x) centered at a = '+a+'.', correct:'ln('+a+') + (x - '+a+')/'+a+' - (x - '+a+')^2/'+(2*a*a),
     // At a = 1 dividing by a changes nothing, so "forgot to divide by a" would be
     // a second right answer; a sign slip stands in for it there.
     wrong:[(a===1?'(x - 1) + (x - 1)^2/2':'ln('+a+') + (x - '+a+') - (x - '+a+')^2/2'),'ln('+a+') - (x - '+a+')/'+a+' + (x - '+a+')^2/'+(2*a*a),'(x - '+a+')/'+a+' - (x - '+a+')^2/'+(a*a)],
@@ -543,22 +606,29 @@ family({ chapter:93, lesson:27, slug:'taylor-polynomial-log', name:'Taylor polyn
 });
 family({ chapter:9, lesson:28, slug:'lagrange-bound', name:'Lagrange remainder bounds', section:'10.9' }, function (i) {
   var d=i+2;
-  return { q:'Use the degree-2 Maclaurin polynomial for e^x at x = 1/'+d+'. Which Lagrange bound is valid if M = e^(1/'+d+')?', correct:'e^(1/'+d+')/(6*'+Math.pow(d,3)+')',
-    wrong:['e^(1/'+d+')/(2*'+Math.pow(d,2)+')','1/(6*'+Math.pow(d,3)+')','e^(1/'+d+')/'+Math.pow(d,3)],
+  // At d = 2, the 2!x^2 slip, e^(1/2)/(2*4), and the forgot-3! slip,
+  // e^(1/2)/8, are the same number; going one term too far stands in.
+  return { q:'Use the Maclaurin polynomial of degree 2 for e^x at x = 1/'+d+'. Which Lagrange bound is valid if M = e^(1/'+d+')?', correct:'e^(1/'+d+')/(6*'+Math.pow(d,3)+')',
+    wrong:['e^(1/'+d+')/(2*'+Math.pow(d,2)+')','1/(6*'+Math.pow(d,3)+')',(d===2?'e^(1/2)/(24*16)':'e^(1/'+d+')/'+Math.pow(d,3))],
     why:'For degree 2, |R_2(x)| <= M|x|^3/3!. With x = 1/'+d+' and M = e^(1/'+d+'), the bound is e^(1/'+d+')*(1/'+d+')^3/6 = e^(1/'+d+')/(6*'+Math.pow(d,3)+').',
-    hints:['A degree-n polynomial uses the (n+1)st power and (n+1)! in the remainder.','Here n + 1 = 3 and x = 1/'+d+'.','Substitute into M|x|^3/3!.'] };
+    hints:['A polynomial of degree n uses the (n+1)st power and (n+1)! in the remainder.','Here n + 1 = 3 and x = 1/'+d+'.','Substitute into M|x|^3/3!.'] };
 });
 family({ chapter:9, lesson:28, slug:'degree-for-accuracy', name:'Choosing Taylor degree for an error tolerance', section:'10.9' }, function (i) {
   var m=i+3,N=m-1;
   return { q:'An alternating Maclaurin approximation has error at most 1/(N+1)!. What smallest N guarantees error no greater than 1/'+m+'!?', correct:String(N),
-    wrong:[String(m),String(N+1),String(Math.max(0,N-1))],
+    // m is always N + 1, so pick() drops the copy and N + 2 fills the slot.
+    wrong:[String(m),String(N+1),String(Math.max(0,N-1)),String(N+2)],
     why:'We need 1/(N+1)! <= 1/'+m+'!, so (N+1)! >= '+m+'!. The smallest possibility is N+1 = '+m+', hence N = '+N+'.',
     hints:['Compare the factorial denominators.','A larger factorial denominator gives a smaller error bound.','Set N + 1 = '+m+' for the first degree that meets the tolerance.'] };
 });
 family({ chapter:9, lesson:29, slug:'radius-geometric', name:'Radius and interval from a geometric power series', section:'10.7' }, function (i) {
   var c=i-4,R=i+2,left=c-R,right=c+R;
   return { q:'Find the radius and interval of convergence of sum from n = 0 to infinity of ((x - ('+c+'))/'+R+')^n.', correct:'R = '+R+'; ('+left+', '+right+')',
-    wrong:['R = 1/'+R+'; ('+left+', '+right+')','R = '+R+'; ['+left+', '+right+']','R = '+Math.abs(c)+'; ('+(c-Math.abs(c))+', '+(c+Math.abs(c))+')'],
+    // When |c| = R the center-as-radius slip is the answer; centering the
+    // interval at 0 stands in then. When c = 0 that slip is the empty
+    // "R = 0; (0, 0)", so ignoring the /R (radius 1) replaces it.
+    wrong:['R = 1/'+R+'; ('+left+', '+right+')','R = '+R+'; ['+left+', '+right+']',
+      (c===0?'R = 1; (-1, 1)':'R = '+Math.abs(c)+'; ('+(c-Math.abs(c))+', '+(c+Math.abs(c))+')'),'R = '+R+'; (-'+R+', '+R+')'],
     why:'This is geometric with ratio (x - ('+c+'))/'+R+'. Convergence requires |x - ('+c+')| < '+R+', giving radius '+R+' and the open interval ('+left+', '+right+'). At either endpoint the ratio is +/-1, so the terms do not approach zero.',
     hints:['Treat the expression raised to n as the geometric ratio.','Solve |(x - center)/'+R+'| < 1.','Test both endpoints: ratios 1 and -1 make the terms fail to approach zero.'] };
 });
@@ -578,9 +648,12 @@ family({ chapter:9, lesson:30, slug:'geometric-transform', name:'Constructing po
 });
 family({ chapter:9, lesson:30, slug:'integrate-known-series', name:'Integrating a known power series', section:'10.7' }, function (i) {
   var a=i+1;
+  // At a = 1, "divided by a instead of multiplying" is the answer itself, so
+  // a sign slip stands in for it.
   return { q:'Write the power series for ln(1 + '+a+'x) about x = 0.', correct:'sum from n = 1 of (-1)^(n+1) '+a+'^n x^n/n, for |x| < 1/'+a,
-    wrong:['sum from n = 0 of (-1)^n '+a+'^n x^n, for |x| < 1/'+a,'sum from n = 1 of '+a+'^n x^n/n, for |x| < 1/'+a,'sum from n = 1 of (-1)^(n+1) x^n/('+a+'n), for |x| < '+a],
-    why:'ln(1+u)=sum from n=1 of (-1)^(n+1)u^n/n. Substituting u='+a+'x gives the stated series, valid for |'+a+'x|<1.',
+    wrong:['sum from n = 0 of (-1)^n '+a+'^n x^n, for |x| < 1/'+a,'sum from n = 1 of '+a+'^n x^n/n, for |x| < 1/'+a,
+      (a===1?'sum from n = 1 of (-1)^n x^n/n, for |x| < 1':'sum from n = 1 of (-1)^(n+1) x^n/('+a+'n), for |x| < '+a)],
+    why:'ln(1+u)=sum from n=1 of (-1)^(n+1)u^n/n. Substituting u='+a+'x gives the stated series, valid for '+(a===1?'|x|<1':'|'+a+'x|<1')+'.',
     hints:['Recall the standard series for ln(1+u).','Substitute u = '+a+'x into every power.','Translate |u| < 1 into a condition on x.'] };
 });
 family({ chapter:9, lesson:31, slug:'maclaurin-sine', name:'Maclaurin expansions by substitution', section:'10.8' }, function (i) {
@@ -589,7 +662,9 @@ family({ chapter:9, lesson:31, slug:'maclaurin-sine', name:'Maclaurin expansions
     // At k = 1, "forgot to substitute kx" is the right answer.
     wrong:(k===1?['x + x^3/6 + x^5/120','x - x^3/3 + x^5/5','x - x^3/6 + x^5/24']:[k+'x + '+a3+'x^3 + '+a5+'x^5','x - x^3/6 + x^5/120',k+'x - '+frac(k,6)+'x^3 + '+frac(k,120)+'x^5']),
     why:'Substitute '+k+'x into sin(u)=u-u^3/3!+u^5/5!-... . The powers produce '+k+'x - '+k+'^3x^3/6 + '+k+'^5x^5/120.',
-    hints:['Start with the standard sine series.','Replace u by '+k+'x inside every power.','Cube and fifth-power the coefficient '+k+' as well as x.'] };
+    hints:['Start with the standard sine series.','Replace u by '+k+'x inside every power.',(k===1
+      ?'Keep the factorials as numbers: 3! = 6 and 5! = 120.'
+      :'Cube and fifth-power the coefficient '+k+' as well as x.')] };
 });
 family({ chapter:9, lesson:31, slug:'coefficient-formula', name:'Coefficients of a Taylor series', section:'10.8' }, function (i) {
   var a=i+1;
@@ -599,14 +674,18 @@ family({ chapter:9, lesson:31, slug:'coefficient-formula', name:'Coefficients of
     wrong:(a===1?['n','1/n!','(-1)^n']:['1/'+a+'^n',a+'n','1/n!']),
     why:(a===1?'The geometric series 1/(1-u)=sum u^n with u=x gives sum x^n, so every coefficient is 1: c_n=1.'
       :'The geometric series 1/(1-u)=sum u^n with u='+a+'x gives sum ('+a+'x)^n = sum '+a+'^n x^n. Therefore c_n='+a+'^n.'),
-    hints:['Recognize a geometric-series denominator.','Use u = '+a+'x in 1/(1-u).','Expand ('+a+'x)^n into coefficient times x^n.'] };
+    hints:['Recognize a geometric-series denominator.','Use u = '+a+'x in 1/(1-u).',(a===1
+      ?'Read off the number multiplying x^n in sum x^n.'
+      :'Expand ('+a+'x)^n into coefficient times x^n.')] };
 });
 
 /* Gym 10 and the comprehensive-final route - power-series applications and polar calculus. */
 family({ chapter:10, lesson:32, slug:'series-limit', name:'Limits evaluated with series', section:'10.8' }, function (i) {
   var k=i+1,answer=frac(k*k,2);
+  // At k = 1 and 2 the k-slips repeat each other or the answer; dividing by
+  // 3! instead of 2!, and "everything cancels", stand in then.
   return { q:'Evaluate lim as x approaches 0 of (e^('+k+'x) - 1 - '+k+'x)/x^2 using a series.', correct:answer,
-    wrong:[String(k*k),frac(k,2),String(k)],
+    wrong:[String(k*k),frac(k,2),String(k),frac(k*k,6),'0'],
     why:'The expansion e^('+k+'x) = 1 + '+k+'x + ('+k+'x)^2/2! + higher powers cancels the first two numerator terms. Dividing by x^2 leaves '+k+'^2/2 plus terms that approach zero, so the limit is '+answer+'.',
     hints:['Expand the exponential through the x^2 term.','Cancel the constant and linear terms shown in the numerator.','Divide the first surviving term by x^2, then let x approach zero.'] };
 });
@@ -632,10 +711,14 @@ family({ chapter:10, lesson:33, slug:'polar-circle-equation', name:'Recognizing 
     hints:['Use r^2 = x^2+y^2 and r cos(theta)=x.','Rewrite the equation as x^2 - '+a+'x + y^2 = 0.','Complete the square in x by adding ('+h+')^2.'] };
 });
 family({ chapter:10, lesson:34, slug:'polar-rose-petals', name:'Counting petals of polar roses', section:'11.3' }, function (i) {
+  // One of k and 2k is always the answer, so the slips run on (k + 1, k + 2,
+  // 2k + 2) and pick() keeps the first three that differ from it and from
+  // each other - real counts, never the stock "0" or "Does not exist".
   var k=i+1,petals=k%2===0?2*k:k;
-  return { q:'How many petals does the polar curve r = '+(i+2)+' cos('+k+' theta) have?', correct:String(petals),
-    wrong:[String(k),String(2*k),String(k+1)].filter(function(x,index,self){return x!==String(petals)&&self.indexOf(x)===index;}),
-    why:'For r = a cos(k theta), an odd k produces k petals and an even k produces 2k petals. Since k = '+k+' is '+(k%2===0?'even':'odd')+', the curve has '+petals+' petals.',
+  return { q:'How many petals does the polar curve r = '+(i+2)+' cos('+(k===1?'':k+' ')+'theta) have?', correct:String(petals),
+    wrong:[String(k),String(2*k),String(k+1),String(k+2),String(2*k+2)],
+    why:'For r = a cos(k theta), an odd k produces k petals and an even k produces 2k petals. Since k = '+k+' is '+(k%2===0?'even':'odd')+', the curve has '+
+      (k===1?'1 petal (with k = 1 that single petal is the whole circle).':petals+' petals.'),
     hints:['The amplitude changes petal length, not petal count.','Check whether k = '+k+' is odd or even.','Use k petals for odd k and 2k petals for even k.'] };
 });
 family({ chapter:10, lesson:34, slug:'polar-tangent-slope', name:'Slopes of polar curves', section:'11.3' }, function (i) {
@@ -647,10 +730,12 @@ family({ chapter:10, lesson:34, slug:'polar-tangent-slope', name:'Slopes of pola
 });
 family({ chapter:94, lesson:35, slug:'polar-area-one-petal', name:'Areas enclosed by polar curves', section:'11.4' }, function (i) {
   var a=i+1,answer=frac(a*a,8)+'pi';
+  // At a = 1 the forgot-to-square-a slip is the answer; taking the integral
+  // of sin^2 as its average, 1/2, stands in then.
   return { q:'Find the area of one petal of r = '+a+' sin(2 theta). Use the interval 0 <= theta <= pi/2.', correct:answer,
-    wrong:[frac(a*a,4)+'pi',frac(a*a,2)+'pi',frac(a,8)+'pi'],
+    wrong:[frac(a*a,4)+'pi',frac(a*a,2)+'pi',frac(a,8)+'pi',frac(a*a,4)],
     why:'Polar area is (1/2) integral r^2 dtheta. Thus A = ('+a+'^2/2) integral from 0 to pi/2 of sin^2(2theta)dtheta. That integral is pi/4, so A = '+answer+'.',
-    hints:['Use A = (1/2) integral from alpha to beta of r^2 dtheta.','Square r, including the amplitude '+a+'.','The average value of sin^2 over this interval is 1/2, so its integral is pi/4.'] };
+    hints:['Use A = (1/2) integral from alpha to beta of r^2 dtheta.',(a===1?'Square r: r^2 = sin^2(2theta).':'Square r, including the amplitude '+a+'.'),'The average value of sin^2 over this interval is 1/2, so its integral is pi/4.'] };
 });
 family({ chapter:94, lesson:35, slug:'polar-arc-length', name:'Arc length of polar curves', section:'11.4' }, function (i) {
   var k=i+1;
@@ -659,7 +744,9 @@ family({ chapter:94, lesson:35, slug:'polar-arc-length', name:'Arc length of pol
   return { q:'Find the polar arc length of r = e^('+(k===1?'':k+' ')+'theta) for 0 <= theta <= 1.',
     correct:(k===1?'sqrt(2)(e - 1)':'sqrt(1 + '+k+'^2)(e^'+k+' - 1)/'+k),
     wrong:(k===1?['e - 1','2(e - 1)','sqrt(2)e']:['sqrt(1 + '+k+'^2)(e^'+k+' - 1)','(e^'+k+' - 1)/'+k,'sqrt(1 + '+k+')(e^'+k+' - 1)/'+k]),
-    why:'Polar arc length is integral sqrt(r^2+(dr/dtheta)^2)dtheta. Here dr/dtheta='+k+'e^('+k+'theta), so the integrand is sqrt(1+'+k+'^2)e^('+k+'theta). Integrating from 0 to 1 gives sqrt(1+'+k+'^2)(e^'+k+'-1)/'+k+'.',
+    why:'Polar arc length is integral sqrt(r^2+(dr/dtheta)^2)dtheta. '+(k===1
+      ?'Here dr/dtheta=e^(theta), so the integrand is sqrt(2)e^(theta). Integrating from 0 to 1 gives sqrt(2)(e - 1).'
+      :'Here dr/dtheta='+k+'e^('+k+'theta), so the integrand is sqrt(1+'+k+'^2)e^('+k+'theta). Integrating from 0 to 1 gives sqrt(1+'+k+'^2)(e^'+k+'-1)/'+k+'.'),
     hints:['Use L = integral sqrt(r^2 + (dr/dtheta)^2) dtheta.','Differentiate r = e^('+k+'theta).','Factor e^('+k+'theta) from the square root, then integrate the exponential.'] };
 });
 
