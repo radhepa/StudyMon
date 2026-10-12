@@ -43,10 +43,33 @@ function makeMon(id, level, opts) {
     shiny: d.shiny === false ? false :
       (opts.shiny !== undefined ? opts.shiny : (Math.random() < SHINY_RATE)),
     nick: null,
+    gender: rollGender(id),
     hp: 0
   };
   m.hp = maxHp(m);
   return m;
+}
+
+/* 'M', 'F' or null for genderless, using the species' odds in eighths. */
+function genderRate(id) {
+  var r = window.GENDER_RATE && GENDER_RATE[id];
+  return r === undefined ? 4 : r;
+}
+function rollGender(id) {
+  var r = genderRate(id);
+  if (r < 0) return null;
+  return Math.random() * 8 < r ? 'F' : 'M';
+}
+
+/* Saves from before genders existed get one the first time it is asked for.
+   A mon that evolves into a single-gender or genderless line follows it. */
+function monGender(m) {
+  var r = genderRate(m.id);
+  if (r < 0) return null;
+  if (r === 0) return 'M';
+  if (r === 8) return 'F';
+  if (m.gender !== 'M' && m.gender !== 'F') m.gender = rollGender(m.id);
+  return m.gender;
 }
 
 function maxHp(m) {

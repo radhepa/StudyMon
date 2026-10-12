@@ -119,17 +119,10 @@ function renderBattle() {
   field._battle = B;
   field._key = key;
   $('#battlefield').innerHTML =
-    '<div class="hpbox foe"><div class="nm"><span>' + esc(monName(f).toUpperCase()) + '</span><span>Lv' + f.lvl + '</span></div>' +
-    typePills(dexOf(f.id).types) +
-    '<div class="hpbar"><div class="hpfill ' + hpClass(f) + '" style="width:' + hpPct(f) + '%"></div></div></div>' +
-
+    hpBoxHtml(f, 'foe') +
     '<div class="bf-slot bf-foe"><img id="foeimg" src="' + monSprite(f, f.shiny ? 'shiny' : 'front') + '" alt=""></div>' +
     '<div class="bf-slot bf-you"><img id="youimg" src="' + spriteUrl(y.id, 'back') + '" alt=""></div>' +
-
-    '<div class="hpbox you"><div class="nm"><span>' + esc(monName(y).toUpperCase()) + '</span><span>Lv' + y.lvl + '</span></div>' +
-    typePills(dexOf(y.id).types) +
-    '<div class="hpbar"><div class="hpfill ' + hpClass(y) + '" style="width:' + hpPct(y) + '%"></div></div>' +
-    '<div class="hpnum">' + y.hp + '/' + maxHp(y) + '</div></div>';
+    hpBoxHtml(y, 'you');
 
   seatSprite($('#foeimg'), $('.bf-foe'));
   seatSprite($('#youimg'), $('.bf-you'));
@@ -138,15 +131,58 @@ function renderBattle() {
   renderTopbar();
 }
 
+/* The battle plates follow the handheld games: the foe's shows whether you
+   have caught that species (a red ball) or not (a grey one), and yours shows
+   your HP in numbers and how far you are into the next level. */
+var BALL_ICON = '<svg class="ball-ic" viewBox="0 0 16 16" aria-hidden="true">' +
+  '<circle cx="8" cy="8" r="7" class="ball-bot"/><path d="M1 8a7 7 0 0 1 14 0z" class="ball-top"/>' +
+  '<circle cx="8" cy="8" r="7" class="ball-rim"/><path d="M1 8h14" class="ball-rim"/>' +
+  '<circle cx="8" cy="8" r="2.3" class="ball-btn"/></svg>';
+var GENDER_ICON = {
+  M: '<svg class="gd-ic" viewBox="0 0 16 16"><title>Male</title><circle cx="6.5" cy="9.5" r="4.2"/><path d="M9.6 6.4L14 2M9.5 2H14V6.5"/></svg>',
+  F: '<svg class="gd-ic" viewBox="0 0 16 16"><title>Female</title><circle cx="8" cy="6" r="4.2"/><path d="M8 10.2V15.5M5 13H11"/></svg>'
+};
+
+function xpPct(m) { return m.lvl >= 100 ? 0 : Math.min(100, Math.round(m.xp / xpToNext(m.lvl) * 100)); }
+
+function genderHtml(m) {
+  var g = monGender(m);
+  return g ? '<span class="gd ' + (g === 'M' ? 'male' : 'female') + '">' + GENDER_ICON[g] + '</span>' : '';
+}
+
+function hpBoxHtml(m, side) {
+  var foeSide = side === 'foe';
+  var h = '<div class="hpbox ' + side + '"><div class="nm">' +
+    '<span class="nm-name"><span class="nm-text">' + esc(monName(m).toUpperCase()) + '</span>' + genderHtml(m) + '</span>' +
+    '<span class="nm-lv">Lv' + m.lvl + '</span></div>' +
+    typePills(dexOf(m.id).types) +
+    '<div class="hp-row">' +
+    (foeSide ? '<span class="ball-mark ' + (S.caught[m.id] ? 'caught' : 'uncaught') + '" title="' +
+      (S.caught[m.id] ? 'Caught before' : 'Not caught yet') + '">' + BALL_ICON + '</span>' : '') +
+    '<span class="hp-tag">HP</span>' +
+    '<div class="hpbar"><div class="hpfill ' + hpClass(m) + '" style="width:' + hpPct(m) + '%"></div></div></div>';
+  if (!foeSide) {
+    h += '<div class="hpnum">' + m.hp + '/' + maxHp(m) + '</div>' +
+      '<div class="xp-row"><span class="xp-tag">EXP</span>' +
+      '<div class="xpbar"><div class="xpfill" style="width:' + xpPct(m) + '%"></div></div></div>';
+  }
+  return h + '</div>';
+}
+
 function updateHpBox(box, m) {
   if (!box) return;
-  var nm = box.querySelectorAll('.nm span');
-  if (nm[0]) nm[0].textContent = monName(m).toUpperCase();
-  if (nm[1]) nm[1].textContent = 'Lv' + m.lvl;
+  var nm = box.querySelector('.nm-name');
+  if (nm) nm.innerHTML = '<span class="nm-text">' + esc(monName(m).toUpperCase()) + '</span>' + genderHtml(m);
+  var lv = box.querySelector('.nm-lv');
+  if (lv) lv.textContent = 'Lv' + m.lvl;
+  var ball = box.querySelector('.ball-mark');
+  if (ball) ball.className = 'ball-mark ' + (S.caught[m.id] ? 'caught' : 'uncaught');
   var fill = box.querySelector('.hpfill');
   if (fill) { fill.className = 'hpfill ' + hpClass(m); fill.style.width = hpPct(m) + '%'; }
   var num = box.querySelector('.hpnum');
   if (num) num.textContent = m.hp + '/' + maxHp(m);
+  var xp = box.querySelector('.xpfill');
+  if (xp) xp.style.width = xpPct(m) + '%';
 }
 
 /* ---- seating sprites on the battle platforms -------------------------------

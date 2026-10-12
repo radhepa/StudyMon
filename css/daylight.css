@@ -367,7 +367,7 @@ html body #app #battlefield .hpbox {
   border: 4px solid var(--dl-ink); border-radius: 10px; box-shadow: 0 5px 0 var(--dl-ink); padding: 10px 14px 12px;
 }
 html body #app #battlefield .hpbox .nm { font-family: var(--pixel); font-weight: 700; font-size: 20px; }
-html body #app #battlefield .hpbox .nm span:last-child { font-weight: 600; font-size: 17px; }
+html body #app #battlefield .hpbox .nm > span:last-child { font-weight: 600; font-size: 17px; }
 html body #app .hpbar, html body #app .xpbar {
   height: 12px; background: #3A3A55; border: 3px solid var(--dl-ink); border-radius: 4px; overflow: hidden; box-shadow: none;
 }
@@ -377,6 +377,41 @@ html body #app .hpfill.mid { background: #E3A41F; }
 html body #app .hpfill.low { background: var(--dl-red); }
 html body #app .xpfill { background: var(--dl-blue); background-image: none; }
 html body #app #battlefield .hpbox .hpnum, html body #app .hpnum { font-family: var(--pixel); font-weight: 600; font-size: 14px; color: var(--dl-ink); }
+/* handheld-style plate details: gender mark, caught ball, HP and EXP tags */
+html body #app #battlefield .hpbox .nm-name { display: inline-flex; align-items: center; gap: 6px; min-width: 0; }
+html body #app #battlefield .hpbox .nm-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+html body #app #battlefield .hpbox .gd { display: inline-flex; flex: none; }
+html body #app #battlefield .hpbox .gd-ic { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: square; }
+html body #app #battlefield .hpbox .gd.male { color: #2F6FD6; }
+html body #app #battlefield .hpbox .gd.female { color: #E0457B; }
+html body #app #battlefield .hpbox .hp-row, html body #app #battlefield .hpbox .xp-row { display: flex; align-items: center; gap: 6px; margin-top: 8px; }
+html body #app #battlefield .hpbox .hp-row .hpbar, html body #app #battlefield .hpbox .xp-row .xpbar { flex: 1; margin-top: 0; }
+html body #app #battlefield .hpbox .hp-tag, html body #app #battlefield .hpbox .xp-tag {
+  flex: none; font-family: var(--pixel); font-weight: 700; font-size: 12px; line-height: 1;
+  padding: 3px 5px 2px; border-radius: 4px; background: var(--dl-ink); color: #F5B935; letter-spacing: 1px;
+}
+html body #app #battlefield .hpbox .xp-tag { color: #8FC1FF; font-size: 10px; }
+html body #app #battlefield .hpbox .xp-row { margin-top: 6px; }
+html body #app #battlefield .hpbox .xp-row .xpbar { height: 9px; border-width: 2px; }
+html body #app #battlefield .hpbox .hpnum { text-align: right; margin-top: 4px; }
+html body #app #battlefield .hpbox .ball-mark { display: inline-flex; flex: none; }
+html body #app #battlefield .hpbox .ball-ic { width: 18px; height: 18px; }
+html body #app #battlefield .hpbox .ball-ic .ball-bot { fill: #FFFFFF; }
+html body #app #battlefield .hpbox .ball-ic .ball-rim { fill: none; stroke: var(--dl-ink); stroke-width: 1.6; }
+html body #app #battlefield .hpbox .ball-ic .ball-btn { fill: #FFFFFF; stroke: var(--dl-ink); stroke-width: 1.6; }
+html body #app #battlefield .hpbox .ball-mark.caught .ball-top { fill: #E5383B; }
+html body #app #battlefield .hpbox .ball-mark.uncaught .ball-top { fill: #A9A9B4; }
+html body #app #battlefield .hpbox .ball-mark.uncaught .ball-bot, html body #app #battlefield .hpbox .ball-mark.uncaught .ball-btn { fill: #E4E4EA; }
+html body #app #battlefield .hpbox .ball-mark.uncaught .ball-rim, html body #app #battlefield .hpbox .ball-mark.uncaught .ball-btn { stroke: #6E6E7C; }
+@media (max-width: 760px) {
+  html body #app #battlefield .hpbox .nm { font-size: 14px; gap: 4px; }
+  html body #app #battlefield .hpbox .nm > span.nm-lv:last-child { font-size: 13px; }
+  html body #app #battlefield .hpbox .nm-name { gap: 3px; }
+  html body #app #battlefield .hpbox .gd-ic, html body #app #battlefield .hpbox .ball-ic { width: 14px; height: 14px; }
+  html body #app #battlefield .hpbox .hp-tag { font-size: 10px; padding: 2px 4px 1px; }
+  html body #app #battlefield .hpbox .xp-tag { font-size: 8px; padding: 2px 3px 1px; }
+  html body #app #battlefield .hpbox .hp-row, html body #app #battlefield .hpbox .xp-row { margin-top: 5px; gap: 4px; }
+}
 html body #app #battlelog {
   background: var(--dl-card); background-image: none; color: var(--dl-ink);
   border: 5px solid var(--dl-ink); border-radius: 12px;
@@ -538,7 +573,7 @@ html body input, html body select, html body textarea { font-family: var(--read)
 html body #app .statbox .v, html body #app .bar-row .val, html body #app .dl-acc,
 html body #battlefield .hpbox .hpnum, html body #app .hpnum, html body #app .move .mv-bot,
 html body #app #topbar .chip b, html body #app .pc-cell .lvtag, html body #app .pc-slot .s-lv,
-html body #app .route .num, html body #battlefield .hpbox .nm span:last-child {
+html body #app .route .num, html body #battlefield .hpbox .nm > span:last-child {
   font-family: var(--read); font-weight: 700; letter-spacing: 0;
 }
 
