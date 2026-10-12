@@ -140,7 +140,8 @@ const SEED=(subject)=>{
   await p.evaluate((seed)=>{eval('('+seed+')')('c');startBattle({kind:'wild',chapters:[1],foes:[makeMon(149,30)],title:'Test'});},SEED.toString());
   const settle=async()=>{let last=-1;for(let i=0;i<30;i++){const y=await p.evaluate(()=>scrollY);if(y===last)break;last=y;await p.waitForTimeout(120);}};
   await p.waitForTimeout(300); await settle();
-  const dockTop=await p.evaluate(()=>document.getElementById('nav').getBoundingClientRect().top);
+  // on a laptop the nav is a side rail and covers nothing below; navCoverTop says where the dock begins
+  const dockTop=await p.evaluate(()=>typeof navCoverTop==='function'?navCoverTop():document.getElementById('nav').getBoundingClientRect().top);
   const startFit=await p.evaluate(()=>document.querySelector('#quiz').lastElementChild.getBoundingClientRect().bottom);
   check('the moves and actions open above the nav dock',startFit<=dockTop,Math.round(startFit)+' vs dock '+Math.round(dockTop));
   await p.evaluate(()=>chooseMove(0)); await p.waitForTimeout(300); await settle();

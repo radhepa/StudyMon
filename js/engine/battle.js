@@ -78,9 +78,7 @@ function logName(m) { return esc(monName(m).toUpperCase()); }
 function battleFrame(first, last) {
   if (CUR !== 'battle' || !first || !last) return;
   var y = window.scrollY, top = 8;
-  var nav = $('#nav');
-  var navTop = nav && getComputedStyle(nav).display !== 'none' ? nav.getBoundingClientRect().top : window.innerHeight;
-  var bottom = Math.min(window.innerHeight, navTop) - 12;
+  var bottom = Math.min(window.innerHeight, navCoverTop()) - 12;
   var a = first.getBoundingClientRect().top + y;
   var lr = last.getBoundingClientRect();
   var target = y;
@@ -204,9 +202,9 @@ function renderQuestion() {
     h += '<div class="fillwrap"><input id="fillin" autocomplete="off" spellcheck="false" placeholder="type your answer">' +
       '<button class="primary" onclick="submitFill()">Attack</button></div>';
   } else {
-    h += '<div class="choices">';
     var letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
     var choiceOrder = displayedChoiceOrder(B, q);
+    h += '<div class="choices' + (choicesFitTwoUp(q) ? ' two-up' : '') + '">';
     for (var i = 0; i < choiceOrder.length; i++) {
       var sourceIndex = choiceOrder[i];
       h += '<button class="choice" id="ch' + sourceIndex + '" onclick="answer(' + sourceIndex + ')">' +
@@ -226,6 +224,17 @@ function renderQuestion() {
     fi.onkeydown = function (e) { if (e.key === 'Enter') { e.preventDefault(); submitFill(); } };
   }
   battleFrame($('#battlefield'), $('#quiz .qcard'));
+}
+
+/* Four short answers ("20", "The address of n") read best as a 2x2 of big
+   move-style buttons. Anything longer, multi-line or a fifth choice stays one
+   per row so nothing gets squeezed. */
+function choicesFitTwoUp(q) {
+  if (!q || !q.c || q.c.length !== 4) return false;
+  return q.c.every(function (c) {
+    var s = String(c);
+    return s.length <= 28 && s.indexOf('\n') < 0;
+  });
 }
 
 function revealSelfCheck() {

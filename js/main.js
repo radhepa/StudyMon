@@ -34,6 +34,13 @@ document.addEventListener('keydown', function (e) {
   if (tag === 'input' || tag === 'textarea') return;
   if (e.ctrlKey || e.metaKey || e.altKey) return;
 
+  // the title screen says "press Enter": it picks the highlighted menu row
+  if (CUR === 'title' && e.key === 'Enter' && tag !== 'button') {
+    var pick = $('#s-title .t-menu button.first');
+    if (pick) { e.preventDefault(); pick.click(); }
+    return;
+  }
+
   if (CUR !== 'battle' && CUR !== 'drill') return;
   var scope = CUR === 'drill' ? '#s-drill' : '#quiz';
   var map = { '1': 0, '2': 1, '3': 2, '4': 3, '5': 4, '6': 5,

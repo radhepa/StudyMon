@@ -31,18 +31,56 @@ function showScreen(name) {
   CUR = name;
   $$('.screen').forEach(function (s) { s.classList.toggle('on', s.id === 's-' + name); });
   $$('#nav button').forEach(function (b) { b.classList.toggle('sel', b.dataset.scr === name); });
-  $('#nav').style.display = (name === 'title' || name === 'starter') ? 'none' : 'flex';
+  var chrome = !(name === 'title' || name === 'starter');
+  $('#nav').style.display = chrome ? 'flex' : 'none';
   // no chips before there is a partner: the ferry would sail off with an empty party
-  $('#topbar').style.display = (name === 'title' || name === 'starter') ? 'none' : 'flex';
+  $('#topbar').style.display = chrome ? 'flex' : 'none';
+  // the stylesheet keys the sky on the title and the side rail off these
+  document.body.setAttribute('data-screen', name);
+  document.body.classList.toggle('has-chrome', chrome);
   window.scrollTo(0, 0);
   renderTopbar();
+}
+
+/* Where the nav stops covering the page from below. On a laptop the nav is a
+   rail down the left edge and covers nothing below; on a small screen it is a
+   dock along the bottom. */
+function navCoverTop() {
+  var nav = $('#nav');
+  if (!nav || getComputedStyle(nav).display === 'none') return window.innerHeight;
+  var r = nav.getBoundingClientRect();
+  if (r.width < window.innerWidth / 2 && r.left <= 1) return window.innerHeight;
+  return r.top;
+}
+
+/* A Pokémon centred in a round frame. Sprites are 96x96 with the creature
+   drawn off-centre inside, so the measured bounds in SPRITE_SEAT_DATA place
+   and scale it: the creature's middle lands on the circle's middle and its
+   larger side fills about three quarters of it. */
+function circleSpriteHtml(m, box) {
+  var url = monSprite(m, m.shiny ? 'shiny' : 'front');
+  var t = window.SPRITE_SEAT_DATA, hit = /sprites\/(front|back|shiny)\/(\d+)\.png/.exec(url);
+  var row = t && hit && t[hit[1]] && t[hit[1]][hit[2]];
+  var below = row ? row[0] : 0.25, cx = row ? row[1] : 0.5, span = row ? row[2] : 0.6;
+  var cy = 1 - below - Math.min(span, 1 - below) / 2;
+  var size = Math.round(Math.max(box * 0.9, Math.min(box * 2.4, box * 0.76 / span)));
+  return '<img src="' + url + '" alt="' + esc(monName(m)) + '" style="position:absolute;max-width:none;' +
+    'width:' + size + 'px;height:' + size + 'px;left:' + Math.round(box / 2 - cx * size) + 'px;top:' +
+    Math.round(box / 2 - cy * size) + 'px;image-rendering:pixelated">';
+}
+
+function logoHtml(cls) {
+  var word = '<i>S</i><i>t</i><i>u</i><i>d</i><i>y</i><i>M</i><i>o</i><i>n</i>';
+  return '<span class="sm-logo ' + (cls || '') + '" role="img" aria-label="StudyMon">' +
+    '<span class="lg-blue" aria-hidden="true">' + word + '</span>' +
+    '<span class="lg-fill" aria-hidden="true">' + word + '</span></span>';
 }
 
 function renderTopbar() {
   if (!S) return;
   var due = dueCount();
   $('#topbar').innerHTML =
-    '<span class="logo">StudyMon</span>' +
+    '<span class="logo">' + logoHtml() + '</span>' +
     (typeof radioChip === 'function' ? radioChip() : '') +
     (typeof pokedoroChip === 'function' ? pokedoroChip() : '') +
     (typeof regionChip === 'function' ? regionChip() : '') +
@@ -51,7 +89,7 @@ function renderTopbar() {
     '<span class="chip">● <b>' + (itemCount('great') + itemCount('ultra')) + '</b> good balls</span>' +
     '<span class="chip">✚ <b>' + (itemCount('potion') + itemCount('superpotion')) + '</b> potions</span>' +
     '<span class="chip streak-chip">🔥 streak <b>' + S.streak + '</b></span>' +
-    (due ? '<span class="chip">⟳ <b>' + due + '</b> to review</span>' : '') +
+    (due ? '<span class="chip due-chip">⟳ <b>' + due + '</b> to review</span>' : '') +
     '<span class="spacer"></span>' +
     '<span class="chip caught-chip">' + Object.keys(S.caught).length + ' caught</span>';
 }
@@ -303,8 +341,33 @@ function showResult(won, msg, extra, acc) {
 /* ---- title / new game ---------------------------------------------------- */
 
 function renderTitle() {
-  $('#continuebtn').style.display = hasSave() ? '' : 'none';
+  var saved = hasSave();
+  $('#continuebtn').style.display = saved ? '' : 'none';
+  // the highlighted row is the one Enter picks
+  $('#continuebtn').classList.toggle('first', saved);
+  $('#newgamebtn').classList.toggle('first', !saved);
+  var sum = titleSaveSummary();
+  $('#titlesave').textContent = sum ? sum.line : '';
+  $('#titlebadges').textContent = sum ? sum.badges : 'NO SAVE YET';
   renderTitleMons();
+}
+
+/* What Continue will open, read straight from the save like the lineup is, so
+   painting the title never loads (and so never mutates) S. */
+function titleSaveSummary() {
+  try {
+    var o = JSON.parse(localStorage.getItem(SAVE_KEY) || 'null');
+    if (!o) return null;
+    var sub = SUBJECTS[o.subject] ? o.subject : 'c';
+    var p = (o.progress && o.progress[sub]) || o;
+    var badges = Object.keys(p.badges || {}).filter(function (k) { return p.badges[k]; }).length;
+    var total = ((SUBJECTS[sub] && SUBJECTS[sub].CHAPTERS) || []).length;
+    var caught = Object.keys(o.caught || {}).length;
+    return {
+      badges: badges + (total ? ' / ' + total : '') + ' BADGES',
+      line: (SUBJECTS[sub] ? SUBJECTS[sub].region : '') + ' · ' + caught + ' Pokémon caught'
+    };
+  } catch (e) { return null; }
 }
 
 /* Placeholder lineup for a trainer with no save yet, or nothing caught. */
@@ -460,98 +523,181 @@ function leaderFace(name, fallback) {
 
 function renderMap() {
   var def = subjectDef();
-  var h = '<h2>' + esc(def.region) + '</h2>' +
-    '<p class="muted" style="margin-bottom:14px">' + esc(def.mapIntro || '') + '</p>';
+  var order = mapOrder();
+  var h = '';
 
-  if (S.curriculumNotice && activeSubject() === 'c') h = '<div class="panel curriculum-notice"><h3>Your chapters now follow the fourth edition</h3><p>Your Pokémon and question review history are kept. Earlier badges and chapter scores follow their topics. The two pointer chapters now share one badge; Recursion is a new chapter to study. A copy of your earlier chapter record is included in your save.</p><button onclick="dismissCurriculumNotice()">Got it</button></div>' + h;
+  if (S.curriculumNotice && activeSubject() === 'c') h += '<div class="panel curriculum-notice"><h3>Your chapters now follow the fourth edition</h3><p>Your Pokémon and question review history are kept. Earlier badges and chapter scores follow their topics. The two pointer chapters now share one badge; Recursion is a new chapter to study. A copy of your earlier chapter record is included in your save.</p><button onclick="dismissCurriculumNotice()">Got it</button></div>';
 
-  /* One list. Gyms in order, and each boss standing exactly where the course
-     puts it - which for the C region means all five bunched at the end, and for
-     the Isles means an exam every few gyms. */
+  var focus = mapFocus();
+  h += mapFocusHtml(focus);
+
+  h += '<div class="dl-routes-head"><h2>' + esc(def.region) + '</h2>' +
+    '<div class="dl-sort" role="group" aria-label="Order the routes">' +
+    '<button type="button" aria-pressed="' + (order === 'course') + '" onclick="setMapOrder(\'course\')">Course order</button>' +
+    '<button type="button" aria-pressed="' + (order === 'weak') + '" onclick="setMapOrder(\'weak\')">Weakest first</button>' +
+    '</div></div>' +
+    '<p class="muted" style="margin:0 0 14px">' + esc(def.mapIntro || '') + '</p>';
+
   if (activeSubject() === 'c') h += questEntryCard();
-  var stops = mapStops(), openedBossSection = false;
   h += '<div class="maplist">';
 
-  stops.forEach(function (stop) {
-    if (stop.kind === 'gym') {
-      var c = stop.ch;
-      var got = !!S.badges[c.n];
-      var blocker = gymBlockedBy(c.n);
-      var st = S.chapterStats[c.n] || { r: 0, w: 0 };
-      var tot = st.r + st.w;
-      var acc = tot ? Math.round(st.r / tot * 100) + '% of ' + tot : 'not studied yet';
-      h += '<div class="route' + (got ? ' done' : '') + (blocker ? ' route-blocked' : '') + '">' +
-        leaderFace(c.leader, c.n) +
-        '<div><div class="ttl">' + esc(c.title) + ' <span class="badge-dot' + (got ? ' got' : '') + '"></span></div>' +
-        '<div class="meta">' + typePillsInline([c.type]) +
-        ' ' + esc(c.route) + ' &nbsp;·&nbsp; Gym Leader <b>' + esc(c.leader) + '</b>, ' + esc(c.epithet) +
-        ' &nbsp;·&nbsp; <span class="lvl-hint' + (gymExpectedLevel(c) > playerLevel() + 6 ? ' over' : '') +
-          '">Lv ~' + gymExpectedLevel(c) + ' · ' + gymTeamSize(c.n) +
-          (gymTeamSize(c.n) === 1 ? ' Pokémon' : ' Pokémon') + '</span>' +
-        '<br>' + esc(c.blurb) +
-        (blocker ? '<br><span class="route-gate">Sit ' + esc(blocker.epithet) + ' before you come back here.</span>'
-                 : '<br><span style="opacity:.75">Accuracy: ' + acc + '</span>') +
-        '</div></div>' +
-        '<div class="acts">' +
-        '<button ' + (blocker ? 'disabled' : '') + ' onclick="goWild(' + c.n + ')">Wild battle</button>' +
-        (got
-          ? '<button onclick="openLeader(\'' + leaderForGym(c.n) + '\')">Visit ' +
-            esc(String(c.leader).split(' ')[0]) + '</button>'
-          : '<button class="' + (blocker ? '' : 'primary') + '" ' + (blocker ? 'disabled' : '') +
-            ' onclick="goGym(' + c.n + ')">Gym</button>') +
-        '<button class="ghost" onclick="goStudy(' + c.n + ')">Notes</button>' +
-        '<button class="ghost" onclick="openRouteInfo(' + c.n + ')">Route info</button>' +
-        '</div></div>';
-      return;
+  if (order === 'weak') {
+    /* Gyms by accuracy, worst first, untouched chapters last; then every boss
+       and exam together, in the order the course sits them. */
+    var acc = function (c) {
+      var st = S.chapterStats[c.n] || { r: 0, w: 0 }, tot = st.r + st.w;
+      return tot ? st.r / tot : 2;
+    };
+    CHAPTERS.slice().sort(function (a, b) { return acc(a) - acc(b) || a.n - b.n; })
+      .forEach(function (c) { h += mapGymRow(c, focus); });
+    var bosses = mapStops().filter(function (s) { return s.kind === 'boss'; });
+    if (bosses.length) {
+      h += '</div><h2 style="margin-top:22px">' + esc(def.bossTitle || 'Exams') + '</h2><div class="maplist">';
+      bosses.forEach(function (s) { h += mapBossRow(s.e); });
     }
-
-    var e = stop.e;
-    var beat = bossBeaten(e), open = bossOpen(e), champ = isChampion(e);
-    var examCh = examChapterFor(e);
-
-    /* The C region still wants its "Victory Road" heading before the block of
-       five. The Isles do not - an exam is just the next thing on the calendar. */
-    if (!openedBossSection && bossAfter(e) >= CHAPTERS.length && def.bossTitle) {
-      openedBossSection = true;
-      h += '</div><h2 style="margin-top:22px">' + esc(def.bossTitle) + '</h2>' +
-        '<p class="muted" style="margin-bottom:12px">' +
-        (open ? 'You have every badge. These battles draw questions from several chapters.'
-              : 'Locked until you hold all ' + CHAPTERS.length + ' badges. You have ' + badgeCount() + '.') +
-        '</p><div class="maplist">';
-    }
-
-    h += '<div class="route boss' + (beat ? ' done' : '') + (champ ? ' final' : '') + '">' +
-      leaderFace(e.name, champ ? '★' : '✦') +
-      '<div><div class="ttl">' + esc(e.name) + ' <span class="badge-dot' + (beat ? ' got' : '') + '"></span></div>' +
-      '<div class="meta">' + (e.types || []).map(function (t) { return '<span class="tp ' + t + '">' + t + '</span>'; }).join('') +
-      ' ' + esc(e.epithet) +
-      ' &nbsp;·&nbsp; <span class="lvl-hint' + (bossExpectedLevel(e) > playerLevel() + 6 ? ' over' : '') +
-        '">Lv ~' + bossExpectedLevel(e) + '</span>' +
-      '<br><i>"' + esc(e.intro) + '"</i>' +
-      (e.only && e.only.length
-        ? '<br><span class="route-only">Covers lesson' +
-          (e.only.length > 1 ? 's ' : ' ') + e.only.join(', ') + ', which no quiz asks about</span>'
-        : '') +
-      '<br><span style="opacity:.75">Questions from ' +
-        (e.lessons ? 'lessons ' + e.lessons[0] + '–' + e.lessons[e.lessons.length - 1]
-                   : 'chapters ' + e.chapters.join(', ')) +
-      (open ? '' : ' · needs ' + bossAfter(e) + ' badges, you have ' + badgeCount()) +
-      '</span>' +
-      (examCh ? '<br><span style="opacity:.75">' + esc(e.route) + ' is open for practice - no badges needed</span>' : '') +
-      '</div></div>' +
-      '<div class="acts">' +
-      (examCh ? '<button class="ghost" onclick="goWildExam(\'' + e.id + '\')">Revision route</button>' +
-        '<button class="ghost" onclick="openRouteInfo(' + examCh.n + ')">Route info</button>' : '') +
-      (beat
-        ? '<button onclick="openLeader(\'' + leaderForBoss(e.id) + '\')">Visit ' + esc(String(e.name).split(' ')[0]) + '</button>'
-        : '<button class="' + (open ? 'primary' : '') + '" ' + (open ? '' : 'disabled') +
-          ' onclick="goElite(\'' + e.id + '\')">Challenge</button>') + '</div></div>';
-  });
+  } else {
+    /* Gyms in order, and each boss standing exactly where the course puts it -
+       which for the C region means all five bunched at the end, and for the
+       Isles means an exam every few gyms. */
+    var openedBossSection = false;
+    mapStops().forEach(function (stop) {
+      if (stop.kind === 'gym') { h += mapGymRow(stop.ch, focus); return; }
+      var e = stop.e;
+      /* The C region still wants its "Victory Road" heading before the block of
+         five. The Isles do not - an exam is just the next thing on the calendar. */
+      if (!openedBossSection && bossAfter(e) >= CHAPTERS.length && def.bossTitle) {
+        openedBossSection = true;
+        h += '</div><h2 style="margin-top:22px">' + esc(def.bossTitle) + '</h2>' +
+          '<p class="muted" style="margin-bottom:12px">' +
+          (bossOpen(e) ? 'You have every badge. These battles draw questions from several chapters.'
+                       : 'Locked until you hold all ' + CHAPTERS.length + ' badges. You have ' + badgeCount() + '.') +
+          '</p><div class="maplist">';
+      }
+      h += mapBossRow(e);
+    });
+  }
 
   h += '</div>';
   if (TOWN_UI_ENABLED) h += '<div class="panel town-invite"><h3>Take a break in town</h3><p>Rowan and the others are around. Stop for a chat, make plans, or try a practice match.</p><button onclick="openFriends()">Visit your friends</button></div>';
   $('#s-map').innerHTML = h;
   renderTopbar();
+}
+
+function mapOrder() { return S.settings && S.settings.mapOrder === 'weak' ? 'weak' : 'course'; }
+
+function setMapOrder(order) {
+  if (!S.settings) S.settings = {};
+  S.settings.mapOrder = order === 'weak' ? 'weak' : 'course';
+  saveGame();
+  renderMap();
+}
+
+/* What the home card points at. The weakest chapter with enough answers to
+   mean something, unless even that one is going well, in which case the next
+   badge you do not have yet. */
+function mapFocus() {
+  var open = function (c) { return !gymBlockedBy(c.n); };
+  var weak = weakChapters(5).filter(function (x) { return open(x.ch); })[0] || null;
+  var next = CHAPTERS.filter(function (c) { return !S.badges[c.n] && open(c); })[0] || null;
+  if (weak && (weak.pct < 0.85 || !next)) return { ch: weak.ch, weak: weak };
+  return { ch: next || CHAPTERS[0], weak: null };
+}
+
+function mapFocusHtml(f) {
+  var c = f.ch;
+  if (!c) return '';
+  var due = dueCount();
+  var got = !!S.badges[c.n];
+  var first = esc(String(c.leader).split(' ')[0]);
+  var lead = S.party.filter(function (m) { return m.hp > 0; })[0] || S.party[0];
+  var text = f.weak
+    ? 'Your weakest chapter at ' + Math.round(f.weak.pct * 100) + '% over ' + f.weak.total + ' questions. '
+    : esc(c.blurb) + ' ';
+  text += esc(c.route) + ' leads to ' + esc(c.leader) + '’s gym.';
+
+  var badges = '';
+  CHAPTERS.forEach(function (ch) { badges += '<span class="' + (S.badges[ch.n] ? 'got' : '') + '"></span>'; });
+
+  return '<section class="dl-focus" aria-label="' + (f.weak ? 'Today’s focus' : 'Up next') + '">' +
+    '<div class="f-body">' +
+    '<div class="f-kicker">' + (f.weak ? 'TODAY’S FOCUS' : 'UP NEXT') + ' ' + typePillsInline([c.type]) + '</div>' +
+    '<h2>Ch ' + c.n + ' · ' + esc(c.title) + '</h2>' +
+    '<p>' + text + '</p>' +
+    '<div class="f-acts">' +
+    (due ? '<button class="primary" onclick="drillReview()">Review ' + due + ' due</button>' : '') +
+    '<button' + (due ? '' : ' class="primary"') + ' onclick="goWild(' + c.n + ')">Wild battle</button>' +
+    (got ? '<button onclick="openLeader(\'' + leaderForGym(c.n) + '\')">Visit ' + first + '</button>'
+         : '<button onclick="goGym(' + c.n + ')">Gym · ' + first + '</button>') +
+    '<button onclick="goStudy(' + c.n + ')">Notes</button>' +
+    '</div></div>' +
+    '<div class="f-side">' +
+    (lead ? '<div class="f-art">' + circleSpriteHtml(lead, 142) + '</div>' : '') +
+    '<div class="dl-badges" role="img" aria-label="' + badgeCount() + ' of ' + CHAPTERS.length + ' badges">' + badges + '</div>' +
+    '</div></section>';
+}
+
+function mapGymRow(c, focus) {
+  var got = !!S.badges[c.n];
+  var blocker = gymBlockedBy(c.n);
+  var st = S.chapterStats[c.n] || { r: 0, w: 0 };
+  var tot = st.r + st.w;
+  var pct = tot ? Math.round(st.r / tot * 100) : 0;
+  var isFocus = focus && focus.ch === c;
+  return '<div class="route' + (got ? ' done' : '') + (blocker ? ' route-blocked' : '') + (isFocus ? ' dl-focus-row' : '') + '">' +
+    leaderFace(c.leader, c.n) +
+    '<div><div class="ttl">Ch ' + c.n + ' · ' + esc(c.title) + ' <span class="badge-dot' + (got ? ' got' : '') + '"></span></div>' +
+    '<div class="meta">' + typePillsInline([c.type]) +
+    ' ' + esc(c.route) + ' &nbsp;·&nbsp; Gym Leader <b>' + esc(c.leader) + '</b>, ' + esc(c.epithet) +
+    ' &nbsp;·&nbsp; <span class="lvl-hint' + (gymExpectedLevel(c) > playerLevel() + 6 ? ' over' : '') +
+      '">Lv ~' + gymExpectedLevel(c) + ' · ' + gymTeamSize(c.n) + ' Pokémon</span>' +
+    '<br>' + esc(c.blurb) +
+    (blocker ? '<br><span class="route-gate">Sit ' + esc(blocker.epithet) + ' before you come back here.</span>' : '') +
+    '</div>' +
+    (blocker ? '' : '<div class="dl-acc">' +
+      (tot ? '<span class="bar" aria-hidden="true"><i style="width:' + pct + '%"></i></span>Accuracy ' + pct + '% of ' + tot
+           : 'Not studied yet') + '</div>') +
+    '</div>' +
+    '<div class="acts">' +
+    '<button ' + (blocker ? 'disabled' : '') + ' onclick="goWild(' + c.n + ')">Wild battle</button>' +
+    (got
+      ? '<button onclick="openLeader(\'' + leaderForGym(c.n) + '\')">Visit ' +
+        esc(String(c.leader).split(' ')[0]) + '</button>'
+      : '<button class="' + (blocker ? '' : 'primary') + '" ' + (blocker ? 'disabled' : '') +
+        ' onclick="goGym(' + c.n + ')">Gym</button>') +
+    '<button class="ghost" onclick="goStudy(' + c.n + ')">Notes</button>' +
+    '<button class="ghost" onclick="openRouteInfo(' + c.n + ')">Route info</button>' +
+    '</div></div>';
+}
+
+function mapBossRow(e) {
+  var beat = bossBeaten(e), open = bossOpen(e), champ = isChampion(e);
+  var examCh = examChapterFor(e);
+  return '<div class="route boss' + (beat ? ' done' : '') + (champ ? ' final' : '') + '">' +
+    leaderFace(e.name, champ ? '★' : '✦') +
+    '<div><div class="ttl">' + esc(e.name) + ' <span class="badge-dot' + (beat ? ' got' : '') + '"></span></div>' +
+    '<div class="meta">' + (e.types || []).map(function (t) { return '<span class="tp ' + t + '">' + t + '</span>'; }).join('') +
+    ' ' + esc(e.epithet) +
+    ' &nbsp;·&nbsp; <span class="lvl-hint' + (bossExpectedLevel(e) > playerLevel() + 6 ? ' over' : '') +
+      '">Lv ~' + bossExpectedLevel(e) + '</span>' +
+    '<br><i>"' + esc(e.intro) + '"</i>' +
+    (e.only && e.only.length
+      ? '<br><span class="route-only">Covers lesson' +
+        (e.only.length > 1 ? 's ' : ' ') + e.only.join(', ') + ', which no quiz asks about</span>'
+      : '') +
+    '<br><span style="opacity:.75">Questions from ' +
+      (e.lessons ? 'lessons ' + e.lessons[0] + '–' + e.lessons[e.lessons.length - 1]
+                 : 'chapters ' + e.chapters.join(', ')) +
+    (open ? '' : ' · needs ' + bossAfter(e) + ' badges, you have ' + badgeCount()) +
+    '</span>' +
+    (examCh ? '<br><span style="opacity:.75">' + esc(e.route) + ' is open for practice - no badges needed</span>' : '') +
+    '</div></div>' +
+    '<div class="acts">' +
+    (examCh ? '<button class="ghost" onclick="goWildExam(\'' + e.id + '\')">Revision route</button>' +
+      '<button class="ghost" onclick="openRouteInfo(' + examCh.n + ')">Route info</button>' : '') +
+    (beat
+      ? '<button onclick="openLeader(\'' + leaderForBoss(e.id) + '\')">Visit ' + esc(String(e.name).split(' ')[0]) + '</button>'
+      : '<button class="' + (open ? 'primary' : '') + '" ' + (open ? '' : 'disabled') +
+        ' onclick="goElite(\'' + e.id + '\')">Challenge</button>') + '</div></div>';
 }
 
 function goWild(n) {
@@ -1220,6 +1366,20 @@ function renderStats() {
   var totalQ = allQuestions().length;
 
   var h = '<h2>Trainer Card &amp; Weakness Report</h2>';
+  var lead = S.party[0];
+  var badgeMarks = '';
+  CHAPTERS.forEach(function (c) { badgeMarks += '<span class="' + (S.badges[c.n] ? 'got' : '') + '"></span>'; });
+  h += '<div class="panel dl-trainer-card" style="padding:0;overflow:hidden;margin-bottom:18px">' +
+    '<div class="dl-trainer"><div class="tc-band" style="flex:1"><span>TRAINER CARD · ' + esc(subjectDef().region).toUpperCase() +
+    '</span><span>' + badgeCount() + ' / ' + CHAPTERS.length + ' BADGES</span></div></div>' +
+    '<div style="display:flex;align-items:center;gap:16px;padding:14px 18px 16px">' +
+    (lead ? '<div class="dl-trainer"><div class="tc-art">' + circleSpriteHtml(lead, 88) + '</div></div>' : '') +
+    '<div style="display:flex;flex-direction:column;gap:6px">' +
+    '<span style="font-family:var(--pixel);font-weight:700;font-size:26px">' + esc(S.trainer || 'TRAINER') + '</span>' +
+    (lead ? '<span class="muted">Partner: ' + esc(monName(lead)) + ' · Lv ' + lead.lvl + '</span>' : '') +
+    '<div class="dl-badges" style="justify-content:flex-start;max-width:none" role="img" aria-label="' +
+      badgeCount() + ' of ' + CHAPTERS.length + ' badges">' + badgeMarks + '</div>' +
+    '</div></div></div>';
   h += '<div class="statgrid trainer-summary-grid">' +
     box(acc + '%', 'Overall accuracy') +
     box(tot, 'Questions answered') +
@@ -1232,14 +1392,16 @@ function renderStats() {
     '</div>';
 
   h += '<div class="panel dark"><h3 style="color:var(--accent)">Accuracy by chapter, weakest first</h3>' +
-    '<p class="small" style="margin-bottom:12px">This is the list to study from. Chapters you have not touched are at the bottom.</p>';
+    '<p class="small" style="margin-bottom:12px">This is the list to study from. Pick a chapter to drill it. Chapters you have not touched are at the bottom.</p>';
   var w = weakChapters(1);
   if (!w.length) h += '<p class="muted">Answer some questions and this fills in.</p>';
   for (var i = 0; i < w.length; i++) {
-    var x = w[i];
-    h += '<div class="bar-row"><span class="lbl">' + x.ch.n + '. ' + esc(x.ch.title) + '</span>' +
-      '<span class="bar-out"><span class="bar-in" style="width:' + Math.round(x.pct * 100) + '%"></span></span>' +
-      '<span class="val">' + Math.round(x.pct * 100) + '% · ' + x.total + '</span></div>';
+    var x = w[i], p = Math.round(x.pct * 100);
+    h += '<button type="button" class="bar-row" onclick="drill(' + x.ch.n + ')" title="Drill chapter ' + x.ch.n + ': ' +
+      p + '% right over ' + x.total + ' questions"><span class="lbl">' + x.ch.n + '. ' + esc(x.ch.title) + '</span>' +
+      '<span class="bar-out"><span class="bar-in" style="width:' + p + '%"></span></span>' +
+      '<span class="val">' + p + '% · ' + x.total + '</span>' +
+      '<span class="flag' + (p < 50 ? ' on' : '') + '">' + (p < 50 ? 'FOCUS' : 'DRILL') + '</span></button>';
   }
   var untouched = CHAPTERS.filter(function (c) { var s = S.chapterStats[c.n]; return !s || (s.r + s.w) === 0; });
   if (untouched.length) {

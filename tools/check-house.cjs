@@ -179,7 +179,16 @@ const { chromium } = require('./playwright.cjs');
   ok('every resident sits inside the glass', cases.inside);
 
   /* ---- the topbar ferry --------------------------------------------------- */
-  const warp = await page.evaluate(() => {
+  /* The ferry plays its voyage first and travels when the boat lands. */
+  const warp = await page.evaluate(async () => {
+    const landed = (id) => new Promise((done) => {
+      const t0 = Date.now();
+      (function wait() {
+        if (activeSubject() === id && !document.getElementById('ferry-voyage')) return done(Date.now() - t0);
+        if (Date.now() - t0 > 8000) return done(-1);
+        setTimeout(wait, 50);
+      })();
+    });
     closeModal();
     showScreen('map'); renderMap();
     const before = activeSubject();
@@ -187,15 +196,21 @@ const { chromium } = require('./playwright.cjs');
     if (!chip) return { missing: true };
     const outLabel = chip.getAttribute('aria-label');
     chip.click();
+    const midway = activeSubject();
+    const voyage = !!document.getElementById('ferry-voyage');
+    const outMs = await landed('calc');
     const there = activeSubject();
     const back = document.querySelector('#topbar .region-chip');
     const backLabel = back && back.getAttribute('aria-label');
     if (back) back.click();
-    return { before, outLabel, there, backLabel, home: activeSubject() };
+    const backMs = await landed('c');
+    return { before, outLabel, midway, voyage, outMs, there, backLabel, backMs, home: activeSubject() };
   });
   ok('the topbar carries a one-click crossing to the calculus region',
      !warp.missing && warp.before === 'c' && /Converging Isles/.test(warp.outLabel) && warp.there === 'calc', warp);
-  ok('and the same ferry button brings you back', /C-Region/.test(warp.backLabel || '') && warp.home === 'c', warp);
+  ok('the voyage plays first and you arrive when it lands',
+     warp.voyage && warp.midway === 'c' && warp.outMs >= 2000, warp);
+  ok('and the same ferry button brings you back', /C-Region/.test(warp.backLabel || '') && warp.home === 'c' && warp.backMs > 0, warp);
 
   /* ---- persistence ------------------------------------------------------- */
   const persisted = await page.evaluate(() => {

@@ -1,0 +1,574 @@
+/* =========================================================================
+   Handheld Daylight: StudyMon's look.
+   Loaded last, on top of the older skins, so every screen picks it up.
+   Thick ink outlines, hard drop shadows, a pixel display face for labels and
+   a very readable face for questions. The logo is lettered like the Pokémon
+   wordmark. Fonts are bundled in assets/fonts so the game stays offline.
+   ========================================================================= */
+
+@font-face { font-family: 'Pixelify Sans'; font-weight: 400; font-display: swap; unicode-range: U+0020-002F, U+003A-0042, U+0044-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; src: url(../assets/fonts/pixelify-sans-latin-400-normal.woff2) format('woff2'); }
+@font-face { font-family: 'Pixelify Sans'; font-weight: 600; font-display: swap; unicode-range: U+0020-002F, U+003A-0042, U+0044-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; src: url(../assets/fonts/pixelify-sans-latin-600-normal.woff2) format('woff2'); }
+@font-face { font-family: 'Pixelify Sans'; font-weight: 700; font-display: swap; unicode-range: U+0020-002F, U+003A-0042, U+0044-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; src: url(../assets/fonts/pixelify-sans-latin-700-normal.woff2) format('woff2'); }
+@font-face { font-family: 'Atkinson Hyperlegible'; font-weight: 400; font-display: swap; src: url(../assets/fonts/atkinson-hyperlegible-latin-400-normal.woff2) format('woff2'); }
+@font-face { font-family: 'Atkinson Hyperlegible'; font-weight: 700; font-display: swap; src: url(../assets/fonts/atkinson-hyperlegible-latin-700-normal.woff2) format('woff2'); }
+@font-face { font-family: 'JetBrains Mono'; font-weight: 500; font-display: swap; src: url(../assets/fonts/jetbrains-mono-latin-500-normal.woff2) format('woff2'); }
+@font-face { font-family: 'JetBrains Mono'; font-weight: 700; font-display: swap; src: url(../assets/fonts/jetbrains-mono-latin-700-normal.woff2) format('woff2'); }
+/* "Pokemon Solid" by IPBP, CC BY (fontspace.com/pokemon-solid-font-f13844). Logo only. */
+@font-face { font-family: 'Pokemon Solid'; font-display: block; src: url(../assets/fonts/pokemon-solid.ttf) format('truetype'); }
+
+:root {
+  --dl-ink: #1B1B2F;
+  --dl-ink-2: #33334D;
+  --dl-paper: #FBF7EA;
+  --dl-card: #FFFFFF;
+  --dl-hover: #FFF1C9;
+  --dl-line: #EDE5CC;
+  --dl-dots: #E6DDC2;
+  --dl-muted: #4A4536;
+  --dl-red: #C8331F;
+  --dl-red-ink: #A3281A;
+  --dl-gold: #F2C14E;
+  --dl-yellow: #FFCB05;
+  --dl-blue: #2F6FD0;
+  --dl-logo-blue: #2A75BB;
+  --dl-navy: #1D2C5E;
+  --dl-sky: #8FD3FF;
+  --dl-grass: #7CCB5B;
+  --dl-grass-2: #5DB04A;
+  --dl-good: #2E7D3E;
+  --dl-good-bg: #DDF5D0;
+  --dl-bad-bg: #FFE1DB;
+  --dl-shadow: 0 6px 0 var(--dl-ink);
+  --dl-shadow-sm: 0 4px 0 var(--dl-ink);
+
+  /* the older stylesheets read these */
+  /* Pixelify draws 5 like S, 0 like O and 8 like B, so its font-face leaves the
+     digits out and every number falls through to Atkinson Hyperlegible. Its
+     capital C is all but closed (it reads as O), so C falls through too. */
+  --pixel: 'Pixelify Sans', 'Atkinson Hyperlegible', 'Segoe UI Symbol', 'Segoe UI', sans-serif;
+  --read: 'Atkinson Hyperlegible', 'Segoe UI', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', 'Cascadia Mono', Consolas, monospace;
+  --ink: var(--dl-ink);
+  --ink-soft: var(--dl-muted);
+  --panel: var(--dl-card);
+  --accent: var(--dl-red);
+  --accent-2: var(--dl-blue);
+}
+
+/* ---------- page ---------------------------------------------------------- */
+html { background: var(--dl-paper); }
+html body {
+  background: var(--dl-paper);
+  background-image: radial-gradient(var(--dl-dots) 1.5px, transparent 1.5px);
+  background-size: 24px 24px;
+  color: var(--dl-ink);
+  font-family: var(--read);
+}
+html body h1, html body h2, html body h3 {
+  font-family: var(--pixel); font-weight: 700; letter-spacing: .5px; color: var(--dl-ink);
+}
+html body h2 { font-size: 30px; line-height: 1.15; }
+html body h3 { font-size: 20px; line-height: 1.2; }
+html body .muted, html body .small { color: var(--dl-muted); }
+html body .eyebrow { font-family: var(--pixel); font-size: 15px; letter-spacing: 2px; color: #6B6450; }
+html body code, html body kbd { font-family: var(--mono); }
+html body ::selection { background: var(--dl-hover); color: var(--dl-ink); }
+
+/* ---------- cards ----------------------------------------------------------- */
+html body .panel, html body .panel.dark, html body .qcard, html body .note,
+html body .statbox, html body .route, html body .card {
+  background: var(--dl-card);
+  color: var(--dl-ink);
+  border: 4px solid var(--dl-ink);
+  border-radius: 12px;
+  box-shadow: var(--dl-shadow);
+  background-image: none;
+}
+html body .panel.dark h2, html body .panel.dark h3 { color: var(--dl-ink); }
+html body .panel h3[style*="accent"] { color: var(--dl-ink) !important; }
+html body hr.sep { border: 0; border-top: 3px dashed var(--dl-line); }
+
+/* ---------- buttons ---------------------------------------------------------- */
+html body button, html body .btn {
+  font-family: var(--pixel);
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: .3px;
+  color: var(--dl-ink);
+  background: var(--dl-card);
+  background-image: none;
+  border: 3px solid var(--dl-ink);
+  border-radius: 9px;
+  box-shadow: var(--dl-shadow-sm);
+  text-shadow: none;
+  min-height: 40px;
+  transition: transform .08s, box-shadow .08s, background-color .12s;
+}
+html body button:hover:not(:disabled), html body .btn:hover {
+  background: var(--dl-hover); background-image: none;
+  transform: translateY(2px); box-shadow: 0 2px 0 var(--dl-ink);
+}
+html body button:active:not(:disabled) { transform: translateY(4px); box-shadow: none; }
+/* cutscene controls hold still: the next line is revealed under the cursor */
+html body #lab-scene button:hover:not(:disabled), html body #lab-scene button:active:not(:disabled) { transform: none; }
+html body button.primary, html body .btn.primary {
+  background: var(--dl-red); color: #FFFFFF; border-color: var(--dl-ink);
+}
+html body button.primary:hover:not(:disabled) { background: #B02C1A; }
+html body :is(#app, #modal) button.ghost { background: var(--dl-card); background-image: none; color: var(--dl-ink); border-color: var(--dl-ink); }
+html body :is(#app, #modal) button.ghost:hover:not(:disabled) { background: var(--dl-hover); }
+html body button.danger { color: var(--dl-red-ink); }
+html body button:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+html body :focus-visible { outline: 3px solid var(--dl-blue); outline-offset: 3px; }
+
+/* type pills: Pokémon type colours, ink text where white would not read */
+html body .tp {
+  font-family: var(--pixel); font-weight: 600; font-size: 12px; letter-spacing: .5px;
+  border: 0; border-radius: 4px; padding: 2px 8px; text-transform: uppercase;
+  color: var(--dl-ink); text-shadow: none; box-shadow: none;
+}
+html body .tp.normal { background: #A8A878; } html body .tp.fire { background: #F08030; }
+html body .tp.water { background: #6890F0; } html body .tp.grass { background: #78C850; }
+html body .tp.electric { background: #F8D030; } html body .tp.ice { background: #98D8D8; }
+html body .tp.fighting { background: #C03028; color: #FFF; } html body .tp.poison { background: #A040A0; color: #FFF; }
+html body .tp.ground { background: #E0C068; } html body .tp.flying { background: #A890F0; }
+html body .tp.psychic { background: #F85888; } html body .tp.bug { background: #A8B820; }
+html body .tp.rock { background: #B8A038; } html body .tp.ghost { background: #705898; color: #FFF; }
+html body .tp.dragon { background: #7038F8; color: #FFF; } html body .tp.dark { background: #705848; color: #FFF; }
+html body .tp.steel { background: #B8B8D0; } html body .tp.fairy { background: #EE99AC; }
+
+/* ---------- logo: the Pokémon wordmark treatment ------------------------------ */
+.sm-logo {
+  display: inline-grid; font-family: 'Pokemon Solid', var(--pixel); font-weight: 400;
+  line-height: 1.2; letter-spacing: 1px; white-space: nowrap;
+}
+.sm-logo > span { grid-area: 1 / 1; display: flex; align-items: flex-end; }
+.sm-logo .lg-shadow { color: var(--dl-navy); -webkit-text-stroke: .24em var(--dl-navy); transform: translateY(.06em); }
+.sm-logo .lg-edge { color: var(--dl-navy); -webkit-text-stroke: .24em var(--dl-navy); }
+.sm-logo .lg-blue { color: var(--dl-logo-blue); -webkit-text-stroke: .13em var(--dl-logo-blue); }
+.sm-logo .lg-fill { color: var(--dl-yellow); }
+.sm-logo i { display: inline-block; font-style: normal; margin-left: -.04em; }
+.sm-logo i:first-child { margin-left: 0; }
+.sm-logo.arched i:nth-child(1) { font-size: 1.18em; transform: translateY(.08em) rotate(-6deg); }
+.sm-logo.arched i:nth-child(2) { transform: rotate(-4deg); }
+.sm-logo.arched i:nth-child(3) { transform: translateY(-.07em) rotate(-2deg); }
+.sm-logo.arched i:nth-child(4) { transform: translateY(-.11em) rotate(-1deg); }
+.sm-logo.arched i:nth-child(5) { transform: translateY(-.11em) rotate(1deg); }
+.sm-logo.arched i:nth-child(6) { font-size: 1.1em; transform: translateY(-.07em) rotate(2deg); }
+.sm-logo.arched i:nth-child(7) { transform: rotate(4deg); }
+.sm-logo.arched i:nth-child(8) { transform: translateY(.08em) rotate(6deg); }
+
+/* ---------- title screen ---------------------------------------------------- */
+html body[data-screen="title"] { background: var(--dl-sky); background-image: none; }
+html body[data-screen="title"] #app { max-width: none; padding: 0; }
+html body #app #s-title.dl-title.on {
+  position: relative; min-height: 100vh; overflow: hidden; padding: 0; text-align: left;
+  display: grid; grid-template-columns: minmax(0, 1fr) 420px; gap: 32px;
+  align-items: start; padding: 56px max(32px, 6vw) 0;
+}
+#app .dl-title .t-cloud { position: absolute; background: #FFFFFF; border-radius: 999px; pointer-events: none; }
+#app .dl-title .t-hill {
+  position: absolute; border-radius: 50%; border: 6px solid var(--dl-ink); pointer-events: none;
+}
+#app .dl-title .t-hill.back { left: -12%; bottom: -46vh; width: 76%; height: 74vh; background: var(--dl-grass); }
+#app .dl-title .t-hill.front { right: -18%; bottom: -54vh; width: 88%; height: 76vh; background: var(--dl-grass-2); }
+#app .dl-title .t-brand { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: flex-start; }
+#app .dl-title .t-eyebrow { font-family: var(--pixel); font-weight: 600; font-size: 18px; letter-spacing: 3px; color: var(--dl-ink); }
+#app .dl-title h1.t-logo { margin: 12px 0 0 4px; font-size: clamp(64px, 8.4vw, 124px); line-height: 1.15; }
+#app .dl-title .t-courses { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 58px; }
+#app .dl-title .t-course {
+  font-family: var(--pixel); font-weight: 600; font-size: 20px; color: #FFFFFF;
+  border: 4px solid var(--dl-ink); border-radius: 6px; padding: 5px 14px; box-shadow: var(--dl-shadow-sm);
+}
+#app .dl-title .t-course.c { background: var(--dl-blue); }
+#app .dl-title .t-course.calc { background: #6E44C9; }
+#app .dl-title .t-book { margin: 18px 0 0; font-size: 15px; color: var(--dl-ink); max-width: 560px; }
+html body #app .dl-title .title-mons {
+  position: absolute; z-index: 1; left: max(24px, 5vw); bottom: 9vh; width: min(58vw, 760px);
+  display: flex; align-items: flex-end; justify-content: space-between; gap: 4px; margin: 0;
+  padding: 0; border: 0; background: none; box-shadow: none;
+}
+html body #app .dl-title .title-mons img {
+  width: auto !important; height: auto !important; max-width: 13%; flex: 1 1 0;
+  image-rendering: pixelated; filter: none; animation: dl-bob 1.4s steps(2) infinite;
+}
+html body #app .dl-title .title-mons img:nth-child(2n) { animation-delay: .35s; margin-bottom: 4vh; }
+html body #app .dl-title .title-mons img:nth-child(3n) { animation-delay: .7s; }
+@keyframes dl-bob { 50% { transform: translateY(-8px); } }
+#app .dl-title .t-menu {
+  position: relative; z-index: 3; margin-top: 18px; background: var(--dl-card); border: 6px solid var(--dl-ink);
+  border-radius: 12px; box-shadow: 0 10px 0 var(--dl-ink); overflow: hidden;
+}
+#app .dl-title .t-menu-head {
+  display: flex; justify-content: space-between; gap: 12px; padding: 12px 22px;
+  background: var(--dl-ink); color: var(--dl-paper); font-family: var(--pixel); font-size: 17px; letter-spacing: 2px;
+}
+#app .dl-title .t-menu-head b { color: var(--dl-gold); font-weight: 600; }
+html body #app .dl-title .t-menu button {
+  display: flex; align-items: center; gap: 14px; width: 100%; min-height: 70px; padding: 14px 22px;
+  border: 0; border-bottom: 3px solid var(--dl-line); border-radius: 0; box-shadow: none; transform: none;
+  background: var(--dl-card); text-align: left; font-size: 28px; color: var(--dl-ink);
+}
+html body #app .dl-title .t-menu button:last-child { border-bottom: 0; }
+html body #app .dl-title .t-menu button:hover, html body #app .dl-title .t-menu button:focus-visible {
+  background: var(--dl-hover); transform: none; box-shadow: none; outline: none;
+}
+#app .dl-title .t-menu .cur { width: 18px; height: 24px; flex: none; opacity: 0; }
+#app .dl-title .t-menu button:hover .cur, #app .dl-title .t-menu button:focus-visible .cur,
+#app .dl-title .t-menu button.first .cur { opacity: 1; }
+html body #app .dl-title .t-menu button.first { background: var(--dl-hover); }
+#app .dl-title .t-menu .t-sub { display: block; font-family: var(--read); font-weight: 400; font-size: 15px; color: #5C5640; margin-top: 2px; letter-spacing: 0; }
+#app .dl-title .t-press {
+  position: relative; z-index: 3; margin-top: 34px; text-align: center; font-family: var(--pixel);
+  font-weight: 600; font-size: 24px; letter-spacing: 3px; animation: dl-blink 1.2s steps(1) infinite;
+}
+@keyframes dl-blink { 50% { opacity: 0; } }
+#app .dl-title .t-tagline {
+  position: absolute; z-index: 2; left: max(32px, 6vw); bottom: 22px; margin: 0;
+  font-family: var(--pixel); font-weight: 700; font-size: 26px; line-height: 1.15; color: var(--dl-ink);
+}
+#app .dl-title .t-credit {
+  position: absolute; z-index: 2; right: max(32px, 6vw); bottom: 18px; margin: 0; max-width: 420px;
+  font-size: 13px; line-height: 1.35; color: var(--dl-ink); text-align: right;
+}
+@media (max-width: 960px) {
+  html body #app #s-title.dl-title { grid-template-columns: 1fr; padding: 32px 20px 0; }
+  html body #app .dl-title .title-mons { position: relative; left: 0; bottom: 0; width: 100%; margin: 26px 0 0; }
+  .dl-title .t-tagline, #app .dl-title .t-credit { position: relative; left: 0; right: 0; bottom: 0; text-align: left; margin: 18px 0 0; }
+  .dl-title .t-credit { padding-bottom: 28px; }
+  .dl-title .t-hill.back { bottom: -60vh; }
+  .dl-title .t-hill.front { bottom: -64vh; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html body #app .dl-title .title-mons img, #app .dl-title .t-press { animation: none; }
+}
+
+/* ---------- top bar ----------------------------------------------------------- */
+html body #app #topbar {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 5px; min-height: 60px;
+  margin: 0 0 26px; padding: 10px 14px; background: var(--dl-ink); color: var(--dl-paper);
+  border: 0; border-radius: 12px; box-shadow: 0 6px 0 #000000;
+}
+html body #app #topbar .logo { font-size: 26px; margin-right: 6px; color: inherit; text-shadow: none; -webkit-text-stroke: 0; background: none; padding: 0; }
+html body #app #topbar .chip, html body .chip {
+  font-family: var(--pixel); font-weight: 600; font-size: 14px; letter-spacing: .2px;
+  color: var(--dl-paper); background: transparent; background-image: none;
+  border: 3px solid #4A4A66; border-radius: 8px; padding: 4px 8px; box-shadow: none; text-shadow: none;
+}
+html body #app #topbar .chip b { color: var(--dl-gold); font-weight: 700; }
+html body #app #topbar .chip.due-chip { background: var(--dl-red); border-color: var(--dl-red); }
+html body #app #topbar .chip.due-chip b { color: #FFFFFF; }
+html body #app #topbar .chip.region-chip { background: var(--dl-blue); border-color: var(--dl-blue); color: #FFFFFF; }
+html body #app #topbar .chip.region-chip:hover { background: #255BB0; }
+html body #app #topbar .chip button, html body #app #topbar button.chip { min-height: 0; box-shadow: none; }
+
+/* ---------- navigation: one dock, centred along the bottom ------------------------ */
+html body #nav {
+  position: fixed; left: 50%; right: auto; bottom: 14px; top: auto; transform: translateX(-50%);
+  width: max-content; max-width: calc(100% - 24px); display: flex; align-items: center; gap: 6px; padding: 8px;
+  background: var(--dl-card); background-image: none; border: 4px solid var(--dl-ink);
+  border-radius: 14px; box-shadow: 0 7px 0 var(--dl-ink); backdrop-filter: none;
+}
+html body #nav::before, html body #nav::after { content: none; }
+html body #nav button {
+  display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 8px 14px;
+  font-family: var(--pixel); font-weight: 600; font-size: 16px; color: var(--dl-ink);
+  background: transparent; background-image: none; border: 3px solid transparent;
+  border-radius: 9px; box-shadow: none; text-shadow: none; white-space: nowrap;
+}
+html body #nav button svg { flex: none; display: block; width: 22px; height: 22px; }
+html body #nav button[hidden] { display: none; }
+html body #nav button:hover:not(:disabled) { background: var(--dl-hover); transform: none; box-shadow: none; }
+html body #nav button.sel, html body #nav button.sel:hover {
+  background: var(--dl-hover); border-color: var(--dl-ink); color: var(--dl-ink); box-shadow: none;
+}
+/* the page is centred over the dock and leaves room for it */
+html body.has-chrome #app { max-width: 1180px; margin: 0 auto; padding-bottom: 130px; }
+@media (max-width: 1000px) {
+  html body #nav { gap: 2px; padding: 6px; bottom: 10px; }
+  html body #nav button { flex-direction: column; gap: 2px; min-height: 52px; padding: 6px 9px; font-size: 13px; }
+  html body #nav button svg { width: 20px; height: 20px; }
+}
+@media (max-width: 640px) {
+  html body #nav { width: calc(100% - 16px); }
+  html body #nav button { flex: 1 1 0; min-width: 0; padding: 6px 2px; font-size: 11px; white-space: normal; line-height: 1.15; text-align: center; }
+}
+
+/* ---------- map: the home screen ------------------------------------------------- */
+#app .dl-focus {
+  display: flex; gap: 24px; align-items: center; margin: 0 0 22px; padding: 20px 24px;
+  background: var(--dl-card); border: 5px solid var(--dl-ink); border-radius: 12px; box-shadow: 0 7px 0 var(--dl-ink);
+}
+#app .dl-focus .f-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+#app .dl-focus .f-kicker { display: flex; align-items: center; gap: 10px; font-family: var(--pixel); font-size: 15px; letter-spacing: 2px; color: #6B6450; }
+html body #app .dl-focus h2 { margin: 0; font-size: 36px; line-height: 1.05; }
+#app .dl-focus p { margin: 0; font-size: 17px; line-height: 1.45; color: #3A3628; }
+#app .dl-focus .f-acts { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 6px; }
+html body #app .dl-focus .f-acts button { font-size: 18px; padding: 8px 16px; }
+#app .dl-focus .f-side { flex: none; width: 176px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+#app .dl-focus .f-art {
+  position: relative; width: 150px; height: 150px; border-radius: 50%; border: 4px solid var(--dl-ink); background: #EAE2F7;
+  overflow: hidden;
+}
+#app .dl-badges { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; max-width: 176px; }
+#app .dl-badges span { width: 10px; height: 10px; transform: rotate(45deg); border: 2px solid var(--dl-ink); background: var(--dl-card); }
+#app .dl-badges span.got { background: var(--dl-gold); }
+
+#app .dl-routes-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; margin: 0 0 12px; }
+html body #app .dl-routes-head h2 { margin: 0; font-size: 22px; letter-spacing: 1px; }
+#app .dl-sort { display: flex; padding: 4px; gap: 4px; background: var(--dl-line); border-radius: 10px; }
+html body #app .dl-sort button { min-height: 36px; padding: 4px 12px; font-size: 15px; border: 0; box-shadow: none; background: transparent; }
+html body #app .dl-sort button[aria-pressed="true"] { background: var(--dl-card); border: 3px solid var(--dl-ink); padding: 1px 9px; }
+html body #app .dl-sort button:hover:not(:disabled) { transform: none; box-shadow: none; }
+
+html body #app .maplist { display: flex; flex-direction: column; gap: 12px; }
+html body #app .route {
+  display: grid; grid-template-columns: 56px minmax(0, 1fr) auto; align-items: center; gap: 16px;
+  padding: 12px 16px; border: 4px solid var(--dl-ink); background: var(--dl-card); box-shadow: 0 5px 0 var(--dl-ink);
+}
+html body #app .route:hover { background: #FFFBEF; }
+html body #app .route.dl-focus-row { border-color: var(--dl-red); box-shadow: 0 5px 0 var(--dl-red); }
+html body #app .route.done { background: var(--dl-card); border-color: var(--dl-ink); opacity: 1; }
+html body #app .route .num {
+  width: 56px; height: 56px; display: grid; place-items: center; border-radius: 50%;
+  border: 4px solid var(--dl-ink); background: var(--dl-card); color: var(--dl-ink);
+  font-family: var(--pixel); font-weight: 700; font-size: 22px; line-height: 1; padding: 0; box-shadow: none;
+}
+html body #app .route.done .num { background: var(--dl-gold); }
+html body #app .route .ttl { font-family: var(--pixel); font-weight: 600; font-size: 21px; line-height: 1.2; margin: 0 0 4px; color: var(--dl-ink); }
+html body #app .route .meta { font-size: 15px; line-height: 1.45; color: var(--dl-muted); }
+html body #app .route .meta b { color: var(--dl-ink); }
+#app .dl-acc { display: inline-flex; align-items: center; gap: 8px; margin-top: 6px; font-family: var(--pixel); font-weight: 600; font-size: 15px; color: var(--dl-ink); }
+#app .dl-acc .bar { width: 140px; height: 10px; background: var(--dl-line); border-radius: 4px; overflow: hidden; }
+#app .dl-acc .bar i { display: block; height: 100%; background: var(--dl-blue); border-radius: 4px; }
+html body #app .route .acts { display: flex; flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 8px; max-width: 430px; }
+html body #app .route .acts button { width: auto; background: var(--dl-card); background-image: none; border-color: var(--dl-ink); color: var(--dl-ink); min-height: 40px; padding: 6px 12px; font-size: 15px; box-shadow: 0 3px 0 var(--dl-ink); }
+html body #app .route .acts button.primary { background: var(--dl-red); color: #FFFFFF; }
+html body #app .route .acts button:hover:not(:disabled) { background: var(--dl-hover); transform: translateY(2px); box-shadow: 0 1px 0 var(--dl-ink); }
+html body #app .route .acts button.primary:hover:not(:disabled) { background: #B02C1A; }
+html body #app .badge-dot { width: 12px; height: 12px; border: 2px solid var(--dl-ink); background: var(--dl-card); transform: rotate(45deg); border-radius: 0; box-shadow: none; vertical-align: 2px; margin-left: 6px; }
+html body #app .badge-dot.got { background: var(--dl-gold); }
+html body #app .route.boss .num { background: #EDE5CC; }
+html body #app .route.boss.final .num { background: var(--dl-gold); }
+html body #app .route.route-blocked { opacity: .75; }
+@media (max-width: 900px) {
+  html body #app .route { grid-template-columns: 48px minmax(0, 1fr); }
+  html body #app .route .num { width: 48px; height: 48px; }
+  html body #app .route .acts { grid-column: 1 / -1; justify-content: flex-start; max-width: none; }
+  .dl-focus { flex-direction: column; align-items: stretch; }
+  .dl-focus .f-side { width: auto; flex-direction: row; justify-content: flex-start; }
+}
+
+/* ---------- battle ----------------------------------------------------------------- */
+html body #app #s-battle h2#btitle { font-size: 26px; margin: 0 0 14px; }
+html body #app #battlefield { border: 6px solid var(--dl-ink); border-radius: 14px; box-shadow: 0 8px 0 var(--dl-ink); }
+html body #app #battlefield .hpbox {
+  background: var(--dl-paper); background-image: none; color: var(--dl-ink);
+  border: 4px solid var(--dl-ink); border-radius: 10px; box-shadow: 0 5px 0 var(--dl-ink); padding: 10px 14px 12px;
+}
+html body #app #battlefield .hpbox .nm { font-family: var(--pixel); font-weight: 700; font-size: 20px; }
+html body #app #battlefield .hpbox .nm span:last-child { font-weight: 600; font-size: 17px; }
+html body #app .hpbar, html body #app .xpbar {
+  height: 12px; background: #3A3A55; border: 3px solid var(--dl-ink); border-radius: 4px; overflow: hidden; box-shadow: none;
+}
+html body #app #battlefield .hpbox .hpbar { height: 14px; margin-top: 8px; }
+html body #app .hpfill { background: #2E9E4F; background-image: none; border-radius: 0; }
+html body #app .hpfill.mid { background: #E3A41F; }
+html body #app .hpfill.low { background: var(--dl-red); }
+html body #app .xpfill { background: var(--dl-blue); background-image: none; }
+html body #app #battlefield .hpbox .hpnum, html body #app .hpnum { font-family: var(--pixel); font-weight: 600; font-size: 14px; color: var(--dl-ink); }
+html body #app #battlelog {
+  background: var(--dl-card); background-image: none; color: var(--dl-ink);
+  border: 5px solid var(--dl-ink); border-radius: 12px;
+  box-shadow: inset 0 0 0 4px var(--dl-paper), inset 0 0 0 6px #D9D0B4, 0 6px 0 var(--dl-ink);
+  font-family: var(--read); font-size: 17px; line-height: 1.5; padding: 14px 22px;
+}
+html body #app #battlelog b { font-family: var(--pixel); font-weight: 700; }
+
+html body #app #quiz .moves { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+@media (min-width: 1100px) { html body #app #quiz .moves { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+html body #app .move {
+  display: flex; flex-direction: column; justify-content: center; gap: 8px; text-align: left;
+  padding: 12px 16px; min-height: 84px; background: var(--dl-card); border: 4px solid var(--dl-ink);
+  border-radius: 10px; box-shadow: var(--dl-shadow); color: var(--dl-ink);
+}
+html body #app .move:hover:not(:disabled) { background: var(--dl-hover); transform: translateY(2px); box-shadow: 0 3px 0 var(--dl-ink); }
+html body #app .move .mv-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-family: var(--pixel); font-weight: 700; font-size: 20px; }
+html body #app .move .mv-bot { display: flex; justify-content: space-between; gap: 8px; font-family: var(--read); font-weight: 400; font-size: 14px; color: var(--dl-muted); }
+html body #app .move .stars { color: var(--dl-red); font-size: 14px; letter-spacing: 1px; }
+
+html body #app .qcard { padding: 16px 20px 18px; border-width: 5px; box-shadow: 0 7px 0 var(--dl-ink); }
+html body #app .qhead {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 10px;
+  font-family: var(--read); font-size: 14px; color: var(--dl-muted);
+}
+html body #app .qtag {
+  font-family: var(--pixel); font-weight: 600; font-size: 14px; letter-spacing: .5px;
+  color: var(--dl-paper); background: var(--dl-ink); border: 0; border-radius: 4px; padding: 2px 8px;
+}
+html body #app .qtag.srs { background: var(--dl-red); color: #FFFFFF; }
+html body #app .qtext { font-family: var(--read); font-size: 21px; line-height: 1.45; color: var(--dl-ink); font-weight: 700; }
+html body #app .qcode, html body #app pre.qcode {
+  background: var(--dl-ink); color: #F7F3E3; border: 0; border-radius: 8px;
+  font-family: var(--mono); font-size: 16px; line-height: 1.5; padding: 14px 18px; box-shadow: none;
+}
+html body #app .choices { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; margin-top: 14px; }
+html body #app .choices.two-up { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+html body #app .choice {
+  display: flex; align-items: center; gap: 14px; text-align: left; width: 100%;
+  min-height: 60px; padding: 10px 16px; background: var(--dl-card); background-image: none;
+  border: 4px solid var(--dl-ink); border-radius: 10px; box-shadow: 0 5px 0 var(--dl-ink);
+  font-family: var(--read); font-weight: 700; font-size: 18px; color: var(--dl-ink);
+}
+html body #app .choices.two-up .choice { min-height: 74px; font-size: 24px; }
+html body #app .choice:hover:not(:disabled) { background: var(--dl-hover); transform: translateY(2px); box-shadow: 0 3px 0 var(--dl-ink); }
+html body #app .choice .k {
+  flex: none; width: 34px; height: 34px; display: grid; place-items: center; border: 0;
+  background: var(--dl-ink); color: var(--dl-paper); border-radius: 6px;
+  font-family: var(--read); font-weight: 700; font-size: 17px; box-shadow: none;
+}
+html body #app .choice:disabled { opacity: .45; transform: none; cursor: default; }
+html body #app .choice.right:disabled { opacity: 1; background: var(--dl-good-bg); border-color: var(--dl-good); box-shadow: 0 5px 0 var(--dl-good); }
+html body #app .choice.right .k { background: var(--dl-good); }
+html body #app .choice.wrong:disabled { opacity: 1; background: var(--dl-bad-bg); border-color: var(--dl-red); box-shadow: 0 5px 0 var(--dl-red); }
+html body #app .choice.wrong .k { background: var(--dl-red); }
+html body #app .fillwrap input, html body #app #fillin {
+  font-family: var(--mono); font-size: 18px; border: 4px solid var(--dl-ink); border-radius: 10px; background: var(--dl-card); color: var(--dl-ink);
+}
+html body #app .why {
+  margin-top: 14px; padding: 12px 16px; background: var(--dl-good-bg); color: var(--dl-ink);
+  border: 3px solid var(--dl-good); border-radius: 10px; font-size: 17px; line-height: 1.5; box-shadow: none;
+}
+html body #app .why b { display: block; font-family: var(--pixel); font-weight: 700; font-size: 20px; color: var(--dl-good); margin-bottom: 4px; }
+html body #app .why.bad { background: var(--dl-bad-bg); border-color: var(--dl-red); }
+html body #app .why.bad b { color: var(--dl-red-ink); }
+html body #app #contbtn { background: #E3A41F; color: var(--dl-ink); font-size: 20px; font-weight: 700; }
+html body #app #contbtn:hover:not(:disabled) { background: #D29618; }
+
+/* ---------- party & boxes ----------------------------------------------------------- */
+html body #app .pc-slot, html body #app .pc-cell {
+  background: var(--dl-card); border: 4px solid var(--dl-ink); border-radius: 10px; box-shadow: 0 4px 0 var(--dl-ink); color: var(--dl-ink);
+}
+html body #app .pc-slot:hover:not(:disabled), html body #app .pc-cell:hover:not(.empty) { background: var(--dl-hover); }
+html body #app .pc-slot.sel, html body #app .pc-cell.sel { background: var(--dl-hover); box-shadow: 0 5px 0 var(--dl-red); border-color: var(--dl-ink); }
+html body #app .pc-slot.empty, html body #app .pc-cell.empty { background: transparent; border: 3px dashed #9DB88A; box-shadow: none; }
+html body #app .pc-slot .s-nm { font-family: var(--pixel); font-weight: 700; font-size: 18px; }
+html body #app .pc-slot .s-lv, html body #app .pc-cell .lvtag { font-family: var(--pixel); font-weight: 600; color: var(--dl-ink); }
+html body #app .pc-grid { background: #E9F3DC; border: 5px solid var(--dl-ink); border-radius: 12px; box-shadow: 0 7px 0 var(--dl-ink); padding: 12px; }
+html body #app .pc-boxhead .pc-title { font-family: var(--pixel); font-weight: 700; font-size: 19px; color: var(--dl-ink); }
+html body #app .pc-detail { border-width: 5px; box-shadow: 0 7px 0 var(--dl-ink); }
+html body #app .pc-detail h3 { font-size: 28px; }
+html body #app .pc-detail .pc-art { background: #FFE5D1; border: 4px solid var(--dl-ink); border-radius: 50%; }
+html body #app .pc-col > h3 { font-size: 20px; letter-spacing: 1px; }
+
+html body #app .center-button {
+  display: flex; align-items: center; justify-content: center; gap: 8px; white-space: nowrap;
+  min-height: 52px; padding: 8px 12px; font-size: 18px; outline: 0; border: 4px solid var(--dl-ink) !important;
+}
+html body #app .center-button::before, html body #app .center-button::after { content: none; }
+html body #app .center-button img { width: 30px; height: 30px; flex: none; }
+/* the party screen used to tint its type tags; use the same colours as everywhere else */
+html body #app #s-party .tp {
+  border: 0; box-shadow: none; text-shadow: none; font: 600 12px var(--pixel); letter-spacing: .5px; padding: 3px 9px; color: var(--dl-ink);
+}
+html body #app #s-party .tp.normal { background: #A8A878; } html body #app #s-party .tp.fire { background: #F08030; }
+html body #app #s-party .tp.water { background: #6890F0; } html body #app #s-party .tp.grass { background: #78C850; }
+html body #app #s-party .tp.electric { background: #F8D030; } html body #app #s-party .tp.ice { background: #98D8D8; }
+html body #app #s-party .tp.fighting { background: #C03028; color: #FFF; } html body #app #s-party .tp.poison { background: #A040A0; color: #FFF; }
+html body #app #s-party .tp.ground { background: #E0C068; } html body #app #s-party .tp.flying { background: #A890F0; }
+html body #app #s-party .tp.psychic { background: #F85888; } html body #app #s-party .tp.bug { background: #A8B820; }
+html body #app #s-party .tp.rock { background: #B8A038; } html body #app #s-party .tp.ghost { background: #705898; color: #FFF; }
+html body #app #s-party .tp.dragon { background: #7038F8; color: #FFF; } html body #app #s-party .tp.dark { background: #705848; color: #FFF; }
+html body #app #s-party .tp.steel { background: #B8B8D0; } html body #app #s-party .tp.fairy { background: #EE99AC; }
+
+/* ---------- trainer card --------------------------------------------------------------- */
+html body #app .statbox { padding: 14px 16px; text-align: center; }
+html body #app .statbox .v { font-family: var(--pixel); font-weight: 700; font-size: 36px; color: var(--dl-ink); line-height: 1; }
+html body #app .statbox .l { font-family: var(--read); font-size: 15px; color: var(--dl-muted); margin-top: 4px; }
+html body #app .bar-row {
+  display: grid; grid-template-columns: minmax(0, 260px) minmax(0, 1fr) 84px 58px; align-items: center; gap: 12px;
+  padding: 4px 8px; border-radius: 6px;
+}
+html body #app a.bar-row, html body #app button.bar-row { color: inherit; text-decoration: none; }
+html body #app button.bar-row {
+  width: 100%; min-height: 0; border: 0; box-shadow: none; background: transparent; font-family: var(--read);
+  font-weight: 400; text-align: left; cursor: pointer;
+}
+html body #app button.bar-row:hover:not(:disabled) { background: var(--dl-hover); transform: none; box-shadow: none; }
+html body #app .bar-row .lbl { font-family: var(--read); font-size: 15px; color: var(--dl-ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+html body #app .bar-row .val { font-family: var(--pixel); font-weight: 600; font-size: 15px; text-align: right; color: var(--dl-ink); }
+html body #app .bar-out { height: 12px; background: var(--dl-line); box-shadow: none; border-radius: 4px; overflow: hidden; }
+html body #app .bar-in { height: 100%; background: var(--dl-blue); background-image: none; border-radius: 4px; }
+html body #app .bar-row .flag { font-family: var(--pixel); font-weight: 700; font-size: 13px; color: var(--dl-red-ink); visibility: hidden; }
+html body #app .bar-row .flag.on, html body #app button.bar-row:hover .flag { visibility: visible; }
+#app .dl-trainer { display: flex; align-items: center; gap: 18px; }
+#app .dl-trainer .tc-band {
+  display: flex; justify-content: space-between; padding: 8px 18px; background: var(--dl-red); color: #FFFFFF;
+  font-family: var(--pixel); font-weight: 600; font-size: 15px; letter-spacing: 2px;
+}
+#app .dl-trainer .tc-art { position: relative; width: 96px; height: 96px; border-radius: 50%; border: 4px solid var(--dl-ink); background: #FFE5D1; overflow: hidden; flex: none; }
+#app @media (max-width: 760px) {
+  html body #app .bar-row { grid-template-columns: minmax(0, 1fr) 84px; }
+  html body #app .bar-row .bar-out { grid-column: 1 / -1; grid-row: 2; }
+  html body #app .bar-row .flag { display: none; }
+}
+
+/* ---------- pokédex, notes and the rest: shared pieces ----------------------------------- */
+html body .dexcell { background: var(--dl-card); border: 3px solid var(--dl-ink); border-radius: 8px; box-shadow: 0 3px 0 var(--dl-ink); }
+html body #app .dexcell.caught { background: var(--dl-hover); border-color: var(--dl-ink); }
+html body .dexcell:hover { background: var(--dl-hover); }
+html body .dexcell .n, html body .dexcell .i { font-family: var(--pixel); }
+html body #modal .box {
+  background: var(--dl-card); color: var(--dl-ink); border: 5px solid var(--dl-ink); border-radius: 14px;
+  box-shadow: 0 10px 0 var(--dl-ink); background-image: none;
+}
+html body #toast {
+  background: var(--dl-ink); color: var(--dl-paper); border: 4px solid var(--dl-ink); border-radius: 10px;
+  font-family: var(--pixel); font-weight: 600; font-size: 16px; box-shadow: 0 6px 0 #000000;
+}
+html body .region-tabs button.active { background: var(--dl-hover); }
+html body .starter { background: var(--dl-card); border: 4px solid var(--dl-ink); border-radius: 12px; box-shadow: var(--dl-shadow); background-image: none; }
+html body .starter:hover { background: var(--dl-hover); }
+html body .section-intro h2 { font-size: 40px; }
+html body input, html body select, html body textarea { font-family: var(--read); }
+
+/* ---------- digits stay in the reading face -----------------------------------------
+   Pixelify draws 5 like S, 0 like O and B like 8. Answers, scores and counts are
+   exactly where that matters, so anything numeric is set in Atkinson Hyperlegible. */
+html body #app .statbox .v, html body #app .bar-row .val, html body #app .dl-acc,
+html body #battlefield .hpbox .hpnum, html body #app .hpnum, html body #app .move .mv-bot,
+html body #app #topbar .chip b, html body #app .pc-cell .lvtag, html body #app .pc-slot .s-lv,
+html body #app .route .num, html body #battlefield .hpbox .nm span:last-child {
+  font-family: var(--read); font-weight: 700; letter-spacing: 0;
+}
+
+/* ---------- ferry crossing: a pixel-art voyage, then the new region ------------------ */
+#ferry-voyage {
+  position: fixed; inset: 0; z-index: 9000; display: grid; place-items: center;
+  background: rgba(27, 27, 47, .28); animation: fv-dim .25s ease-out both;
+}
+#ferry-voyage .fv-card {
+  width: min(500px, calc(100vw - 32px)); padding: 10px; background: var(--dl-ink);
+  border-radius: 16px; box-shadow: 0 10px 0 #000000; animation: fv-in .32s cubic-bezier(.2, .9, .3, 1.25) both;
+}
+#ferry-voyage canvas {
+  display: block; width: 100%; height: auto; aspect-ratio: 240 / 112;
+  image-rendering: pixelated; image-rendering: crisp-edges; border-radius: 8px;
+}
+/* the dialogue box from the handheld games: white, a dark frame, a blinking arrow */
+#ferry-voyage .fv-text {
+  position: relative; margin-top: 10px; padding: 12px 40px 12px 16px; background: #FFFFFF;
+  border: 4px solid #F8F8F8; border-radius: 8px; box-shadow: inset 0 0 0 3px #5878A8;
+  font-family: var(--pixel); font-weight: 600; font-size: 19px; color: #383848; line-height: 1.3;
+}
+#ferry-voyage .fv-text b { color: var(--dl-red); font-weight: 700; }
+#ferry-voyage .fv-more {
+  position: absolute; right: 16px; bottom: 14px; width: 0; height: 0;
+  border-left: 7px solid transparent; border-right: 7px solid transparent; border-top: 9px solid var(--dl-red);
+  animation: fv-blink .8s steps(1) infinite;
+}
+#ferry-voyage.fv-out { animation: fv-fade .4s ease-in both; }
+@keyframes fv-dim { from { background: rgba(27, 27, 47, 0); } }
+@keyframes fv-in { from { opacity: 0; transform: translateY(16px) scale(.9); } }
+@keyframes fv-fade { to { opacity: 0; } }
+@keyframes fv-blink { 50% { opacity: 0; } }
