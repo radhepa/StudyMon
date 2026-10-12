@@ -565,7 +565,6 @@ function renderMap() {
   if (S.curriculumNotice && activeSubject() === 'c') h += '<div class="panel curriculum-notice"><h3>Your chapters now follow the fourth edition</h3><p>Your Pokémon and question review history are kept. Earlier badges and chapter scores follow their topics. The two pointer chapters now share one badge; Recursion is a new chapter to study. A copy of your earlier chapter record is included in your save.</p><button onclick="dismissCurriculumNotice()">Got it</button></div>';
 
   var focus = mapFocus();
-  (def.REVISION_ROUTES || []).forEach(function (c) { h += mapRevisionRoute(c); });
   h += mapFocusHtml(focus);
 
   h += '<div class="dl-routes-head"><h2>' + esc(def.region) + '</h2>' +
@@ -586,7 +585,7 @@ function renderMap() {
       return tot ? st.r / tot : 2;
     };
     CHAPTERS.slice().sort(function (a, b) { return acc(a) - acc(b) || a.n - b.n; })
-      .forEach(function (c) { h += mapGymRow(c, focus); });
+      .forEach(function (c) { h += mapChapterRows(c, focus); });
     var bosses = mapStops().filter(function (s) { return s.kind === 'boss'; });
     if (bosses.length) {
       h += '</div><h2 style="margin-top:22px">' + esc(def.bossTitle || 'Exams') + '</h2><div class="maplist">';
@@ -598,7 +597,7 @@ function renderMap() {
        Isles means an exam every few gyms. */
     var openedBossSection = false;
     mapStops().forEach(function (stop) {
-      if (stop.kind === 'gym') { h += mapGymRow(stop.ch, focus); return; }
+      if (stop.kind === 'gym') { h += mapChapterRows(stop.ch, focus); return; }
       var e = stop.e;
       /* The C region still wants its "Victory Road" heading before the block of
          five. The Isles do not - an exam is just the next thing on the calendar. */
@@ -622,6 +621,14 @@ function renderMap() {
 
 function mapOrder() { return S.settings && S.settings.mapOrder === 'weak' ? 'weak' : 'course'; }
 
+function mapChapterRows(c, focus) {
+  var h = mapGymRow(c, focus);
+  (subjectDef().REVISION_ROUTES || []).forEach(function (revision) {
+    if (revision.after === c.n) h += mapRevisionRoute(revision);
+  });
+  return h;
+}
+
 function mapRevisionRoute(c) {
   var questions = routeQuestions(c.n);
   var met = questions.filter(questionWasEncountered).length;
@@ -630,13 +637,14 @@ function mapRevisionRoute(c) {
   return '<section class="panel midterm-route" aria-label="' + esc(c.route) + '">' +
     '<div class="midterm-route-body"><span class="friend-role">C midterm · open for practice</span>' +
     '<h2>' + esc(c.route) + '</h2><p>' + esc(c.blurb) + '</p>' +
+    (c.encounterBlurb ? '<p class="small">' + esc(c.encounterBlurb) + '</p>' : '') +
     '<p class="small"><b>' + met + '/' + questions.length + '</b> questions encountered · <b>' +
       caught + '/' + species.length + '</b> Pokémon caught here</p>' +
     '<div class="row"><button class="primary" onclick="goWild(' + c.n + ')">Wild battle</button>' +
     '<button onclick="drill(' + c.n + ')">Drill</button>' +
     '<button class="ghost" onclick="openRouteInfo(' + c.n + ')">Route info</button>' +
     '<button class="ghost" onclick="openQuestionBase(' + c.n + ')">See all questions</button></div></div>' +
-    '<div class="midterm-route-art" aria-hidden="true">' + [133, 25, 7].map(function (id) {
+    '<div class="midterm-route-art" aria-hidden="true">' + (c.previewSpecies || []).map(function (id) {
       return '<img src="' + spriteUrl(id) + '" alt="">';
     }).join('') + '</div></section>';
 }
@@ -850,6 +858,7 @@ function openRouteInfo(n) {
     '<p class="route-tally"><b>' + caught + '</b> of <b>' + list.length +
       '</b> caught here' + (seen ? ' &nbsp;·&nbsp; ' + seen + ' seen but not yet caught' : '') + '</p>';
   if (c.revision) h += '<p>' + esc(c.blurb) + '</p>' +
+    (c.encounterBlurb ? '<p>' + esc(c.encounterBlurb) + '</p>' : '') +
     '<p class="small">Your answers count toward their original chapters. Question progress is shared with the ordinary routes.</p>';
 
   if (!list.length) {
@@ -869,7 +878,7 @@ function openRouteInfo(n) {
     });
     h += '</div>';
     h += '<p class="small">Common Pokémon turn up about ten times as often as rare ones. ' +
-      'Legendaries do not appear on this list - they roam, from five badges onward.</p>';
+      (c.roaming === false ? '' : 'Legendaries do not appear on this list - they roam, from five badges onward.') + '</p>';
   }
   h += routeQuestionBaseHtml(c.n);
   h += '<div class="row"><button class="primary" onclick="closeModal();' +

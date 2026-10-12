@@ -401,7 +401,7 @@ function routeSpecies(chapter) {
    info panel is a promise rather than a guess, weighted by rarity. Levels still
    track your party - a route has to stay studiable the night you need it. */
 function wildFor(chapter) {
-  if (badgeCount() >= 5 && Math.random() < 0.03) {
+  if (chapter.roaming !== false && badgeCount() >= 5 && Math.random() < 0.03) {
     var leg = legendaryFor(chapter);
     if (leg) { leg.isLegendary = true; return leg; }
   }

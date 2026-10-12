@@ -1,10 +1,13 @@
 /* Midterm practice reuses the existing bank. IDs below select only the extra
    I/O, character and pointer material; no questions or review IDs are created. */
 window.C_REVISION_ROUTES = [{
-  n: 91, revision: true, id: 'midterm',
+  n: 91, revision: true, id: 'midterm', after: 7,
   route: 'Midterm Revision Route', title: 'C Midterm Revision',
   type: 'normal', teamTypes: ['normal', 'grass', 'electric', 'fighting', 'psychic', 'water', 'ghost'],
   chapters: [1, 2, 3, 4, 5],
+  encounterRoutes: [1, 2, 3, 4, 5], roaming: false,
+  previewSpecies: [298, 172, 447],
+  encounterBlurb: 'Catch the Pokémon from Routes 1–5, with their usual rarities.',
   blurb: 'All of Chapters 1–5, plus existing questions on printf/scanf, characters and pointers from later chapters.',
   questionIds: [
     // Formatted and character I/O. File opening, modes and file ownership are outside this exam.
@@ -33,16 +36,5 @@ window.C_REVISION_ROUTES = [{
     'c11-01', 'c11-06', 'c11-07', 'c11-08', 'c11-09', 'c11-12', 'c11-13', 'c11-18',
     'c11-23', 'c11-30', 'c11-35', 'c11-38', 'c11-41', 'c11-43', 'c11-46', 'c11-52',
     'c11-60', 'c11-61', 'c11-65', 'c11-67', 'c10-ed4-003', 'c10-tf-001', 'c10-tf-003', 'c10-tf-005'
-  ],
-  // Official species already in the dex, grouped using the ordinary route rarity weights.
-  encounters: [
-    [133, 'common'], [25, 'common'], [1, 'common'], [4, 'common'], [7, 'common'],
-    [92, 'common'], [63, 'common'], [66, 'common'], [54, 'common'], [43, 'common'],
-    [81, 'common'], [129, 'common'], [172, 'common'], [179, 'common'], [298, 'common'],
-    [2, 'uncommon'], [5, 'uncommon'], [8, 'uncommon'], [93, 'uncommon'], [64, 'uncommon'],
-    [67, 'uncommon'], [82, 'uncommon'], [134, 'uncommon'], [135, 'uncommon'], [136, 'uncommon'],
-    [280, 'uncommon'], [147, 'uncommon'],
-    [3, 'rare'], [6, 'rare'], [9, 'rare'], [94, 'rare'], [65, 'rare'],
-    [68, 'rare'], [196, 'rare'], [197, 'rare'], [282, 'rare']
   ]
 }];

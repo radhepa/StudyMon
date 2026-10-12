@@ -120,8 +120,15 @@ function buildRegion(chapters, label, seedBase, position, used, rarity) {
 }
 
 const c = buildRegion(CHAPTERS, 'C region', 1000);
-// Revision routes reuse familiar official species with an intentional mixed table.
-(window.C_REVISION_ROUTES || []).forEach(route => { c[route.n] = route.encounters; });
+// Revision encounters come from their source routes, preserving each rarity.
+(window.C_REVISION_ROUTES || []).forEach(route => {
+  const seen = new Set();
+  c[route.n] = (route.encounterRoutes || []).flatMap(n => c[n] || []).filter(entry => {
+    if (seen.has(entry[0])) return false;
+    seen.add(entry[0]);
+    return true;
+  }).sort((a, b) => RARITY.findIndex(r => r.key === a[1]) - RARITY.findIndex(r => r.key === b[1]));
+});
 const kUsed = {};
 const k = buildRegion(CALC_CHAPTERS, 'Converging Isles', 5000, null, kUsed);
 

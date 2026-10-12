@@ -70,6 +70,8 @@ check('the C bank still contains exactly 1025 questions and no synthetic chapter
         excludedIds[q.id] = true;
       });
       const table = routeSpecies(c);
+      const source = new Map([1,2,3,4,5].flatMap(n => routeSpecies(chapterByNumber(n)))
+        .map(r => [r.id, r.rarity]));
       let sampled = new Set(), invalidEncounter = false;
       const random = Math.random;
       try {
@@ -79,6 +81,14 @@ check('the C bank still contains exactly 1025 questions and no synthetic chapter
           if (!table.some(r => r.id === wild.id)) invalidEncounter = true;
         }
       } finally { Math.random = random; }
+      // A progressed save must still draw only from Routes 1–5, even on a roaming roll.
+      const badges = S.badges;
+      let progressedEscapes = 0;
+      try {
+        S.badges = { 1:true, 2:true, 3:true, 4:true, 5:true };
+        Math.random = () => 0;
+        for (let i = 0; i < 20; i++) if (!source.has(wildFor(c).id)) progressedEscapes++;
+      } finally { S.badges = badges; Math.random = random; }
       return {
         size: pool.length, bankSize: all.length, unique: ids.size === pool.length,
         full: [1,2,3,4,5].every(n => QBANK[n].every(q => ids.has(q.id))),
@@ -87,6 +97,9 @@ check('the C bank still contains exactly 1025 questions and no synthetic chapter
         excluded: Object.keys(excluded).every(id => !ids.has(id)),
         drawEscapes, unreachable, unchanged: priorBank === JSON.stringify(QBANK),
         pokemon: table.length, uniquePokemon: new Set(table.map(r => r.id)).size,
+        sourceCount: source.size, sourceMatches: table.length === source.size &&
+          table.every(r => source.get(r.id) === r.rarity), progressedEscapes,
+        previewMatches: c.previewSpecies.every(id => source.has(id)),
         validPokemon: table.every(r => !!dexOf(r.id) && !dexOf(r.id).custom && !dexOf(r.id).legendary),
         invalidEncounter, sampled: sampled.size, gyms: CHAPTERS.length,
         byChapter: Object.fromEntries([...new Set(pool.map(q => q.chapter))].map(n => [n, pool.filter(q => q.chapter === n).length]))
@@ -98,17 +111,25 @@ check('the C bank still contains exactly 1025 questions and no synthetic chapter
     check('file management, heap allocation and string libraries stay outside the supplement', result.excluded);
     check('all 498 questions can be drawn and 1000 mixed draws stay inside the syllabus',
       result.unreachable === 0 && result.drawEscapes === 0 && result.unchanged);
-    check('36 distinct official Pokemon are catchable from the advertised table',
-      result.pokemon === 36 && result.uniquePokemon === 36 && result.validPokemon &&
-      !result.invalidEncounter && result.sampled === 36);
+    check('all 60 Pokemon from Routes 1–5 retain their source rarities and are catchable',
+      result.sourceCount === 60 && result.sourceMatches && result.uniquePokemon === result.sourceCount &&
+      result.validPokemon && !result.invalidEncounter && result.sampled === result.sourceCount);
+    check('five badges and a roaming roll cannot introduce an outside species', result.progressedEscapes === 0);
+    check('the card previews only Pokemon from Routes 1–5', result.previewMatches);
     check('the route adds no gym or question-bank chapter', result.gyms === 15 && result.bankSize === 1025);
 
     const card = page.locator('.midterm-route');
     check('the map exposes the route with no badges', await card.isVisible());
+    check('the revision route sits once between Chapters 7 and 8', await page.evaluate(() => {
+      const card = document.querySelector('.midterm-route');
+      return document.querySelectorAll('.midterm-route').length === 1 && card.parentElement.classList.contains('maplist') &&
+        card.previousElementSibling.querySelector('.ttl').textContent.startsWith('Ch 7 ·') &&
+        card.nextElementSibling.querySelector('.ttl').textContent.startsWith('Ch 8 ·');
+    }));
     await card.screenshot({ path: path.join(out, 'desktop-card.png') });
     await card.getByRole('button', { name: 'Route info', exact: true }).click();
-    check('route info advertises the same 36 Pokemon and 498 questions',
-      await page.locator('#modal .routecell').count() === 36 &&
+    check('route info advertises the same 60 Pokemon and 498 questions',
+      await page.locator('#modal .routecell').count() === result.sourceCount &&
       (await page.locator('#modal .question-base').innerText()).includes('/498'));
     await page.locator('#modal').getByRole('button', { name: 'See all questions' }).click();
     check('the complete catalog keeps original chapter labels',
@@ -153,7 +174,7 @@ check('the C bank still contains exactly 1025 questions and no synthetic chapter
     await page.evaluate(() => {
       B.over = true; goWild(91);
       // A wounded common resident makes this integration catch deterministic.
-      B.foes[0] = makeMon(129, 35); foe().hp = 1; markSeen(foe().id); renderBattle(); showMoveMenu();
+      B.foes[0] = makeMon(174, 35); foe().hp = 1; markSeen(foe().id); renderBattle(); showMoveMenu();
     });
     const species = await page.evaluate(() => foe().id);
     for (let attempt = 0; attempt < 10; attempt++) {
@@ -178,7 +199,9 @@ check('the C bank still contains exactly 1025 questions and no synthetic chapter
     await page.evaluate(() => { closeModal(); B = null; showScreen('map'); renderMap(); });
     for (const order of ['weak', 'course']) {
       await page.evaluate(order => setMapOrder(order), order);
-      check('the revision route stays visible in ' + order + ' map order', await card.isVisible());
+      check('the revision route stays immediately after Chapter 7 in ' + order + ' map order',
+        await card.isVisible() && await page.evaluate(() =>
+          document.querySelector('.midterm-route').previousElementSibling.querySelector('.ttl').textContent.startsWith('Ch 7 ·')));
     }
     await page.setViewportSize({ width: 390, height: 844 });
     await page.waitForFunction(() => !document.querySelector('#toast').classList.contains('on'));
