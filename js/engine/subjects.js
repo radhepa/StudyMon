@@ -90,6 +90,8 @@ function chapterByNumber(n) {
   // come from one, and everything downstream needs a title for it.
   var extra = (subjectDef() || {}).EXAM_CHAPTERS || [];
   for (i = 0; i < extra.length; i++) if (extra[i].n === n) return extra[i];
+  var revisions = (subjectDef() || {}).REVISION_ROUTES || [];
+  for (i = 0; i < revisions.length; i++) if (revisions[i].n === n) return revisions[i];
   return null;
 }
 
@@ -150,6 +152,7 @@ function installSubjects() {
     LOCATIONS: window.LOCATIONS,
     TOWNSFOLK: window.TOWNSFOLK,
     EXAM_CHAPTERS: [],
+    REVISION_ROUTES: window.C_REVISION_ROUTES || [],
     bossTitle: 'Victory Road, the Elite Four',
     mapIntro: 'Fifteen routes, one per chapter of the textbook. Every route is open. ' +
       'Pick the chapter you want to practice. Wild battles let you catch Pokémon; ' +

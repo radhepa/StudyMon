@@ -39,6 +39,7 @@ const SUITES=[
   ['data integrity',    'tools/check-integrity.cjs'],
   ['gameplay',          'tools/check-gameplay.cjs'],
   ['systems',           'tools/check-systems.cjs'],
+  ['midterm route',     'tools/check-midterm-route.cjs'],
   ['item registry',     'tools/check-items.cjs'],
   ['item distribution', 'tools/check-item-distribution.cjs'],
   ['gift transactions', 'tools/check-gifts.cjs'],

@@ -81,6 +81,16 @@ function questionsFor(chapters, guestLessons) {
   return out;
 }
 
+/* A practice route selects existing objects, keeping the original chapter and
+   SRS identity. Its complete chapters stay complete when their banks grow. */
+function revisionQuestions(route) {
+  var selected = {};
+  (route.questionIds || []).forEach(function (id) { selected[id] = true; });
+  return allQuestions().filter(function (q) {
+    return (route.chapters || []).indexOf(q.chapter) >= 0 || selected[q.id];
+  });
+}
+
 /* The exam-only lessons parked on route n, or null. Set per subject in
    `wildGuests`; the C region has none. */
 function wildGuestLessons(n) {

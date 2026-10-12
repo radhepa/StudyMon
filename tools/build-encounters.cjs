@@ -16,6 +16,7 @@ global.window = {};
 require('../js/data/pokedex.js');
 require('../js/data/fakemon.js');
 require('../js/data/world.js');
+require('../js/data/c-midterm.js');
 require('../js/data/calc/calc-world.js');
 const { DEX, CHAPTERS, CALC_CHAPTERS, CALC_EXAM_CHAPTERS } = global.window;
 
@@ -119,6 +120,8 @@ function buildRegion(chapters, label, seedBase, position, used, rarity) {
 }
 
 const c = buildRegion(CHAPTERS, 'C region', 1000);
+// Revision routes reuse familiar official species with an intentional mixed table.
+(window.C_REVISION_ROUTES || []).forEach(route => { c[route.n] = route.encounters; });
 const kUsed = {};
 const k = buildRegion(CALC_CHAPTERS, 'Converging Isles', 5000, null, kUsed);
 

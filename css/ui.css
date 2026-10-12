@@ -623,6 +623,24 @@ button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visi
   font-weight: 600;
 }
 
+.midterm-route {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 20px;
+  border-left: 6px solid #6f8f4e;
+}
+.midterm-route-body { flex: 1; min-width: 0; }
+.midterm-route h2 { margin: 5px 0 8px; }
+.midterm-route p { margin-bottom: 12px; }
+.midterm-route-art { display: flex; flex-wrap: wrap; justify-content: center; width: 192px; flex: none; }
+.midterm-route-art img { width: 96px; height: 96px; object-fit: contain; image-rendering: pixelated; }
+@media (max-width: 650px) {
+  .midterm-route { flex-direction: column-reverse; align-items: stretch; }
+  .midterm-route-art { width: auto; }
+  .midterm-route-art img { width: 72px; height: 72px; }
+}
+
 /* What you are walking into. Turns amber when the fight is well above your
    strongest Pokemon, which is the whole point of giving gyms a level floor. */
 .lvl-hint {

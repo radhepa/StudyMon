@@ -565,6 +565,7 @@ function renderMap() {
   if (S.curriculumNotice && activeSubject() === 'c') h += '<div class="panel curriculum-notice"><h3>Your chapters now follow the fourth edition</h3><p>Your Pokémon and question review history are kept. Earlier badges and chapter scores follow their topics. The two pointer chapters now share one badge; Recursion is a new chapter to study. A copy of your earlier chapter record is included in your save.</p><button onclick="dismissCurriculumNotice()">Got it</button></div>';
 
   var focus = mapFocus();
+  (def.REVISION_ROUTES || []).forEach(function (c) { h += mapRevisionRoute(c); });
   h += mapFocusHtml(focus);
 
   h += '<div class="dl-routes-head"><h2>' + esc(def.region) + '</h2>' +
@@ -620,6 +621,25 @@ function renderMap() {
 }
 
 function mapOrder() { return S.settings && S.settings.mapOrder === 'weak' ? 'weak' : 'course'; }
+
+function mapRevisionRoute(c) {
+  var questions = routeQuestions(c.n);
+  var met = questions.filter(questionWasEncountered).length;
+  var species = routeSpecies(c);
+  var caught = species.filter(function (r) { return S.caught[r.id]; }).length;
+  return '<section class="panel midterm-route" aria-label="' + esc(c.route) + '">' +
+    '<div class="midterm-route-body"><span class="friend-role">C midterm · open for practice</span>' +
+    '<h2>' + esc(c.route) + '</h2><p>' + esc(c.blurb) + '</p>' +
+    '<p class="small"><b>' + met + '/' + questions.length + '</b> questions encountered · <b>' +
+      caught + '/' + species.length + '</b> Pokémon caught here</p>' +
+    '<div class="row"><button class="primary" onclick="goWild(' + c.n + ')">Wild battle</button>' +
+    '<button onclick="drill(' + c.n + ')">Drill</button>' +
+    '<button class="ghost" onclick="openRouteInfo(' + c.n + ')">Route info</button>' +
+    '<button class="ghost" onclick="openQuestionBase(' + c.n + ')">See all questions</button></div></div>' +
+    '<div class="midterm-route-art" aria-hidden="true">' + [133, 25, 7].map(function (id) {
+      return '<img src="' + spriteUrl(id) + '" alt="">';
+    }).join('') + '</div></section>';
+}
 
 function setMapOrder(order) {
   if (!S.settings) S.settings = {};
@@ -737,10 +757,18 @@ function mapBossRow(e) {
 }
 
 function goWild(n) {
+  var c = chapterByNumber(n);
+  if (!c) return;
+  if (c.revision) {
+    if (!partyAlive()) { toast('Everyone has fainted. Visit the Poké Center.'); return; }
+    clearLog();
+    startBattle({ kind: 'wild', chapters: c.chapters, pool: routeQuestions(n),
+      foes: [wildFor(c)], title: c.route, chapter: c });
+    return;
+  }
   var blocker = gymBlockedBy(n);
   if (blocker) { toast('Sit ' + blocker.epithet + ' first. ' + blocker.name + ' is waiting.'); return; }
   if (!partyAlive()) { toast('Everyone has fainted. Visit the Poké Center.'); return; }
-  var c = chapterByNumber(n);
   clearLog();
   startBattle({ kind: 'wild', chapters: [n], guestLessons: wildGuestLessons(n), foes: [wildFor(c)], title: c.route, chapter: c });
 }
@@ -821,6 +849,8 @@ function openRouteInfo(n) {
     '</p>' +
     '<p class="route-tally"><b>' + caught + '</b> of <b>' + list.length +
       '</b> caught here' + (seen ? ' &nbsp;·&nbsp; ' + seen + ' seen but not yet caught' : '') + '</p>';
+  if (c.revision) h += '<p>' + esc(c.blurb) + '</p>' +
+    '<p class="small">Your answers count toward their original chapters. Question progress is shared with the ordinary routes.</p>';
 
   if (!list.length) {
     h += '<p class="muted">No encounter table for this route yet.</p>';
@@ -856,6 +886,9 @@ function openRouteInfo(n) {
    battle actually asks - the whole exam's syllabus, not just its own sliver. */
 function routeQuestions(n) {
   var c = chapterByNumber(n);
+  if (c && c.revision) return revisionQuestions(c).sort(function (a, b) {
+    return a.chapter - b.chapter || a.t - b.t || String(a.id).localeCompare(String(b.id));
+  });
   var chapters = (c && c.examOnly) ? examWildChapters(c) : [n];
   var guests = (c && c.examOnly) ? null : wildGuestLessons(n);
   var pool = questionsFor(chapters, guests);
@@ -931,7 +964,8 @@ function openQuestionBase(n) {
     var attempts = (stats.r || 0) + (stats.w || 0);
     h += '<article class="question-entry ' + (metQuestion ? 'encountered' : 'unseen') + '">' +
       '<div class="question-entry-meta"><span class="qtag">' + esc(q.tag || 'Question') + '</span>' +
-      '<span>Tier ' + q.t + (q.lesson ? ' · Lesson ' + q.lesson : '') + '</span>' +
+      '<span>Tier ' + q.t + (q.lesson ? ' · Lesson ' + q.lesson : '') +
+      (c.revision ? ' · Ch ' + q.chapter + ' · ' + esc(chapterTitle(q.chapter)) : '') + '</span>' +
       '<span class="question-status">' + (isHidden(q.id) ? 'Hidden · right ' + reviewPlan().retireAfter + ' in a row' + (attempts ? ' · ' + attempts + ' attempts' : '')
         : metQuestion ? 'Encountered' + (attempts ? ' · ' + attempts + ' attempt' + (attempts === 1 ? '' : 's') : '') : 'Not encountered') + '</span></div>' +
       '<div class="question-entry-text"><b>' + (i + 1) + '.</b> ' + questionHtml(q, q.q) + '</div>' +
@@ -1122,7 +1156,10 @@ function renderStudy() {
 var D = null;
 
 function drill(ch) {
-  D = { chapters: ch === 'review' ? null : [ch], asked: {}, n: 0, right: 0, review: ch === 'review' };
+  var c = ch === 'review' ? null : chapterByNumber(ch);
+  D = { chapters: ch === 'review' ? null : c && c.revision ? c.chapters : [ch],
+    pool: c && c.revision ? routeQuestions(ch) : null, title: c && c.revision ? c.route : null,
+    asked: {}, n: 0, right: 0, review: ch === 'review' };
   showScreen('drill');
   nextDrill();
 }
@@ -1188,7 +1225,7 @@ function nextDrill() {
     if (!due.length) { endDrill(); return; }
     D.q = due[Math.floor(Math.random() * due.length)];
   } else {
-    var got = pickQuestion(chapters, 1 + (D.n % 4), D.asked);
+    var got = pickQuestion(chapters, 1 + (D.n % 4), D.asked, null, D.pool);
     D.q = got.q;
   }
   D.asked[D.q.id] = true;
@@ -1206,7 +1243,7 @@ function renderDrill() {
       'Answers and explanations are held back until the end, like a real paper.</p>';
   } else {
     var dch = chapterByNumber(chNum);
-    h = '<h2>' + (D.review ? 'Review Center'
+    h = '<h2>' + (D.title ? esc(D.title) : D.review ? 'Review Center'
           : 'Drill, ' + (dch && dch.examOnly ? esc(dch.title) : 'Chapter ' + chNum)) + '</h2>' +
       '<p class="muted" style="margin-bottom:12px">' + D.right + ' / ' + D.n + ' correct this session. ' +
       'Take your time. There is no battle or timer here.</p>';

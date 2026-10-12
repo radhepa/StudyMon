@@ -22,7 +22,8 @@ window.ENCOUNTERS = {
   12: [[82,"common"],[558,"common"],[625,"common"],[76,"common"],[141,"common"],[139,"uncommon"],[689,"uncommon"],[437,"uncommon"],[959,"uncommon"],[601,"rare"],[970,"rare"],[395,"rare"]],
   13: [[8,"common"],[400,"common"],[961,"common"],[124,"common"],[964,"common"],[478,"uncommon"],[73,"uncommon"],[121,"uncommon"],[699,"uncommon"],[914,"rare"],[260,"rare"],[350,"rare"]],
   14: [[49,"common"],[920,"common"],[752,"common"],[284,"common"],[596,"common"],[873,"uncommon"],[545,"uncommon"],[348,"uncommon"],[589,"uncommon"],[617,"rare"],[900,"rare"],[738,"rare"]],
-  15: [[705,"common"],[334,"common"],[697,"common"],[715,"common"],[804,"common"],[230,"uncommon"],[612,"uncommon"],[706,"uncommon"],[373,"uncommon"],[445,"rare"],[149,"rare"],[635,"rare"]]
+  15: [[705,"common"],[334,"common"],[697,"common"],[715,"common"],[804,"common"],[230,"uncommon"],[612,"uncommon"],[706,"uncommon"],[373,"uncommon"],[445,"rare"],[149,"rare"],[635,"rare"]],
+  91: [[133,"common"],[25,"common"],[1,"common"],[4,"common"],[7,"common"],[92,"common"],[63,"common"],[66,"common"],[54,"common"],[43,"common"],[81,"common"],[129,"common"],[172,"common"],[179,"common"],[298,"common"],[2,"uncommon"],[5,"uncommon"],[8,"uncommon"],[93,"uncommon"],[64,"uncommon"],[67,"uncommon"],[82,"uncommon"],[134,"uncommon"],[135,"uncommon"],[136,"uncommon"],[280,"uncommon"],[147,"uncommon"],[3,"rare"],[6,"rare"],[9,"rare"],[94,"rare"],[65,"rare"],[68,"rare"],[196,"rare"],[197,"rare"],[282,"rare"]]
  },
  calc: {
   1: [[396,"common"],[821,"common"],[187,"common"],[16,"common"],[519,"common"],[278,"uncommon"],[661,"uncommon"],[447,"uncommon"],[66,"uncommon"],[56,"rare"],[852,"rare"],[759,"rare"]],
