@@ -85,7 +85,7 @@ var ITEM_EFFECTS = {
     if (!B || B.over || B.kind !== 'wild') return { error: 'Poké Dolls only work in wild battles.' };
     return {
       message: 'The wild Pokémon watched the doll while you slipped away safely.',
-      afterSave: function () { log('You used a Poké Doll and got away safely.'); B.over = true; showScreen('map'); renderMap(); }
+      afterSave: function () { log('You used a Poké Doll and got away safely.'); B.over = true; backToMap(); }
     };
   }
 };

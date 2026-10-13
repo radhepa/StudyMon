@@ -49,8 +49,12 @@ function startBattle(cfg) {
   if (typeof journalBattle === 'function') journalBattle();
   markSeen(foe().id);
   saveGame();
-  $('#quiz').style.minHeight = '';
+  /* the next wild Pokémon on a route appears where you already are */
+  var stayY = CUR === 'battle' ? window.scrollY : null;
+  if (cfg.kind !== 'wild') WILD_TRIP = null;
+  if (stayY === null) $('#quiz').style.minHeight = '';
   showScreen('battle');
+  if (stayY !== null) window.scrollTo(0, stayY);
   renderBattle();
   log(cfg.kind === 'wild'
     ? (foe().shiny
@@ -554,7 +558,7 @@ function runAway() {
   if (B.kind !== 'wild') { toast(B.kind === 'rematch' ? 'A rematch is a promise. See it through.' : 'You cannot run from a Gym battle!'); return; }
   log('You got away safely.');
   B.over = true;
-  showScreen('map'); renderMap();
+  backToMap();
 }
 
 /* Catching costs a question: you have to prove you understand the topic. */
@@ -700,7 +704,7 @@ function resolveCatch(correct) {
     if (typeof journalCatch === 'function') journalCatch(f.id);
     if (typeof collectFirstCatch === 'function') collectFirstCatch();
     if (S.party.length < 6) S.party.push(f); else S.box.push(f);
-    B.over = true; B.caught = true;
+    B.over = true; B.caught = true; B.rollOn = true;
     playCry(f.id);
     saveGame();
     showCaught(f);
@@ -773,6 +777,14 @@ function winBattle() {
   var accTxt = acc ? B.correctThisBattle + '/' + acc + ' questions correct this battle.' : '';
   syncFriendStory();
   saveGame();
+  /* On a route the next wild Pokémon just walks up; the win goes in the log. */
+  if (B.kind === 'wild' && WILD_TRIP) {
+    B.rollOn = true;
+    log('<span class="good">' + esc(msg + ' ' + extra) + '</span>' + (accTxt ? ' ' + esc(accTxt) : ''));
+    var done = B;
+    setTimeout(function () { if (B === done) nextWildEncounter(); }, 1400);
+    return;
+  }
   showResult(true, msg, extra, accTxt);
 }
 

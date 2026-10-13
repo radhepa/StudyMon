@@ -322,11 +322,13 @@ function closeModal() {
 }
 
 /* A battle that is over has nothing left on its screen to press, so closing
-   its result with Escape or a click outside goes on to the map, as the result's
-   own button does, instead of stranding you on a dead battlefield. */
+   its result with Escape or a click outside goes on, as the result's own
+   button does, instead of stranding you on a dead battlefield: to the route's
+   next wild Pokémon after a catch, otherwise back to the map. */
 function leaveFinishedBattle() {
   if (CUR !== 'battle' || (B && !B.over) || $('#modal').classList.contains('on')) return;
-  showScreen('map'); renderMap();
+  if (B && B.rollOn && WILD_TRIP) { nextWildEncounter(); return; }
+  backToMap();
 }
 
 /* For a modal that finishes a screen: if it is dismissed without its button,
@@ -361,7 +363,7 @@ function showCaught(m) {
     typePills(d.types) +
     '<p class="muted" style="margin-top:10px">' + esc(d.genus) + ', ' + esc(d.flavor) + '</p>' +
     (S.party.length >= 6 ? '<p class="muted">Your party is full, so it went to the PC Box.</p>' : '') +
-    '<button class="primary" onclick="closeModal();showScreen(\'map\');renderMap()">Continue ▶</button>');
+    '<button class="primary" onclick="closeModal()">Continue ▶</button>');
 }
 
 function showResult(won, msg, extra, acc) {
@@ -369,7 +371,7 @@ function showResult(won, msg, extra, acc) {
     (extra ? '<p style="font-size:15px">' + esc(extra) + '</p>' : '') +
     (acc ? '<p class="muted">' + esc(acc) + '</p>' : '') +
     '<div class="row" style="justify-content:center;margin-top:14px">' +
-    '<button class="primary" onclick="closeModal();showScreen(\'map\');renderMap()">To the map ▶</button>' +
+    '<button class="primary" onclick="closeModal();backToMap()">To the map ▶</button>' +
     '<button class="ghost" onclick="closeModal();goCenter()">Poké Center</button>' +
     '</div>');
 }
@@ -764,12 +766,48 @@ function mapBossRow(e) {
         ' onclick="goElite(\'' + e.id + '\')">Challenge</button>') + '</div></div>';
 }
 
+/* A trip down a route: where the map was scrolled when you set off, and how
+   to meet the route's next wild Pokémon. A win or a catch rolls straight on
+   to the next encounter; running or leaving puts the map back where it was. */
+var WILD_TRIP = null;
+
+/* Called as a route battle starts. A battle that carries on a trip already
+   under way keeps the log and the trip's map position. */
+function setOffOnRoute(again) {
+  if (CUR === 'battle' && WILD_TRIP && B && B.rollOn) { WILD_TRIP.again = again; return; }
+  WILD_TRIP = { y: CUR === 'map' ? window.scrollY : 0, again: again };
+  clearLog();
+}
+
+function nextWildEncounter() {
+  if (!WILD_TRIP || CUR !== 'battle' || !B || !B.over || !B.rollOn) return;
+  if ($('#modal').classList.contains('on')) return;
+  var done = B;
+  WILD_TRIP.again();
+  if (B === done) backToMap();   // the next battle could not start
+}
+
+/* Back to the routes, at the spot the trip set off from. */
+function backToMap() {
+  var y = WILD_TRIP ? WILD_TRIP.y : 0;
+  WILD_TRIP = null;
+  showScreen('map'); renderMap();
+  if (y) window.scrollTo(0, y);
+}
+
+/* The Routes button: from a battle it ends the trip the way Run does. */
+function openRoutes() {
+  if (CUR === 'battle') { backToMap(); return; }
+  showScreen('map'); renderMap();
+}
+
 function goWild(n) {
   var c = chapterByNumber(n);
   if (!c) return;
+  var again = function () { goWild(n); };
   if (c.revision) {
     if (!partyAlive()) { toast('Everyone has fainted. Visit the Poké Center.'); return; }
-    clearLog();
+    setOffOnRoute(again);
     startBattle({ kind: 'wild', chapters: c.chapters, pool: routeQuestions(n),
       foes: [wildFor(c)], title: c.route, chapter: c });
     return;
@@ -777,7 +815,7 @@ function goWild(n) {
   var blocker = gymBlockedBy(n);
   if (blocker) { toast('Sit ' + blocker.epithet + ' first. ' + blocker.name + ' is waiting.'); return; }
   if (!partyAlive()) { toast('Everyone has fainted. Visit the Poké Center.'); return; }
-  clearLog();
+  setOffOnRoute(again);
   startBattle({ kind: 'wild', chapters: [n], guestLessons: wildGuestLessons(n), foes: [wildFor(c)], title: c.route, chapter: c });
 }
 
@@ -790,7 +828,7 @@ function goWildExam(id) {
   var examCh = e && examChapterFor(e);
   if (!examCh) return;
   if (!partyAlive()) { toast('Everyone has fainted. Visit the Poké Center.'); return; }
-  clearLog();
+  setOffOnRoute(function () { goWildExam(id); });
   startBattle({
     kind: 'wild', chapters: e.chapters,
     pool: e.revisionPerType ? routeQuestions(examCh.n) : null,
