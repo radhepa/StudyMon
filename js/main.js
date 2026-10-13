@@ -34,10 +34,24 @@ document.addEventListener('keydown', function (e) {
   if (tag === 'input' || tag === 'textarea') return;
   if (e.ctrlKey || e.metaKey || e.altKey) return;
 
-  // the title screen says "press Enter": it picks the highlighted menu row
-  if (CUR === 'title' && e.key === 'Enter' && tag !== 'button') {
-    var pick = $('#s-title .t-menu button.first');
-    if (pick) { e.preventDefault(); pick.click(); }
+  // A cartridge-style menu: arrows choose a row, Enter opens that row.
+  if (CUR === 'title') {
+    var rows = $$('#s-title .t-menu button').filter(function (b) { return b.offsetParent !== null; });
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+      var current = rows.indexOf(document.activeElement);
+      if (current < 0) current = rows.indexOf($('#s-title .t-menu button.first'));
+      var next = (current + (e.key === 'ArrowUp' ? -1 : 1) + rows.length) % rows.length;
+      if (rows[next]) {
+        e.preventDefault();
+        selectTitleMenu(rows[next]);
+        rows[next].focus();
+      }
+      return;
+    }
+    if (e.key === 'Enter' && tag !== 'button') {
+      var pick = $('#s-title .t-menu button.first');
+      if (pick) { e.preventDefault(); pick.click(); }
+    }
     return;
   }
 

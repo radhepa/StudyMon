@@ -378,6 +378,10 @@ function showResult(won, msg, extra, acc) {
 
 /* ---- title / new game ---------------------------------------------------- */
 
+function selectTitleMenu(button) {
+  $$('#s-title .t-menu button').forEach(function (b) { b.classList.toggle('first', b === button); });
+}
+
 function renderTitle() {
   var saved = hasSave();
   $('#continuebtn').style.display = saved ? '' : 'none';
@@ -387,6 +391,7 @@ function renderTitle() {
   var sum = titleSaveSummary();
   $('#titlesave').textContent = sum ? sum.line : '';
   $('#titlebadges').textContent = sum ? sum.badges : 'NO SAVE YET';
+  $('#titletrainer').textContent = sum ? sum.trainer : 'YOUR ADVENTURE';
   renderTitleMons();
 }
 
@@ -402,30 +407,27 @@ function titleSaveSummary() {
     var total = ((SUBJECTS[sub] && SUBJECTS[sub].CHAPTERS) || []).length;
     var caught = Object.keys(o.caught || {}).length;
     return {
+      trainer: o.trainer || 'YOUR ADVENTURE',
       badges: badges + (total ? ' / ' + total : '') + ' BADGES',
       line: (SUBJECTS[sub] ? SUBJECTS[sub].region : '') + ' · ' + caught + ' Pokémon caught'
     };
   } catch (e) { return null; }
 }
 
-/* Placeholder lineup for a trainer with no save yet, or nothing caught. */
-var TITLE_MONS_FALLBACK = [4, 255, 155, 94, 297, 380, 149];
-
-/* A fresh 7 every time the title shows: distinct species pulled from the
-   save's party and PC, read straight out of localStorage so this never has
-   to load (and thus mutate) S just to paint the title screen.
-
-   The row stays invisible (.pending) until every sprite has loaded, then
-   fades in whole. The page ships it empty, so there is never a placeholder
-   lineup on screen to be swapped out. */
+/* Only the saved party, in slot order, with its nicknames and shiny sprites.
+   Read the save without loading or changing S. An empty party gets scenery
+   and an invitation to choose a partner, never borrowed or preset Pokémon. */
 function renderTitleMons() {
   var el = document.querySelector('.title-mons');
   if (!el) return;
-  var pool = titleMonPool();
-  var pick = pool.length ? shuffle(pool).slice(0, 7) : TITLE_MONS_FALLBACK.slice();
-  while (pool.length && pick.length < 7) pick.push(pool[Math.floor(Math.random() * pool.length)]);
+  var party = titleMonPool();
+  $('#titleparty').textContent = party.length ? 'YOUR PARTY · ' + party.length + ' / 6' : 'A WORLD OF POSSIBILITY';
+  $('#titleempty').hidden = party.length > 0;
+  el.style.setProperty('--party-count', party.length || 1);
+  el.style.setProperty('--phone-scale', party.length <= 3 ? '.85' : party.length === 4 ? '.7' : '.54');
+  el.classList.toggle('empty', !party.length);
   el.classList.add('pending');
-  el.innerHTML = titleMonsHtml(pick);
+  el.innerHTML = titleMonsHtml(party);
 
   var imgs = el.querySelectorAll('img'), left = imgs.length, shown = false;
   var reveal = function () {
@@ -443,26 +445,24 @@ function renderTitleMons() {
   setTimeout(reveal, 1500);        // a slow sprite never holds the row back for long
 }
 
-/* Sprite frames are all the same 96x96 canvas, but the creature drawn inside
-   varies hugely in how much of it it fills (a coiled Rayquaza vs a compact
-   Voltorb) - shown at one fixed size they read as wildly different sizes.
-   Scale each toward this lineup's own median fill, so the seven read as one
-   consistent set no matter which seven got drawn, without the row blowing
-   past the panel width the way scaling to a fixed global target could. */
-function titleMonsHtml(ids) {
-  var spans = ids.map(titleMonSpan);
-  var sorted = spans.slice().sort(function (a, b) { return a - b; });
-  var target = sorted[Math.floor(sorted.length / 2)];
-  return ids.map(function (id, i) {
-    var scale = Math.max(0.8, Math.min(1.5, target / spans[i]));
-    var px = Math.round(68 * scale);
-    return '<img src="' + spriteUrl(id) + '" alt="" style="width:' + px + 'px;height:' + px + 'px">';
+/* The measured sprite bounds put every creature's feet on the grass, even
+   tiny sprites and original creatures with different transparent padding.
+   CSS scales this same stage down on phones without clipping any member. */
+function titleMonsHtml(party) {
+  return party.map(function (m, i) {
+    var kind = m.shiny ? 'shiny' : 'front';
+    var data = window.SPRITE_SEAT_DATA && window.SPRITE_SEAT_DATA[kind];
+    var row = data && data[m.id];
+    var below = row ? row[0] : 0.25, cx = row ? row[1] : 0.5, span = row ? row[2] : 0.6;
+    var size = Math.round(Math.max(96, Math.min(210, 90 / span)));
+    var name = monName(m);
+    return '<div class="t-mon" role="listitem" title="' + esc(name) + '" data-party-slot="' + i + '" data-species="' + m.id +
+      '" style="--sprite-size:' + size + 'px;--sprite-left:' + Math.round(60 - cx * size) +
+      'px;--sprite-bottom:' + Math.round(-below * size) + 'px;--delay:' + (i * 0.23) + 's">' +
+      '<span class="t-mon-ground" aria-hidden="true"></span><span class="t-mon-sprite">' +
+      '<img src="' + monSprite(m) + '" alt="' + esc(name + (m.shiny ? ' (shiny)' : '')) + '" width="96" height="96">' +
+      '</span><span class="t-mon-name">' + esc(name) + (m.shiny ? ' <b aria-hidden="true">✦</b>' : '') + '</span></div>';
   }).join('');
-}
-
-function titleMonSpan(id) {
-  var row = window.SPRITE_SEAT_DATA && window.SPRITE_SEAT_DATA.front && window.SPRITE_SEAT_DATA.front[id];
-  return (row && row[2]) || 0.6;   // ~population median, a safe default if data is missing
 }
 
 function titleMonPool() {
@@ -470,12 +470,10 @@ function titleMonPool() {
     var raw = localStorage.getItem(SAVE_KEY);
     if (!raw) return [];
     var o = JSON.parse(raw);
-    var ids = [].concat(o.party || [], o.box || [])
-      .map(function (m) { return m && m.id; })
-      .filter(function (id) { return typeof id === 'number' && dexOf(id); });
-    var seen = {}, out = [];
-    ids.forEach(function (id) { if (!seen[id]) { seen[id] = true; out.push(id); } });
-    return out;
+    if (!o || !Array.isArray(o.party)) return [];
+    return o.party.slice(0, 6).filter(function (m) {
+      return m && typeof m.id === 'number' && dexOf(m.id);
+    });
   } catch (e) { return []; }
 }
 

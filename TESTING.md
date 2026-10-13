@@ -21,6 +21,7 @@ node tools/check-maths.cjs
 | --- | --- |
 | `check-side-quests.cjs` | 30 labs, 169 cases, every case carrying a verified expected output that still matches the contract that produced it |
 | `check-handlers.cjs` | every function named in an `onclick` exists, so no button is silently dead |
+| `check-title.cjs` | only the saved party appears, in slot order with shiny sprites and nicknames; rendering keeps saves untouched, menu keys and clicks work, and desktop/mobile layouts respect reduced motion |
 | `check-typechart.cjs` | all 18 attacking types match the canonical Gen VI+ matchups, in all three relations |
 | `check-maths.cjs` | damage responds to type, STAB, level and power; catch rates are ordered from common to legendary, improve when wounded, worsen on a wrong answer |
 | `check-integrity.cjs` | every species, team, ace, reward and question referenced anywhere exists and is usable; no duplicate question ids; no evolution chain loops |

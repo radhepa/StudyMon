@@ -22,7 +22,8 @@
 <link rel="stylesheet" href="css/pokedoro.css?v=sweep-20261007">
 <link rel="stylesheet" href="css/gym-leaders.css?v=phase6-20260925">
 <link rel="stylesheet" href="css/world.css?v=phase7-20260925">
-<link rel="stylesheet" href="css/daylight.css?v=plates-20261012">
+<link rel="stylesheet" href="css/daylight.css?v=party-meadow-20261012">
+<link rel="stylesheet" href="css/title.css?v=party-meadow-20261012">
 </head>
 <body data-screen="title">
 
@@ -32,14 +33,11 @@
 
   <!-- ================= TITLE ================= -->
   <section id="s-title" class="screen on dl-title">
-    <div class="t-cloud" aria-hidden="true" style="left:54%;top:64px;width:160px;height:40px"></div>
-    <div class="t-cloud" aria-hidden="true" style="left:57%;top:42px;width:80px;height:48px"></div>
-    <div class="t-cloud" aria-hidden="true" style="left:48%;top:340px;width:120px;height:32px"></div>
-    <div class="t-hill back" aria-hidden="true"></div>
-    <div class="t-hill front" aria-hidden="true"></div>
+    <div class="t-scene" aria-hidden="true"></div>
+    <div class="t-motes" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
 
     <div class="t-brand">
-      <div class="t-eyebrow">C AND CALCULUS II · A POKÉMON ADVENTURE</div>
+      <div class="t-eyebrow">YOUR NEXT ADVENTURE AWAITS</div>
       <h1 class="t-logo sm-logo arched" aria-label="StudyMon">
         <span class="lg-shadow" aria-hidden="true"><i>S</i><i>t</i><i>u</i><i>d</i><i>y</i><i>M</i><i>o</i><i>n</i></span>
         <span class="lg-edge" aria-hidden="true"><i>S</i><i>t</i><i>u</i><i>d</i><i>y</i><i>M</i><i>o</i><i>n</i></span>
@@ -47,27 +45,31 @@
         <span class="lg-fill" aria-hidden="true"><i>S</i><i>t</i><i>u</i><i>d</i><i>y</i><i>M</i><i>o</i><i>n</i></span>
       </h1>
       <div class="t-courses"><span class="t-course c">C PROGRAMMING</span><span class="t-course calc">CALCULUS II</span></div>
-      <p class="t-book">Forouzan &amp; Afyouni · <i>Computer Science: A Structured Programming Approach in C</i> · 4th edition</p>
+      <p class="t-book">Study a little. Stay for a battle.</p>
     </div>
 
     <div class="t-side">
       <nav class="t-menu" aria-label="Main menu">
-        <div class="t-menu-head"><span>SAVE FILE</span><b id="titlebadges"></b></div>
-        <button id="continuebtn" onclick="continueGame()">
+        <div class="t-menu-head"><span id="titletrainer">YOUR ADVENTURE</span><b id="titlebadges"></b></div>
+        <button id="continuebtn" onclick="continueGame()" onfocus="selectTitleMenu(this)" onpointerenter="selectTitleMenu(this)">
           <svg class="cur" viewBox="0 0 6 8" aria-hidden="true" shape-rendering="crispEdges"><path d="M0 0h2v1h1v1h1v1h1v2h-1v1h-1v1h-1v1h-2z" fill="#C8331F"/></svg>
           <span>CONTINUE<span class="t-sub" id="titlesave"></span></span>
         </button>
-        <button id="newgamebtn" onclick="newGame()">
+        <button id="newgamebtn" onclick="newGame()" onfocus="selectTitleMenu(this)" onpointerenter="selectTitleMenu(this)">
           <svg class="cur" viewBox="0 0 6 8" aria-hidden="true" shape-rendering="crispEdges"><path d="M0 0h2v1h1v1h1v1h1v2h-1v1h-1v1h-1v1h-2z" fill="#C8331F"/></svg>
-          <span>NEW GAME</span>
+          <span>NEW GAME<span class="t-sub">A new partner. A whole world to explore.</span></span>
         </button>
       </nav>
-      <div class="t-press" aria-hidden="true">PRESS ENTER</div>
+      <div class="t-press" aria-hidden="true">PRESS ENTER <span>TO BEGIN</span></div>
+      <p class="t-controls">↑ ↓ select · Enter confirm · Tap to play</p>
     </div>
 
-    <div class="title-mons pending" aria-label="Your adventure companions"></div>
-    <p class="t-tagline">Study a little.<br>Stay for a battle.</p>
-    <p class="t-credit">Missed questions come back for review. Pokémon sprites, cries and stats come from PokéAPI and are saved on your computer, so you can play offline.</p>
+    <div class="t-companions">
+      <p class="t-party-label" id="titleparty">YOUR PARTY</p>
+      <div class="title-mons pending" role="list" aria-label="Your current party"></div>
+      <p class="t-empty" id="titleempty">Your first partner is waiting.<br>Let’s start an adventure.</p>
+    </div>
+    <footer class="t-footer"><span>C PROGRAMMING &amp; CALCULUS II</span><span>Study. Battle. Explore.</span></footer>
   </section>
 
   <!-- ================= STARTER ================= -->
@@ -204,7 +206,7 @@
 <script src="js/engine/question-format.js?v=sweep-20261007"></script>
 <script src="js/engine/mons.js?v=midterm-route-position-20261012"></script>
 <script src="js/engine/quiz.js?v=midterm-route-20261012"></script>
-<script src="js/engine/ui.js?v=midterm-route-position-20261012"></script>
+<script src="js/engine/ui.js?v=party-title-20261012"></script>
 <script src="js/engine/battle.js?v=daylight-20261011"></script>
 <script src="js/engine/shop.js?v=sweep-20261007"></script>
 <script src="js/engine/town.js?v=phase3-economy-20260911"></script>
@@ -244,6 +246,6 @@
 <script src="js/data/radio-songs.js?v=radio-20260923c"></script>
 <script src="js/engine/radio.js?v=sweep-20261007"></script>
 <script src="js/engine/pokedoro.js?v=sweep-20261007"></script>
-<script src="js/main.js?v=daylight-20261011"></script>
+<script src="js/main.js?v=party-title-20261012"></script>
 </body>
 </html>

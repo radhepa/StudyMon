@@ -1,0 +1,200 @@
+/* The opening meadow. Pokémon are live party sprites, never part of the art. */
+html body[data-screen="title"] { background: #238bdb; background-image: none; }
+html body[data-screen="title"] #app { max-width: none; padding: 0; }
+html body #app #s-title.dl-title.on {
+  position: relative; display: block; min-height: max(680px, 100svh); overflow: hidden;
+  padding: 0; text-align: center; isolation: isolate; color: #fff8dd;
+}
+#app .dl-title .t-scene {
+  position: absolute; z-index: -2; inset: 0; pointer-events: none;
+  background: #238bdb url(../assets/ui/title-meadow-v1.png) center center / cover no-repeat;
+  image-rendering: pixelated;
+}
+#app .dl-title .t-brand {
+  position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center;
+  padding: clamp(28px, 5vh, 64px) 20px 0;
+}
+#app .dl-title .t-eyebrow {
+  font: 600 16px var(--pixel); letter-spacing: 4px; color: #fff8dd;
+  text-shadow: 2px 2px #185581, -1px -1px #185581;
+}
+#app .dl-title h1.t-logo {
+  margin: 12px 0 0; font-size: clamp(90px, 10vw, 144px); line-height: 1.2;
+  filter: drop-shadow(0 5px 0 #173858);
+}
+#app .dl-title .t-courses { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-top: 72px; }
+#app .dl-title .t-course {
+  font: 600 16px var(--pixel); letter-spacing: 1px; color: #fff8dd;
+  border: 3px solid #193652; border-radius: 2px; padding: 4px 14px;
+  box-shadow: inset 0 2px #ffffff40, 0 3px #193652;
+}
+#app .dl-title .t-course.c { background: #2467af; }
+#app .dl-title .t-course.calc { background: #7353ae; }
+#app .dl-title .t-book {
+  margin: 14px 0 0; font: 600 20px var(--pixel); color: #fff8dd;
+  text-shadow: 2px 2px #193652; letter-spacing: .5px;
+}
+#app .dl-title .t-side { position: absolute; z-index: 3; right: 5vw; bottom: 15%; width: 360px; }
+#app .dl-title .t-menu {
+  position: relative; margin: 0; border: 4px solid #183651; border-radius: 3px;
+  background: #fff9df; box-shadow: inset 0 0 0 2px #fff, 4px 6px 0 #132f44a6;
+  overflow: hidden; text-align: left;
+}
+#app .dl-title .t-menu-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  background: #224665; color: #fff9df; padding: 10px 16px;
+  font: 600 15px var(--pixel); letter-spacing: 1px; border-bottom: 3px solid #183651;
+}
+#app .dl-title .t-menu-head > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#app .dl-title .t-menu-head b { flex: none; color: #ffdd64; font-weight: 600; font-size: 13px; }
+html body #app .dl-title .t-menu button {
+  display: flex; align-items: center; gap: 12px; width: 100%; min-height: 84px; padding: 13px 16px;
+  border: 0; border-bottom: 2px solid #d1d6bf; border-radius: 0; box-shadow: none;
+  transform: none; background: #fff9df; text-align: left; font: 600 26px var(--pixel); color: #1c3545;
+}
+html body #app .dl-title .t-menu button:last-child { border-bottom: 0; }
+html body #app .dl-title .t-menu button.first,
+html body #app .dl-title .t-menu button:hover,
+html body #app .dl-title .t-menu button:focus-visible { background: #f2eac1; transform: none; box-shadow: inset 4px 0 #ca4534; }
+html body #app .dl-title .t-menu button:focus-visible { outline: 3px solid #2c74b1; outline-offset: -5px; }
+#app .dl-title .t-menu .cur { width: 13px; height: 18px; flex: none; opacity: 0; }
+#app .dl-title .t-menu button.first .cur,
+#app .dl-title .t-menu button:hover .cur,
+#app .dl-title .t-menu button:focus-visible .cur { opacity: 1; }
+#app .dl-title .t-sub {
+  display: block; margin-top: 4px; font: 400 14px/1.25 var(--read); color: #536355; letter-spacing: 0;
+}
+#app .dl-title .t-press {
+  margin: 20px 0 0; color: #fff9df; font: 700 24px var(--pixel); letter-spacing: 3px;
+  text-shadow: 2px 2px #143648, -1px -1px #143648; animation: title-pulse 2.4s steps(2) infinite;
+}
+#app .dl-title .t-press span { font-size: 15px; letter-spacing: 1px; }
+#app .dl-title .t-controls {
+  margin: 5px 0 0; font: 400 12px var(--read); color: #fff9df;
+  text-shadow: 1px 1px #143648; background: #183651c9; padding: 3px 8px; display: inline-block;
+}
+#app .dl-title .t-companions {
+  position: absolute; z-index: 2; left: 3vw; bottom: 10%; width: min(59vw, 870px);
+}
+#app .dl-title .t-party-label {
+  display: inline-block; margin: 0 0 20px; padding: 4px 12px; background: #173e35cf;
+  border: 2px solid #e2efb980; box-shadow: 2px 2px #16372b70;
+  font: 600 15px var(--pixel); letter-spacing: 2px; color: #fff9df;
+}
+html body #app .dl-title .title-mons {
+  position: relative; left: auto; bottom: auto; display: grid;
+  grid-template-columns: repeat(var(--party-count, 6), minmax(0, 1fr));
+  align-items: end; gap: 0; width: 100%; max-width: none; min-height: 140px;
+  margin: 0; padding: 0; border: 0; background: none; box-shadow: none;
+  transition: opacity .25s;
+}
+#app .dl-title .title-mons.pending { opacity: 0; }
+html body #app .dl-title .title-mons.empty { display: none; }
+#app .dl-title .t-mon { position: relative; height: 140px; min-width: 0; --mon-scale: 1; }
+#app .dl-title .t-mon-sprite {
+  position: absolute; left: 50%; bottom: 27px; width: 120px; height: 120px;
+  transform: translateX(-50%) scale(var(--mon-scale)); transform-origin: center bottom;
+}
+html body #app .dl-title .title-mons .t-mon img {
+  position: absolute; left: var(--sprite-left); bottom: var(--sprite-bottom);
+  width: var(--sprite-size) !important; height: var(--sprite-size) !important; max-width: none;
+  margin: 0; object-fit: contain; image-rendering: pixelated; filter: none;
+  animation: title-idle 2.8s steps(2, end) infinite; animation-delay: var(--delay);
+}
+#app .dl-title .t-mon-ground {
+  position: absolute; left: 50%; bottom: 23px; width: 54px; height: 8px;
+  transform: translateX(-50%) scale(var(--mon-scale)); background: #234c3866;
+  box-shadow: 6px -2px #234c382b, -6px -2px #234c382b;
+}
+#app .dl-title .t-mon-name {
+  position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); max-width: 100%;
+  padding: 2px 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  color: #fff9df; background: #173e35cf; font: 600 14px var(--pixel);
+}
+#app .dl-title .t-mon-name b { color: #ffdc56; }
+#app .dl-title .t-empty { margin: 0; font: 600 26px/1.3 var(--pixel); color: #fff9df; text-shadow: 2px 2px #163c30; }
+#app .dl-title .t-empty[hidden] { display: none; }
+#app .dl-title .t-footer {
+  position: absolute; z-index: 3; left: 0; right: 0; bottom: 0; display: flex;
+  justify-content: space-between; gap: 20px; padding: 13px 4vw;
+  background: #123833d9; border-top: 2px solid #c0d7ac5c; color: #e5eec7;
+  font: 600 13px var(--pixel); letter-spacing: 1px;
+}
+#app .dl-title .t-motes { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
+#app .dl-title .t-motes i {
+  position: absolute; left: 12%; bottom: 20%; width: 4px; height: 4px; background: #fff7b3;
+  box-shadow: 4px 0 #fff7b354; opacity: 0; animation: title-mote 7s steps(12) infinite;
+}
+#app .dl-title .t-motes i:nth-child(2) { left: 30%; bottom: 16%; animation-delay: 2s; }
+#app .dl-title .t-motes i:nth-child(3) { left: 65%; bottom: 25%; animation-delay: 4s; }
+#app .dl-title .t-motes i:nth-child(4) { left: 85%; bottom: 18%; animation-delay: 1s; }
+#app .dl-title .t-motes i:nth-child(5) { left: 48%; bottom: 30%; animation-delay: 5s; }
+#app .dl-title .t-motes i:nth-child(6) { left: 73%; bottom: 12%; animation-delay: 3s; }
+@keyframes title-idle { 50% { transform: translateY(-3px); } }
+@keyframes title-pulse { 50% { opacity: .6; } }
+@keyframes title-mote { 20%, 70% { opacity: .65; } 100% { transform: translate(24px, -90px); opacity: 0; } }
+@media (max-width: 1100px) and (min-width: 961px) {
+  #app .dl-title .t-side { right: 3vw; width: 330px; }
+  #app .dl-title .t-companions { width: 57vw; }
+  #app .dl-title .t-mon { --mon-scale: .85; }
+}
+@media (max-width: 960px) {
+  html body #app #s-title.dl-title.on { display: flex; flex-direction: column; min-height: 100svh; padding: 0; }
+  #app .dl-title .t-scene { background-position: 46% center; }
+  #app .dl-title .t-brand { padding: 26px 16px 0; }
+  #app .dl-title h1.t-logo { font-size: clamp(64px, 14vw, 114px); }
+  #app .dl-title .t-eyebrow { font-size: 13px; letter-spacing: 2px; }
+  #app .dl-title .t-courses { margin-top: 44px; }
+  #app .dl-title .t-side { position: relative; right: auto; bottom: auto; width: min(420px, calc(100% - 40px)); margin: 28px auto 0; }
+  #app .dl-title .t-companions { position: relative; left: auto; bottom: auto; width: min(760px, calc(100% - 24px)); margin: 30px auto 32px; }
+  #app .dl-title .t-party-label { margin-bottom: 8px; }
+  #app .dl-title .t-footer { position: relative; padding: 10px 20px; margin-top: auto; }
+}
+@media (max-width: 560px) {
+  #app .dl-title h1.t-logo { font-size: clamp(54px, 16.6vw, 84px); margin-top: 10px; }
+  #app .dl-title .t-eyebrow { font-size: 11px; }
+  #app .dl-title .t-course { font-size: 13px; padding: 3px 9px; border-width: 2px; }
+  #app .dl-title .t-book { font-size: 17px; margin-top: 12px; }
+  #app .dl-title .t-side { margin-top: 24px; }
+  html body #app .dl-title .t-menu button { min-height: 76px; font-size: 23px; padding: 11px 13px; }
+  #app .dl-title .t-menu-head { font-size: 13px; padding: 8px 13px; }
+  #app .dl-title .t-menu-head b { font-size: 12px; }
+  #app .dl-title .t-sub { font-size: 13px; }
+  #app .dl-title .t-press { margin-top: 15px; font-size: 21px; }
+  #app .dl-title .t-controls { font-size: 11px; }
+  #app .dl-title .t-companions { margin-top: 26px; margin-bottom: 26px; }
+  #app .dl-title .t-mon { height: 105px; --mon-scale: var(--phone-scale, .54); }
+  #app .dl-title .t-mon-name { font-size: 10px; padding: 2px 3px; }
+  html body #app .dl-title .title-mons { min-height: 105px; }
+  #app .dl-title .t-party-label { font-size: 13px; }
+  #app .dl-title .t-empty { font-size: 22px; padding: 10px 0; }
+  #app .dl-title .t-footer { flex-direction: column; gap: 4px; font-size: 11px; }
+}
+@media (min-width: 561px) and (max-width: 960px) and (max-height: 560px) {
+  html body #app #s-title.dl-title.on { display: block; min-height: max(370px, 100svh); }
+  #app .dl-title .t-brand { width: 51%; padding: 20px 12px 0; }
+  #app .dl-title h1.t-logo { font-size: clamp(48px, 7vw, 67px); margin-top: 6px; }
+  #app .dl-title .t-eyebrow { font-size: 10px; letter-spacing: 1px; }
+  #app .dl-title .t-courses { gap: 5px; margin-top: 30px; }
+  #app .dl-title .t-course { font-size: 11px; padding: 3px 6px; border-width: 2px; }
+  #app .dl-title .t-book { font-size: 15px; margin-top: 10px; }
+  #app .dl-title .t-side { position: absolute; right: 3%; top: 48%; width: 42%; margin: 0; transform: translateY(-50%); }
+  html body #app .dl-title .t-menu button { min-height: 66px; padding: 9px 12px; font-size: 22px; }
+  #app .dl-title .t-menu-head { padding: 8px 12px; font-size: 12px; }
+  #app .dl-title .t-menu-head b { font-size: 11px; }
+  #app .dl-title .t-sub { font-size: 12px; }
+  #app .dl-title .t-press { font-size: 19px; margin-top: 12px; }
+  #app .dl-title .t-controls { font-size: 10px; }
+  #app .dl-title .t-companions { position: absolute; left: 1%; bottom: 52px; width: 50%; margin: 0; }
+  #app .dl-title .t-party-label { font-size: 11px; margin-bottom: 5px; padding: 3px 8px; }
+  html body #app .dl-title .title-mons { min-height: 85px; }
+  #app .dl-title .t-mon { height: 85px; --mon-scale: var(--phone-scale, .54); }
+  #app .dl-title .t-mon-name { font-size: 10px; }
+  #app .dl-title .t-empty { font-size: 18px; }
+  #app .dl-title .t-footer { position: absolute; font-size: 11px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html body #app .dl-title .title-mons .t-mon img, #app .dl-title .t-press, #app .dl-title .t-motes i { animation: none; }
+  html body #app .dl-title .title-mons { transition: none; }
+  #app .dl-title .t-motes { display: none; }
+}

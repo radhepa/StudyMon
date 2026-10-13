@@ -34,6 +34,7 @@ const SUITES=[
   ['question banks',    'tools/check-questions.cjs'],
   ['side quest data',   'tools/check-side-quests.cjs'],
   ['handlers',          'tools/check-handlers.cjs'],
+  ['title screen',      'tools/check-title.cjs'],
   ['type chart',        'tools/check-typechart.cjs'],
   ['battle maths',      'tools/check-maths.cjs'],
   ['data integrity',    'tools/check-integrity.cjs'],

@@ -1,6 +1,6 @@
 /* Fresh README screenshots from the shipped app, in disposable browser storage.
    Start the local server, then run:
-     node tools/capture-readme.cjs http://127.0.0.1:8777/ [main|labs|extras]
+     node tools/capture-readme.cjs http://127.0.0.1:8777/ [title|main|labs|extras]
    No player profile or question bank is changed. */
 const assert = require('assert');
 const fs = require('fs');
@@ -84,11 +84,14 @@ const part = process.argv[3] || 'all';
       midtermSpecies: routeSpecies(C_REVISION_ROUTES[0]).length
     }));
     console.log('FACTS ' + JSON.stringify(facts));
-    if (part === 'all' || part === 'main') {
+    if (part === 'all' || part === 'main' || part === 'title') {
+      await reset();
       await page.setViewportSize({ width: 1280, height: 800 });
-      await page.evaluate(() => { localStorage.removeItem(SAVE_KEY); showScreen('title'); renderTitle(); });
+      await page.evaluate(() => { showScreen('title'); renderTitle(); });
       await page.waitForFunction(() => !document.querySelector('.title-mons').classList.contains('pending'));
       await shot('banner.png');
+    }
+    if (part === 'all' || part === 'main') {
       await page.setViewportSize({ width: 1280, height: 1000 });
       await reset(); await shot('map.jpg');
       await page.evaluate(() => {

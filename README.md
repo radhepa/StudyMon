@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="docs/screenshots/banner.png" alt="StudyMon's current title screen, with a blue sky, grassy hills and Pokémon companions" width="100%">
+<img src="docs/screenshots/banner.png" alt="StudyMon's title screen: a pixel-art mountain meadow and the trainer's current party" width="100%">
 
 ### A Pokémon-style adventure where every attack is a question.
 
@@ -26,7 +26,7 @@
 
 StudyMon turns course revision into a creature-collecting RPG. Pick a starter, explore a route, and meet a wild Pokémon. To use a move you have to **answer a question** from your course, and stronger moves ask harder questions. Win battles to level up and evolve your team, earn gym badges, and track your collection in a 1,046-entry Pokédex.
 
-The current app has a bright **handheld-inspired design**: a sky-and-grass title screen, crisp pixel labels, readable question text, and battle plates with gender markers, caught indicators, numeric HP and an EXP bar. Routes highlight your next chapter or weakest topic, and you can switch between **Course order** and **Weakest first**.
+The current app has a bright **handheld-inspired design**: a detailed pixel-art mountain meadow on the title screen, crisp pixel labels, readable question text, and battle plates with gender markers, caught indicators, numeric HP and an EXP bar. Your title-screen companions are always your saved party, in slot order, with their nicknames and shiny sprites. A new trainer sees the scenery until choosing a first partner. Use ↑ / ↓ and Enter, or tap the title menu, to start. Routes highlight your next chapter or weakest topic, and you can switch between **Course order** and **Weakest first**.
 
 It is built around two real university courses:
 
