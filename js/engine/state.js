@@ -43,6 +43,7 @@ function freshSave() {
     clock: 0,            // increments on every answered question; drives SRS due dates
     chapterStats: {},    // ch -> { r, w }
     totals: { r: 0, w: 0, battles: 0, wins: 0, caught: 0 },
+    shinyStudy: { answers: 0, correct: 0, total: 0, awaySince: 0 }, // one study session, across subjects
     streak: 0,
     bestStreak: 0,
     settings: { sound: true }
@@ -197,6 +198,7 @@ function activateSave(save) {
     if (typeof ensureLeaders === 'function') ensureLeaders();
     if (typeof ensureQuestFraming === 'function') ensureQuestFraming();
     if (typeof ensureWorldState === 'function') ensureWorldState();
+    if (typeof shinyStudyOnLoad === 'function') shinyStudyOnLoad();
   } catch (e) {
     S = previous;
     throw e;

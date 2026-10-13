@@ -1,0 +1,98 @@
+/* Pixel stars use the daylight palette and live with each sprite. HP plates
+   stay above them; every layer is decorative and lets pointer input through. */
+#battlefield .battle-type-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+#battlefield .battle-shiny-tag {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+  border: 1px solid #a57112;
+  border-radius: 4px;
+  background: #fff1bc;
+  color: #68420c;
+  font-family: var(--pixel);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: .45px;
+}
+
+#battlefield .battle-shiny-tag svg {
+  flex: none;
+  width: 11px;
+  height: 11px;
+  color: #ab6d09;
+}
+
+#battlefield .shiny-sparkles {
+  position: absolute;
+  inset: 0;
+  display: block;
+  pointer-events: none;
+  z-index: 1;
+}
+
+#battlefield .shiny-pixel-star {
+  position: absolute;
+  left: var(--shine-x);
+  top: var(--shine-y);
+  width: clamp(13px, 1.45vw, 23px);
+  height: clamp(13px, 1.45vw, 23px);
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+#battlefield .shiny-pixel-star svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  image-rendering: pixelated;
+}
+
+#battlefield .shiny-burst .shiny-pixel-star {
+  width: clamp(17px, 2vw, 30px);
+  height: clamp(17px, 2vw, 30px);
+  animation: shiny-star-burst 1s steps(6, end) var(--shine-delay) both;
+}
+
+#battlefield .shiny-ambient .shiny-pixel-star {
+  animation: shiny-star-twinkle 3.6s steps(3, end) calc(var(--shine-delay) * 4 + 1.3s) infinite both;
+}
+
+@keyframes shiny-star-burst {
+  0% { left: 50%; top: 46%; opacity: 0; transform: translate(-50%, -50%) scale(.25); }
+  15% { opacity: 1; }
+  40% { left: var(--shine-x); top: var(--shine-y); opacity: 1; transform: translate(-50%, -50%) scale(var(--shine-size)); }
+  70% { opacity: 1; transform: translate(-50%, -50%) scale(.85); }
+  100% { left: var(--shine-x); top: var(--shine-y); opacity: 0; transform: translate(-50%, -50%) scale(.25); }
+}
+
+@keyframes shiny-star-twinkle {
+  0%, 18%, 100% { opacity: 0; transform: translate(-50%, -50%) scale(.45); }
+  5%, 12% { opacity: 1; transform: translate(-50%, -50%) scale(var(--shine-size)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #battlefield .shiny-burst { display: none; }
+  #battlefield .shiny-ambient .shiny-pixel-star {
+    animation: none;
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+@media (max-width: 760px) {
+  #battlefield .battle-type-row { gap: 3px; margin-top: 3px; }
+  #battlefield .battle-shiny-tag { font-size: 9px; padding: 2px 4px; gap: 3px; letter-spacing: .25px; }
+  #battlefield .battle-shiny-tag svg { width: 9px; height: 9px; }
+}

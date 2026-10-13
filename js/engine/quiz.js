@@ -309,6 +309,7 @@ function reviewGap(plan, correct) {
 
 /* Record an answer and reschedule. */
 function recordAnswer(q, correct) {
+  if (typeof recordShinyStudyAnswer === 'function') recordShinyStudyAnswer(correct);
   S.clock++;
   S.activityClock = (Number(S.activityClock) || 0) + 1;
   var e = S.srs[q.id];

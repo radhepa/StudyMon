@@ -65,7 +65,7 @@ function startBattle(cfg) {
     : (B.leader ? B.leader + ' sent out ' + logName(foe()) + '!'
       : logName(foe()) + ' wants to battle!'));
   playCry(foe().id);
-  if (cfg.kind === 'wild' && foe().shiny) toast('✦ A shiny! Roughly one in a thousand. Do not let it get away.');
+  if (cfg.kind === 'wild' && foe().shiny) toast('✦ A shiny! Do not let it get away.');
   showMoveMenu();
 }
 
@@ -704,6 +704,7 @@ function resolveCatch(correct) {
     if (typeof journalCatch === 'function') journalCatch(f.id);
     if (typeof collectFirstCatch === 'function') collectFirstCatch();
     if (S.party.length < 6) S.party.push(f); else S.box.push(f);
+    if (f.shiny) resetShinyStudyBoost();
     B.over = true; B.caught = true; B.rollOn = true;
     playCry(f.id);
     saveGame();

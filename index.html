@@ -24,6 +24,8 @@
 <link rel="stylesheet" href="css/world.css?v=phase7-20260925">
 <link rel="stylesheet" href="css/daylight.css?v=party-meadow-20261012">
 <link rel="stylesheet" href="css/title.css?v=party-meadow-20261012">
+<link rel="stylesheet" href="css/battle-session.css?v=shiny-effects-20261013">
+<link rel="stylesheet" href="css/shiny-effects.css?v=shiny-effects-20261013">
 </head>
 <body data-screen="title">
 
@@ -80,7 +82,13 @@
 
   <!-- ================= BATTLE ================= -->
   <section id="s-battle" class="screen">
-    <h2 id="btitle"></h2>
+    <div class="battle-heading">
+      <h2 id="btitle"></h2>
+      <div class="battle-session-counter" role="status" aria-live="polite" aria-atomic="true">
+        <span class="battle-session-label">STUDY SESSION</span>
+        <span class="battle-session-value"><b id="battle-session-count">0 / 0</b> correct</span>
+      </div>
+    </div>
     <div id="battlefield"></div>
     <div id="battlelog"></div>
     <div id="quiz"></div>
@@ -201,13 +209,14 @@
 <script src="js/data/calc/calc-questions-boilerexams-exam1.js?v=sweep-20261007"></script>
 <script src="js/data/encounters.js?v=midterm-route-position-20261012"></script>
 <script src="js/data/items.js?v=phase3-economy-20260911"></script>
-<script src="js/engine/state.js?v=sweep-20261007"></script>
+<script src="js/engine/state.js?v=shiny-effects-20261013"></script>
 <script src="js/engine/subjects.js?v=midterm-route-20261012"></script>
 <script src="js/engine/question-format.js?v=sweep-20261007"></script>
-<script src="js/engine/mons.js?v=midterm-route-position-20261012"></script>
-<script src="js/engine/quiz.js?v=midterm-route-20261012"></script>
-<script src="js/engine/ui.js?v=party-title-20261012"></script>
-<script src="js/engine/battle.js?v=daylight-20261011"></script>
+<script src="js/engine/mons.js?v=shiny-effects-20261013"></script>
+<script src="js/engine/quiz.js?v=shiny-effects-20261013"></script>
+<script src="js/engine/shiny-effects.js?v=shiny-effects-20261013"></script>
+<script src="js/engine/ui.js?v=shiny-effects-20261013"></script>
+<script src="js/engine/battle.js?v=shiny-effects-20261013"></script>
 <script src="js/engine/shop.js?v=sweep-20261007"></script>
 <script src="js/engine/town.js?v=phase3-economy-20260911"></script>
 <script src="js/engine/pc.js?v=curriculum4-20260905"></script>

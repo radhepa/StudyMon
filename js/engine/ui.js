@@ -21,6 +21,7 @@ function toast(msg) {
 var TOWN_UI_ENABLED = false;
 var CUR = 'title';
 function showScreen(name) {
+  if (name !== 'battle' && typeof stopShinyBattleEffects === 'function') stopShinyBattleEffects();
   if(name !== 'quests' && typeof cancelCJob === 'function') cancelCJob();
   if(typeof LAB_SCENE !== 'undefined' && LAB_SCENE) closeLabScene(true);
   if(name !== 'kingdom' && typeof kingdomStop === 'function') kingdomStop(true);
@@ -29,6 +30,7 @@ function showScreen(name) {
     B.over=true; saveGame();
   }
   CUR = name;
+  setShinyStudyActive(shinyStudyScreenActive());
   $$('.screen').forEach(function (s) { s.classList.toggle('on', s.id === 's-' + name); });
   $$('#nav button').forEach(function (b) { b.classList.toggle('sel', b.dataset.scr === name); });
   var chrome = !(name === 'title' || name === 'starter');
@@ -99,16 +101,26 @@ function renderTopbar() {
 function hpPct(m) { return Math.max(0, Math.round(m.hp / maxHp(m) * 100)); }
 function hpClass(m) { var p = hpPct(m); return p <= 20 ? 'low' : p <= 50 ? 'mid' : ''; }
 
+function renderBattleSessionCounter() {
+  var counter = $('#battle-session-count');
+  if (!counter) return;
+  var study = ensureShinyStudy();
+  var correct = study ? study.correct : 0, total = study ? study.total : 0;
+  var value = correct.toLocaleString() + ' / ' + total.toLocaleString();
+  if (counter.textContent !== value) counter.textContent = value;
+}
+
 /* The scene is rebuilt only when a different Pokemon steps in. Otherwise the
    HP plates are updated in place, so a hit's shake, a faint's fade and the HP
    bar's slide all get to play instead of being replaced in the same frame. */
 function renderBattle() {
   if (!B) return;
+  renderBattleSessionCounter();
   var f = foe(), y = B.you;
   // the scene art is shared; a filter per battle kind keeps them distinct
   var field = $('#battlefield');
   field.className = 'bf-' + (B.kind || 'wild');
-  var key = B.foeIx + ':' + f.id + ':' + (f.shiny ? 1 : 0) + ':' + S.party.indexOf(y) + ':' + y.id;
+  var key = B.foeIx + ':' + f.id + ':' + (f.shiny ? 1 : 0) + ':' + S.party.indexOf(y) + ':' + y.id + ':' + (y.shiny ? 1 : 0);
   if (field._battle === B && field._key === key && $('#foeimg') && $('#youimg')) {
     updateHpBox(field.querySelector('.hpbox.foe'), f);
     updateHpBox(field.querySelector('.hpbox.you'), y);
@@ -120,12 +132,13 @@ function renderBattle() {
   field._key = key;
   $('#battlefield').innerHTML =
     hpBoxHtml(f, 'foe') +
-    '<div class="bf-slot bf-foe"><img id="foeimg" src="' + monSprite(f, f.shiny ? 'shiny' : 'front') + '" alt=""></div>' +
-    '<div class="bf-slot bf-you"><img id="youimg" src="' + spriteUrl(y.id, 'back') + '" alt=""></div>' +
+    '<div class="bf-slot bf-foe" data-shiny="' + !!f.shiny + '"><img id="foeimg" src="' + monSprite(f, f.shiny ? 'shiny' : 'front') + '" alt="' + esc((f.shiny ? 'Shiny ' : '') + monName(f)) + '"></div>' +
+    '<div class="bf-slot bf-you" data-shiny="' + !!y.shiny + '"><img id="youimg" src="' + spriteUrl(y.id, 'back') + '" alt="' + esc((y.shiny ? 'Shiny ' : '') + monName(y)) + '"></div>' +
     hpBoxHtml(y, 'you');
 
   seatSprite($('#foeimg'), $('.bf-foe'));
   seatSprite($('#youimg'), $('.bf-you'));
+  if (typeof renderShinyBattleEffects === 'function') renderShinyBattleEffects();
 
   $('#btitle').textContent = B.title;
   renderTopbar();
@@ -150,12 +163,17 @@ function genderHtml(m) {
   return g ? '<span class="gd ' + (g === 'M' ? 'male' : 'female') + '">' + GENDER_ICON[g] + '</span>' : '';
 }
 
+function battleShinyMarkerHtml(m) {
+  return m.shiny ? '<span class="battle-shiny-tag"><svg viewBox="0 0 12 12" aria-hidden="true" shape-rendering="crispEdges">' +
+    '<path d="M5 0h2v3h2v2h3v2H9v2H7v3H5V9H3V7H0V5h3V3h2z" fill="currentColor"/></svg>SHINY</span>' : '';
+}
+
 function hpBoxHtml(m, side) {
   var foeSide = side === 'foe';
   var h = '<div class="hpbox ' + side + '"><div class="nm">' +
     '<span class="nm-name"><span class="nm-text">' + esc(monName(m).toUpperCase()) + '</span>' + genderHtml(m) + '</span>' +
     '<span class="nm-lv">Lv' + m.lvl + '</span></div>' +
-    typePills(dexOf(m.id).types) +
+    '<div class="battle-type-row">' + typePills(dexOf(m.id).types) + battleShinyMarkerHtml(m) + '</div>' +
     '<div class="hp-row">' +
     (foeSide ? '<span class="ball-mark ' + (S.caught[m.id] ? 'caught' : 'uncaught') + '" title="' +
       (S.caught[m.id] ? 'Caught before' : 'Not caught yet') + '">' + BALL_ICON + '</span>' : '') +
@@ -1408,6 +1426,7 @@ function drillAnswer(choice, isFill) {
 
 function endDrill() {
   if (!D) return;
+  setShinyStudyActive(false);
   var pct = D.n ? Math.round(D.right / D.n * 100) : 0;
   if (D.exam) { showExamReport(pct); return; }
   modal('<h2>Session over</h2><p style="font-size:16px">' + D.right + ' of ' + D.n + ' correct (' + pct + '%)</p>' +

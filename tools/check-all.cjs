@@ -40,6 +40,8 @@ const SUITES=[
   ['data integrity',    'tools/check-integrity.cjs'],
   ['gameplay',          'tools/check-gameplay.cjs'],
   ['systems',           'tools/check-systems.cjs'],
+  ['shiny study',       'tools/check-shiny-study.cjs'],
+  ['battle shiny UI',   'tools/check-battle-shiny-ui.cjs'],
   ['midterm route',     'tools/check-midterm-route.cjs'],
   ['item registry',     'tools/check-items.cjs'],
   ['item distribution', 'tools/check-item-distribution.cjs'],

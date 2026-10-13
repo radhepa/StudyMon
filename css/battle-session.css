@@ -1,0 +1,64 @@
+/* The accuracy counter follows the study session, including subsequent battles. */
+#s-battle .battle-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+  margin-bottom: 16px;
+}
+html body #app #s-battle .battle-heading h2#btitle {
+  flex: 1 1 240px;
+  margin: 0;
+}
+.battle-session-counter {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 7px 14px;
+  border: 3px solid var(--dl-ink);
+  border-radius: 9px;
+  background: var(--dl-good-bg);
+  color: var(--dl-ink);
+  box-shadow: 0 3px 0 var(--dl-ink);
+  line-height: 1.2;
+  flex: 0 1 auto;
+  min-width: 0;
+}
+.battle-session-label {
+  font-family: var(--pixel);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: #275D35;
+}
+.battle-session-value { font-family: var(--pixel); font-size: 17px; }
+.battle-session-value b {
+  font-family: var(--read);
+  font-size: 21px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+@media (max-width: 760px) {
+  #s-battle .battle-heading { gap: 8px; margin-bottom: 14px; }
+  html body #app #s-battle .battle-heading h2#btitle { flex-basis: 100%; font-size: 23px; }
+  .battle-session-counter { flex-direction: row; align-items: center; flex-wrap: wrap; gap: 5px 12px; padding: 5px 10px; }
+  .battle-session-label { font-size: 11px; }
+  .battle-session-value { font-size: 15px; }
+  .battle-session-value b { font-size: 18px; }
+  /* Give the two plates their own corners and keep the shiny entrance visible.
+     The narrower crop needs its own anchors rather than the desktop clearing's. */
+  html body #app #battlefield {
+    aspect-ratio: 1;
+    max-width: none;
+  }
+  #battlefield .bf-foe { left: 72%; top: 40%; height: 32%; }
+  #battlefield .bf-you { left: 27%; top: 89%; height: 39%; }
+  #battlefield .bf-slot img { height: 100%; }
+  html body #app #battlefield .hpbox .nm { font-size: 12px; }
+  html body #app #battlefield .hpbox .nm > span.nm-lv:last-child { font-size: 11px; }
+  html body #app #battlefield .hpbox .gd-ic { width: 12px; height: 12px; }
+}
+@media (max-width: 360px) {
+  #battlefield .bf-foe { top: 33%; }
+}

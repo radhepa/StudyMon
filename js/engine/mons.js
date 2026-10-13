@@ -29,9 +29,116 @@ function titleCase(s) {
 
 /* ---- instance creation ------------------------------------------------- */
 
-/* One in a thousand. Rare enough that finding one is worth stopping for, which
-   is the point: the odds are what make it feel earned. */
+/* Wild shiny odds rise evenly with every answer, including wrong answers.
+   A shiny catch starts the next run. The grace period is deliberately silent. */
 var SHINY_RATE = 1 / 1000;
+var SHINY_STUDY_CAP = 0.03;
+var SHINY_STUDY_ANSWERS = 100;
+var SHINY_STUDY_GRACE_MS = 20000;
+var _shinyStudyActive = false;
+var _shinyStudyTimer = null;
+
+function ensureShinyStudy() {
+  if (!S) return null;
+  var study = S.shinyStudy;
+  if (!study || typeof study !== 'object' || Array.isArray(study)) {
+    study = S.shinyStudy = { answers: 0, correct: 0, total: 0, awaySince: 0 };
+  }
+  study.answers = Number.isFinite(study.answers) ?
+    Math.max(0, Math.min(SHINY_STUDY_ANSWERS, Math.floor(study.answers))) : 0;
+  // Session accuracy continues beyond the odds cap and through a shiny catch.
+  study.total = Number.isFinite(study.total) ?
+    Math.max(0, Math.min(Number.MAX_SAFE_INTEGER, Math.floor(study.total))) : 0;
+  study.correct = Number.isFinite(study.correct) ?
+    Math.max(0, Math.min(study.total, Math.floor(study.correct))) : 0;
+  study.awaySince = Number.isFinite(study.awaySince) && study.awaySince > 0 ?
+    Math.min(study.awaySince, Date.now()) : 0;
+  return study;
+}
+
+function resetShinyStudy() {
+  clearTimeout(_shinyStudyTimer);
+  _shinyStudyTimer = null;
+  var study = ensureShinyStudy();
+  if (study) { study.answers = 0; study.correct = 0; study.total = 0; study.awaySince = 0; }
+  if (typeof renderBattleSessionCounter === 'function') renderBattleSessionCounter();
+}
+
+function resetShinyStudyBoost() {
+  var study = ensureShinyStudy();
+  if (study) study.answers = 0;
+}
+
+/* Check wall time as well as the timeout: background tabs can throttle timers,
+   and a closed page must still expire while no JavaScript is running. */
+function expireShinyStudy() {
+  var study = ensureShinyStudy();
+  if (!study || !study.awaySince || Date.now() - study.awaySince < SHINY_STUDY_GRACE_MS) return false;
+  resetShinyStudy();
+  saveGame();
+  return true;
+}
+
+function scheduleShinyStudyExpiry() {
+  clearTimeout(_shinyStudyTimer);
+  _shinyStudyTimer = null;
+  var study = ensureShinyStudy();
+  if (!study || !(study.answers || study.total) || !study.awaySince) return;
+  _shinyStudyTimer = setTimeout(function () {
+    _shinyStudyTimer = null;
+    if (!expireShinyStudy()) scheduleShinyStudyExpiry();
+  }, Math.max(0, SHINY_STUDY_GRACE_MS - (Date.now() - study.awaySince)));
+}
+
+function shinyStudyScreenActive() {
+  return CUR === 'battle' || (CUR === 'drill' && !!D) || CUR === 'study' || CUR === 'quests';
+}
+
+function setShinyStudyActive(active) {
+  _shinyStudyActive = !!active && !document.hidden;
+  var study = ensureShinyStudy();
+  if (!study) return;
+  expireShinyStudy();
+  var before = study.awaySince;
+  if (_shinyStudyActive) study.awaySince = 0;
+  else if ((study.answers || study.total) && !study.awaySince) study.awaySince = Date.now();
+  scheduleShinyStudyExpiry();
+  if (before !== study.awaySince) saveGame();
+}
+
+function recordShinyStudyAnswer(correct) {
+  setShinyStudyActive(shinyStudyScreenActive());
+  var study = ensureShinyStudy();
+  if (!study || !_shinyStudyActive) return;
+  study.answers = Math.min(SHINY_STUDY_ANSWERS, study.answers + 1);
+  study.total = Math.min(Number.MAX_SAFE_INTEGER, study.total + 1);
+  if (correct) study.correct = Math.min(study.total, study.correct + 1);
+  if (typeof renderBattleSessionCounter === 'function') renderBattleSessionCounter();
+}
+
+function wildShinyRate() {
+  expireShinyStudy();
+  var study = ensureShinyStudy();
+  return Math.min(SHINY_STUDY_CAP, SHINY_RATE + (SHINY_STUDY_CAP - SHINY_RATE) *
+    (study ? study.answers : 0) / SHINY_STUDY_ANSWERS);
+}
+
+function shinyStudyOnLoad() {
+  _shinyStudyActive = false;
+  clearTimeout(_shinyStudyTimer);
+  var study = ensureShinyStudy();
+  if (!study) return;
+  // Loading starts at the title/map. Returning to a study screen ends the grace period.
+  if ((study.answers || study.total) && !study.awaySince) study.awaySince = Date.now();
+  expireShinyStudy();
+  scheduleShinyStudyExpiry();
+}
+
+document.addEventListener('visibilitychange', function () {
+  setShinyStudyActive(!document.hidden && shinyStudyScreenActive());
+});
+window.addEventListener('pagehide', function () { setShinyStudyActive(false); });
+window.addEventListener('pageshow', function () { setShinyStudyActive(shinyStudyScreenActive()); });
 
 function makeMon(id, level, opts) {
   opts = opts || {};
@@ -41,7 +148,7 @@ function makeMon(id, level, opts) {
     lvl: level,
     xp: 0,
     shiny: d.shiny === false ? false :
-      (opts.shiny !== undefined ? opts.shiny : (Math.random() < SHINY_RATE)),
+      (opts.shiny !== undefined ? opts.shiny : (Math.random() < (opts.wild ? wildShinyRate() : SHINY_RATE))),
     nick: null,
     gender: rollGender(id),
     hp: 0
@@ -383,7 +490,7 @@ function legendaryFor(chapter) {
   });
   var bag = (matched.length && Math.random() > 0.25) ? matched : all;
   if (!bag.length) return null;
-  return makeMon(pick(bag).id, clampLvl(playerLevel() + 5));
+  return makeMon(pick(bag).id, clampLvl(playerLevel() + 5), { wild: true });
 }
 
 /* The fixed table of what lives on a route, common first. */
@@ -411,7 +518,7 @@ function wildFor(chapter) {
 
   if (!table.length) {                       // a region with no table yet
     var pool = opponentPool(chapter.teamTypes, Math.max(partyCapBst() * 1.02, 320 + badgeCount() * 25));
-    return makeMon(pool[Math.floor(Math.random() * pool.length)].id, lvl);
+    return makeMon(pool[Math.floor(Math.random() * pool.length)].id, lvl, { wild: true });
   }
 
   var weights = window.RARITY_WEIGHT || { common: 10, uncommon: 4, rare: 1 };
@@ -420,9 +527,9 @@ function wildFor(chapter) {
   var roll = Math.random() * total;
   for (i = 0; i < table.length; i++) {
     roll -= weights[table[i][1]] || 1;
-    if (roll <= 0) return makeMon(table[i][0], lvl);
+    if (roll <= 0) return makeMon(table[i][0], lvl, { wild: true });
   }
-  return makeMon(table[table.length - 1][0], lvl);
+  return makeMon(table[table.length - 1][0], lvl, { wild: true });
 }
 
 /* Gym leader team: three type-matched species, the ace last and strongest.
