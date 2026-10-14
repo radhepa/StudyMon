@@ -187,7 +187,8 @@ function renderQuestion() {
   h += '<span class="qtag">' + (q.tag || 'Question') + '</span>';
   if (B.qReview) h += '<span class="qtag srs">Review</span>';
   h += '<span>Ch ' + chNum + ' · ' + esc(chapterTitle(chNum)) + '</span>';
-  h += '<span class="spacer"></span><span>' + B.pendingMove.label + ' · tier ' + q.t + '</span>' + questionCopyButton('battle');
+  h += '<span class="spacer"></span><span>' + B.pendingMove.label + ' · tier ' + q.t + '</span>' + questionCopyButton('battle') +
+    (typeof questionDataButton === 'function' ? questionDataButton(q) : '');
   h += '</div>';
 
   h += '<div class="qtext">' + questionHtml(q, q.q) + '</div>';
@@ -203,7 +204,7 @@ function renderQuestion() {
       '<button class="choice" id="ch1" onclick="answer(1)"><span class="k">↺</span><span>I need to review it</span></button>' +
       '</div></div></div>';
   } else if (q.k === 'fill') {
-    h += '<div class="fillwrap"><input id="fillin" autocomplete="off" spellcheck="false" placeholder="type your answer">' +
+    h += '<div class="fillwrap"><input id="fillin" autocomplete="off" spellcheck="false" placeholder="' + (q.match === 'number' ? 'type a number, e.g. 3.13e-19' : 'type your answer') + '">' +
       '<button class="primary" onclick="submitFill()">Attack</button></div>';
   } else {
     var letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];

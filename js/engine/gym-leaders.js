@@ -34,8 +34,16 @@ function leaderSubjectDef(subject) {
   if (window.SUBJECTS && SUBJECTS[subject]) return SUBJECTS[subject];
   if (subject === 'calc') return { CHAPTERS: window.CALC_CHAPTERS || [], ELITE: window.CALC_ELITE || [],
     LOCATIONS: window.CALC_LOCATIONS || [], GYM_DIALOGUE: window.CALC_GYM_DIALOGUE || {} };
+  if (subject === 'chem') return { CHAPTERS: window.CHEM_CHAPTERS || [], ELITE: window.CHEM_ELITE || [],
+    LOCATIONS: window.CHEM_LOCATIONS || [], GYM_DIALOGUE: window.CHEM_GYM_DIALOGUE || {} };
   return { CHAPTERS: window.CHAPTERS || [], ELITE: window.ELITE || [], LOCATIONS: window.LOCATIONS || [],
     GYM_DIALOGUE: window.GYM_DIALOGUE || {} };
+}
+
+/* Every subject that has gym leaders: the two original regions, plus the
+   Periodic Coast when its data is loaded. */
+function leaderSubjectIds() {
+  return ['c', 'calc'].concat(window.CHEM_CHAPTERS ? ['chem'] : []);
 }
 
 function leaderBossAfter(subject, boss) {
@@ -66,7 +74,7 @@ function gymLeaderRegistry() {
   if (typeof castEntries !== 'function') return [];
   var profiles = window.GYM_LEADER_PROFILES || {}, portraits = window.LEADER_PORTRAITS || {};
   var order = {};
-  ['c', 'calc'].forEach(function (subject) {
+  leaderSubjectIds().forEach(function (subject) {
     leaderStops(subject).forEach(function (id, i) { order[id] = i + 1; });
   });
   var out = castEntries({ sourceKind: ['gym-leader', 'boss'] }).map(function (entry) {
@@ -82,7 +90,7 @@ function gymLeaderRegistry() {
       portrait: portraits[entry.name] || null
     });
   });
-  if (window.SUBJECTS && SUBJECTS.c && SUBJECTS.calc) LEADER_REGISTRY_CACHE = out;
+  if (window.SUBJECTS && SUBJECTS.c && SUBJECTS.calc && (SUBJECTS.chem || !window.CHEM_SUBJECT)) LEADER_REGISTRY_CACHE = out;
   return out;
 }
 
@@ -217,6 +225,7 @@ function leaderHomeLabel(leader) {
     var route = String(source.route || '');
     return 'the gym on ' + (route.indexOf(' - ') >= 0 ? route.split(' - ')[1] : route || 'their route');
   }
+  if (leader.subject === 'chem') return 'Elliott Hall';
   return leader.subject === 'calc' ? 'the Exam Hall' : 'Victory Road';
 }
 
@@ -514,9 +523,9 @@ function renderLeaderHub(castId, line, note) {
     '<p class="leader-where">' + (where.away ? 'Out today at <b>' + esc(where.name) + '</b>' : 'At <b>' + esc(where.name) + '</b>') + '</p>' +
     (greeting ? '<p class="scene-prose">' + esc(greeting.text) + '</p>' : '') +
     (note ? '<p class="small">' + esc(note) + '</p>' : '') +
-    '<p class="small">' + esc(friendNote) + '</p>' +
+    (FRIENDS_ENABLED ? '<p class="small">' + esc(friendNote) + '</p>' +
     '<div class="row leader-actions"><button onclick="leaderChat(\'' + castId + '\')">Have a chat</button>' +
-    '<button class="ghost" onclick="closeModal();openFriend(\'' + castId + '\')">Friendship and gifts</button></div>' +
+    '<button class="ghost" onclick="closeModal();openFriend(\'' + castId + '\')">Friendship and gifts</button></div>' : '') +
     leaderRematchPanel(leader) +
     '<div class="row"><button class="ghost" onclick="closeModal()">Leave</button></div></div>');
 }
@@ -586,11 +595,13 @@ function validateGymLeaderRegistry() {
   var errors = [], warnings = [], seenText = {}, names = {};
   var registry = gymLeaderRegistry();
   var townIds = {};
-  ['c', 'calc'].forEach(function (subject) {
+  leaderSubjectIds().forEach(function (subject) {
     (leaderSubjectDef(subject).TOWNSFOLK || []).forEach(function (p) { townIds[p.id] = subject; });
   });
   (window.TRAINERS || []).forEach(function (t) { townIds[t.id] = 'companion'; });
-  if (registry.length !== 34) errors.push('expected 34 gym leaders and bosses, found ' + registry.length);
+  // 34 in the C region and the Isles, plus one per Periodic Coast gym and boss
+  var expected = 34 + (window.CHEM_CHAPTERS ? CHEM_CHAPTERS.length + (window.CHEM_ELITE || []).length : 0);
+  if (registry.length !== expected) errors.push('expected ' + expected + ' gym leaders and bosses, found ' + registry.length);
   registry.forEach(function (leader) {
     var id = leader.castId, p = leader.profile;
     if (townIds[id]) errors.push(id + ': cast ID collides with a townsfolk or companion ID');

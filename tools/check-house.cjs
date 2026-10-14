@@ -195,7 +195,14 @@ const { chromium } = require('./playwright.cjs');
     const chip = document.querySelector('#topbar .region-chip');
     if (!chip) return { missing: true };
     const outLabel = chip.getAttribute('aria-label');
+    // With three regions the button opens the berth; the crossing is one more click.
+    const pick = (region) => {
+      const dest = [...document.querySelectorAll('.ferry-dest')].find(b => b.textContent.includes(region));
+      if (dest) dest.click();
+      return !!dest;
+    };
     chip.click();
+    const chose = pick('Converging Isles');
     const midway = activeSubject();
     const voyage = !!document.getElementById('ferry-voyage');
     const outMs = await landed('calc');
@@ -203,14 +210,15 @@ const { chromium } = require('./playwright.cjs');
     const back = document.querySelector('#topbar .region-chip');
     const backLabel = back && back.getAttribute('aria-label');
     if (back) back.click();
+    const choseBack = pick('C-Region');
     const backMs = await landed('c');
-    return { before, outLabel, midway, voyage, outMs, there, backLabel, backMs, home: activeSubject() };
+    return { before, outLabel, chose, midway, voyage, outMs, there, backLabel, choseBack, backMs, home: activeSubject() };
   });
-  ok('the topbar carries a one-click crossing to the calculus region',
-     !warp.missing && warp.before === 'c' && /Converging Isles/.test(warp.outLabel) && warp.there === 'calc', warp);
+  ok('the topbar ferry opens the berth and sails to the chosen region',
+     !warp.missing && warp.before === 'c' && /ferry/i.test(warp.outLabel) && warp.chose && warp.there === 'calc', warp);
   ok('the voyage plays first and you arrive when it lands',
      warp.voyage && warp.midway === 'c' && warp.outMs >= 2000, warp);
-  ok('and the same ferry button brings you back', /C-Region/.test(warp.backLabel || '') && warp.home === 'c' && warp.backMs > 0, warp);
+  ok('and the same ferry button brings you back', /ferry/i.test(warp.backLabel || '') && warp.choseBack && warp.home === 'c' && warp.backMs > 0, warp);
 
   /* ---- persistence ------------------------------------------------------- */
   const persisted = await page.evaluate(() => {

@@ -18,7 +18,8 @@ require('../js/data/fakemon.js');
 require('../js/data/world.js');
 require('../js/data/c-midterm.js');
 require('../js/data/calc/calc-world.js');
-const { DEX, CHAPTERS, CALC_CHAPTERS, CALC_EXAM_CHAPTERS } = global.window;
+require('../js/data/chem/chem-world.js');
+const { DEX, CHAPTERS, CALC_CHAPTERS, CALC_EXAM_CHAPTERS, CHEM_CHAPTERS, CHEM_EXAM_CHAPTERS, CHEM_ELITE } = global.window;
 
 const byId = {};
 DEX.forEach(d => { byId[d.id] = d; });
@@ -171,9 +172,23 @@ addFixedEncounter(k, 8, [1038, 'uncommon']);   // Kilnscarab
 addFixedEncounter(k, 9, [1032, 'uncommon']);   // Budloth
 addFixedEncounter(k, 10, [1044, 'uncommon']);  // Cairnkid
 
+/* The Periodic Coast: thirteen gym routes, then one revision route per exam.
+   Each revision route sits on the strength band of the point in the schedule
+   where its exam falls (right after the gym it follows), and gets the same 4x
+   table as Revision Route I because it draws on the whole exam's questions.
+   Built after the other two regions, with its own `used` set, so nothing
+   above changes when this region is rebuilt. */
+const hUsed = {};
+const h = buildRegion(CHEM_CHAPTERS, 'Periodic Coast', 9000, null, hUsed);
+(CHEM_EXAM_CHAPTERS || []).forEach(ch => {
+  const exam = (CHEM_ELITE || []).filter(e => e.id === ch.exam)[0];
+  const at = exam ? Math.min(exam.after, CHEM_CHAPTERS.length - 1) : CHEM_CHAPTERS.length - 1;
+  Object.assign(h, buildRegion([ch], 'Chem revision ' + ch.n, 9000, () => at / (CHEM_CHAPTERS.length - 1), hUsed, REVISION_RARITY));
+});
+
 const every = new Set();
-[c, k].forEach(r => Object.values(r).forEach(t => t.forEach(x => every.add(x[0]))));
-console.log('total distinct species across both regions: ' + every.size + ' of ' + DEX.length);
+[c, k, h].forEach(r => Object.values(r).forEach(t => t.forEach(x => every.add(x[0]))));
+console.log('total distinct species across all regions: ' + every.size + ' of ' + DEX.length);
 
 const fmt = reg => Object.keys(reg).sort((a, b) => a - b)
   .map(n => '  ' + n + ': ' + JSON.stringify(reg[n]).replace(/","/g, '","')).join(',\n');
@@ -193,6 +208,9 @@ ${fmt(c)}
  },
  calc: {
 ${fmt(k)}
+ },
+ chem: {
+${fmt(h)}
  }
 };
 window.RARITY_WEIGHT = { common: 10, uncommon: 4, rare: 1 };

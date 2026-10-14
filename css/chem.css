@@ -1,0 +1,49 @@
+/* The Periodic Coast: the data sheet overlay and the chemistry course chip. */
+
+#chem-datasheet {
+  position: fixed; inset: 0; z-index: 9000;
+  background: rgba(27, 27, 47, .45);
+  display: flex; align-items: flex-start; justify-content: center;
+  padding: 18px 12px; overflow: auto;
+}
+#chem-datasheet .ds-card {
+  background: var(--dl-paper, #FBF7EA); color: var(--dl-ink, #1B1B2F);
+  border: 3px solid var(--dl-ink, #1B1B2F); border-radius: 14px;
+  box-shadow: var(--dl-shadow, 0 6px 0 #1B1B2F);
+  width: min(1100px, 100%); max-height: calc(100vh - 36px);
+  display: flex; flex-direction: column;
+  font-family: var(--read, system-ui, sans-serif);
+}
+#chem-datasheet .ds-head {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; border-bottom: 2px solid var(--dl-line, #EDE5CC);
+}
+#chem-datasheet .ds-head b { font-family: var(--pixel, inherit); font-size: 18px; }
+#chem-datasheet .ds-head .spacer { flex: 1; }
+#chem-datasheet .ds-body { overflow: auto; padding: 12px 14px 16px; }
+#chem-datasheet h4 { margin: 14px 0 6px; font-family: var(--pixel, inherit); }
+#chem-datasheet table { border-collapse: collapse; width: 100%; font-size: 13px; }
+#chem-datasheet th, #chem-datasheet td {
+  text-align: left; vertical-align: top; padding: 4px 6px;
+  border-bottom: 1px solid var(--dl-line, #EDE5CC);
+}
+#chem-datasheet th { width: 34%; font-weight: 700; color: var(--dl-muted, #4A4536); }
+#chem-datasheet .ds-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0 18px; }
+@media (max-width: 760px) { #chem-datasheet .ds-cols { grid-template-columns: 1fr; } }
+
+.pt-grid {
+  display: grid; grid-template-columns: repeat(18, minmax(0, 1fr));
+  grid-template-rows: repeat(7, auto) 8px auto auto; gap: 2px;
+  font-size: 10px; min-width: 640px;
+}
+.pt-el {
+  background: var(--dl-card, #fff); border: 1px solid var(--dl-line, #EDE5CC);
+  border-radius: 4px; padding: 1px 2px 2px; text-align: center; line-height: 1.15;
+}
+.pt-el.f { background: var(--dl-hover, #FFF1C9); }
+.pt-el b { display: block; font-size: 13px; }
+.pt-el .pt-z { display: block; text-align: left; font-size: 9px; color: var(--dl-muted, #4A4536); }
+.pt-el .pt-m { display: block; font-family: var(--mono, monospace); font-size: 9px; }
+
+.qhead .qdata { margin-left: 6px; }
+#app .dl-title .t-course.chem { background: #2e8b57; }

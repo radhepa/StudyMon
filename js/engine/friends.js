@@ -449,6 +449,7 @@ function friendAwardMessage(result) {
 function awardFriendship(id,action,context) {
   context=context||{};var m=castMember(id),f=S.friends&&S.friends[id],gate={allowed:true,reason:null,wait:0};
   var result={accepted:false,action:action,change:0,base:0,multiplier:1,reason:null,wait:0};
+  if(typeof FRIENDS_ENABLED!=='undefined'&&!FRIENDS_ENABLED){result.reason='archived';result.message='';return result;}
   if(!m){result.reason='unknown-character';result.message=friendAwardMessage(result);return result;}
   if(action==='meet')gate=friendMeetingGate(id);
   else {
@@ -486,6 +487,7 @@ function awardFriendship(id,action,context) {
 }
 
 function syncFriendStory(){
+  if(typeof FRIENDS_ENABLED!=='undefined'&&!FRIENDS_ENABLED)return;   // archived feature
   ensureFriends();var badges=badgeCount(),subject=activeSubject(),changed=false;
   var all=(typeof castEntries==='function'?castEntries({befriendable:true}):[]).map(function(entry){return entry.id;});
   /* Badges drift you closer to people you have actually met. Companions travel
@@ -521,7 +523,7 @@ function friendArt(t){
   return face +
          (mon ? '<img class="trainer-partner" src="'+artUrl(mon)+'" alt="'+esc(titleCase(dexOf(mon).name))+'">' : '');
 }
-function openFriends(){showScreen('friends');renderFriends();}
+function openFriends(){if(typeof FRIENDS_ENABLED!=='undefined'&&!FRIENDS_ENABLED)return;showScreen('friends');renderFriends();}
 function renderFriends(){
   syncFriendStory();var h='<h2>People around town</h2><p class="muted">A few familiar faces between routes. Stop for a chat, arrange a practice match, or make plans for the afternoon.</p>'+(typeof relationshipWebButtonHtml==='function'?relationshipWebButtonHtml():'');
   if(S.friendScene&&castMember(S.friendScene.id)){
@@ -558,6 +560,7 @@ function renderFriends(){
   $('#s-friends').innerHTML=h;
 }
 function openFriend(id){
+  if(typeof FRIENDS_ENABLED!=='undefined'&&!FRIENDS_ENABLED)return;   // archived feature
   var m=castMember(id); if(!m) return;
   syncFriendStory(); var f=friendship(id);
   if(!f)return;
@@ -628,6 +631,7 @@ function openFriend(id){
 function talkFriend(id){var m=castMember(id);if(!m)return;var t=m.source,f=friendship(id);if(!f||!f.met)return;var result=awardFriendship(id,'talk',{source:'friend',countMeeting:true});var authored=(typeof selectCharacterDialogue==='function'?selectCharacterDialogue(id):null)||(typeof leaderSocialLine==='function'?leaderSocialLine(id):null);var line=authored?authored.text:(m.companion?t.talk[Math.max(0,f.talks-1)%t.talk.length]:(t.tip||t.say));var rumor=typeof rumorAsideHtml==='function'?rumorAsideHtml(id):'';if(result.accepted||rumor)saveGame();modal('<h2>'+esc(m.name)+'</h2><p class="scene-prose">'+esc(line)+'</p><p class="small">'+esc(result.message)+'</p>'+rumor+'<button class="primary" onclick="closeModal();openFriend(\''+id+'\')">See you around</button>');}
 function chooseOuting(id){var m=castMember(id);if(!m||!m.companion)return;var t=m.source,gate=friendActivityGate(id,'outing');if(!gate.allowed)return;if(S.friendScene){renderFriendScene();return;}var h='<h2>Where to?</h2><p>'+t.name+' has some time this afternoon.</p><div class="outing-options">';t.outings.forEach(function(e,i){var scene=sceneBeats(id,'outing',i);h+='<button onclick="closeModal();startFriendScene(\''+id+'\',\'outing\',\''+scene.id+'\')">'+esc(e[0])+'<small>'+esc(e[1])+'</small></button>';});h+='</div><button class="ghost" onclick="closeModal()">Another time</button>';modal(h);}
 function startFriendScene(id,kind,sceneRef){
+  if(typeof FRIENDS_ENABLED!=='undefined'&&!FRIENDS_ENABLED)return;   // archived feature
   var m=castMember(id);if(!m)return;var t=m.source;var f=friendship(id);if(!f||!f.met)return;
   if(S.friendScene){renderFriendScene();return;}
   if(!m.befriendable)return;

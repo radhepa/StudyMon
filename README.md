@@ -4,19 +4,19 @@
 
 ### A Pokémon-style adventure where every attack is a question.
 
-**Learn C programming and Calculus II by catching, battling and exploring your way through two whole regions.**
+**Learn C programming, Calculus II and General Chemistry by catching, battling and exploring your way through three whole regions.**
 
 <br>
 
 ![1,046 Pokémon](https://img.shields.io/badge/Pok%C3%A9mon-1%2C046-F2C14E?style=for-the-badge&labelColor=1B1B2F)
-![2,842 questions](https://img.shields.io/badge/questions-2%2C842-2F6FD0?style=for-the-badge&labelColor=1B1B2F)
+![6,012 questions](https://img.shields.io/badge/questions-6%2C012-2F6FD0?style=for-the-badge&labelColor=1B1B2F)
 ![49 side quests](https://img.shields.io/badge/side%20quests-49-5DB04A?style=for-the-badge&labelColor=1B1B2F)
 ![Runs offline](https://img.shields.io/badge/runs-offline-2F6FD0?style=for-the-badge&labelColor=1B1B2F)
 ![No build step](https://img.shields.io/badge/build%20step-none-8a6d9c?style=for-the-badge&labelColor=1B1B2F)
 
 <br>
 
-[**Play it**](#-play-it) &nbsp;·&nbsp; [How battles work](#-every-attack-is-a-question) &nbsp;·&nbsp; [Two regions](#-two-regions-two-courses) &nbsp;·&nbsp; [Midterm revision](#-c-midterm-revision-route) &nbsp;·&nbsp; [Study tools](#-the-study-tools) &nbsp;·&nbsp; [Side Quests](#-side-quests-write-real-c) &nbsp;·&nbsp; [Collecting](#-gotta-study-em-all) &nbsp;·&nbsp; [Kingdom](#-pokémon-kingdom) &nbsp;·&nbsp; [Under the hood](#-under-the-hood)
+[**Play it**](#-play-it) &nbsp;·&nbsp; [How battles work](#-every-attack-is-a-question) &nbsp;·&nbsp; [Three regions](#-three-regions-three-courses) &nbsp;·&nbsp; [Midterm revision](#-c-midterm-revision-route) &nbsp;·&nbsp; [Study tools](#-the-study-tools) &nbsp;·&nbsp; [Side Quests](#-side-quests-write-real-c) &nbsp;·&nbsp; [Collecting](#-gotta-study-em-all) &nbsp;·&nbsp; [Kingdom](#-pokémon-kingdom) &nbsp;·&nbsp; [Under the hood](#-under-the-hood)
 
 </div>
 
@@ -28,14 +28,14 @@ StudyMon turns course revision into a creature-collecting RPG. Pick a starter, e
 
 The current app has a bright **handheld-inspired design**: a detailed pixel-art mountain meadow on the title screen, crisp pixel labels, readable question text, and battle plates with gender markers, caught indicators, numeric HP and an EXP bar. Your title-screen companions are always your saved party, in slot order, with their nicknames and shiny sprites. A new trainer sees the scenery until choosing a first partner. Use ↑ / ↓ and Enter, or tap the title menu, to start. Routes highlight your next chapter or weakest topic, and you can switch between **Course order** and **Weakest first**.
 
-It is built around two real university courses:
+It is built around three real university courses:
 
-| | **The C-Region** | **The Converging Isles** |
-|---|---|---|
-| **Subject** | C programming | Calculus II |
-| **Follows** | *Computer Science: A Structured Programming Approach in C*, Forouzan & Afyouni, 4th ed. | The Calculus II syllabus: vectors through series, Taylor and polar coordinates |
-| **World** | 15 chapter routes, 15 gyms, a Midterm Revision Route, an Elite Four and a Champion | 10 quiz routes, 10 gyms, 3 evening exams and a Final, each with a revision route |
-| **Questions** | 1,025 | 1,735 |
+| | **The C-Region** | **The Converging Isles** | **The Periodic Coast** |
+|---|---|---|---|
+| **Subject** | C programming | Calculus II | General Chemistry I |
+| **Follows** | *Computer Science: A Structured Programming Approach in C*, Forouzan & Afyouni, 4th ed. | The Calculus II syllabus: vectors through series, Taylor and polar coordinates | CHM 11510 with Silberberg & Amateis, *Chemistry*, 10th ed.: measurement through nuclear chemistry |
+| **World** | 15 chapter routes, 15 gyms, a Midterm Revision Route, an Elite Four and a Champion | 10 quiz routes, 10 gyms, 3 evening exams and a Final, each with a revision route | 13 lecture-topic routes, 13 gyms, 3 evening exams and a Final, each with a revision route and a timed mock exam |
+| **Questions** | 1,745 | 2,144 | 2,123 |
 
 Everything runs locally in your browser, with no account or build step. Once the repository is downloaded, the game, music and C compiler work offline. Progress is saved in that browser.
 
@@ -46,9 +46,9 @@ Everything runs locally in your browser, with no account or build step. Once the
 | Feature | What you get |
 |---|---|
 | 🐾 **1,046 Pokémon** | All 1,025 official species, each with front, back and shiny sprites and cries, plus **21 original StudyMon creatures** |
-| 📚 **2,842 questions** | Every one with an explanation of *why*, not just which letter was right |
-| 🏟 **25 gyms** | One per chapter in the C-Region, one per quiz in the Converging Isles, each led by a named Gym Leader |
-| 📝 **C midterm revision** | 696 questions and the 60 Pokémon from Routes 1–5, in a practice route between Chapters 7 and 8 |
+| 📚 **6,012 questions** | Every one with an explanation of *why*, not just which letter was right |
+| 🏟 **38 gyms** | One per chapter in the C-Region, one per quiz in the Converging Isles, one per lecture topic on the Periodic Coast, each led by a named Gym Leader |
+| 📝 **C midterm revision** | 1,292 questions and the 60 Pokémon from Routes 1–5, in a practice route between Chapters 7 and 8 |
 | 💻 **49 Side Quests** | Write real C in the game, compiled by Clang inside your browser and graded against hidden tests |
 | 🎬 **98 cutscenes** | Every Side Quest has an opening and a closing scene, with portraits and painted backdrops |
 | 🌿 **Pokémon Kingdom** | A living pixel-art forest town where your whole collection wanders, with day, night and rain |
@@ -93,7 +93,7 @@ Keyboard friendly: `1`–`4` or `A`–`D` to answer, `Enter` to continue.
 
 <br>
 
-## ✦ Two regions, two courses
+## ✦ Three regions, three courses
 
 <table>
 <tr>
@@ -105,6 +105,8 @@ Keyboard friendly: `1`–`4` or `A`–`D` to answer, `Enter` to continue.
 <td align="center"><sub><b>The Converging Isles.</b> Gym leaders have portraits, and every gym and evening exam is open from day one.</sub></td>
 </tr>
 </table>
+
+Past-exam practice: each region also holds original questions modelled on the skills tested in past Purdue exams for its course - the same skill, difficulty and traps, with new numbers, molecules and code, and two versions of every question most students missed. No exam text is reproduced.
 
 Each chapter is a **route** (wild battles to catch Pokémon and practise) with a **gym** at the end (a Gym Leader and a badge). Chapters map to Pokémon types as a memory aid: Pointers are Ghost because of *indirection*, Arrays are Rock because they are *one contiguous block*, and Structures are Steel because of *padding*.
 
@@ -167,6 +169,35 @@ Across the 35 lessons, the quizzes cover most of the course. The **evening exams
 
 </details>
 
+<details>
+<summary><b>The Periodic Coast: all thirteen gyms and the evening exams</b></summary>
+
+<br>
+
+| Ch | Topic | Type | Gym Leader | Badge |
+|:-:|---|:-:|---|---|
+| 1 | Measurement and Significant Figures | Steel | Vera Meniscus | Meniscus |
+| 2 | Atoms, Ions and Chemical Names | Rock | Ernest Foyle | Nucleus |
+| 3 | The Mole and Stoichiometry | Ground | Amedeo Kask | Mole |
+| 4 | Solutions and Aqueous Reactions | Water | Lena Titra | Solubility |
+| | *Evening Exam 1* | | Wren Scantly | |
+| 5 | Thermochemistry | Fire | Hessa Kalor | Enthalpy |
+| 6 | Light and Quantum Theory | Electric | Max Planck-Rydell | Photon |
+| 7 | Electron Configuration and Periodicity | Psychic | Dmitra Aufbaum | Aufbau |
+| | *Evening Exam 2* | | Ione Ardent | |
+| 8 | Models of Chemical Bonding | Fighting | Linus Paulsen | Bond |
+| 9 | Lewis Structures and Molecular Shape | Ice | Gillespie Nyholm | Geometry |
+| 10 | Intermolecular Forces, Phases and Solids | Ice | Clausia Clapey | Phase |
+| 11 | Solutions, Colligative Properties and Biomolecules | Grass | Raoul Van’t-Hoff | Colligative |
+| | *Evening Exam 3* | | Cassius Vell | |
+| 12 | Gases | Flying | Evangelista Torre | Pressure |
+| 13 | Nuclear Chemistry | Dragon | Marie Becquerel | Isotope |
+| | ***The Final*** | | Provost Nobel | |
+
+Each gym is one block of lectures on the course schedule, and each evening exam sits where the calendar puts it, with its own exam-format review set, a revision route and a **25-question timed mock exam** drawn only from what that exam covers. Gases and nuclear chemistry are taught after the third exam, so only the Final tests them. Chemistry questions use the exam's five-choice format, accept typed numeric answers in any common notation (`3.13e-19`, `3.13 × 10⁻¹⁹ J`), and carry a **Data** button that opens the periodic table, constants, equations and solubility rules the real exam provides. The course's own rounding rule (an exact 5 rounds to even) is followed throughout.
+
+</details>
+
 <br>
 
 ## ✦ C Midterm Revision Route
@@ -177,7 +208,7 @@ The **Midterm Revision Route** sits **between Chapters 7 and 8** in Course order
 <img src="docs/screenshots/midterm.jpg" alt="The Midterm Revision Route between Chapters 7 and 8, showing its question pool and Pokémon from Routes 1–5" width="850">
 </div>
 
-- **696 questions.** 614 authored review questions plus all 82 uploaded exercises. Coverage includes computers, data types, operators, functions, selection, logic, formatted I/O, file I/O, loops, recursion, arrays, searching, sorting, pointers and memory allocation. Generic strings questions are excluded; the six strings questions from the official practice exam remain.
+- **1,292 questions.** 614 authored review questions, all 82 uploaded exercises, and 596 original questions modelled on past CS 159 exams. Coverage includes computers, data types, operators, functions, selection, logic, formatted I/O, file I/O, loops, recursion, arrays, searching, sorting, pointers and memory allocation. Generic strings questions are excluded; the six strings questions from the official practice exam remain.
 - **60 Pokémon from Routes 1–5.** Their original rarities are preserved. Roaming legendaries do not enter this route.
 - **Shared study progress.** Answers update the original questions and chapters, so revision, chapter drills and ordinary routes share one review history. New exercises use distinct IDs; existing questions retain their saved progress.
 - **Choose how to revise.** Wild battles, a plain drill, Route Info and **See all questions** use the same selected pool.
@@ -320,10 +351,10 @@ Your collection does not just sit in a box. In the **Pokémon Kingdom**, every P
 
 ## ✦ Also built, currently switched off
 
-Some systems are fully built and saved, but their menu buttons are hidden for now (`TOWN_UI_ENABLED = false` in [`js/engine/ui.js`](js/engine/ui.js)). Nothing was deleted.
+Some systems are fully built and saved, but switched off for now (`TOWN_UI_ENABLED` and `FRIENDS_ENABLED` in [`js/engine/ui.js`](js/engine/ui.js)). Nothing was deleted; [`docs/ARCHIVED-FEATURES.md`](docs/ARCHIVED-FEATURES.md) lists exactly what each switch hides and how to bring it back.
 
 - 🏘 **Bootstrap Town:** an 18-scene walkable community with 45 homes, 17 public buildings and a connected town map.
-- 💛 **Friendship:** a large cast of townspeople and companions who can become friends, with heart-event scenes, gifts, rumours and mail.
+- 💛 **Friendship:** a large cast of townspeople, companions and gym leaders who can become friends, with heart-event scenes, gifts, rumours and mail. Archived: no friendship points, heart scenes or Friends screens appear, and a beaten gym leader's hub offers only the rematch.
 - 📔 **A journal and collection:** one notebook page per day, plus a chest, an aquarium and a terrarium for keepsakes ([design notes](COLLECTABLES.md)).
 
 <br>
@@ -376,6 +407,7 @@ js/data/                 species, questions, gyms, side quests, cast, songs, sce
 js/data/questions/       the C question bank, merged at load time
 js/data/c-midterm.js     the revision route's references to existing questions and encounters
 js/data/calc/            the Calculus II lessons, questions and world
+js/data/chem/            the General Chemistry lectures, questions, cast and world
 js/engine/               state, battle, quiz and spaced repetition, UI, kingdom, radio
 assets/                  sprites, cries, portraits, painted scenes, the WASM compiler
 docs/screenshots/        current app screenshots used in this README

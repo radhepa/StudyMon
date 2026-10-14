@@ -11,7 +11,7 @@
    INSIDE each region is gated by that region's own badges; getting to the region
    is not. */
 
-var FERRY_PORT = { c: 'town', calc: 'harbour' };
+var FERRY_PORT = { c: 'town', calc: 'harbour', chem: 'landing' };
 
 /* The berth only appears in the departure location of the region you are in. */
 function ferryHere() {
@@ -53,7 +53,7 @@ function openFerry() {
   if (!dests.length) { toast('There is nowhere else to sail yet.'); return; }
 
   var h = '<h2>The Ferry Berth</h2>' +
-    '<p class="muted">One trainer, two coastlines. Everything you have caught comes ' +
+    '<p class="muted">One trainer, every coastline. Everything you have caught comes ' +
     'with you; every badge you have earned stays behind until you come back.</p>' +
     '<div class="ferry-list">';
 
@@ -254,12 +254,14 @@ function ferryVoyage(def, arrive) {
   setTimeout(land, FERRY_VOYAGE_MS + 900);
 }
 
-/* One compact topbar button sails directly to the other region. */
+/* One compact topbar button. With one other region it sails straight there;
+   with more than one it opens the berth so you can say where. */
 function regionChip() {
   var dests = ferryDestinations();
   if (!dests.length) return '';
-  var d = dests[0], label = esc('Ferry to ' + d.region);
-  return '<button type="button" class="chip region-chip" onclick="ferrySail(\'' + d.id + '\')" ' +
+  var d = dests[0], label = esc(dests.length === 1 ? 'Ferry to ' + d.region : 'Take the ferry');
+  var go = dests.length === 1 ? 'ferrySail(\'' + d.id + '\')' : 'openFerry()';
+  return '<button type="button" class="chip region-chip" onclick="' + go + '" ' +
     'title="' + label + '" aria-label="' + label + '">' +
     '<span aria-hidden="true">⛴</span> Ferry</button>';
 }

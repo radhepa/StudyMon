@@ -19,6 +19,15 @@ function toast(msg) {
 
 /* Keep town content and saves intact while its navigation is hidden. */
 var TOWN_UI_ENABLED = false;
+
+/* Friendships are ARCHIVED, not deleted: heart scenes (townsfolk, companions
+   and gym leaders), friendship points, the Friends and friend-profile screens,
+   gifts, and the leaders' chat/friendship buttons all sit behind this switch.
+   Their code, data and any points already in a save are untouched, so turning
+   it back on restores everything. See docs/ARCHIVED-FEATURES.md. Test suites that
+   still exercise the archived systems set window.STUDYMON_ARCHIVED_FEATURES
+   before the page loads. */
+var FRIENDS_ENABLED = !!window.STUDYMON_ARCHIVED_FEATURES;
 var CUR = 'title';
 function showScreen(name) {
   if (name !== 'battle' && typeof stopShinyBattleEffects === 'function') stopShinyBattleEffects();
@@ -762,18 +771,21 @@ function mapBossRow(e) {
     ' &nbsp;·&nbsp; <span class="lvl-hint' + (bossExpectedLevel(e) > playerLevel() + 6 ? ' over' : '') +
       '">Lv ~' + bossExpectedLevel(e) + '</span>' +
     '<br><i>"' + esc(e.intro) + '"</i>' +
+    (e.date ? '<br><span class="route-only">' + esc(e.date) + '</span>' : '') +
     (e.only && e.only.length
-      ? '<br><span class="route-only">Covers lesson' +
-        (e.only.length > 1 ? 's ' : ' ') + e.only.join(', ') + ', which no quiz asks about</span>'
+      ? '<br><span class="route-only">' + (e.onlyNote ? esc(e.onlyNote) : 'Covers lesson' +
+        (e.only.length > 1 ? 's ' : ' ') + e.only.join(', ') + ', which no quiz asks about') + '</span>'
       : '') +
     '<br><span style="opacity:.75">Questions from ' +
-      (e.lessons ? 'lessons ' + e.lessons[0] + '–' + e.lessons[e.lessons.length - 1]
+      (e.lessons ? (subjectDef().lessonWord || 'lessons') + ' ' + e.lessons[0] + '–' + e.lessons[e.lessons.length - 1]
                  : 'chapters ' + e.chapters.join(', ')) +
     (open ? '' : ' · needs ' + bossAfter(e) + ' badges, you have ' + badgeCount()) +
     '</span>' +
     (examCh ? '<br><span style="opacity:.75">' + esc(e.route) + ' is open for practice - no badges needed</span>' : '') +
     '</div></div>' +
     '<div class="acts">' +
+    (e.chapters && subjectDef().mockPerExam ? '<button class="ghost" onclick="mockExam(' + subjectDef().mockPerExam +
+      ', \'' + e.id + '\')">Mock exam</button>' : '') +
     (examCh ? '<button class="ghost" onclick="goWildExam(\'' + e.id + '\')">Revision route</button>' +
       '<button class="ghost" onclick="openRouteInfo(' + examCh.n + ')">Route info</button>' : '') +
     (beat
@@ -1142,7 +1154,15 @@ function goStudy(n) { STUDY_CH = n; showScreen('study'); renderStudy(); }
 
 /* The exam-only chapters have no number of their own. Naming them by the
    lessons they cover keeps the four buttons from being identical stars. */
+/* What the active subject calls its numbered units: Calculus has lessons, the
+   chemistry course has lectures. */
+function lessonWordCap() {
+  var w = (subjectDef() || {}).lessonWord || 'lessons';
+  return w.charAt(0).toUpperCase() + w.slice(1);
+}
+
 function examNoteLabel(c) {
+  if (c.noteLabel) return c.noteLabel;
   return c.lessons && c.lessons.length ? 'L' + c.lessons.join('/') : String(c.n);
 }
 
@@ -1158,6 +1178,9 @@ function renderStudy() {
   // and must not be shown over a calculus chapter.
   if (activeSubject() === 'c') {
     h += '<details class="panel curriculum-source"><summary>Textbook alignment and study scope</summary><p>Fourth edition, ISBN 9780357506134. Chapters 1-8 keep their earlier order; Chapter 9 includes pointer applications, Chapters 10-14 cover strings through lists, and Chapter 15 covers recursion.</p><p>The supplied third edition supports the earlier material. The fourth-edition order is checked against the publisher; individual fourth-edition exercises and every wording change have not been verified. These are original study questions, not the textbook answer key.</p><p>This course uses C99/C11/C17 rules unless a question says otherwise. Required standard headers and declarations are assumed in short snippets.</p><p><a href="https://prod.cengageasia.com/title/default/detail?isbn=9780357506134" target="_blank" rel="noopener">Publisher chapter list</a> · <a href="https://www.open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf" target="_blank" rel="noopener">C11 committee draft</a></p></details>';
+  } else if (def.sourceNote) {
+    h += '<details class="panel curriculum-source"><summary>Where these chapters come from</summary><p>' +
+      esc(def.book) + '. ' + esc(def.blurb) + '</p><p>' + esc(def.sourceNote) + '</p></details>';
   } else {
     h += '<details class="panel curriculum-source"><summary>Where these chapters come from</summary><p>' +
       esc(def.book) + '. ' + esc(def.blurb) + '</p><p>Chapters here are quizzes, not textbook chapters. ' +
@@ -1178,7 +1201,7 @@ function renderStudy() {
     '<div class="small">' + typePillsInline([c.type]) + ' ' + esc(c.route || '') +
     (c.leader ? ' · Gym Leader ' + esc(c.leader) + ', ' + esc(c.epithet) : '') +
     '<br>' + esc(c.blurb || '') +
-    (c.lessons ? '<br>Lessons ' + c.lessons.join(', ') : '') +
+    (c.lessons ? '<br>' + lessonWordCap() + ' ' + c.lessons.join(', ') : '') +
     '<br>Your record here: ' + (tot ? st.r + ' right, ' + st.w + ' wrong (' + Math.round(st.r / tot * 100) + '%)' : 'nothing answered yet') +
     '</div></div>';
 
@@ -1230,20 +1253,25 @@ function drill(ch) {
 /* Mock exam: a fixed number of questions spread across every chapter, timed,
    with a per-chapter breakdown at the end. This is the one mode that is not a
    game - it is meant to feel like sitting the paper. */
-function mockExam(count) {
+function mockExam(count, examId) {
   count = count || 25;
   var picked = [];
   var used = {};
+  // A paper for one evening exam draws only on what that exam covers - its
+  // gyms plus its own review set - instead of the whole region.
+  var exam = examId ? (ELITE || []).filter(function (x) { return x.id === examId; })[0] : null;
+  var scope = exam && exam.chapters ? exam.chapters : CHAPTERS.map(function (c) { return c.n; });
   // spread evenly over the chapters, then fill the remainder at random
-  var perCh = Math.floor(count / CHAPTERS.length);
-  for (var i = 0; i < CHAPTERS.length; i++) {
-    var bank = (QBANK[CHAPTERS[i].n] || []).filter(function (q) { return !q.selfCheck && !isHidden(q.id); });
+  var perCh = Math.floor(count / scope.length);
+  for (var i = 0; i < scope.length; i++) {
+    var bank = (QBANK[scope[i]] || []).filter(function (q) { return !q.selfCheck && !isHidden(q.id); });
     for (var k = 0; k < perCh && bank.length; k++) {
       var q = bank.splice(Math.floor(Math.random() * bank.length), 1)[0];
       if (!used[q.id]) { used[q.id] = 1; picked.push(q); }
     }
   }
-  var all = allQuestions().filter(function (q) { return !used[q.id] && !q.selfCheck && !isHidden(q.id); });
+  var all = (exam ? questionsFor(scope) : allQuestions())
+    .filter(function (q) { return !used[q.id] && !q.selfCheck && !isHidden(q.id); });
   while (picked.length < count && all.length) {
     var q2 = all.splice(Math.floor(Math.random() * all.length), 1)[0];
     used[q2.id] = 1; picked.push(q2);
@@ -1253,7 +1281,8 @@ function mockExam(count) {
 
   D = {
     chapters: null, asked: {}, n: 0, right: 0, review: false,
-    exam: picked, examIx: 0, perCh: {}, startedAt: Date.now()
+    exam: picked, examIx: 0, perCh: {}, startedAt: Date.now(),
+    examId: exam ? exam.id : null, examName: exam ? exam.epithet : null
   };
   showScreen('drill');
   nextDrill();
@@ -1301,8 +1330,10 @@ function renderDrill() {
   var chNum = questionChapter(q);
   var h;
   if (D.exam) {
-    h = '<h2>Mock Exam</h2><p class="muted" style="margin-bottom:12px">Question ' +
-      D.examIx + ' of ' + D.exam.length + ' · every chapter, shuffled. ' +
+    var mins = Math.floor((Date.now() - D.startedAt) / 60000);
+    h = '<h2>Mock Exam' + (D.examName ? ': ' + esc(D.examName) : '') + '</h2><p class="muted" style="margin-bottom:12px">Question ' +
+      D.examIx + ' of ' + D.exam.length + ' · ' + (D.examName ? 'that exam\'s chapters' : 'every chapter') + ', shuffled · ' +
+      mins + ' min elapsed (the real paper is 60). ' +
       'Answers and explanations are held back until the end, like a real paper.</p>';
   } else {
     var dch = chapterByNumber(chNum);
@@ -1314,7 +1345,8 @@ function renderDrill() {
   h += '<div class="qcard"><div class="qhead"><span class="qtag">' + (q.tag || 'Question') + '</span>' +
     (S.srs[q.id] ? '<span class="qtag srs">Box ' + S.srs[q.id].box + '/5</span>' : '') +
     '<span>Ch ' + chNum + ' · ' + esc(chapterTitle(chNum)) + '</span>' +
-    '<span class="spacer"></span><span>tier ' + q.t + '</span>' + questionCopyButton('drill') + '</div>';
+    '<span class="spacer"></span><span>tier ' + q.t + '</span>' + questionCopyButton('drill') +
+    (typeof questionDataButton === 'function' ? questionDataButton(q) : '') + '</div>';
   h += '<div class="qtext">' + questionHtml(q, q.q) + '</div>';
   if (q.code) h += '<pre class="qcode">' + esc(q.code) + '</pre>';
   if (q.selfCheck && !D.exam) {
@@ -1327,7 +1359,7 @@ function renderDrill() {
       '<button class="choice" id="dch1" onclick="drillAnswer(1)"><span class="k">↺</span><span>I need to review it</span></button>' +
       '</div></div></div>';
   } else if (q.k === 'fill') {
-    h += '<div class="fillwrap"><input id="dfill" autocomplete="off" spellcheck="false" placeholder="type your answer">' +
+    h += '<div class="fillwrap"><input id="dfill" autocomplete="off" spellcheck="false" placeholder="' + (q.match === 'number' ? 'type a number, e.g. 3.13e-19' : 'type your answer') + '">' +
       '<button class="primary" onclick="drillFill()">Check</button></div>';
   } else {
     h += '<div class="choices">';
@@ -1442,7 +1474,8 @@ function endDrill() {
 function showExamReport(pct) {
   var mins = Math.max(1, Math.round((Date.now() - D.startedAt) / 60000));
   var wrong = D.exam.filter(function (q) { return q._got === false; });
-  var h = '<h2>Mock Exam Result</h2>' +
+  var again = D.examId ? 'mockExam(' + D.exam.length + ', \'' + D.examId + '\')' : 'mockExam(25)';
+  var h = '<h2>Mock Exam Result' + (D.examName ? ': ' + esc(D.examName) : '') + '</h2>' +
     '<div class="statgrid" style="margin-bottom:14px">' +
     box(pct + '%', 'Score') + box(D.right + '/' + D.n, 'Correct') + box(mins + ' min', 'Time taken') +
     '</div>';
@@ -1480,7 +1513,7 @@ function showExamReport(pct) {
   }
 
   h += '<div class="row" style="margin-top:16px">' +
-    '<button class="primary" onclick="mockExam(25)">Another exam</button>' +
+    '<button class="primary" onclick="' + again + '">Another exam</button>' +
     '<button onclick="showScreen(\'stats\');renderStats()">Trainer Card</button>' +
     '<button class="ghost" onclick="showScreen(\'map\');renderMap()">Back to the map</button></div>';
 

@@ -135,7 +135,9 @@ const { chromium } = require('./playwright.cjs');
   console.log('unreplaced {} : ' + (r.placeholders.length ? r.placeholders.slice(0, 5).join(', ') : 'none'));
   console.log('page errors   : ' + (errors.length ? errors.slice(0, 3).join(' | ') : 'none'));
 
-  const exact = r.cast === 130 && r.scenes === 412 && r.beats === 1080;
+  // 130 cast / 412 scenes / 1080 beats before the Periodic Coast, whose 28 townsfolk
+  // each bring their class's three heart scenes (+84 scenes, +168 beats).
+  const exact = r.cast === 158 && r.scenes === 496 && r.beats === 1248;
   const unique = r.uniqueScenes === r.scenes && r.uniqueBeats === r.beats && r.uniqueChoices === r.choices;
   const migrated = migration.schema === 3 && JSON.stringify(migration.completed) === JSON.stringify(migration.completedExpected) &&
     migration.recordStable && migration.pendingStable && migration.invalidDropped && migration.validMemoryKept;
@@ -144,7 +146,7 @@ const { chromium } = require('./playwright.cjs');
     progression.priorLocked && progression.started && progression.resumed && progression.completed;
 
   if (r.bad.length || r.placeholders.length || errors.length || !exact || !unique || !migrated || !replay || !stableProgression) {
-      if (!exact) console.log('FAIL expected exactly 130 cast, 412 scenes, and 1080 beats');
+      if (!exact) console.log('FAIL expected exactly 158 cast, 496 scenes, and 1248 beats');
     if (!unique) console.log('FAIL social IDs are not globally unique');
     if (!migrated) console.log('FAIL schema-3 migration: ' + JSON.stringify(migration));
     if (!replay) console.log('FAIL stable replay/reorder: ' + JSON.stringify(migration));

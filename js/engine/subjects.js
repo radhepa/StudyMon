@@ -167,6 +167,12 @@ function installSubjects() {
     registerSubject(window.CALC_SUBJECT);
   }
 
+  if (window.CHEM_SUBJECT) {
+    window.CHEM_SUBJECT.QBANK = window.CHEM_QBANK || {};
+    window.CHEM_SUBJECT.TOWNSFOLK = window.CHEM_TOWNSFOLK || [];
+    registerSubject(window.CHEM_SUBJECT);
+  }
+
   SUBJECT_GLOBALS.forEach(function (key) {
     delete window[key];
     Object.defineProperty(window, key, {

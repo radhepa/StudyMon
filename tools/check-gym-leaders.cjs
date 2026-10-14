@@ -241,7 +241,7 @@ function check(name, ok, detail) {
 
     /* ---- Every leader resolves every state -------------------------------- */
     const statesOk = [];
-    ['c', 'calc'].forEach(subject => {
+    ['c', 'calc', 'chem'].forEach(subject => {
       fresh(subject);
       const def = subjectDef(subject);
       def.CHAPTERS.forEach(c => { S.badges[c.n] = true; });
@@ -266,14 +266,15 @@ function check(name, ok, detail) {
   await browser.close();
 
   const reg = r.registry;
-  check('34 gym leaders and bosses resolve through the cast registry (25 gyms, 9 bosses)',
-    reg.count === 34 && reg.gyms === 25 && reg.bosses === 9, JSON.stringify({ count: reg.count, gyms: reg.gyms, bosses: reg.bosses }));
+  // C 15+5, Calculus 10+4, Periodic Coast 13+4
+  check('51 gym leaders and bosses resolve through the cast registry (38 gyms, 13 bosses)',
+    reg.count === 51 && reg.gyms === 38 && reg.bosses === 13, JSON.stringify({ count: reg.count, gyms: reg.gyms, bosses: reg.bosses }));
   check('registry audit: profiles, hangouts, signatures, relationships and dialogue validate with zero errors',
     reg.errors.length === 0, reg.errors.slice(0, 5).join(' | '));
   console.log('      audit warnings: ' + reg.warnings.join('; '));
   check('the two Tier 1 leaders stay Tier 1 and each region has exactly one champion',
     JSON.stringify(reg.tier1) === JSON.stringify(['c-gym-1', 'calc-gym-1']) &&
-    JSON.stringify(reg.champions) === JSON.stringify(['c-boss-champ', 'calc-boss-final']), JSON.stringify(reg.tier1) + ' ' + JSON.stringify(reg.champions));
+    JSON.stringify(reg.champions) === JSON.stringify(['c-boss-champ', 'calc-boss-final', 'chem-boss-final']), JSON.stringify(reg.tier1) + ' ' + JSON.stringify(reg.champions));
   check('map positions run 1..N without gaps in both regions', reg.positionsOk);
 
   check('a fresh save sees every leader unbeaten and at home', r.freshStates && r.freshHome);
@@ -339,7 +340,7 @@ function check(name, ok, detail) {
     r.map.visit && r.map.stillGym && r.map.noOldRematch, JSON.stringify(r.map));
 
   const bad = r.allLeaders.filter(x => x.state !== 'region-cleared' || !x.hello || !x.social || !x.team);
-  check('all 34 leaders resolve a region-cleared greeting, a chat line and a legal tier 3 team', bad.length === 0 && r.allLeaders.length === 34,
+  check('all 51 leaders resolve a region-cleared greeting, a chat line and a legal tier 3 team', bad.length === 0 && r.allLeaders.length === 51,
     JSON.stringify(bad.slice(0, 3)));
   check('rematch money stays well under a first win, with a lifetime cap per leader',
     r.economy.tier3 <= r.economy.firstWin * 0.5 && r.economy.lifetimeCap <= r.economy.firstWin * 3, JSON.stringify(r.economy));

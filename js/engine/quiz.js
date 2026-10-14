@@ -356,10 +356,28 @@ function recordAnswer(q, correct) {
 
 /* Loose matching for fill-in answers: case, spaces and trailing punctuation
    should never be the reason a right answer is marked wrong. */
+/* Read a typed number the way a chemistry student writes one: "5.61e-19",
+   "5.61 x 10^-19", "5.61×10⁻¹⁹ J", "−55.5", "1,204". Units after the number
+   are ignored. NaN when there is no number at the front. */
+function parseChemNumber(s) {
+  var sup = { '⁰': '0', '¹': '1', '²': '2', '³': '3', '⁴': '4', '⁵': '5', '⁶': '6', '⁷': '7', '⁸': '8', '⁹': '9', '⁻': '-', '⁺': '+' };
+  var t = String(s).trim().toLowerCase().replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁻⁺]/g, function (ch) { return sup[ch]; });
+  t = t.replace(/−/g, '-').replace(/,/g, '').replace(/\s+/g, ' ');
+  t = t.replace(/\s*[×x*]\s*10\s*\^?\s*\(?\s*([+-]?\d+)\s*\)?/, 'e$1');
+  var m = t.match(/^[+-]?(\d+\.?\d*|\.\d+)(e[+-]?\d+)?/);
+  return m ? Number(m[0]) : NaN;
+}
+
 function fillMatches(input, accepted, question) {
   // Output questions preserve case and punctuation. C-token questions also
   // preserve token boundaries, while allowing harmless formatting changes.
   var mode = question && question.match;
+  if (mode === 'number') {
+    var v = parseChemNumber(input), want = Number(question.num);
+    if (!isFinite(v) || !isFinite(want)) return false;
+    if (question.abs != null) return Math.abs(v - want) <= question.abs;
+    return Math.abs(v - want) <= Math.abs(want) * (question.tol != null ? question.tol : 0.01);
+  }
   if (mode === 'exact') return accepted.some(function (value) {
     return String(input).trim() === String(value).trim();
   });

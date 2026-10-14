@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>StudyMon, a C and Calculus II study RPG</title>
+<title>StudyMon, a C, Calculus II and Chemistry study RPG</title>
 <link rel="icon" type="image/png" href="assets/ui/studymon-icon.png">
 <link rel="apple-touch-icon" href="assets/ui/studymon-icon.png">
 <link rel="stylesheet" href="css/style.css?v=phase3-items-20260911">
@@ -26,6 +26,7 @@
 <link rel="stylesheet" href="css/title.css?v=party-meadow-20261012">
 <link rel="stylesheet" href="css/battle-session.css?v=shiny-effects-20261013">
 <link rel="stylesheet" href="css/shiny-effects.css?v=shiny-effects-20261013">
+<link rel="stylesheet" href="css/chem.css?v=chem-20261014">
 </head>
 <body data-screen="title">
 
@@ -46,7 +47,7 @@
         <span class="lg-blue" aria-hidden="true"><i>S</i><i>t</i><i>u</i><i>d</i><i>y</i><i>M</i><i>o</i><i>n</i></span>
         <span class="lg-fill" aria-hidden="true"><i>S</i><i>t</i><i>u</i><i>d</i><i>y</i><i>M</i><i>o</i><i>n</i></span>
       </h1>
-      <div class="t-courses"><span class="t-course c">C PROGRAMMING</span><span class="t-course calc">CALCULUS II</span></div>
+      <div class="t-courses"><span class="t-course c">C PROGRAMMING</span><span class="t-course calc">CALCULUS II</span><span class="t-course chem">CHEMISTRY</span></div>
       <p class="t-book">Study a little. Stay for a battle.</p>
     </div>
 
@@ -71,7 +72,7 @@
       <div class="title-mons pending" role="list" aria-label="Your current party"></div>
       <p class="t-empty" id="titleempty">Your first partner is waiting.<br>Let’s start an adventure.</p>
     </div>
-    <footer class="t-footer"><span>C PROGRAMMING &amp; CALCULUS II</span><span>Study. Battle. Explore.</span></footer>
+    <footer class="t-footer"><span>C PROGRAMMING · CALCULUS II · CHEMISTRY</span><span>Study. Battle. Explore.</span></footer>
   </section>
 
   <!-- ================= STARTER ================= -->
@@ -168,12 +169,19 @@
 <script src="js/data/curriculum-notes.js?v=sweep-20261007"></script>
 <script src="js/data/questions/midterm-quality.js?v=midterm-quality-20261013"></script>
 <script src="js/data/questions/cs159-midterm.js?v=midterm-practice-20261013"></script>
+<script src="js/data/questions/cs159-pastexam-a.js?v=pastexam-20261014"></script>
+<script src="js/data/questions/cs159-pastexam-b.js?v=pastexam-20261014"></script>
+<script src="js/data/questions/cs159-pastexam-c.js?v=pastexam-20261014"></script>
+<script src="js/data/questions/cs159-pastexam-d.js?v=pastexam-20261014"></script>
 <script src="js/data/c-midterm.js?v=midterm-strings-scope-20261013"></script>
 <script src="js/data/calc/calc-world.js?v=revision-route1-20260922"></script>
 <script src="js/data/calc/calc-townsfolk.js?v=calc-review-20260921"></script>
+<script src="js/data/chem/chem-world.js?v=chem-20261014"></script>
+<script src="js/data/chem/chem-townsfolk.js?v=chem-20261014"></script>
 <script src="js/data/cast-bibles.js?v=phase3-gifts-20260911"></script>
-<script src="js/data/cast.js?v=phase2-20260911"></script>
+<script src="js/data/cast.js?v=chem-20261014"></script>
 <script src="js/data/gym-leaders.js?v=phase6-20260925"></script>
+<script src="js/data/chem/chem-leaders.js?v=chem-20261014"></script>
 <script src="js/data/core-cast-production.js?v=phase4-slice1-20260911"></script>
 <script src="js/data/rowan-phase4.js?v=phase4-slice2-20260911"></script>
   <script src="js/data/mira-phase4.js?v=phase4-slice4-20260911"></script>
@@ -209,24 +217,40 @@
 <script src="js/data/calc/calc-questions-thomas-topup.js?v=calc-20260910"></script>
 <script src="js/data/calc/calc-questions-tenfold.js?v=sweep-20261007"></script>
 <script src="js/data/calc/calc-questions-boilerexams-exam1.js?v=sweep-20261007"></script>
-<script src="js/data/encounters.js?v=midterm-route-position-20261012"></script>
+<script src="js/data/calc/calc-questions-pastexam-a.js?v=pastexam-20261014"></script>
+<script src="js/data/calc/calc-questions-pastexam-b.js?v=pastexam-20261014"></script>
+<script src="js/data/chem/chem-qbank.js?v=chem-20261014"></script>
+<script src="js/data/chem/chem-q-fundamentals-a.js?v=chem-20261014"></script>
+<script src="js/data/chem/chem-q-fundamentals-b.js?v=chem-20261014"></script>
+<script src="js/data/chem/chem-q-thermo.js?v=chem-20261014"></script>
+<script src="js/data/chem/chem-q-quantum.js?v=chem-20261014"></script>
+<script src="js/data/chem/chem-q-periodicity.js?v=chem-20261014"></script>
+<script src="js/data/chem/chem-q-exam2.js?v=chem-20261014"></script>
+<script src="js/data/chem/chem-q-bonding.js?v=chem-20261014"></script>
+<script src="js/data/chem/chem-q-phases.js?v=chem-20261014"></script>
+<script src="js/data/chem/chem-q-final.js?v=chem-20261014"></script>
+<script src="js/data/chem/chem-q-course-rules.js?v=chem-20261014"></script>
+<script src="js/data/chem/chem-q-pastexam-a.js?v=pastexam-20261014"></script>
+<script src="js/data/chem/chem-q-pastexam-b.js?v=pastexam-20261014"></script>
+<script src="js/data/encounters.js?v=chem-20261014"></script>
 <script src="js/data/items.js?v=phase3-economy-20260911"></script>
 <script src="js/engine/state.js?v=shiny-effects-20261013"></script>
-<script src="js/engine/subjects.js?v=midterm-route-20261012"></script>
-<script src="js/engine/question-format.js?v=sweep-20261007"></script>
+<script src="js/engine/subjects.js?v=chem-20261014"></script>
+<script src="js/engine/question-format.js?v=chem-20261014"></script>
+<script src="js/engine/chem-datasheet.js?v=chem-20261014"></script>
 <script src="js/engine/mons.js?v=study-tab-retention-20261013"></script>
-<script src="js/engine/quiz.js?v=midterm-strings-scope-20261013"></script>
+<script src="js/engine/quiz.js?v=chem-20261014"></script>
 <script src="js/engine/shiny-effects.js?v=shiny-effects-20261013"></script>
-<script src="js/engine/ui.js?v=shiny-effects-20261013"></script>
-<script src="js/engine/battle.js?v=shiny-effects-20261013"></script>
+<script src="js/engine/ui.js?v=chem-20261014"></script>
+<script src="js/engine/battle.js?v=chem-20261014"></script>
 <script src="js/engine/shop.js?v=sweep-20261007"></script>
 <script src="js/engine/town.js?v=phase3-economy-20260911"></script>
 <script src="js/engine/pc.js?v=curriculum4-20260905"></script>
 <script src="js/engine/friends.js?v=sweep-20261007"></script>
 <script src="js/engine/gifts.js?v=phase3-close-20260911"></script>
 <script src="js/engine/social-context.js?v=phase4-slice3-20260911"></script>
-<script src="js/engine/gym-leaders.js?v=phase6-20260925"></script>
-<script src="js/engine/ferry.js?v=daylight-20261012"></script>
+<script src="js/engine/gym-leaders.js?v=chem-20261014"></script>
+<script src="js/engine/ferry.js?v=chem-20261014"></script>
 <script src="js/engine/journal.js?v=journal-20260915"></script>
 <script src="js/data/collectables.js?v=collect-20260915"></script>
 <script src="js/engine/collectables.js?v=collect-20260915"></script>
@@ -236,7 +260,7 @@
 <script src="js/engine/lab-scenes.js?v=lab-direction-20260928"></script>
 <script src="js/data/quest-framing.js?v=phase6-20260925"></script>
 <script src="js/engine/quest-framing.js?v=phase6-20260925"></script>
-<script src="js/engine/world-state.js?v=phase7-slice2-20260925"></script>
+<script src="js/engine/world-state.js?v=chem-20261014"></script>
 <script src="js/engine/rumors.js?v=phase7-20260925"></script>
 <script src="js/engine/walkins.js?v=phase7-20260925"></script>
 <script src="js/data/walkins.js?v=phase7-20260925"></script>

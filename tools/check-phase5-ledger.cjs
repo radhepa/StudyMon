@@ -17,14 +17,15 @@ function check(name, ok, detail) {
   const data = await page.evaluate(() => {
     const ledger = window.TIER2_TIER3_LEDGER;
     const validationErrors = validateTier2Tier3Ledger();
-    const tier2 = castEntries({ tier: 2 });
-    const tier3 = castEntries({ tier: 3 });
+    // the frozen baseline covers the C-Region and the Isles only
+    const tier2 = castEntries({ tier: 2, homeSubject: ['c', 'calc'] });
+    const tier3 = castEntries({ tier: 3, homeSubject: ['c', 'calc'] });
     const blockedIds = tier2.filter(e => e.sourceKind !== 'townsfolk').map(e => e.id).sort();
     const readyTier2Ids = tier2.filter(e => e.sourceKind === 'townsfolk').map(e => e.id).sort();
     const clusterCoverage = new Set();
     ledger.clusters.forEach(c => c.tier2Ids.concat(c.tier3Ids).forEach(id => clusterCoverage.add(id)));
     return {
-      census: castCensus(),
+      census: castCensus(['c', 'calc']),
       ledgerMeta: { tier2: ledger.tier2, tier3: ledger.tier3, tier2ReadyCount: ledger.tier2ReadyCount,
         befriendablePercentage: ledger.befriendablePercentage, requiredMinimum: ledger.requiredMinimum },
       validationErrors,

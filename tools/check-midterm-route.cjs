@@ -10,7 +10,7 @@ const { chromium } = require('./playwright.cjs');
 const root = path.resolve(__dirname, '..');
 const out = path.join(root, 'output', 'midterm-route');
 const url = process.argv[2] || 'http://127.0.0.1:8780/';
-const expectedPoolSize = 696;
+const expectedPoolSize = 1292;   // 614 authored + 82 uploaded exercises + 596 past-exam twins (chapters 1-9)
 const excludedAuthoredIds = [
   'c2-03', 'c2-07', 'c2-21', 'c2-22', 'c2-35', 'c2-43', 'c2-50', 'c2-tf-009', 'c2-tf-010',
   'c5-41', 'c7-15', 'c7-16', 'c7-20', 'c7-34', 'c7-47', 'c7-48', 'c7-51',
@@ -51,8 +51,8 @@ check('every supplemental ID exists and appears once',
 check('all six uploaded practice string exercises retain their source and route membership',
   practiceStringIds.every(id => route.questionIds.includes(id) && original.some(q =>
     q.id === id && q.chapter === 10 && q.source && q.source.document === 'cs159-practice')));
-check('the C bank still contains exactly 1107 questions and no synthetic chapter',
-  original.length === 1107 && !data.QBANK[route.n]);
+check('the C bank still contains exactly 1745 questions and no synthetic chapter',
+  original.length === 1745 && !data.QBANK[route.n]);
 
 (async () => {
   fs.mkdirSync(out, { recursive: true });
@@ -145,7 +145,7 @@ check('the C bank still contains exactly 1107 questions and no synthetic chapter
       result.validPokemon && !result.invalidEncounter && result.sampled === result.sourceCount);
     check('five badges and a roaming roll cannot introduce an outside species', result.progressedEscapes === 0);
     check('the card previews only Pokemon from Routes 1–5', result.previewMatches);
-    check('the route adds no gym or question-bank chapter', result.gyms === 15 && result.bankSize === 1107);
+    check('the route adds no gym or question-bank chapter', result.gyms === 15 && result.bankSize === 1745);
 
     const card = page.locator('.midterm-route');
     check('the map exposes the route with no badges', await card.isVisible());

@@ -48,7 +48,8 @@ function worldSubjectProgress(subject) {
    SUBJECTS, so the two shipped subjects are also recognised by their globals. */
 function worldSubjectKnown(subject) {
   if (window.SUBJECTS && SUBJECTS[subject]) return true;
-  return subject === 'c' || (subject === 'calc' && !!window.CALC_SUBJECT);
+  return subject === 'c' || (subject === 'calc' && !!window.CALC_SUBJECT) ||
+    (subject === 'chem' && !!window.CHEM_SUBJECT);
 }
 function worldFriend(castId) { return S && worldPlain(S.friends) && worldPlain(S.friends[castId]) ? S.friends[castId] : null; }
 function worldQuestRecord(questId) {

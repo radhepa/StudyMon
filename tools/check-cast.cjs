@@ -24,7 +24,8 @@ function check(name, ok, detail) {
     const ledgerErrors = validateCastEntries(CAST_REGISTRY);
     return {
       sourceCounts,
-      census: castCensus(),
+      census: castCensus(['c', 'calc']),   // the frozen Phase 2 baseline
+      fullCensus: castCensus(),
       registry: CAST_REGISTRY.length,
       uniqueIds: new Set(CAST_REGISTRY.map(entry => entry.id)).size,
       uniqueSources: new Set(CAST_REGISTRY.map(entry => entry.sourceKey)).size,
@@ -40,7 +41,8 @@ function check(name, ok, detail) {
   });
   const expectedTotal = Object.values(census.sourceCounts).reduce((sum, n) => sum + n, 0);
   check('the census covers every companion, townsfolk, gym leader, and boss source exactly once',
-    expectedTotal === 164 && census.registry === expectedTotal && census.uniqueIds === expectedTotal &&
+    // 164 in the C-Region and the Isles, plus the Periodic Coast's 28 locals and 17 leaders
+    expectedTotal === 209 && census.registry === expectedTotal && census.uniqueIds === expectedTotal &&
       census.uniqueSources === expectedTotal && census.sourcesResolve, JSON.stringify(census.sourceCounts));
   check('the approved ledger carries every required classification field',
     census.ledgerErrors.length === 0, census.ledgerErrors.slice(0, 4).join(' | '));
@@ -78,7 +80,7 @@ function check(name, ok, detail) {
   });
   check('castMember overlays live sources instead of copying gameplay records', adapters.rowan && adapters.vesta && adapters.byte);
   check('everyPerson and personSubject enumerate through the registry while preserving source shapes',
-    adapters.people === 125 && adapters.peopleUnique === 125 &&
+    adapters.people === 153 && adapters.peopleUnique === 153 &&
       JSON.stringify(adapters.subjects) === JSON.stringify(['c', 'calc', 'calc']), JSON.stringify(adapters));
   check('friendRoster enumerates tracked friends through stable registry IDs',
     JSON.stringify(adapters.roster) === JSON.stringify(['ren', 'rowan']), JSON.stringify(adapters.roster));

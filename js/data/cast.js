@@ -21,6 +21,10 @@
       CHAPTERS: window.CALC_CHAPTERS || [], ELITE: window.CALC_ELITE || [],
       TOWNSFOLK: window.CALC_TOWNSFOLK || []
     };
+    if (subject === 'chem') return {
+      CHAPTERS: window.CHEM_CHAPTERS || [], ELITE: window.CHEM_ELITE || [],
+      TOWNSFOLK: window.CHEM_TOWNSFOLK || []
+    };
     return { CHAPTERS: window.CHAPTERS || [], ELITE: window.ELITE || [], TOWNSFOLK: window.TOWNSFOLK || [] };
   }
 
@@ -92,8 +96,9 @@
   (window.TRAINERS || []).forEach(function (person) { addPerson(person, 'c', 'companion'); });
   (window.TOWNSFOLK || []).forEach(function (person) { addPerson(person, 'c', 'townsfolk'); });
   (window.CALC_TOWNSFOLK || []).forEach(function (person) { addPerson(person, 'calc', 'townsfolk'); });
+  (window.CHEM_TOWNSFOLK || []).forEach(function (person) { addPerson(person, 'chem', 'townsfolk'); });
 
-  ['c', 'calc'].forEach(function (subject) {
+  ['c', 'calc'].concat(window.CHEM_CHAPTERS ? ['chem'] : []).forEach(function (subject) {
     var def = subjectData(subject);
     (def.CHAPTERS || []).forEach(function (chapter) {
       var id = subject + '-gym-' + chapter.n;
@@ -241,8 +246,11 @@
     return errors;
   };
 
-  window.castCensus = function () {
-    var meaningful = castEntries({ meaningful: true });
+  /* `subjects` (optional) limits the census to cast whose home is one of
+     those subjects - the frozen Phase 2/5 baseline is the C-Region and the
+     Isles, so the Periodic Coast, added later, is counted separately. */
+  window.castCensus = function (subjects) {
+    var meaningful = castEntries(subjects ? { meaningful: true, homeSubject: subjects } : { meaningful: true });
     var befriendable = meaningful.filter(function (entry) { return entry.befriendable; });
     var tiers = { 1: 0, 2: 0, 3: 0 };
     meaningful.forEach(function (entry) { tiers[entry.tier]++; });

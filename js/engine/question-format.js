@@ -416,8 +416,16 @@ function questionCopyButton(where) {
     '<span class="qcopy-ico" aria-hidden="true">⧉</span><span class="qcopy-txt">Copy</span></button>';
 }
 
+function isChemQuestion(q) {
+  return !!(q && typeof q.id === 'string' && /^m\d/.test(q.id));
+}
+
 function questionTopicLine(q) {
   var calc = isCalcQuestion(q);
+  if (isChemQuestion(q)) {
+    var lec = q.lesson && window.CHEM_LESSONS && CHEM_LESSONS[q.lesson];
+    return 'General Chemistry I (CHM 11510, Silberberg)' + (lec ? ' · Lecture ' + q.lesson + ': ' + lec : '');
+  }
   var subject = calc ? 'Calculus II' : 'C programming';
   if (calc && q.lesson && window.CALC_LESSONS && CALC_LESSONS[q.lesson]) {
     return subject + ' · Lesson ' + q.lesson + ': ' + CALC_LESSONS[q.lesson];

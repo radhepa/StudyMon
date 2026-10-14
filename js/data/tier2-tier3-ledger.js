@@ -78,9 +78,14 @@
     return Object.keys(byKey).sort().map(function (key) { return byKey[key]; });
   }
 
+  /* The ledger was frozen at Phase 5 over the two regions that existed then.
+     The Periodic Coast's cast came later (and friendships are archived), so
+     it is outside this baseline rather than drifting it. */
+  var LEDGER_SUBJECTS = ['c', 'calc'];
+
   function build() {
-    var tier2 = castEntries({ tier: 2 });
-    var tier3 = castEntries({ tier: 3 });
+    var tier2 = castEntries({ tier: 2, homeSubject: LEDGER_SUBJECTS });
+    var tier3 = castEntries({ tier: 3, homeSubject: LEDGER_SUBJECTS });
     var entries = {};
     tier2.concat(tier3).forEach(function (entry) { entries[entry.id] = buildEntry(entry); });
     var blockedIds = tier2.filter(function (entry) { return entry.sourceKind !== 'townsfolk'; }).map(function (entry) { return entry.id; });
@@ -100,7 +105,7 @@
   window.validateTier2Tier3Ledger = function () {
     var errors = [];
     var ledger = window.TIER2_TIER3_LEDGER;
-    var tier2 = castEntries({ tier: 2 }), tier3 = castEntries({ tier: 3 });
+    var tier2 = castEntries({ tier: 2, homeSubject: LEDGER_SUBJECTS }), tier3 = castEntries({ tier: 3, homeSubject: LEDGER_SUBJECTS });
     var liveIds = {};
     tier2.concat(tier3).forEach(function (entry) { liveIds[entry.id] = true; });
     Object.keys(ledger.entries).forEach(function (id) {
@@ -111,7 +116,7 @@
     });
     if (tier2.length !== 117) errors.push('Tier 2 count drifted from frozen 117: ' + tier2.length);
     if (tier3.length !== 37) errors.push('Tier 3 count drifted from frozen 37: ' + tier3.length);
-    var census = castCensus();
+    var census = castCensus(LEDGER_SUBJECTS);
     if (census.percentage !== ledger.befriendablePercentage) errors.push('befriendable percentage drifted: ' + census.percentage);
     var blocked = tier2.filter(function (entry) { return entry.sourceKind !== 'townsfolk'; }).length;
     if (blocked !== ledger.tier2BlockedIds.length) errors.push('blocked gym/boss count drifted: ' + blocked);

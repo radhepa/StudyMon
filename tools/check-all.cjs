@@ -70,6 +70,7 @@ const SUITES=[
     ['Phase 5 archive desk', 'tools/check-archive-phase5.cjs'],
     ['Phase 5 meadow bug catchers', 'tools/check-meadow-bugs-phase5.cjs'],
   ['Phase 6 gym leaders', 'tools/check-gym-leaders.cjs'],
+  ['archived friendships stay off', 'tools/check-archived-off.cjs'],
   ['Phase 6 quest framing', 'tools/check-quest-framing.cjs'],
   ['Phase 7 world state', 'tools/check-world-state.cjs'],
   ['Phase 7 rumors', 'tools/check-rumors.cjs'],
