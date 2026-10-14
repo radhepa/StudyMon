@@ -33,6 +33,7 @@ node tools/check-maths.cjs
 | `check-battle.cjs` | wild and gym battles played to completion through the real DOM, plus every berry rule |
 | `check-calc-review.cjs` | Calculus II: every question reachable from a Wild Battle, right answers due in about 50 questions and wrong ones in about 25, three right in a row hides a question (and `unhideQuestions` restores it), the C region keeps the original boxes |
 | `check-midterm-route.cjs` | C midterm: existing questions, catches from Routes 1–5 with matching rarities, placement after Chapter 7, battles, drills, shared progress, region travel and mobile layout |
+| `check-midterm-quality.cjs` | Authored C midterm: four-option distractors, preserved imports and IDs, answer-length strategies by rank/tag/tier, and shuffled grading identity |
 | `check-progression.cjs` | catching, dex recording, experience, and reward routing to the box when the party is full |
 | `check-evolution.cjs` | branching choices, refusal mid battle and below level, chain walking |
 | `check-autograder.cjs` | a correct submission passes and pays once, a one byte difference fails, errors and timeouts pay nothing |

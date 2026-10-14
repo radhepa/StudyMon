@@ -11,6 +11,11 @@ tmp/
 tools/c-worker-lax.js
 
 # Local implementation notes (kept on disk, not published)
+AGENTS.md
+CLAUDE.md
+.agents/
+.claude/
+.codex/
 HANDOFF-*.md
 IMPLEMENTATION-ROADMAP.md
 docs/*-handoff.md

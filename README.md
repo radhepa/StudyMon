@@ -9,7 +9,7 @@
 <br>
 
 ![1,046 Pokémon](https://img.shields.io/badge/Pok%C3%A9mon-1%2C046-F2C14E?style=for-the-badge&labelColor=1B1B2F)
-![2,760 questions](https://img.shields.io/badge/questions-2%2C760-2F6FD0?style=for-the-badge&labelColor=1B1B2F)
+![2,842 questions](https://img.shields.io/badge/questions-2%2C842-2F6FD0?style=for-the-badge&labelColor=1B1B2F)
 ![49 side quests](https://img.shields.io/badge/side%20quests-49-5DB04A?style=for-the-badge&labelColor=1B1B2F)
 ![Runs offline](https://img.shields.io/badge/runs-offline-2F6FD0?style=for-the-badge&labelColor=1B1B2F)
 ![No build step](https://img.shields.io/badge/build%20step-none-8a6d9c?style=for-the-badge&labelColor=1B1B2F)
@@ -46,9 +46,9 @@ Everything runs locally in your browser, with no account or build step. Once the
 | Feature | What you get |
 |---|---|
 | 🐾 **1,046 Pokémon** | All 1,025 official species, each with front, back and shiny sprites and cries, plus **21 original StudyMon creatures** |
-| 📚 **2,760 questions** | Every one with an explanation of *why*, not just which letter was right |
+| 📚 **2,842 questions** | Every one with an explanation of *why*, not just which letter was right |
 | 🏟 **25 gyms** | One per chapter in the C-Region, one per quiz in the Converging Isles, each led by a named Gym Leader |
-| 📝 **C midterm revision** | 498 existing questions and the 60 Pokémon from Routes 1–5, in a practice route between Chapters 7 and 8 |
+| 📝 **C midterm revision** | 787 questions and the 60 Pokémon from Routes 1–5, in a practice route between Chapters 7 and 8 |
 | 💻 **49 Side Quests** | Write real C in the game, compiled by Clang inside your browser and graded against hidden tests |
 | 🎬 **98 cutscenes** | Every Side Quest has an opening and a closing scene, with portraits and painted backdrops |
 | 🌿 **Pokémon Kingdom** | A living pixel-art forest town where your whole collection wanders, with day, night and rain |
@@ -177,9 +177,9 @@ The **Midterm Revision Route** sits **between Chapters 7 and 8** in Course order
 <img src="docs/screenshots/midterm.jpg" alt="The Midterm Revision Route between Chapters 7 and 8, showing its question pool and Pokémon from Routes 1–5" width="850">
 </div>
 
-- **498 existing questions.** All of Chapters 1–5, plus selected questions from later chapters on formatted and character I/O, characters and pointers. This covers the midterm's computers, data types, operators, prefix/postfix, modulus, functions, selection, logical expressions, `rand`/`srand`, `printf`/`scanf` and pointer topics.
+- **787 questions.** The original 498, plus 207 more existing questions covering later topics, plus 82 added practice exercises. Coverage includes computers, data types, operators, functions, selection, logic, formatted I/O, file I/O, loops, recursion, arrays, searching, sorting, pointers, memory allocation and strings.
 - **60 Pokémon from Routes 1–5.** Their original rarities are preserved. Roaming legendaries do not enter this route.
-- **Shared study progress.** Answers update the original questions and chapters, so revision, chapter drills and ordinary routes share one review history. No duplicate or additional questions are needed.
+- **Shared study progress.** Answers update the original questions and chapters, so revision, chapter drills and ordinary routes share one review history. New exercises use distinct IDs; existing questions retain their saved progress.
 - **Choose how to revise.** Wild battles, a plain drill, Route Info and **See all questions** use the same selected pool.
 
 The quest board also has a separate **19-job Midterm review** set for practising real C programs.

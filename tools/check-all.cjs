@@ -32,6 +32,7 @@ function runSuite(script){
 }
 const SUITES=[
   ['question banks',    'tools/check-questions.cjs'],
+  ['midterm quality',   'tools/check-midterm-quality.cjs'],
   ['side quest data',   'tools/check-side-quests.cjs'],
   ['handlers',          'tools/check-handlers.cjs'],
   ['title screen',      'tools/check-title.cjs'],
@@ -42,6 +43,7 @@ const SUITES=[
   ['systems',           'tools/check-systems.cjs'],
   ['shiny study',       'tools/check-shiny-study.cjs'],
   ['battle shiny UI',   'tools/check-battle-shiny-ui.cjs'],
+  ['midterm content',   'tools/check-midterm-content.cjs'],
   ['midterm route',     'tools/check-midterm-route.cjs'],
   ['item registry',     'tools/check-items.cjs'],
   ['item distribution', 'tools/check-item-distribution.cjs'],
