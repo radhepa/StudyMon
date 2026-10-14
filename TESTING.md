@@ -27,7 +27,7 @@ node tools/check-maths.cjs
 | `check-integrity.cjs` | every species, team, ace, reward and question referenced anywhere exists and is usable; no duplicate question ids; no evolution chain loops |
 | `check-gameplay.cjs` | shop arithmetic, healing, battle entry, boss gating, save round trip, region separation, every location, every quest, route info |
 | `check-systems.cjs` | spaced review boxes and due times, the drill screen, friendship bounds, the ferry, PC box moves |
-| `check-shiny-study.cjs` | every answer raises wild shiny odds to 3% at 100 answers; shiny catches reset the boost; a hidden 20-second grace period survives quick returns and expires across menus, tab hiding and reloads |
+| `check-shiny-study.cjs` | every answer raises wild shiny odds to 3% at 100 answers; shiny catches reset the boost; tab switches preserve the session, and a hidden 20-second grace period expires after leaving study or closing the page |
 | `check-battle-shiny-ui.cjs` | live session accuracy across battles and drills, shiny entrance sparkles and mandatory chime, redraw and switch behavior, mobile layout and static reduced-motion indicators; captures desktop and mobile screenshots |
 | `check-scenes.cjs` | all 750 friend scenes across 250 cast members are well formed, with no unreplaced `{name}` tokens |
 | `check-battle.cjs` | wild and gym battles played to completion through the real DOM, plus every berry rule |

@@ -81,6 +81,24 @@ const near = (a, b) => Math.abs(a - b) < 1e-12;
     check('real drill and battle submissions count once, including a wrong answer',
       r.drillAnswers === 1 && r.total === 2 && r.wrong === 1 && r.sessionCorrect === 1 && r.sessionTotal === 2, JSON.stringify(r));
 
+    // Switching browser tabs leaves the study session open; homework can take
+    // longer than the grace period for actually leaving the study screen.
+    await page.evaluate(() => {
+      Object.defineProperty(document, 'hidden', { configurable: true, get: () => true });
+      document.dispatchEvent(new Event('visibilitychange'));
+    });
+    await page.clock.fastForward(10 * 60000);
+    r = await page.evaluate(() => {
+      const before = { correct: S.shinyStudy.correct, total: S.shinyStudy.total,
+        answers: S.shinyStudy.answers, away: S.shinyStudy.awaySince };
+      delete document.hidden;
+      document.dispatchEvent(new Event('visibilitychange'));
+      return { before, counter: $('#battle-session-count').textContent, rate: wildShinyRate() };
+    });
+    check('switching tabs for ten minutes preserves battle accuracy and shiny boost',
+      r.before.correct === 1 && r.before.total === 2 && r.before.answers === 2 && r.before.away === 0 &&
+      r.counter === '1 / 2' && near(r.rate, 0.00158), JSON.stringify(r));
+
     await page.evaluate(() => { showScreen('map'); renderMap(); });
     await page.clock.fastForward(10000);
     await page.evaluate(() => { showScreen('party'); renderParty(); });

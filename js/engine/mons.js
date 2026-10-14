@@ -95,7 +95,7 @@ function shinyStudyScreenActive() {
 }
 
 function setShinyStudyActive(active) {
-  _shinyStudyActive = !!active && !document.hidden;
+  _shinyStudyActive = !!active;
   var study = ensureShinyStudy();
   if (!study) return;
   expireShinyStudy();
@@ -134,9 +134,8 @@ function shinyStudyOnLoad() {
   scheduleShinyStudyExpiry();
 }
 
-document.addEventListener('visibilitychange', function () {
-  setShinyStudyActive(!document.hidden && shinyStudyScreenActive());
-});
+/* Looking at another tab or homework does not leave the study screen.
+   Navigation and page departure own the grace period, not tab visibility. */
 window.addEventListener('pagehide', function () { setShinyStudyActive(false); });
 window.addEventListener('pageshow', function () { setShinyStudyActive(shinyStudyScreenActive()); });
 
