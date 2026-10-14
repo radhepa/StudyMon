@@ -1,4 +1,4 @@
-/* Question quality gates for the authored C midterm pool, excluding imports. */
+/* Question quality gates for the revised bank and active midterm, excluding imports. */
 const assert=require('assert'),fs=require('fs'),path=require('path'),vm=require('vm');
 const root=path.resolve(__dirname,'..');
 const {window:after,files}=require('./dump-questions.cjs');
@@ -40,18 +40,25 @@ function rates(items,measure){
   }
   return {rankRates:rankScores.map(n=>n/items.length),uniqueLong,longRight,uniqueShort,shortRight};
 }
-const measured={};
+vm.runInContext(fs.readFileSync(path.join(root,'js/data/c-midterm.js'),'utf8'),after);
+vm.runInContext(fs.readFileSync(path.join(root,'js/engine/quiz.js'),'utf8'),after);
+const active=after.revisionQuestions(after.C_REVISION_ROUTES[0]).filter(q=>!q.source);
+assert.equal(active.length,614,'active authored midterm scope changed');
+const activeMCQ=active.filter(q=>q.k==='mcq');
+assert.equal(activeMCQ.length,596);assert.equal(active.filter(q=>q.k==='fill').length,18);
+const measured={revisedBank:{},activeMidterm:{}};
 for(const [name,measure] of Object.entries({characters:s=>[...s].length,words:s=>(s.match(/\S+/g)||[]).length})){
-  const result=rates(mcq,measure);measured[name]=result;
-  for(const score of result.rankRates)assert(score>=.20&&score<=.30,name+': exploitable length rank '+score);
-  for(const group of [
-    ...['Recall','Concept','Bug Hunt','Trace'].map(tag=>mcq.filter(q=>q.tag===tag)),
-    ...[1,2,3,4].map(t=>mcq.filter(q=>q.t===t))
-  ])if(group.length>=80)for(const score of rates(group,measure).rankRates)
-    assert(score<=.34,name+': subgroup length shortcut '+score);
+  for(const [scope,items] of [['revisedBank',mcq],['activeMidterm',activeMCQ]]){
+    const result=rates(items,measure);measured[scope][name]=result;
+    for(const score of result.rankRates)assert(score>=.20&&score<=.30,scope+' '+name+': exploitable length rank '+score);
+    for(const group of [
+      ...['Recall','Concept','Bug Hunt','Trace'].map(tag=>items.filter(q=>q.tag===tag)),
+      ...[1,2,3,4].map(t=>items.filter(q=>q.t===t))
+    ])if(group.length>=80)for(const score of rates(group,measure).rankRates)
+      assert(score<=.34,scope+' '+name+': subgroup length shortcut '+score);
+  }
 }
 // The source index must remain the grading identity across every presentation.
-vm.runInContext(fs.readFileSync(path.join(root,'js/engine/quiz.js'),'utf8'),after);
 vm.runInContext('var qualitySeed=159; Math.random=function(){qualitySeed=(Math.imul(qualitySeed,1664525)+1013904223)>>>0;return qualitySeed/4294967296;};',after);
 for(const q of mcq){
   const positions=new Set();let last=-1;
@@ -70,6 +77,7 @@ const snapshot=JSON.stringify(all(after));vm.runInContext(source,after);
 assert.equal(JSON.stringify(all(after)),snapshot,'quality patches are not idempotent');
 for(const id of after.C_MIDTERM_QUALITY_IDS)assert(prior.has(id),'unknown quality ID '+id);
 console.log('PASS  705 authored cards; 684 four-option MCQs; 21 fills; stable IDs and chapters');
+console.log('PASS  active midterm has 614 authored cards; 596 four-option MCQs and 18 fills');
 console.log('PASS  all 82 imported cards and every later-chapter card unchanged');
 console.log('PASS  no severe correct-answer length giveaway; all length-rank strategies near chance');
 console.log('PASS  seeded presentation shuffles preserve grading and visit all four slots');

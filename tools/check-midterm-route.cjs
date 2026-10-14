@@ -1,5 +1,6 @@
-/* Midterm route: preserve the bank, reuse all Chapters 1–10, keep draws inside
-   the selected syllabus, and play its map, drill and catch flows in fresh storage.
+/* Midterm route: preserve the bank, reuse the non-string Chapters 1–9 syllabus,
+   retain the uploaded exercises (including their six string questions),
+   keep draws inside that syllabus, and play its map, drill and catch flows in fresh storage.
    Optional first argument overrides the local server URL. */
 const assert = require('assert');
 const fs = require('fs');
@@ -9,6 +10,13 @@ const { chromium } = require('./playwright.cjs');
 const root = path.resolve(__dirname, '..');
 const out = path.join(root, 'output', 'midterm-route');
 const url = process.argv[2] || 'http://127.0.0.1:8780/';
+const expectedPoolSize = 696;
+const excludedAuthoredIds = [
+  'c2-03', 'c2-07', 'c2-21', 'c2-22', 'c2-35', 'c2-43', 'c2-50', 'c2-tf-009', 'c2-tf-010',
+  'c5-41', 'c7-15', 'c7-16', 'c7-20', 'c7-34', 'c7-47', 'c7-48', 'c7-51',
+  'c7-ed4-004', 'c7-tf-004', 'c7-tf-005', 'c10-18', 'c10-40', 'c10-48'
+];
+const practiceStringIds = [41, 42, 43, 47, 48, 51].map(n => 'c10-cs159-practice-' + n);
 function check(name, condition, detail) {
   assert(condition, name + (detail ? ': ' + detail : ''));
   console.log('PASS  ' + name + (detail ? ' [' + detail + ']' : ''));
@@ -40,6 +48,9 @@ check('every uploaded exercise is included once',
     source.questionIds.every(id => route.questionIds.includes(id))));
 check('every supplemental ID exists and appears once',
   route.questionIds.every(id => originalIds.has(id)) && new Set(route.questionIds).size === route.questionIds.length);
+check('all six uploaded practice string exercises retain their source and route membership',
+  practiceStringIds.every(id => route.questionIds.includes(id) && original.some(q =>
+    q.id === id && q.chapter === 10 && q.source && q.source.document === 'cs159-practice')));
 check('the C bank still contains exactly 1107 questions and no synthetic chapter',
   original.length === 1107 && !data.QBANK[route.n]);
 
@@ -59,11 +70,11 @@ check('the C bank still contains exactly 1107 questions and no synthetic chapter
       S.party = [makeMon(6, 35)]; ensureBag(); S.money = 99999; buyItem('ultra', 30);
       S.badges = {}; showScreen('map'); renderMap();
     });
-    const result = await page.evaluate(() => {
+    const result = await page.evaluate(({ excludedAuthoredIds, practiceStringIds }) => {
       const c = chapterByNumber(91), pool = routeQuestions(91), all = allQuestions();
       const ids = new Set(pool.map(q => q.id));
       const originalById = new Map(all.map(q => [q.id, q]));
-      const included = { 'c7-01': 1, 'c7-02': 1, 'c10-03': 1, 'c10-19': 1, 'c11-22': 1 };
+      const included = { 'c7-01': 1, 'c7-02': 1, 'c10-03': 1, 'c10-19': 1 };
       const excluded = { 'c12-01': 1, 'c13-01': 1, 'c14-01': 1, 'c15-01': 1 };
       let drawEscapes = 0, unreachable = 0;
       const priorBank = JSON.stringify(QBANK);
@@ -99,7 +110,12 @@ check('the C bank still contains exactly 1107 questions and no synthetic chapter
       } finally { S.badges = badges; Math.random = random; }
       return {
         size: pool.length, bankSize: all.length, unique: ids.size === pool.length,
-        full: [1,2,3,4,5,6,7,8,9,10].every(n => QBANK[n].every(q => ids.has(q.id))),
+        full: [1,2,3,4,5,6,7,8,9].every(n => QBANK[n].filter(q =>
+          !excludedAuthoredIds.includes(q.id)).every(q => ids.has(q.id))),
+        noAuthoredStrings: QBANK[10].filter(q => !q.source).every(q => !ids.has(q.id)) &&
+          excludedAuthoredIds.every(id => !ids.has(id)),
+        practiceStrings: practiceStringIds.every(id => ids.has(id)) &&
+          pool.filter(q => q.chapter === 10).length === practiceStringIds.length,
         originalObjects: pool.every(q => originalById.get(q.id) === q),
         extras: c.questionIds.every(id => ids.has(id)),
         included: Object.keys(included).every(id => ids.has(id)),
@@ -114,13 +130,15 @@ check('the C bank still contains exactly 1107 questions and no synthetic chapter
         invalidEncounter, sampled: sampled.size, gyms: CHAPTERS.length,
         byChapter: Object.fromEntries([...new Set(pool.map(q => q.chapter))].map(n => [n, pool.filter(q => q.chapter === n).length]))
       };
-    });
-    check('the route contains all of Chapters 1–10', result.full, JSON.stringify(result.byChapter));
-    check('787 unique questions reuse their bank objects and all supplemental IDs',
-      result.size === 787 && result.unique && result.originalObjects && result.extras);
-    check('file I/O, heap allocation and string libraries are included; later unrelated chapters stay outside', result.included && result.excluded);
+    }, { excludedAuthoredIds, practiceStringIds });
+    check('the route retains the non-string Chapters 1–9 syllabus', result.full, JSON.stringify(result.byChapter));
+    check(expectedPoolSize + ' unique questions reuse their bank objects and all supplemental IDs',
+      result.size === expectedPoolSize && result.unique && result.originalObjects && result.extras);
+    check('generic string questions stay outside while the six uploaded string exercises remain',
+      result.noAuthoredStrings && result.practiceStrings);
+    check('file I/O and heap allocation remain included; later unrelated chapters stay outside', result.included && result.excluded);
     check('new exercises show plain question labels', result.plain);
-    check('all 787 questions can be drawn and 1000 mixed draws stay inside the syllabus',
+    check('all ' + expectedPoolSize + ' questions can be drawn and 1000 mixed draws stay inside the syllabus',
       result.unreachable === 0 && result.drawEscapes === 0 && result.unchanged);
     check('all 60 Pokemon from Routes 1–5 retain their source rarities and are catchable',
       result.sourceCount === 60 && result.sourceMatches && result.uniquePokemon === result.sourceCount &&
@@ -139,19 +157,19 @@ check('the C bank still contains exactly 1107 questions and no synthetic chapter
     }));
     await card.screenshot({ path: path.join(out, 'desktop-card.png') });
     await card.getByRole('button', { name: 'Route info', exact: true }).click();
-    check('route info advertises the same 60 Pokemon and 787 questions',
+    check('route info advertises the same 60 Pokemon and ' + expectedPoolSize + ' questions',
       await page.locator('#modal .routecell').count() === result.sourceCount &&
-      (await page.locator('#modal .question-base').innerText()).includes('/787'));
+      (await page.locator('#modal .question-base').innerText()).includes('/' + expectedPoolSize));
     await page.locator('#modal').getByRole('button', { name: 'See all questions' }).click();
     check('the complete catalog keeps the chapter labels',
-      await page.locator('#modal .question-entry').count() === 787 &&
+      await page.locator('#modal .question-entry').count() === expectedPoolSize &&
       (await page.locator('#modal .question-entry-meta').last().innerText()).includes('Ch '));
     await page.locator('#modal').getByRole('button', { name: 'Close', exact: true }).click();
 
     await card.getByRole('button', { name: 'Drill', exact: true }).click();
     check('the drill identifies the midterm route and uses the complete pool',
       (await page.locator('#s-drill h2').innerText()) === 'Midterm Revision Route' &&
-      await page.evaluate(() => D.pool.length === 787));
+      await page.evaluate(size => D.pool.length === size, expectedPoolSize));
     for (let i = 0; i < 12; i++) {
       const q = await page.evaluate(() => ({ id: D.q.id, kind: D.q.k, answer: D.q.a, chapter: D.q.chapter }));
       if (q.kind === 'fill') {
@@ -166,12 +184,12 @@ check('the C bank still contains exactly 1107 questions and no synthetic chapter
     await page.locator('#s-drill').getByRole('button', { name: 'End session' }).click();
     await page.locator('#modal').getByRole('button', { name: 'Back to the map' }).click();
     check('the map shows shared question progress after drilling',
-      !(await card.innerText()).includes('0/787'));
+      !(await card.innerText()).includes('0/' + expectedPoolSize));
 
     await card.getByRole('button', { name: 'Wild battle', exact: true }).click();
     check('a catchable wild battle starts without badges and uses the exact revision pool',
-      await page.evaluate(() => B.kind === 'wild' && B.title === 'Midterm Revision Route' &&
-        B.pool.length === 787 && badgeCount() === 0));
+      await page.evaluate(size => B.kind === 'wild' && B.title === 'Midterm Revision Route' &&
+        B.pool.length === size && badgeCount() === 0, expectedPoolSize));
     await page.locator('#quiz .move').first().click();
     check('attacking draws from the revision pool',
       await page.evaluate(() => B.pool.some(q => q === B.q)));
@@ -223,13 +241,13 @@ check('the C bank still contains exactly 1107 questions and no synthetic chapter
       const r = document.querySelector('.midterm-route').getBoundingClientRect();
       return r.left >= 0 && r.right <= innerWidth && document.documentElement.scrollWidth <= innerWidth;
     }));
-    const region = await page.evaluate(() => {
+    const region = await page.evaluate(size => {
       switchSubject('calc'); showScreen('map'); renderMap();
       const calc = { route: chapterByNumber(91).exam === 'x1', questions: routeQuestions(91).length,
         absent: !document.querySelector('.midterm-route') };
       switchSubject('c'); renderMap();
-      return { calc, restored: chapterByNumber(91).revision && routeQuestions(91).length === 787 };
-    });
+      return { calc, restored: chapterByNumber(91).revision && routeQuestions(91).length === size };
+    }, expectedPoolSize);
     check('calculus keeps its own revision route and the C route returns after travel',
       region.calc.route && region.calc.questions > 0 && region.calc.absent && region.restored);
     await page.reload();

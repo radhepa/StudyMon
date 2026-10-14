@@ -81,13 +81,14 @@ function questionsFor(chapters, guestLessons) {
   return out;
 }
 
-/* A practice route selects existing objects, keeping the original chapter and
-   SRS identity. Its complete chapters stay complete when their banks grow. */
+/* A practice route selects existing objects, keeping their chapter and SRS
+   identity. Explicit source IDs can include exceptions to a chapter's scope. */
 function revisionQuestions(route) {
-  var selected = {};
+  var selected = {}, excluded = {};
   (route.questionIds || []).forEach(function (id) { selected[id] = true; });
+  (route.excludedQuestionIds || []).forEach(function (id) { excluded[id] = true; });
   return allQuestions().filter(function (q) {
-    return (route.chapters || []).indexOf(q.chapter) >= 0 || selected[q.id];
+    return selected[q.id] || (!excluded[q.id] && (route.chapters || []).indexOf(q.chapter) >= 0);
   });
 }
 
