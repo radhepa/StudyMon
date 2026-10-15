@@ -889,7 +889,8 @@ function renderKingdom() {
       '<h2>Pokémon Kingdom</h2><p>Your Pokémon live their own lives here. Each one settles in for a while - ' +
       'a few minutes or a few days - then follows the paths somewhere new.</p></div>' +
       '<div class="kingdom-counts"><span>★ ' + roster.length + ' residents</span>' +
-      '<span>Party ' + S.party.length + '</span><span>PC ' + S.box.length + '</span></div></div>';
+      '<span>Party ' + S.party.length + '</span><span>PC ' + S.box.length + '</span>' +
+      kingdomBiosButtonHtml() + '</div></div>';
   var h =
     '<section class="kingdom-location-head"><div><span class="kingdom-location-icon">' + location.icon + '</span>' +
       '<div><h3>' + esc(location.name) + '</h3><p>' + esc(location.description) + '</p></div></div>' +
@@ -1068,6 +1069,8 @@ function kingdomSync(initial) {
   kingdomDrawMapWalkers(census, now);
   kingdomRefreshInspector();
   kingdomRefreshGymStations();
+  kingdomBiosTick(now);
+  kingdomBiosRefresh();
 }
 
 /* Sets an actor walking one leg, exactly as its itinerary has it. A leave leg
@@ -1337,7 +1340,8 @@ function kingdomInspect(actor) {
     '<div><h3>' + esc(monName(m)) + (m.shiny ? ' ✦' : '') + '</h3><div>' + typePills(d.types) + '</div>' +
     '<p>Level ' + m.lvl + ' · ' + esc(d.genus) + ' · ' + home + '<br><span id="kingdom-inspect-status">' +
     esc(kingdomTravelLine(actor)) + '</span></p><p id="kingdom-inspect-about" class="kingdom-inspect-about">' +
-    kingdomAboutHtml(actor) + '</p><div id="kingdom-inspect-moves" data-travelling="' +
+    kingdomAboutHtml(actor) + '</p><button type="button" class="kingdom-bio-link" onclick="kingdomBiosOpen(\'' +
+    actor.key + '\')">📖 Read biography</button><div id="kingdom-inspect-moves" data-travelling="' +
     travelling + '" data-act="' + esc(kingdomActKey(actor)) + '">' +
     kingdomMoveButtonsHtml(actor, travelling) + '</div></div>' +
     '<button class="kingdom-close" onclick="kingdomClearInspect()" aria-label="Close Pokémon details">×</button>';
@@ -2084,6 +2088,7 @@ function kingdomStop(stopAudio) {
     KINGDOM_GRAB = null;
   }
   if (stopAudio && KINGDOM_CARRY) kingdomReturnCarried();
+  kingdomBiosClose();
   kingdomSavePlaces();
   if (KINGDOM_RAF) cancelAnimationFrame(KINGDOM_RAF);
   if (KINGDOM_CLOCK_TIMER) clearInterval(KINGDOM_CLOCK_TIMER);

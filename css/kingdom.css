@@ -2267,3 +2267,226 @@ html.kingdom-carrying body { user-select: none; }
   .kingdom-halo { animation: none !important; }
   .kfx { display: none; }
 }
+
+/* ---- Biographies: the header button, the list and one resident's story ---- */
+.kingdom-counts .kingdom-bios-open {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 0;
+  padding: 4px 11px 4px 8px;
+  border: 2px solid #745735;
+  border-radius: 999px;
+  background: #fff7df;
+  color: #4e3423;
+  font: 700 11px var(--read);
+  letter-spacing: 0;
+  box-shadow: 0 2px 0 #74573566;
+  cursor: pointer;
+}
+.kingdom-bios-open i { font-style: normal; font-size: 14px; line-height: 1; }
+.kingdom-inspector .kingdom-bio-link {
+  min-height: 0;
+  margin-top: 7px;
+  padding: 5px 10px;
+  font-size: 11px;
+  font-style: normal;
+}
+
+.kingdom-bios {
+  width: min(680px, calc(100vw - 24px));
+  max-width: none;
+  max-height: min(800px, calc(100dvh - 24px));
+  padding: 0;
+  overflow: hidden;
+  border: 5px solid #523821;
+  border-radius: 15px;
+  background: linear-gradient(135deg, #f7ebcf, #e3cb9c);
+  color: #4a2f20;
+  box-shadow: 0 10px 0 #1a100a88, inset 0 0 0 2px #e8c780;
+}
+.kingdom-bios[open] { display: flex; flex-direction: column; }
+.kingdom-bios::backdrop { background: #2a1a0fa8; }
+.kingdom-bios-box { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+.kingdom-bios-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 14px 10px;
+  border-bottom: 3px solid #8c6c41;
+  background: linear-gradient(#fff6e1, #eedcb3);
+}
+.kingdom-bios-head > div { flex: 1; min-width: 0; }
+.kingdom-bios-head h3 { margin: 0; color: #6b4327; font-size: 18px; }
+.kingdom-bios-head p { margin: 2px 0 0; color: #725b3e; font: 700 12px var(--read); }
+.kingdom-bios-mark { font-style: normal; font-size: 26px; line-height: 1; }
+.kingdom-bios-head button { flex: none; min-width: 40px; min-height: 0; padding: 6px; text-align: center; }
+.kingdom-bios-search { padding: 10px 14px 2px; }
+.kingdom-bios-search input {
+  width: 100%;
+  padding: 8px 11px;
+  border: 2px solid #9a7446;
+  border-radius: 9px;
+  background: #fffaf0;
+  color: #3f281a;
+  font: 400 14px var(--read);
+}
+.kingdom-bios-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 8px 14px 16px;
+}
+.kingdom-bio-none { margin: 24px 6px; color: #7a6245; font: italic 13px var(--read); text-align: center; }
+
+/* The list of residents */
+.kingdom-bio-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(178px, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.kingdom-bios .kingdom-bio-card,
+.kingdom-bio-friends button {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+  min-height: 0;
+  padding: 6px 9px 6px 8px;
+  border: 3px solid #745735;
+  border-radius: 10px;
+  background: #fffaf0;
+  color: #4a2f20;
+  box-shadow: 0 3px 0 #74573566;
+  font: 400 12px var(--read);
+  letter-spacing: 0;
+  text-align: left;
+  cursor: pointer;
+}
+.kingdom-bios .kingdom-bio-card:hover,
+.kingdom-bios .kingdom-bio-friends button:hover {
+  background: #fff1d6;
+  border-color: #9a3550;
+  transform: translateY(1px);
+  box-shadow: 0 2px 0 #74573566;
+}
+/* Sprites carry a wide empty border, so they are drawn larger than their cell. */
+.kingdom-bio-card img, .kingdom-bio-friends img {
+  width: 52px;
+  height: 52px;
+  margin: -6px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+.kingdom-bio-card b, .kingdom-bio-card small, .kingdom-bio-friends b, .kingdom-bio-friends small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.kingdom-bio-card b, .kingdom-bio-friends b { color: #3f281a; font: 700 13px var(--pixel); letter-spacing: .3px; }
+.kingdom-bio-card small, .kingdom-bio-friends small { margin-top: 1px; color: #7a6245; font: 700 11px var(--read); }
+.kingdom-bio-card .kingdom-bio-card-where { color: #3f6b25; }
+.kingdom-bio-card-friends {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: #9a3550;
+  font: 700 12px var(--read);
+}
+.kingdom-bio-card-friends .kingdom-icon, .kingdom-bio-hearts .kingdom-icon { flex: none; }
+
+/* One resident's biography */
+.kingdom-bio-hero {
+  display: grid;
+  grid-template-columns: 92px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 0 12px;
+  border-bottom: 2px dashed #b9976255;
+}
+.kingdom-bio-hero img { width: 108px; height: 108px; margin: -8px; object-fit: contain; image-rendering: pixelated; }
+.kingdom-bio-hero h4 { margin: 0; color: #3f281a; font: 700 22px var(--pixel); letter-spacing: .4px; }
+.kingdom-bio-hero p { margin: 5px 0 0; color: #6b5033; font: 400 12px/1.4 var(--read); }
+.kingdom-bio-hero .kingdom-bio-now { color: #3f6b25; font-weight: 700; }
+.kingdom-bios .kingdom-bio-visit { min-height: 0; padding: 7px 14px; font-size: 13px; }
+.kingdom-bio section { margin-top: 13px; }
+.kingdom-bio h5 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 7px;
+  color: #6b4327;
+  font: 700 14px var(--pixel);
+  letter-spacing: .4px;
+}
+.kingdom-bio h5 small {
+  padding: 1px 7px;
+  border: 2px solid #9a7446;
+  border-radius: 999px;
+  background: #fff7df;
+  color: #59422c;
+  font: 700 11px var(--read);
+  letter-spacing: 0;
+}
+.kingdom-bio-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; margin: 0; }
+.kingdom-bio-facts > div {
+  padding: 6px 9px 7px;
+  border: 2px solid #c9a873;
+  border-radius: 8px;
+  background: #fffaf0;
+}
+.kingdom-bio-facts dt {
+  color: #87643e;
+  font: 700 10px var(--read);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.kingdom-bio-facts dd { margin: 2px 0 0; color: #3f281a; font: 700 13px/1.35 var(--read); }
+.kingdom-bio-facts > .hidden { border-style: dashed; background: #f1e3c3; }
+.kingdom-bio-facts > .hidden dd { color: #a08a66; letter-spacing: .2em; }
+.kingdom-bio-note { margin: 7px 2px 0; color: #7a6245; font: italic 12px/1.45 var(--read); }
+.kingdom-bio-friends {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(178px, 1fr));
+  gap: 7px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.kingdom-bio-hearts { display: inline-flex; gap: 1px; }
+.kingdom-bio-diary { margin: 0; padding: 0; list-style: none; }
+.kingdom-bio-diary li {
+  display: grid;
+  grid-template-columns: 104px minmax(0, 1fr);
+  gap: 10px;
+  padding: 6px 2px;
+  border-bottom: 1px dashed #b9976266;
+  color: #4a2f20;
+  font: 400 13px/1.4 var(--read);
+}
+.kingdom-bio-diary li:last-child { border-bottom: 0; }
+.kingdom-bio-diary time { color: #87643e; font: 700 11px/1.7 var(--read); }
+
+@media (max-width: 560px) {
+  .kingdom-bios { width: calc(100vw - 16px); max-height: calc(100dvh - 16px); }
+  .kingdom-bios-head { gap: 8px; padding: 9px 10px 8px; }
+  .kingdom-bios-head h3 { font-size: 16px; }
+  .kingdom-bios-mark { font-size: 22px; }
+  .kingdom-bios-search { padding: 9px 9px 2px; }
+  .kingdom-bios-body { padding: 8px 9px 12px; }
+  .kingdom-bio-grid, .kingdom-bio-friends { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px; }
+  .kingdom-bios .kingdom-bio-card, .kingdom-bio-friends button { grid-template-columns: 34px minmax(0, 1fr) auto; gap: 5px; padding: 5px 7px 5px 6px; }
+  .kingdom-bio-card img, .kingdom-bio-friends img { width: 44px; height: 44px; margin: -5px; }
+  .kingdom-bio-card b, .kingdom-bio-friends b { font-size: 12px; }
+  .kingdom-bio-hero { grid-template-columns: 72px minmax(0, 1fr); gap: 10px; }
+  .kingdom-bio-hero img { width: 86px; height: 86px; margin: -7px; }
+  .kingdom-bio-hero h4 { font-size: 18px; }
+  .kingdom-bios .kingdom-bio-visit { grid-column: 2; justify-self: start; }
+  .kingdom-bio-diary li { grid-template-columns: 1fr; gap: 1px; }
+}

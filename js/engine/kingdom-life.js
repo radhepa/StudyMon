@@ -813,15 +813,22 @@ function kingdomBondMeet(a, b, rivalry) {
   bond.t = now;
   kingdomBondsSave();
   var after = kingdomBondLevel(bond);
+  var milestone = function (tie) {
+    kingdomBioNote(a.entry, 'Became ' + tie + ' with ' + monName(b.entry.mon) + '.', now);
+    kingdomBioNote(b.entry, 'Became ' + tie + ' with ' + monName(a.entry.mon) + '.', now);
+    kingdomBiosSave();
+  };
   if (after > before) {
     kingdomSay(monName(a.entry.mon) + ' and ' + monName(b.entry.mon) + ' are ' +
       (after === 3 ? 'now best friends!' : after === 2 ? 'close friends now!' : 'friends now!'), 'news');
     kingdomEmote(a, '♥', 'bond');
     kingdomEmote(b, '♥', 'bond');
+    milestone(KINGDOM_BOND_NAMES[after]);
     return after;
   }
   if (!wasRival && (bond.r || 0) >= 3) {
     kingdomSay(monName(a.entry.mon) + ' and ' + monName(b.entry.mon) + ' have become gym rivals!', 'news');
+    milestone('gym rivals');
   }
   return 0;
 }
@@ -1985,4 +1992,509 @@ function kingdomUseSpot(id) {
   if (kingdomActStart(actor, spot, seat, { manual: true })) {
     toast(monName(actor.entry.mon) + ' is heading to the ' + spot.name + '.');
   }
+}
+
+/* ---- Biographies ----------------------------------------------------------------
+   Every resident has a biography. Part of it is written the day it moves in
+   (personality, birthday, favourite places, habits). Part is discovered at
+   random as time passes: four hidden facts and a diary of little moments.
+   Friendships are rolled at random too: a newcomer arrives already knowing a
+   friend or two, and now and then two residents in the same district hit it
+   off. They go in the same bond store as the friendships that grow by meeting
+   (kingdomBondMeet), so the inspector and trips together honour them. */
+
+var KINGDOM_BIO_KEY = 'studymon.kingdom.bios.v1';
+var KINGDOM_BIOS = null;
+var KINGDOM_BIO_DIARY_MAX = 10;
+/* Each minute a resident has this chance that something new happens in its
+   life. Time away counts too, up to three hours' worth. */
+var KINGDOM_BIO_RATE = .03;
+var KINGDOM_BIO_CATCH_UP_MIN = 180;
+var KINGDOM_BIO_TICK_AT = 0;
+/* The open panel: null for the list of residents, or one resident's key. */
+var KINGDOM_BIO_VIEW = null;
+var KINGDOM_BIO_QUERY = '';
+var KINGDOM_BIO_LIST_TOP = 0;
+var KINGDOM_BIO_HTML = '';
+
+var KINGDOM_BIO_PERSONALITIES = ['cheerful', 'shy', 'bold', 'dreamy', 'curious', 'gentle', 'mischievous',
+  'proud', 'easygoing', 'brave', 'chatty', 'thoughtful', 'grumpy but kind', 'playful', 'calm', 'stubborn',
+  'polite', 'energetic'];
+var KINGDOM_BIO_MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August',
+  'September', 'October', 'November', 'December'];
+var KINGDOM_BIO_GAITS = { step: 'Walks', hop: 'Hops', fly: 'Flies', float: 'Floats', slither: 'Slithers', heavy: 'Stomps' };
+
+/* Hidden until discovered. The answer is fixed when the biography is written;
+   only finding it out is random. */
+var KINGDOM_BIO_FACTS = [
+  { id: 'snack', label: 'Favourite snack', found: 'Turns out its favourite snack is {v}.', pool: [
+    'Oran Berries', 'Pecha Berries', 'Sitrus Berries', 'warm honey cakes', 'cupcakes from the Berry Market',
+    'crunchy orchard apples', 'Rawst Berries', 'Leppa Berries', 'Moomoo Milk', 'Poké Puffs', 'roasted chestnuts',
+    'sweet Pinap Berries'] },
+  { id: 'hobby', label: 'Hobby', found: 'Was spotted {v}. That is its hobby!', pool: [
+    'collecting smooth pebbles', 'stargazing on Moonbell Hill', 'napping in sunbeams', 'practising its cry',
+    'drawing in the dirt with a stick', 'counting the lanterns in the Square', 'racing falling leaves',
+    'humming along to the town music', 'building little stone towers', 'watching the clouds',
+    'trying to beat its gym record', 'sorting berries by colour'] },
+  { id: 'quirk', label: 'Quirk', found: 'Someone noticed that it {v}.', pool: [
+    'sneezes when it is happy', 'always sits facing the sunset', 'hums while it walks',
+    'gives a tiny bow to everyone it meets', 'falls asleep in the funniest places', 'keeps one berry hidden for later',
+    'is a little scared of its own shadow at night', 'cannot walk past a puddle without splashing in it',
+    'tidies up after everyone', 'talks in its sleep', 'tilts its head at every new sound',
+    'never takes the same path twice'] },
+  { id: 'dream', label: 'Dream', found: 'Told a friend its dream: {v}.', pool: [
+    'to win a badge at Mossroot Gym', 'to see a shooting star from the Observatory', 'to visit every district in one day',
+    'to become the strongest in your party', 'to make a friend in every district', 'to ring the Moonbell at midnight',
+    'to throw the best party Lantern Square has ever seen', 'to grow its own berry tree',
+    'to climb the gym wall without stopping', 'to travel far beyond the Kingdom with you'] }
+];
+
+var KINGDOM_BIO_MOMENTS = [
+  'Found a smooth, shiny pebble at {place}.', 'Watched the clouds drift over {place} for a whole afternoon.',
+  'Shared a snack with a newcomer at {place}.', 'Got lost on the way to {place} and found a shortcut.',
+  'Practised its cry until {place} echoed.', 'Took a long nap in a sunny corner of {place}.',
+  'Helped tidy up {place} after a busy day.', 'Learned a new dance step at {place}.',
+  'Chased a butterfly around {place} in circles.', 'Hummed along to the music at {place}.',
+  'Built a little tower of stones at {place}.', 'Told a very long story to everyone at {place}.',
+  'Tried a new berry at {place} and made a funny face.', 'Waved at everyone walking through {place}.'
+];
+var KINGDOM_BIO_PLACE_MOMENTS = {
+  green: ['Rolled all the way down the grassy slope of the Green.'],
+  square: ['Watched the lanterns light up one by one.'],
+  market: ['Talked a stall keeper into a free berry.'],
+  riverside: ['Skipped a stone five times across the river.'],
+  hearth: ['Warmed up by the hearth fire on a chilly evening.'],
+  hill: ['Heard the Moonbell ring and made a wish.'],
+  gym: ['Beat its own record on the agility hurdles.', 'Sparred with a training dummy and won (probably).'],
+  orchard: ['Picked an apple almost too big to carry.'],
+  springs: ['Soaked in the warm springs until it was very sleepy.'],
+  observatory: ['Counted twelve shooting stars from the Observatory.']
+};
+
+function kingdomBiosLoad() {
+  if (KINGDOM_BIOS) return KINGDOM_BIOS;
+  var saved = null;
+  try { saved = JSON.parse(localStorage.getItem(KINGDOM_BIO_KEY) || 'null'); } catch (error) { }
+  KINGDOM_BIOS = saved && saved.v === 1 && saved.mons ? saved : { v: 1, mons: {} };
+  return KINGDOM_BIOS;
+}
+
+function kingdomBiosSave() {
+  if (!KINGDOM_BIOS) return;
+  var live = {};
+  kingdomRoster().forEach(function (entry) { live[kingdomPlacementKey(entry)] = true; });
+  Object.keys(KINGDOM_BIOS.mons).forEach(function (key) { if (!live[key]) delete KINGDOM_BIOS.mons[key]; });
+  try { localStorage.setItem(KINGDOM_BIO_KEY, JSON.stringify(KINGDOM_BIOS)); } catch (error) { }
+}
+
+/* A resident's biography, written the first time anyone asks for it. */
+function kingdomBio(entry) {
+  var store = kingdomBiosLoad();
+  var key = kingdomPlacementKey(entry);
+  if (!store.mons[key]) {
+    var now = Date.now();
+    store.mons[key] = { seed: Math.floor(Math.random() * 1e9), since: now, at: now, found: {},
+      diary: [{ t: now, text: 'Moved into the Kingdom.' }] };
+  }
+  return store.mons[key];
+}
+
+/* The same answer every time for one biography. */
+function kingdomBioPick(bio, salt, list) {
+  return list[kingdomStringHash(bio.seed + ':' + salt) % list.length];
+}
+
+function kingdomBioNote(entry, text, time) {
+  var diary = kingdomBio(entry).diary;
+  diary.unshift({ t: time || Date.now(), text: text });
+  diary.sort(function (x, y) { return y.t - x.t; });
+  if (diary.length > KINGDOM_BIO_DIARY_MAX) diary.length = KINGDOM_BIO_DIARY_MAX;
+}
+
+/* Two residents become friends (or gym rivals) out of the blue: mostly
+   friends, sometimes close or best friends. An existing friendship is left
+   alone. 'old' is a friendship from before moving in. */
+function kingdomBioBefriend(a, b, time, why, place) {
+  var store = kingdomBondsLoad();
+  var id = kingdomBondId(a, b);
+  var bond = store.pairs[id] || { n: 0, r: 0, t: 0 };
+  if (kingdomBondLevel(bond) >= 1 || (bond.r || 0) >= 3) return false;
+  var roll = Math.random();
+  var rival = roll < .15;
+  var n = rival || roll < .6 ? 3 + Math.floor(Math.random() * 3) :
+    roll < .88 ? 6 + Math.floor(Math.random() * 4) : 10 + Math.floor(Math.random() * 3);
+  store.pairs[id] = { n: Math.max(bond.n || 0, n), r: rival ? 3 : bond.r || 0, t: bond.t || 0 };
+  var tie = rival ? 'gym rivals' : KINGDOM_BOND_NAMES[kingdomBondLevel(store.pairs[id])];
+  var line = function (other) {
+    var name = monName(other.mon);
+    if (why === 'old') return 'Already knew ' + name + ' before moving in. They are ' + tie + '.';
+    return rival ? 'Raced ' + name + (place ? ' at ' + place : '') + ' and found a rival.' :
+      'Met ' + name + (place ? ' at ' + place : '') + ' and they hit it off. They are ' + tie + ' now.';
+  };
+  kingdomBioNote(a, line(b), time);
+  kingdomBioNote(b, line(a), time);
+  return true;
+}
+
+function kingdomBioDiscover(entry, bio, time) {
+  var hidden = KINGDOM_BIO_FACTS.filter(function (fact) { return !bio.found[fact.id]; });
+  if (!hidden.length) return false;
+  var fact = hidden[Math.floor(Math.random() * hidden.length)];
+  bio.found[fact.id] = time;
+  kingdomBioNote(entry, fact.found.replace('{v}', kingdomBioPick(bio, fact.id, fact.pool)), time);
+  return true;
+}
+
+/* Where a resident is (or is heading), from its census entry. */
+function kingdomBioPlace(census) {
+  var where = census && census.whereNow;
+  if (!where) return null;
+  return kingdomLocation(where.kind === 'road' ? where.leg.to : where.loc);
+}
+
+/* Something happens in a resident's life: a fact comes out, a new friend, or
+   a little moment for the diary. */
+function kingdomBioEvent(entry, bio, roster, census, time) {
+  var key = kingdomPlacementKey(entry);
+  var loc = kingdomBioPlace(census[key]);
+  var roll = Math.random();
+  if (roll < .3 && kingdomBioDiscover(entry, bio, time)) return 'fact';
+  if (roll < .42 && loc) {
+    var near = roster.filter(function (other) {
+      var otherKey = kingdomPlacementKey(other);
+      return otherKey !== key && kingdomBioPlace(census[otherKey]) === loc;
+    });
+    var other = near[Math.floor(Math.random() * near.length)];
+    if (other && kingdomBioBefriend(entry, other, time, 'new', loc.name)) return 'friend';
+  }
+  var lines = KINGDOM_BIO_MOMENTS.concat(loc && KINGDOM_BIO_PLACE_MOMENTS[loc.id] || []);
+  var text = lines[Math.floor(Math.random() * lines.length)];
+  kingdomBioNote(entry, text.replace('{place}', loc ? loc.name : 'the Kingdom'), time);
+  return 'moment';
+}
+
+/* Once a minute while the Kingdom is open: write biographies for newcomers
+   (with their old friends), then give everyone their chances for each minute
+   since last time. */
+function kingdomBiosTick(now) {
+  if (now < KINGDOM_BIO_TICK_AT) return false;
+  KINGDOM_BIO_TICK_AT = now + 60000;
+  var roster = kingdomRoster();
+  if (!roster.length) return false;
+  var census = kingdomCensusByKey();
+  var bonds = false;
+  var bios = roster.map(kingdomBio);
+  roster.forEach(function (entry, i) {
+    var bio = bios[i];
+    if (bio.started) return;
+    bio.started = true;
+    var count = Math.random() < .3 ? 0 : Math.random() < .65 ? 1 : 2;
+    for (var k = 0; k < count && roster.length > 1; k++) {
+      var j = Math.floor(Math.random() * roster.length);
+      if (j !== i && kingdomBioBefriend(entry, roster[j], bio.since, 'old')) bonds = true;
+    }
+  });
+  roster.forEach(function (entry, i) {
+    var bio = bios[i];
+    var minutes = Math.floor((now - bio.at) / 60000);
+    if (minutes < 1) return;
+    bio.at = now - (now - bio.at) % 60000;
+    minutes = Math.min(minutes, KINGDOM_BIO_CATCH_UP_MIN);
+    var lucky = [];
+    for (var m = 0; m < minutes; m++) if (Math.random() < KINGDOM_BIO_RATE) lucky.push(m);
+    /* Three things at most after a long time away, from anywhere in it. */
+    while (lucky.length > 3) lucky.splice(Math.floor(Math.random() * lucky.length), 1);
+    lucky.forEach(function (minute) {
+      /* Dated the minute it happened, so time away reads right in the diary. */
+      var time = bio.at - (minutes - 1 - minute) * 60000;
+      if (kingdomBioEvent(entry, bio, roster, census, time) === 'friend') bonds = true;
+    });
+  });
+  if (bonds) kingdomBondsSave();
+  kingdomBiosSave();
+  return true;
+}
+
+/* ---- Biographies panel ----------------------------------------------------------
+   Opened from the Biographies button in the Kingdom header, or from the
+   inspector. A list of every resident; tapping one opens its biography. */
+
+/* The census entry (it knows .whereNow) for every resident, by placement key. */
+function kingdomCensusByKey() {
+  var census = KINGDOM_CENSUS || kingdomTownCensus(Date.now());
+  var byKey = {};
+  Object.keys(census.groups).forEach(function (id) {
+    census.groups[id].forEach(function (entry) { byKey[kingdomPlacementKey(entry)] = entry; });
+  });
+  census.road.forEach(function (entry) { byKey[kingdomPlacementKey(entry)] = entry; });
+  return byKey;
+}
+
+function kingdomBioWhereText(census, long) {
+  var where = census && census.whereNow;
+  if (!where) return 'Somewhere in town';
+  if (where.kind === 'road') return 'On the path to ' + kingdomLocation(where.leg.to)[long ? 'name' : 'short'];
+  var loc = kingdomLocation(where.loc);
+  return loc.icon + ' ' + loc[long ? 'name' : 'short'] + (loc.id === KINGDOM_LOCATION ? ' (here)' : '');
+}
+
+/* Friends and rivals of one resident, most meetings first, plus how many
+   others it has only met. */
+function kingdomBioFriends(key, byKey) {
+  var store = kingdomBondsLoad();
+  var rows = [], met = 0;
+  Object.keys(store.pairs).forEach(function (id) {
+    var keys = id.split('|');
+    if (keys[0] !== key && keys[1] !== key) return;
+    var other = byKey[keys[0] === key ? keys[1] : keys[0]];
+    if (!other) return;
+    var bond = store.pairs[id];
+    var row = { entry: other, level: kingdomBondLevel(bond), rival: (bond.r || 0) >= 3, n: bond.n || 0 };
+    if (row.level >= 1 || row.rival) rows.push(row);
+    else met++;
+  });
+  rows.sort(function (x, y) { return y.n - x.n; });
+  return { rows: rows, met: met };
+}
+
+function kingdomBioFriendCounts() {
+  var counts = {};
+  var store = kingdomBondsLoad();
+  Object.keys(store.pairs).forEach(function (id) {
+    var bond = store.pairs[id];
+    if (kingdomBondLevel(bond) < 1 && (bond.r || 0) < 3) return;
+    id.split('|').forEach(function (key) { counts[key] = (counts[key] || 0) + 1; });
+  });
+  return counts;
+}
+
+function kingdomBioIcon(i) {
+  return '<i class="kingdom-icon" style="--i:' + i + '" aria-hidden="true"></i>';
+}
+
+function kingdomBioCap(text) {
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
+function kingdomBioAgo(time, now) {
+  var ms = now - time;
+  return ms < 60000 ? 'just now' : kingdomDurationText(ms) + ' ago';
+}
+
+function kingdomBioListHtml(roster, census) {
+  var query = KINGDOM_BIO_QUERY.trim().toLowerCase();
+  var counts = kingdomBioFriendCounts();
+  var rows = roster.filter(function (entry) {
+    return !query || monName(entry.mon).toLowerCase().indexOf(query) >= 0;
+  });
+  rows.sort(function (a, b) {
+    if (a.where !== b.where) return a.where === 'party' ? -1 : 1;
+    return a.where === 'party' ? a.index - b.index : monName(a.mon).localeCompare(monName(b.mon));
+  });
+  if (!rows.length) {
+    return '<p class="kingdom-bio-none">' + (roster.length ? 'No resident is called that.' :
+      'Nobody lives in the Kingdom yet. Catch a Pokémon and it will move in.') + '</p>';
+  }
+  return '<ul class="kingdom-bio-grid">' + rows.map(function (entry) {
+    var m = entry.mon, key = kingdomPlacementKey(entry);
+    var friends = counts[key] || 0;
+    return '<li><button type="button" class="kingdom-bio-card" data-bio="' + esc(key) + '">' +
+      '<img src="' + kingdomSprite(m) + '" alt="" loading="lazy" draggable="false"><span>' +
+      '<b>' + esc(monName(m)) + (m.shiny ? ' ✦' : '') + '</b>' +
+      '<small>Lv ' + m.lvl + (entry.where === 'party' ? ' · ★ Party' : '') + '</small>' +
+      '<small class="kingdom-bio-card-where">' + esc(kingdomBioWhereText(census[key])) + '</small></span>' +
+      '<span class="kingdom-bio-card-friends" title="' + friends + (friends === 1 ? ' friend' : ' friends') + '">' +
+      kingdomBioIcon(0) + friends + '</span></button></li>';
+  }).join('') + '</ul>';
+}
+
+function kingdomBioRowsHtml(rows) {
+  return '<dl class="kingdom-bio-facts">' + rows.map(function (row) {
+    return '<div' + (row[2] ? ' class="hidden"' : '') + '><dt>' + esc(row[0]) + '</dt><dd>' + esc(row[1]) + '</dd></div>';
+  }).join('') + '</dl>';
+}
+
+function kingdomBioHtml(key, roster, census) {
+  var byKey = {};
+  roster.forEach(function (entry) { byKey[kingdomPlacementKey(entry)] = entry; });
+  var entry = byKey[key];
+  if (!entry) return '<p class="kingdom-bio-none">This Pokémon has left the Kingdom.</p>';
+  var m = entry.mon, d = dexOf(m.id), bio = kingdomBio(entry), traits = kingdomTraits(m.id);
+  var now = Date.now();
+  var haunts = kingdomFavouriteHaunts(m.id).map(function (loc) { return loc.name; });
+  var habits = [];
+  if (traits.nocturnal) habits.push('Night owl');
+  if (traits.glow) habits.push('Glows after dark');
+  if (traits.sleepy) habits.push('Loves a nap');
+  if (traits.swimmer) habits.push('Loves the water');
+  var profile = [
+    ['Personality', kingdomBioCap(kingdomBioPick(bio, 'personality', KINGDOM_BIO_PERSONALITIES))],
+    ['Birthday', kingdomBioPick(bio, 'month', KINGDOM_BIO_MONTHS) + ' ' + (1 + kingdomStringHash(bio.seed + ':day') % 28)],
+    ['Moved in', new Date(bio.since).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })],
+    ['Favourite places', haunts.length ? haunts.join(' and ') : 'Anywhere its friends are'],
+    ['Habits', habits.length ? habits.join(' · ') : 'Up with the sun, asleep by dark'],
+    ['Gets around', KINGDOM_BIO_GAITS[traits.gait] || 'Walks']
+  ];
+  var found = 0;
+  var facts = KINGDOM_BIO_FACTS.map(function (fact) {
+    if (!bio.found[fact.id]) return [fact.label, '???', true];
+    found++;
+    return [fact.label, kingdomBioCap(kingdomBioPick(bio, fact.id, fact.pool))];
+  });
+  var friends = kingdomBioFriends(key, byKey);
+  var where = kingdomBioWhereText(census[key], true);
+  var h = '<article class="kingdom-bio"><div class="kingdom-bio-hero">' +
+    '<img src="' + kingdomSprite(m) + '" alt="" draggable="false"><div>' +
+    '<h4>' + esc(monName(m)) + (m.shiny ? ' ✦' : '') + '</h4>' + typePills(d.types) +
+    '<p>Level ' + m.lvl + ' · ' + esc(d.genus) + ' · ' +
+    (entry.where === 'party' ? 'Traveling in your party' : 'Living in the PC') + '</p>' +
+    '<p class="kingdom-bio-now">Now: ' + esc(where) + '</p></div>' +
+    '<button type="button" class="kingdom-bio-visit" data-visit="' + esc(key) + '">Visit</button></div>';
+  h += '<section><h5>Profile</h5>' + kingdomBioRowsHtml(profile) + '</section>';
+  h += '<section><h5>Discovered <small>' + found + ' of ' + facts.length + '</small></h5>' + kingdomBioRowsHtml(facts) +
+    (found < facts.length ? '<p class="kingdom-bio-note">Hidden facts come out bit by bit, at random, while ' +
+      esc(monName(m)) + ' lives in the Kingdom.</p>' : '') + '</section>';
+  h += '<section><h5>Friends <small>' + friends.rows.length + '</small></h5>';
+  if (friends.rows.length) {
+    h += '<ul class="kingdom-bio-friends">' + friends.rows.map(function (row) {
+      var name = row.rival ? 'Gym rival' : kingdomBioCap(KINGDOM_BOND_NAMES[row.level]).slice(0, -1);
+      var hearts = '';
+      for (var i = 0; i < (row.rival ? 1 : row.level); i++) hearts += kingdomBioIcon(row.rival ? 8 : 0);
+      return '<li><button type="button" data-bio="' + esc(kingdomPlacementKey(row.entry)) + '">' +
+        '<img src="' + kingdomSprite(row.entry.mon) + '" alt="" draggable="false"><span><b>' +
+        esc(monName(row.entry.mon)) + '</b><small>' + name + '</small></span>' +
+        '<span class="kingdom-bio-hearts" aria-hidden="true">' + hearts + '</span></button></li>';
+    }).join('') + '</ul>';
+  } else {
+    h += '<p class="kingdom-bio-note">No friends yet. New friendships happen at random, and Pokémon in the ' +
+      'district you are watching grow closer each time they meet.</p>';
+  }
+  if (friends.met) {
+    h += '<p class="kingdom-bio-note">Has met ' + friends.met + (friends.met === 1 ? ' other resident' :
+      ' other residents') + ' and is still getting to know ' + (friends.met === 1 ? 'it' : 'them') + '.</p>';
+  }
+  h += '</section><section><h5>Diary</h5><ol class="kingdom-bio-diary">' + bio.diary.map(function (line) {
+    return '<li><time>' + kingdomBioAgo(line.t, now) + '</time>' + esc(line.text) + '</li>';
+  }).join('') + '</ol></section></article>';
+  return h;
+}
+
+/* The button in the Kingdom header. */
+function kingdomBiosButtonHtml() {
+  return '<button type="button" class="kingdom-bios-open" onclick="kingdomBiosOpen()" aria-haspopup="dialog">' +
+    '<i aria-hidden="true">📖</i>Biographies</button>';
+}
+
+function kingdomBiosDialog() {
+  var box = document.getElementById('kingdom-bios');
+  if (box) return box;
+  box = document.createElement('dialog');
+  box.id = 'kingdom-bios';
+  box.className = 'kingdom-bios';
+  box.setAttribute('aria-labelledby', 'kingdom-bios-title');
+  box.innerHTML = '<div class="kingdom-bios-box"><header class="kingdom-bios-head">' +
+    '<button type="button" class="kingdom-bios-back" aria-label="Back to all biographies">←</button>' +
+    '<i class="kingdom-bios-mark" aria-hidden="true">📖</i>' +
+    '<div><h3 id="kingdom-bios-title">Biographies</h3><p id="kingdom-bios-sum"></p></div>' +
+    '<button type="button" class="kingdom-close" aria-label="Close biographies">×</button></header>' +
+    '<div class="kingdom-bios-search"><input type="search" placeholder="Find a resident by name" ' +
+    'autocomplete="off" aria-label="Find a resident by name"></div>' +
+    '<div id="kingdom-bios-body" class="kingdom-bios-body"></div></div>';
+  /* A click on the dimmed backdrop lands on the dialog itself. */
+  box.addEventListener('click', function (ev) {
+    if (ev.target === box || ev.target.closest('.kingdom-close')) { kingdomBiosClose(); return; }
+    if (ev.target.closest('.kingdom-bios-back')) { kingdomBiosShow(null); return; }
+    var visit = ev.target.closest('[data-visit]');
+    if (visit) { kingdomBiosVisit(visit.getAttribute('data-visit')); return; }
+    var card = ev.target.closest('[data-bio]');
+    if (card) kingdomBiosShow(card.getAttribute('data-bio'));
+  });
+  box.querySelector('.kingdom-bios-search input').addEventListener('input', function (ev) {
+    KINGDOM_BIO_QUERY = ev.target.value;
+    kingdomBiosRefresh();
+  });
+  document.body.appendChild(box);
+  return box;
+}
+
+/* Opens the list, or one resident's biography when given its key. */
+function kingdomBiosOpen(key) {
+  var box = kingdomBiosDialog();
+  if (!box.open) {
+    if (box.showModal) box.showModal();
+    else box.setAttribute('open', '');
+  }
+  KINGDOM_BIO_LIST_TOP = 0;
+  kingdomBiosShow(key || null);
+  box.querySelector('.kingdom-close').focus();
+}
+
+function kingdomBiosShow(key) {
+  var body = document.getElementById('kingdom-bios-body');
+  if (!body) return;
+  if (!KINGDOM_BIO_VIEW && key) KINGDOM_BIO_LIST_TOP = body.scrollTop;
+  KINGDOM_BIO_VIEW = key;
+  KINGDOM_BIO_HTML = '';
+  kingdomBiosRefresh();
+  body.scrollTop = key ? 0 : KINGDOM_BIO_LIST_TOP;
+}
+
+function kingdomBiosClose() {
+  var box = document.getElementById('kingdom-bios');
+  if (!box || !box.open) return;
+  if (box.close) box.close();
+  else box.removeAttribute('open');
+}
+
+/* Runs with every Kingdom sync, and redraws the open panel only when
+   something in it changed, so it never flickers. */
+function kingdomBiosRefresh() {
+  var box = document.getElementById('kingdom-bios');
+  var body = document.getElementById('kingdom-bios-body');
+  if (!box || !box.open || !body) return;
+  var roster = kingdomRoster();
+  var census = kingdomCensusByKey();
+  var key = KINGDOM_BIO_VIEW;
+  var entry = key && roster.filter(function (row) { return kingdomPlacementKey(row) === key; })[0];
+  box.classList.toggle('reading', !!key);
+  box.querySelector('.kingdom-bios-back').hidden = !key;
+  box.querySelector('.kingdom-bios-search').hidden = !!key;
+  var friendships = 0;
+  var bonds = kingdomBondsLoad().pairs;
+  Object.keys(bonds).forEach(function (id) {
+    if (kingdomBondLevel(bonds[id]) >= 1 || (bonds[id].r || 0) >= 3) friendships++;
+  });
+  $('#kingdom-bios-sum').textContent = entry ? monName(entry.mon) + '’s life in the Kingdom' :
+    roster.length + (roster.length === 1 ? ' resident · ' : ' residents · ') + friendships +
+    (friendships === 1 ? ' friendship' : ' friendships');
+  var html = key ? kingdomBioHtml(key, roster, census) : kingdomBioListHtml(roster, census);
+  if (html === KINGDOM_BIO_HTML) return;
+  var active = document.activeElement;
+  var focused = active && body.contains(active) &&
+    (active.getAttribute('data-bio') || active.getAttribute('data-visit'));
+  KINGDOM_BIO_HTML = html;
+  body.innerHTML = html;
+  if (focused) {
+    var again = body.querySelector('[data-bio="' + focused + '"], [data-visit="' + focused + '"]');
+    if (again) again.focus({ preventScroll: true });
+  }
+}
+
+/* Visit: go to the district where the resident is and say hello to it. */
+function kingdomBiosVisit(key) {
+  kingdomBiosClose();
+  var entry = kingdomCensusByKey()[key];
+  if (!entry) return;
+  var where = entry.whereNow;
+  if (where.kind === 'road') {
+    kingdomGo(where.leg.to);
+    toast(monName(entry.mon) + ' is on the path to ' + kingdomLocation(where.leg.to).name + '.');
+    return;
+  }
+  kingdomGo(where.loc);
+  var actor = KINGDOM_ACTORS.filter(function (a) { return a.key === key; })[0];
+  var district = document.getElementById('kingdom-district');
+  if (district) district.scrollIntoView({ block: 'start', behavior: kingdomReduceMotion() ? 'auto' : 'smooth' });
+  if (actor) kingdomInspect(actor);
+  else toast(monName(entry.mon) + ' is in ' + kingdomLocation(where.loc).name + ' but out of sight right now.');
 }

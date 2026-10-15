@@ -10,6 +10,7 @@ var SANDBOX_PRESS = null;
 
 KINGDOM_TRAVEL_KEY = 'studymon.sandbox.kingdom.travel.v1';
 KINGDOM_BOND_KEY = 'studymon.sandbox.kingdom.bonds.v1';
+KINGDOM_BIO_KEY = 'studymon.sandbox.kingdom.bios.v1';
 CUR = 'kingdom';
 
 function sandboxLoad() {

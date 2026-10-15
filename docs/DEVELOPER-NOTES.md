@@ -54,6 +54,21 @@ close friends (35%) and best friends (65%) tag along on trips, and
 pre-evolutions follow their evolved relatives. The inspector shows a
 resident's top friendships.
 
+**Biographies.** The 📖 Biographies button in the Kingdom header (and "Read
+biography" in the inspector) opens a list of every resident; tapping one shows
+its biography. Biographies are saved in `studymon.kingdom.bios.v1` (the
+sandbox uses `studymon.sandbox.kingdom.bios.v1`). Part is fixed when the
+biography is written, from a stored random seed: personality, birthday,
+favourite places, habits and gait. Four facts (favourite snack, hobby, quirk,
+dream) are also fixed but show as `???` until discovered. `kingdomBiosTick`
+runs once a minute while the Kingdom is open: each resident gets a 3% chance
+per minute (time away counts, up to three hours and three events) of a hidden
+fact coming out, a random new friendship with someone in the same district,
+or a diary moment. Friendships are rolled at random as well: a newcomer
+arrives with 0-2 old friends (mostly friends, sometimes close or best friends,
+15% gym rivals). Random friendships go into the same bond store as the ones
+that grow by meeting, and friendship milestones are written into both diaries.
+
 **Night and weather.** After dusk every resident is drawn above the town's night
 tint, still in depth order, and graded by an SVG colour matrix that matches the
 tint (`KINGDOM_TINTS`). Pokémon that make light get a lighter grade, a halo

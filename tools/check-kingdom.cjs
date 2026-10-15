@@ -358,6 +358,142 @@ const fs = require('fs');
     throw new Error('The rain forecast is unsteady or out of range: ' + JSON.stringify(lifeAudit));
   }
 
+  /* Biographies: every resident gets one (with friendships rolled at random),
+     hidden facts and diary moments turn up at random over time, and the panel
+     lists everyone, opens a biography, and visits the resident. */
+  const bioSetup = await page.evaluate(() => {
+    const r = kingdomRoster();
+    /* The friendship made by meeting above was written into both diaries. */
+    const milestone = kingdomBio(r[0]).diary.some(line => /^Became friends with /.test(line.text));
+    const bonds = kingdomBondsLoad();
+    Object.keys(bonds.pairs).forEach(id => delete bonds.pairs[id]);
+    KINGDOM_BIOS = { v: 1, mons: {} };
+    KINGDOM_BIO_TICK_AT = 0;
+    kingdomBiosTick(Date.now());
+    const bios = Object.values(KINGDOM_BIOS.mons);
+    const friendships = Object.values(bonds.pairs).filter(b => kingdomBondLevel(b) >= 1 || b.r >= 3).length;
+    /* Three hours away with every minute lucky: three new things, never more. */
+    kingdomTravelSettle(r[0], 'hill', null);
+    kingdomTravelSettle(r[1], 'orchard', null);
+    const bio = kingdomBio(r[0]);
+    const before = bio.diary.length;
+    bio.at -= 180 * 60000;
+    const rate = KINGDOM_BIO_RATE;
+    KINGDOM_BIO_RATE = 1;
+    KINGDOM_BIO_TICK_AT = 0;
+    kingdomBiosTick(Date.now());
+    KINGDOM_BIO_RATE = rate;
+    kingdomBioDiscover(r[0], bio, Date.now());
+    bonds.pairs[kingdomBondId(r[0], r[1])] = { n: 10, r: 0, t: 0 };
+    kingdomBondsSave();
+    kingdomBiosSave();
+    const saved = JSON.parse(localStorage.getItem(KINGDOM_BIO_KEY) || '{}').mons || {};
+    kingdomGo('square');
+    renderKingdom();
+    return {
+      milestone, bios: bios.length, started: bios.every(b => b.started), friendships,
+      added: bio.diary.length - before,
+      sorted: bio.diary.every((line, i) => !i || bio.diary[i - 1].t >= line.t),
+      oldest: Math.min(...bio.diary.map(line => line.t)),
+      saved: Object.keys(saved).length,
+      keys: r.slice(0, 2).map(kingdomPlacementKey),
+      names: r.slice(0, 2).map(entry => monName(entry.mon))
+    };
+  });
+  if (!bioSetup.milestone || bioSetup.bios !== 38 || !bioSetup.started || bioSetup.friendships < 5 ||
+      bioSetup.added < 3 || !bioSetup.sorted || bioSetup.saved !== 38 ||
+      bioSetup.oldest > Date.now() - 2 * 60000) {
+    throw new Error('Biographies were not written, rolled or saved: ' + JSON.stringify(bioSetup));
+  }
+  await page.locator('.kingdom-bios-open').click();
+  const bioList = await page.evaluate(() => {
+    const box = document.getElementById('kingdom-bios');
+    return {
+      open: box.open,
+      cards: box.querySelectorAll('.kingdom-bio-card').length,
+      summary: document.getElementById('kingdom-bios-sum').textContent,
+      fits: box.getBoundingClientRect().bottom <= innerHeight
+    };
+  });
+  if (!bioList.open || bioList.cards !== 38 || !/^38 residents · \d+ friendships$/.test(bioList.summary) || !bioList.fits) {
+    throw new Error('Biographies list is wrong: ' + JSON.stringify(bioList));
+  }
+  const bioQuery = bioSetup.names[0].slice(0, 3).toLowerCase();
+  await page.fill('.kingdom-bios-search input', bioQuery);
+  const bioFound = await page.locator('.kingdom-bio-card b').allTextContents();
+  if (!bioFound.length || bioFound.length === 38 || !bioFound.every(name => name.toLowerCase().includes(bioQuery))) {
+    throw new Error('Biographies search did not filter by name: ' + JSON.stringify(bioFound));
+  }
+  await page.fill('.kingdom-bios-search input', '');
+  await page.screenshot({ path: 'tmp/kingdom-bios-list-preview.png' });
+  await page.locator('#kingdom-bios [data-bio="' + bioSetup.keys[0] + '"]').click();
+  const bioView = await page.evaluate(() => {
+    const body = document.getElementById('kingdom-bios-body');
+    const sections = [...body.querySelectorAll('.kingdom-bio section')];
+    return {
+      name: body.querySelector('.kingdom-bio-hero h4').textContent,
+      sections: sections.map(s => s.querySelector('h5').firstChild.textContent.trim()),
+      profile: sections[0].querySelectorAll('dd').length,
+      found: sections[1].querySelectorAll('.kingdom-bio-facts > div:not(.hidden)').length,
+      hidden: [...sections[1].querySelectorAll('.kingdom-bio-facts > .hidden dd')].map(dd => dd.textContent),
+      friends: [...sections[2].querySelectorAll('[data-bio]')].map(b => b.getAttribute('data-bio')),
+      diary: body.querySelectorAll('.kingdom-bio-diary li').length,
+      back: !document.querySelector('.kingdom-bios-back').hidden,
+      search: document.querySelector('.kingdom-bios-search').hidden
+    };
+  });
+  if (!bioView.name.startsWith(bioSetup.names[0]) || bioView.sections.join('|') !== 'Profile|Discovered|Friends|Diary' ||
+      bioView.profile !== 6 || bioView.found < 1 || bioView.found + bioView.hidden.length !== 4 ||
+      bioView.hidden.some(text => text !== '???') || !bioView.friends.includes(bioSetup.keys[1]) ||
+      bioView.diary < 4 || !bioView.back || !bioView.search) {
+    throw new Error('Biography page is wrong: ' + JSON.stringify(bioView));
+  }
+  await page.screenshot({ path: 'tmp/kingdom-bio-preview.png' });
+  await page.locator('.kingdom-bio-friends [data-bio="' + bioSetup.keys[1] + '"]').click();
+  if (await page.evaluate(() => KINGDOM_BIO_VIEW) !== bioSetup.keys[1]) {
+    throw new Error('Tapping a friend did not open its biography');
+  }
+  await page.locator('.kingdom-bios-back').click();
+  if (await page.evaluate(() => KINGDOM_BIO_VIEW) !== null) throw new Error('Back did not return to the list');
+  await page.locator('#kingdom-bios [data-bio="' + bioSetup.keys[0] + '"]').click();
+  await page.locator('.kingdom-bio-visit').click();
+  const bioVisit = await page.evaluate(key => ({
+    open: document.getElementById('kingdom-bios').open,
+    location: KINGDOM_LOCATION,
+    inspected: !!KINGDOM_INSPECTED && KINGDOM_INSPECTED.key === key
+  }), bioSetup.keys[0]);
+  if (bioVisit.open || bioVisit.location !== 'hill' || !bioVisit.inspected) {
+    throw new Error('Visit did not take you to the resident: ' + JSON.stringify(bioVisit));
+  }
+  await page.locator('.kingdom-bio-link').click();
+  if (await page.evaluate(() => document.getElementById('kingdom-bios').open && KINGDOM_BIO_VIEW) !== bioSetup.keys[0]) {
+    throw new Error('Read biography in the inspector did not open that biography');
+  }
+  await page.keyboard.press('Escape');
+  if (await page.evaluate(() => document.getElementById('kingdom-bios').open)) {
+    throw new Error('Escape did not close the Biographies panel');
+  }
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.locator('.kingdom-bios-open').click();
+  await page.locator('#kingdom-bios [data-bio="' + bioSetup.keys[0] + '"]').click();
+  await page.waitForTimeout(150);
+  const bioMobile = await page.evaluate(() => {
+    const box = document.getElementById('kingdom-bios').getBoundingClientRect();
+    const parts = [...document.querySelectorAll('#kingdom-bios .kingdom-bio-hero, #kingdom-bios .kingdom-bio-facts > div, ' +
+      '#kingdom-bios .kingdom-bio-friends button, #kingdom-bios .kingdom-bio-diary li')];
+    return {
+      inside: box.left >= 0 && box.right <= innerWidth && box.bottom <= innerHeight,
+      partsFit: parts.every(el => el.scrollWidth <= el.clientWidth + 1 && el.getBoundingClientRect().right <= box.right),
+      overflow: document.documentElement.scrollWidth > innerWidth
+    };
+  });
+  if (!bioMobile.inside || !bioMobile.partsFit || bioMobile.overflow) {
+    throw new Error('Biographies do not fit a phone: ' + JSON.stringify(bioMobile));
+  }
+  await page.screenshot({ path: 'tmp/kingdom-bio-mobile-preview.png' });
+  await page.locator('#kingdom-bios .kingdom-close').click();
+  await page.setViewportSize({ width: 1280, height: 900 });
+
   const grabAudit = await page.evaluate(async () => {
     const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
     const fire = (el, type, x, y) => el.dispatchEvent(new PointerEvent(type, {
@@ -558,7 +694,7 @@ const fs = require('fs');
 
   if (errors.length) throw new Error('Browser errors: ' + errors.join(' | '));
   console.log('PASS Kingdom: 10 districts, collision-safe roaming, activity spots, gym routes, glow, sleep, ' +
-    'rain, bonds, families, favourites, music, lanterns, mobile fit.');
+    'rain, bonds, biographies, families, favourites, music, lanterns, mobile fit.');
   await browser.close();
 })().catch(err => {
   console.error(err);
