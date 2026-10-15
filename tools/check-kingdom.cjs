@@ -117,6 +117,14 @@ const fs = require('fs');
   }
 
   await page.locator('.kingdom-mon').first().waitFor();
+  /* Wake the first resident (it may be napping or busy) and send it walking. */
+  await page.evaluate(() => {
+    const actor = KINGDOM_ACTORS[0];
+    kingdomActCancel(actor, false);
+    actor.pauseUntil = 0;
+    actor.nextTurn = performance.now() + 5000;
+    actor.target = kingdomPoint(actor.rand, actor.location);
+  });
   const before = await page.locator('.kingdom-mon').first().getAttribute('style');
   await page.waitForTimeout(650);
   const after = await page.locator('.kingdom-mon').first().getAttribute('style');
@@ -130,70 +138,225 @@ const fs = require('fs');
 
   const gymAudit = await page.evaluate(() => {
     const entry = kingdomRoster()[0];
-    const autoEntry = kingdomRoster()[1];
     const key = kingdomPlacementKey(entry);
     kingdomTravelSettle(entry, 'gym', { x: 52, y: 55 });
-    kingdomTravelSettle(autoEntry, 'gym', { x: 58, y: 55 });
     kingdomGo('gym');
     KINGDOM_ACTORS.forEach(actor => {
-      kingdomGymCancel(actor, false);
-      actor.gymAt = Infinity;
+      kingdomActCancel(actor, false);
+      actor.nextTurn = Infinity;
     });
     const actor = KINGDOM_ACTORS.find(row => kingdomPlacementKey(row.entry) === key);
-    const station = kingdomGymStation('hurdles');
     kingdomInspect(actor);
     const markerCount = document.querySelectorAll('.kingdom-gym-station').length;
     const workoutButtons = document.querySelectorAll('.kingdom-workout-row button').length;
-    const spotsWalkable = KINGDOM_GYM_STATIONS.every(row =>
-      kingdomIsWalkable(row.x, row.y, kingdomLocation('gym')));
-    kingdomUseGymStation(station.id);
-    const began = actor.gym && actor.gym.manual && actor.gym.station.id === station.id;
-    actor.gym.step = actor.gym.route.length - 1;
-    actor.target = actor.gym.route[actor.gym.step];
-    actor.x = station.x;
-    actor.y = station.y;
-    kingdomGymTick(actor, performance.now(), false, .05);
-    const working = actor.gym && actor.gym.phase === 'working' &&
-      actor.el.classList.contains('gym-working') && actor.el.classList.contains('gym-hurdles');
+    kingdomUseSpot('hurdles');
+    const began = !!actor.act && actor.act.manual && actor.act.spot.id === 'hurdles';
+    let t = performance.now();
+    for (let i = 0; i < 4000 && actor.act && actor.act.phase !== 'do'; i++) {
+      t += 50;
+      kingdomLifeTick(actor, t, i < 3000, .05);
+    }
+    const working = !!actor.act && actor.act.phase === 'do' &&
+      actor.el.classList.contains('acting') && actor.el.classList.contains('act-hurdles');
     const activeMarker = document.querySelector('[data-gym-station="hurdles"]').classList.contains('active');
     const status = document.getElementById('kingdom-inspect-status').textContent;
-    const until = actor.gym.until;
-    kingdomGymTick(actor, until + 1, false, .05);
-    const finished = !actor.gym && !actor.el.classList.contains('gym-working') &&
-      !actor.el.querySelector('.kingdom-gym-emote');
-    const autoActor = KINGDOM_ACTORS.find(row => row !== actor);
-    autoActor.x = 52;
-    autoActor.y = 55;
-    autoActor.gymAt = 0;
-    const simStart = performance.now();
-    kingdomGymTick(autoActor, simStart, false, .05);
-    const autoBegan = autoActor.gym && !autoActor.gym.manual;
-    for (let frame = 1; frame < 700 && autoActor.gym && autoActor.gym.phase !== 'working'; frame++) {
-      kingdomGymTick(autoActor, simStart + frame * 50, false, .05);
+    /* The route carries it over the hurdles, not on the spot. */
+    const start = [actor.x, actor.y];
+    let jumped = false;
+    for (let i = 0; i < 80; i++) {
+      t += 50;
+      kingdomLifeTick(actor, t, false, .05);
+      if (actor.el.classList.contains('leg-jump') && actor.lift > 1) jumped = true;
     }
-    const autoWorking = autoActor.gym && autoActor.gym.phase === 'working';
-    if (autoWorking) kingdomGymTick(autoActor, autoActor.gym.until + 1, false, .05);
-    return { markerCount, workoutButtons, spotsWalkable, began, working, activeMarker, status,
-      finished, autoBegan, autoWorking };
+    const travelled = Math.hypot(actor.x - start[0], actor.y - start[1]) > 2;
+    const until = actor.act.until;
+    t = Math.max(t, until) + 1;
+    for (let i = 0; i < 400 && actor.act; i++) {
+      t += 50;
+      kingdomLifeTick(actor, t, false, .05);
+    }
+    const finished = !actor.act && !actor.el.classList.contains('acting') &&
+      !actor.el.classList.contains('leg-jump') && actor.depthY == null;
+    /* Left alone, a fighting type picks gym stations by itself. */
+    const fighter = KINGDOM_ACTORS.find(row => row !== actor) || actor;
+    const ownTraits = fighter.traits;
+    fighter.traits = Object.assign({}, ownTraits, { types: ['fighting'], has: type => type === 'fighting' });
+    let autoBegan = false;
+    for (let i = 0; i < 300 && !autoBegan; i++) {
+      kingdomActCancel(fighter, false);
+      fighter.x = 52;
+      fighter.y = 55;
+      kingdomDecide(fighter, performance.now());
+      autoBegan = !!fighter.act && !fighter.act.manual && !!fighter.act.spot.station;
+    }
+    kingdomActCancel(fighter, false);
+    fighter.traits = ownTraits;
+    return { markerCount, workoutButtons, began, working, activeMarker, status, jumped, travelled,
+      finished, autoBegan };
   });
-  if (gymAudit.markerCount !== 6 || gymAudit.workoutButtons !== 6 || !gymAudit.spotsWalkable ||
+  if (gymAudit.markerCount !== 6 || gymAudit.workoutButtons !== 6 ||
       !gymAudit.began || !gymAudit.working || !gymAudit.activeMarker ||
-      !gymAudit.status.includes('Agility Hurdles') || !gymAudit.finished ||
-      !gymAudit.autoBegan || !gymAudit.autoWorking) {
+      !gymAudit.status.toLowerCase().includes('agility hurdles') || !gymAudit.jumped || !gymAudit.travelled ||
+      !gymAudit.finished || !gymAudit.autoBegan) {
     throw new Error('Mossroot Gym workout loop failed: ' + JSON.stringify(gymAudit));
   }
   await page.evaluate(() => {
     const actor = KINGDOM_ACTORS[0];
-    const station = kingdomGymStation('weights');
     kingdomInspect(actor);
-    kingdomUseGymStation(station.id);
-    actor.gym.step = actor.gym.route.length - 1;
-    actor.target = actor.gym.route[actor.gym.step];
-    actor.x = station.x;
-    actor.y = station.y;
-    kingdomGymTick(actor, performance.now(), false, .05);
+    kingdomUseSpot('weights');
+    let t = performance.now();
+    for (let i = 0; i < 4000 && actor.act && actor.act.phase !== 'do'; i++) kingdomLifeTick(actor, t += 50, true, .05);
   });
+  await page.waitForTimeout(400);
   await page.screenshot({ path: 'tmp/kingdom-gym-functional-preview.png', fullPage: true });
+
+  const lifeAudit = await page.evaluate(() => {
+    const problems = [];
+    /* Every activity spot sits on reachable, open ground with short hops in. */
+    const perDistrict = {};
+    const reach = {};
+    const reachable = loc => {
+      if (reach[loc.id]) return reach[loc.id];
+      const grid = kingdomWalkGrid(loc);
+      const seen = new Uint8Array(101 * 101);
+      const queue = [kingdomNearestCell(grid, loc.nav.home)];
+      seen[queue[0]] = 1;
+      while (queue.length) {
+        const cur = queue.pop(), x = cur % 101, y = (cur / 101) | 0;
+        [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach(([dx, dy]) => {
+          const nx = x + dx, ny = y + dy, ni = ny * 101 + nx;
+          if (nx < 0 || nx > 100 || ny < 0 || ny > 100 || seen[ni] || !grid[ni]) return;
+          seen[ni] = 1;
+          queue.push(ni);
+        });
+      }
+      return (reach[loc.id] = { grid, seen });
+    };
+    KINGDOM_SPOTS.forEach(spot => {
+      const loc = kingdomLocation(spot.loc);
+      perDistrict[spot.loc] = (perDistrict[spot.loc] || 0) + 1;
+      spot.seats.forEach((seat, i) => {
+        const start = seat.from || seat.at;
+        if (!kingdomIsWalkable(start[0], start[1], loc)) problems.push(spot.id + '#' + i + ' approach blocked');
+        const r = reachable(loc);
+        const cell = kingdomNearestCell(r.grid, start);
+        if (cell < 0 || !r.seen[cell]) problems.push(spot.id + '#' + i + ' unreachable');
+        const legs = seat.from ? [seat.from].concat(seat.via || [], [seat.at]) : [];
+        for (let k = 1; k < legs.length; k++) {
+          if (Math.hypot(legs[k][0] - legs[k - 1][0], legs[k][1] - legs[k - 1][1]) > 11) {
+            problems.push(spot.id + '#' + i + ' long hop');
+          }
+        }
+      });
+    });
+    KINGDOM_LOCATIONS.forEach(loc => {
+      if ((perDistrict[loc.id] || 0) < 3) problems.push(loc.id + ' has few spots');
+    });
+
+    /* Night: fire types and light-makers glow above the tint; others sleep. */
+    kingdomGo('hearth');
+    KINGDOM_PHASE_OVERRIDE = 'night';
+    KINGDOM_WEATHER_SET = true;
+    KINGDOM_WEATHER = 'clear';
+    kingdomApplyAtmosphere();
+    const glowTraits = [4, 37, 181, 609].map(id => !!kingdomTraits(id).glow);
+    const plainTraits = [1, 25, 133].map(id => !!kingdomTraits(id).glow);
+    const actor = KINGDOM_ACTORS.find(row => !row.trip) || KINGDOM_ACTORS[0];
+    actor.trip = null;
+    const fakeFire = { entry: actor.entry, el: actor.el, x: actor.x, y: actor.y, lift: 0,
+      location: actor.location, traits: kingdomTraits(4) };
+    kingdomGlowEnsure(fakeFire);
+    kingdomPaint(fakeFire);
+    const haloLit = !!fakeFire.halo && !!fakeFire.halo.parentNode && parseInt(fakeFire.el.style.zIndex, 10) > 5200;
+    kingdomGlowRemove(fakeFire);
+    actor.el.classList.remove('glows', 'glow-flame');
+    kingdomActCancel(actor, false);
+    const asleep = kingdomStartSleep(actor, performance.now(), true);
+    kingdomLifeTick(actor, performance.now() + 50, true, .05);
+    const slept = asleep && actor.el.classList.contains('act-sleep') && !!actor.el.querySelector('.kingdom-zzz');
+    kingdomActCancel(actor, false);
+    kingdomPaint(actor);
+
+    /* Rain: a fire type looks for shelter, a water type dances in it. */
+    KINGDOM_PHASE_OVERRIDE = 'day';
+    KINGDOM_WEATHER = 'rain';
+    kingdomApplyAtmosphere();
+    const choose = (id, want) => {
+      const saved = actor.traits;
+      actor.traits = kingdomTraits(id);
+      let hits = 0;
+      for (let i = 0; i < 200; i++) {
+        kingdomActCancel(actor, false);
+        kingdomDecide(actor, performance.now());
+        if (actor.act && want.test(actor.act.spot.id + ' ' + actor.act.spot.motion)) hits++;
+      }
+      kingdomActCancel(actor, false);
+      actor.traits = saved;
+      return hits;
+    };
+    const firesShelter = choose(4, /shelter|rest/);
+    const watersDance = choose(7, /raindance|dance/);
+    KINGDOM_PHASE_OVERRIDE = null;
+    KINGDOM_WEATHER_SET = false;
+    kingdomApplyAtmosphere();
+
+    /* Friendship grows meeting by meeting and is saved per pair. */
+    const roster = kingdomRoster();
+    const ea = roster[0], eb = roster[1];
+    const a = { entry: ea, el: actor.el, location: actor.location, traits: kingdomTraits(ea.mon.id), rand: Math.random };
+    const b = { entry: eb, el: actor.el, location: actor.location, traits: kingdomTraits(eb.mon.id), rand: Math.random };
+    const store = kingdomBondsLoad();
+    const id = kingdomBondId(ea, eb);
+    delete store.pairs[id];
+    for (let i = 0; i < 3; i++) {
+      if (store.pairs[id]) store.pairs[id].t = 0;
+      kingdomBondMeet(a, b, false);
+    }
+    const friends = kingdomBondLevel(kingdomBond(ea, eb)) === 1;
+    const saved = !!(JSON.parse(localStorage.getItem(KINGDOM_BOND_KEY) || '{}').pairs || {})[id];
+
+    /* Families: a pre-evolution knows its evolved relative. */
+    const family = kingdomFamily(4).root === kingdomFamily(6).root &&
+      kingdomFamily(4).stage < kingdomFamily(6).stage;
+
+    /* Favourite haunts: water types head for the water more than others do. */
+    let seed = 7;
+    const rand = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+    const share = (dexId, places) => {
+      let hit = 0;
+      for (let i = 0; i < 3000; i++) {
+        if (places.includes(kingdomPickDestination('box-0-' + dexId, 'square', rand))) hit++;
+      }
+      return hit / 3000;
+    };
+    const waterShare = share(7, ['riverside', 'springs']);
+    const plainShare = share(19, ['riverside', 'springs']);
+
+    /* The forecast is the same for everyone at a given time, and rain is occasional. */
+    let rainy = 0;
+    for (let h = 0; h < 2000; h++) if (kingdomForecast(Date.UTC(2026, 0, 1) + h * 7200000) === 'rain') rainy++;
+    const forecastSteady = kingdomForecast(1e12) === kingdomForecast(1e12);
+    return { problems, glowTraits, plainTraits, haloLit, slept, firesShelter, watersDance, friends, saved,
+      family, waterShare, plainShare, rainShare: rainy / 2000, forecastSteady };
+  });
+  if (lifeAudit.problems.length) {
+    throw new Error('Kingdom activity spots are misplaced: ' + lifeAudit.problems.join(', '));
+  }
+  if (lifeAudit.glowTraits.includes(false) || lifeAudit.plainTraits.includes(true) || !lifeAudit.haloLit) {
+    throw new Error('Night glow is wrong: ' + JSON.stringify(lifeAudit));
+  }
+  if (!lifeAudit.slept || lifeAudit.firesShelter < 8 || lifeAudit.watersDance < 8) {
+    throw new Error('Night sleep or rain behaviour is missing: ' + JSON.stringify(lifeAudit));
+  }
+  if (!lifeAudit.friends || !lifeAudit.saved || !lifeAudit.family) {
+    throw new Error('Friendships or families did not work: ' + JSON.stringify(lifeAudit));
+  }
+  if (lifeAudit.waterShare < lifeAudit.plainShare * 1.4) {
+    throw new Error('Type favourites do not steer where Pokemon go: ' + JSON.stringify(lifeAudit));
+  }
+  if (!lifeAudit.forecastSteady || lifeAudit.rainShare < .08 || lifeAudit.rainShare > .3) {
+    throw new Error('The rain forecast is unsteady or out of range: ' + JSON.stringify(lifeAudit));
+  }
 
   const grabAudit = await page.evaluate(async () => {
     const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -288,6 +451,8 @@ const fs = require('fs');
   if (!assetsOk) throw new Error('A town district background failed to load');
 
   const atmosphere = await page.evaluate(() => {
+    KINGDOM_WEATHER_SET = true;
+    KINGDOM_WEATHER = 'clear';
     const night = kingdomEasternTime(Date.parse('2026-09-14T07:00:00Z'));
     const day = kingdomEasternTime(Date.parse('2026-09-14T16:00:00Z'));
     kingdomApplyAtmosphere(Date.parse('2026-09-14T07:00:00Z'));
@@ -367,6 +532,9 @@ const fs = require('fs');
       })
     };
   });
+  const mobileMapping = await page.evaluate(() => KINGDOM_ACTORS.every(actor =>
+    Math.abs(parseFloat(actor.el.style.left) - (actor.x * 2.222222 - 61.111111)) < .05));
+  if (!mobileMapping) throw new Error('Residents do not line up with the cropped town picture on mobile');
   if (mobileGym.markers !== 6 || mobileGym.buttons !== 6 || mobileGym.overflow || !mobileGym.controlsFit) {
     throw new Error('Mossroot Gym controls do not fit mobile: ' + JSON.stringify(mobileGym));
   }
@@ -389,7 +557,8 @@ const fs = require('fs');
   }
 
   if (errors.length) throw new Error('Browser errors: ' + errors.join(' | '));
-  console.log('PASS Kingdom: 10 districts, collision-safe roaming, gym workouts, rain, music, lanterns, mobile fit.');
+  console.log('PASS Kingdom: 10 districts, collision-safe roaming, activity spots, gym routes, glow, sleep, ' +
+    'rain, bonds, families, favourites, music, lanterns, mobile fit.');
   await browser.close();
 })().catch(err => {
   console.error(err);

@@ -328,10 +328,27 @@ Your collection does not just sit in a box. In the **Pokémon Kingdom**, every P
 </div>
 
 - 🚶 **They have individual itineraries.** A resident can stay for five minutes or several days, then walk the connected paths through nearby districts. The town map shows residents travelling between places, and their itineraries continue while the game is closed. Your party wears a gold star.
-- 🌗 **Day, night and rain.** The town follows Eastern Time through dawn, day, dusk and night. Rain brings falling streaks, splashes, mist and a layered rain sound. Lanterns flicker once the sun goes down.
+- 🏡 **Things to do in every district.** 49 activity spots: swimming in the pools and the river, soaking in the hot springs, sitting on benches and at the end of the dock, snacking at the café, browsing the berry stalls, ringing the Moonbell, stargazing, warming up at a crackling campfire and more. There are also 36 things a Pokémon does on the spot, from digging and roaring to chasing a butterfly or singing a lullaby that sends its neighbours to sleep.
+- 💞 **Personalities and friendships.** Pokémon favour places that suit their type (water types head for the river and the springs). Each has its own way of moving: hopping, stomping, slithering, floating or flying. When two Pokémon keep bumping into each other they become friends, close friends and then best friends, or gym rivals; close friends set off on trips together, and little ones tag along after their evolved relatives. Tap a Pokémon to see its friends.
+- 🌗 **Day, night and rain.** The town follows Eastern Time through dawn, day, dusk and night. After dark most of the town falls asleep (night owls nap by day instead), and fire types and Pokémon that make their own light glow softly. In the rain, fire types huddle under shelter while water types dance in it. Rain brings falling streaks, splashes, mist and a layered rain sound, and lanterns flicker once the sun goes down.
 - 🎵 **Original music.** Each district has its own low-fatigue procedural score with its own tempo, harmony and lead voice, and moving between districts crossfades the themes.
-- ✋ **Pick one up.** Tap a Pokémon to say hello, or hold the hand on it to lift it and carry it somewhere else. Mossroot Gym has training stations: a climbing wall, hanging bags, balance logs and agility hurdles.
-- 🧱 **Solid ground.** Hand-authored walkable areas keep residents off buildings, water, stalls and benches, while Pokémon themselves stay non-solid so friends can bunch up naturally.
+- ✋ **Pick one up.** Tap a Pokémon to say hello, or hold the hand on it to lift it and carry it somewhere else. Mossroot Gym has a full training circuit: a climbing wall, a punching bag, balance logs, agility hurdles, a sparring dummy and a barbell.
+- 🧱 **Solid ground.** Hand-authored walkable areas keep residents off buildings, water, stalls and benches. Pokémon can pass through each other while walking, but one about to settle down finds a place of its own.
+
+<table>
+<tr>
+<td width="50%"><img src="docs/screenshots/kingdom-day.jpg" alt="Kingdom Green by day: Pokémon swimming, hopping the stepping stones, chasing a butterfly and singing"></td>
+<td width="50%"><img src="docs/screenshots/kingdom-night.jpg" alt="Moonbell Hill at night: sleepers, a Pokémon ringing the Moonbell, and glowing Vulpix, Ampharos and Umbreon"></td>
+</tr>
+<tr>
+<td><img src="docs/screenshots/kingdom-springs.jpg" alt="Emberstone Springs at night: Pokémon soaking in the hot springs around a lit campfire"></td>
+<td><img src="docs/screenshots/kingdom-gym.jpg" alt="Mossroot Gym: climbing, punching, balancing, hurdling, sparring and lifting"></td>
+</tr>
+<tr>
+<td><img src="docs/screenshots/kingdom-hearth.jpg" alt="Hearthside Lane at dusk: friends around the firepit"></td>
+<td><img src="docs/screenshots/kingdom-rain.jpg" alt="Kingdom Green in the rain: fire types sheltering while water types dance"></td>
+</tr>
+</table>
 
 <br>
 

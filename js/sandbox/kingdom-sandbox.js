@@ -9,6 +9,7 @@ var SANDBOX = { mons: [], nextUid: 1, travel: false };
 var SANDBOX_PRESS = null;
 
 KINGDOM_TRAVEL_KEY = 'studymon.sandbox.kingdom.travel.v1';
+KINGDOM_BOND_KEY = 'studymon.sandbox.kingdom.bonds.v1';
 CUR = 'kingdom';
 
 function sandboxLoad() {
@@ -292,6 +293,18 @@ function sandboxBindDex() {
   });
   $('#sbx-type').addEventListener('change', sandboxRenderDex);
   $('#sbx-travel').addEventListener('change', function (ev) { sandboxSetTravel(ev.target.checked); });
+  /* Pin the time of day or the weather to watch night and rain behaviour. */
+  $('#sbx-phase').addEventListener('change', function (ev) {
+    KINGDOM_PHASE_OVERRIDE = ev.target.value || null;
+    kingdomApplyAtmosphere();
+  });
+  $('#sbx-weather').addEventListener('change', function (ev) {
+    var want = ev.target.value;
+    KINGDOM_WEATHER_SET = !!want;
+    if (want && want !== KINGDOM_WEATHER) kingdomToggleWeather();
+    KINGDOM_WEATHER_SET = !!want;
+    kingdomApplyAtmosphere();
+  });
   $('#sbx-trips').addEventListener('click', sandboxStartTrips);
   $('#sbx-clear').addEventListener('click', function () {
     if (!SANDBOX.mons.length || confirm('Remove all ' + SANDBOX.mons.length + ' Pokémon from the sandbox Kingdom?')) sandboxClear();

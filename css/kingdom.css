@@ -340,12 +340,8 @@
     linear-gradient(#07142fb8, #10254e94 58%, #09172ba3);
   box-shadow: inset 0 0 110px #020817b8;
 }
-.kingdom-stage.phase-night .kingdom-mon img {
-  filter: brightness(.7) saturate(.78) drop-shadow(0 2px 1px #050914aa);
-}
-.kingdom-stage.phase-dusk .kingdom-mon img,
 .kingdom-stage.phase-dawn .kingdom-mon img {
-  filter: brightness(.88) saturate(.9) drop-shadow(0 2px 1px #17211277);
+  filter: brightness(.94) saturate(.94) drop-shadow(0 2px 1px #17211277);
 }
 
 .kingdom-weather {
@@ -505,19 +501,13 @@
   object-fit: contain;
   image-rendering: pixelated;
   filter: drop-shadow(0 2px 1px #17211277);
-  transform: scaleX(var(--face, 1));
-  transition: transform .12s linear;
+  /* The sprites are drawn looking left, and --face 1 means looking right (the
+     way it walks, leans and faces a bench or a board), so it is mirrored. */
+  transform: scaleX(calc(var(--face, 1) * var(--turn, 1) * -1));
   pointer-events: none;
 }
 .kingdom-mon.walking img { animation: kingdom-step .42s steps(2, end) infinite; }
 .kingdom-mon.greeting img { animation: kingdom-greet .42s ease-in-out 2; }
-.kingdom-mon.gym-working img { transform-origin: 50% 82%; }
-.kingdom-mon.gym-working.gym-climb img { animation: kingdom-gym-climb .72s steps(4, end) infinite; }
-.kingdom-mon.gym-working.gym-bags img { animation: kingdom-gym-bags .5s ease-in-out infinite; }
-.kingdom-mon.gym-working.gym-balance img { animation: kingdom-gym-balance 1.25s ease-in-out infinite; }
-.kingdom-mon.gym-working.gym-hurdles img { animation: kingdom-gym-hurdles .82s ease-in-out infinite; }
-.kingdom-mon.gym-working.gym-spar img { animation: kingdom-gym-spar .56s steps(3, end) infinite; }
-.kingdom-mon.gym-working.gym-weights img { animation: kingdom-gym-weights 1.05s ease-in-out infinite; }
 .kingdom-party-mark {
   position: absolute;
   right: -1px;
@@ -534,21 +524,62 @@
   font: 11px/1 Georgia, serif;
   box-shadow: 0 2px 0 #3d291955;
 }
+/* Pixel icons (assets/ui/kingdom-icons.png) in 11px cells: row 0 as drawn,
+   for speech bubbles; row 1 with a dark outline, for things floating over
+   the scene. --i picks the icon. */
+.kingdom-icon {
+  display: block;
+  width: 11px;
+  height: 11px;
+  background: url("../assets/ui/kingdom-icons.png") calc(var(--i, 0) * -11px) -11px / 165px 22px no-repeat;
+  image-rendering: pixelated;
+  font-style: normal;
+}
+/* An emote bubble just above the head, with one icon drawn at twice size. */
 .kingdom-emote {
   position: absolute;
   left: 50%;
-  top: -12px;
+  top: calc(86% - var(--span, 60%) - 6px);
   z-index: 4;
-  transform: translateX(-50%);
-  min-width: 24px;
-  padding: 2px 5px;
-  border: 2px solid #513a26;
-  border-radius: 9px;
-  background: #fff9e8;
-  color: #7d3f37;
-  font: 700 14px/1.2 var(--read);
+  transform: translate(-50%, -100%);
+  padding: 1px;
+  border: 2px solid #3d2a1c;
+  border-radius: 7px;
+  background: #fffdf3;
   box-shadow: 0 2px 0 #37231666;
-  animation: kingdom-pop .2s ease-out;
+  animation: kingdom-emote-pop .18s steps(3, end);
+}
+.kingdom-emote i {
+  display: block;
+  width: 22px;
+  height: 22px;
+  background: url("../assets/ui/kingdom-icons.png") calc(var(--i, 0) * -22px) 0 / 330px 44px no-repeat;
+  image-rendering: pixelated;
+}
+.kingdom-emote::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  width: 8px;
+  height: 5px;
+  translate: -50% 0;
+  background: #3d2a1c;
+  clip-path: polygon(0 0, 100% 0, 100% 20%, 75% 20%, 75% 60%, 50% 60%, 50% 100%, 25% 100%, 25% 20%, 0 20%);
+}
+.kingdom-emote::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -2px;
+  width: 4px;
+  height: 2px;
+  translate: -50% 0;
+  background: #fffdf3;
+  z-index: 1;
+}
+@keyframes kingdom-emote-pop {
+  from { opacity: 0; transform: translate(-50%, calc(-100% + 6px)) scale(.6); }
 }
 
 @keyframes kingdom-step {
@@ -566,9 +597,10 @@
   70% { translate: 2px -5px; }
 }
 @keyframes kingdom-gym-bags {
-  0%, 100% { translate: -2px 0; rotate: -2deg; }
-  42% { translate: 6px -1px; rotate: 5deg; }
-  58% { translate: 2px 0; rotate: 0deg; }
+  0%, 100% { translate: 0 0; rotate: 0deg; scale: 1 1; }
+  30% { translate: calc(var(--face, 1) * -3%) 0; rotate: calc(var(--face, 1) * -6deg); scale: .97 1.02; }
+  42% { translate: calc(var(--face, 1) * 8%) 0; rotate: calc(var(--face, 1) * 7deg); scale: 1.06 .97; }
+  60% { translate: calc(var(--face, 1) * 3%) 0; rotate: calc(var(--face, 1) * 2deg); scale: 1 1; }
 }
 @keyframes kingdom-gym-balance {
   0%, 100% { translate: 0 -2px; rotate: -6deg; }
@@ -579,14 +611,30 @@
   45% { translate: 0 -11px; }
   70% { translate: 6px -1px; }
 }
+/* A quick jab, a wind-up, then the big strike. */
 @keyframes kingdom-gym-spar {
-  0%, 100% { translate: -2px 0; rotate: -3deg; }
-  35% { translate: 6px 0; rotate: 5deg; }
-  65% { translate: 1px -3px; rotate: -2deg; }
+  0%, 100% { translate: 0 0; rotate: 0deg; scale: 1 1; }
+  12% { translate: calc(var(--face, 1) * -2%) 1%; scale: 1.04 .96; }
+  22% { translate: calc(var(--face, 1) * 7%) 0; rotate: calc(var(--face, 1) * 6deg); scale: 1.05 .98; }
+  32% { translate: calc(var(--face, 1) * 1%) 0; rotate: 0deg; scale: 1 1; }
+  48% { translate: calc(var(--face, 1) * -2%) 1.5%; rotate: calc(var(--face, 1) * -4deg); scale: 1.06 .94; }
+  60% { translate: calc(var(--face, 1) * 9%) -2%; rotate: calc(var(--face, 1) * 10deg); scale: .96 1.06; }
+  76% { translate: calc(var(--face, 1) * 2%) 0; rotate: 0deg; scale: 1 1; }
 }
+/* Squat, clean to the chest, press overhead and hold, lower. */
+/* Squat, clean to the shoulders, a trembling press overhead, and down
+   again: in step with the barbell (kingdom-barbell, same length). */
 @keyframes kingdom-gym-weights {
-  0%, 100% { translate: 0 3px; scale: 1 .92; }
-  45%, 65% { translate: 0 -5px; scale: 1.04 1.04; }
+  0%, 16%, 92%, 100% { translate: 0 3%; scale: 1.03 .95; }
+  30% { translate: 0 0; scale: 1 1; }
+  40%, 62%, 68% { translate: 0 -1%; scale: .99 1.02; }
+  46%, 54% { translate: 1px -1%; scale: .99 1.02; }
+  50%, 58% { translate: -1px -1%; scale: .99 1.02; }
+  78% { translate: 0 0; scale: 1 1; }
+}
+@keyframes kingdom-climb-step {
+  0% { translate: -2% 0; rotate: -7deg; }
+  100% { translate: 2% -2%; rotate: 7deg; }
 }
 @keyframes kingdom-pop {
   from { opacity: 0; transform: translate(-50%, 6px) scale(.7); }
@@ -629,9 +677,10 @@
   translate: -50% -50%;
   display: grid;
   place-items: center;
-  width: 34px;
-  height: 34px;
+  width: 26px;
+  height: 26px;
   min-width: 0;
+  min-height: 0;
   padding: 0;
   border: 2px solid #68452a;
   border-radius: 50%;
@@ -640,9 +689,14 @@
   box-shadow: 0 3px 0 #321f1455, 0 0 0 2px #fff1ad55;
   pointer-events: auto;
   backdrop-filter: blur(2px);
-  transition: translate .14s ease, filter .14s ease, background .14s ease;
+  transition: translate .14s ease, filter .14s ease, background .14s ease, opacity .14s ease;
 }
-.kingdom-gym-station > span { font-size: 16px; line-height: 1; }
+.kingdom-gym-station > span { font-size: 13px; line-height: 1; }
+/* With a mouse, an idle pin stays faint so the equipment reads first; it
+   firms up on hover, when picked, or while its station is in use. */
+@media (hover: hover) {
+  .kingdom-gym-station:not(:hover):not(:focus-visible):not(.selected):not(.busy) { opacity: .62; }
+}
 .kingdom-gym-station small {
   position: absolute;
   left: 50%;
@@ -764,8 +818,8 @@
   .kingdom-lanterns i { left: var(--mx); width: var(--msize); }
   .kingdom-rain-splashes i { left: var(--smx); }
   .kingdom-mon { width: clamp(40px, 13%, 62px); }
-  .kingdom-gym-station { left: var(--mx); width: 31px; height: 31px; }
-  .kingdom-gym-station > span { font-size: 14px; }
+  .kingdom-gym-station { left: var(--mx); width: 26px; height: 26px; }
+  .kingdom-gym-station > span { font-size: 12px; }
   .kingdom-bar { top: 8px; left: 8px; right: 8px; align-items: flex-start; }
   .kingdom-story { max-width: 58%; font-size: 9px; white-space: normal; }
   .kingdom-glade { font-size: 9px; }
@@ -924,7 +978,7 @@ html.kingdom-carrying body { user-select: none; }
   .kingdom-mon.holding img,
   .kingdom-mon.dropped img,
   .kingdom-carry img,
-  .kingdom-mon.gym-working img,
+  .kingdom-mon.acting img,
   .kingdom-gym-station.active { animation: none !important; }
 }
 
@@ -942,3 +996,1274 @@ html.kingdom-carrying body { user-select: none; }
 /* Wrappers that let a district change swap the header and district view
    while the town map stays untouched; they take no part in the layout. */
 .kingdom-box { display: contents; }
+
+/* ---- Kingdom life: gaits, activities, glow ---------------------------------
+   Motions animate the sprite's own translate/rotate/scale, which compose with
+   the scaleX() that faces it left or right. Leans use var(--face) so a
+   resident always leans toward what it is looking at. */
+
+.kingdom-mon img {
+  /* Each sprite has its own empty margin below the creature (--below, from
+     the measured sprite table); shifting by it stands every creature on the
+     same ground line, 86% down the box, right on its shadow. */
+  position: relative;
+  top: calc(var(--below, 20%) - 14%);
+  transform-origin: 50% 86%;
+  animation: kingdom-breathe 1.8s steps(1, end) infinite;
+}
+.kingdom-mon::after {
+  left: calc(50% - var(--span, 60%) * .4);
+  right: calc(50% - var(--span, 60%) * .4);
+  bottom: 7%;
+  height: 13%;
+}
+@keyframes kingdom-breathe {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -1px; }
+}
+
+/* Gaits. */
+.kingdom-mon.walking.gait-hop img { animation: kingdom-hop-step .4s ease-in-out infinite; }
+.kingdom-mon.walking.gait-heavy img { animation: kingdom-stomp .72s ease-in-out infinite; }
+.kingdom-mon.walking.gait-slither img { animation: kingdom-slither .56s ease-in-out infinite; }
+.kingdom-mon.gait-fly img,
+.kingdom-mon.gait-float img { top: calc(var(--below, 20%) - 29%); }
+.kingdom-mon.gait-fly::after,
+.kingdom-mon.gait-float::after {
+  left: calc(50% - var(--span, 60%) * .28);
+  right: calc(50% - var(--span, 60%) * .28);
+  opacity: .5;
+}
+.kingdom-mon.gait-float img,
+.kingdom-mon.gait-float.walking img { animation: kingdom-float 2.8s ease-in-out infinite; }
+.kingdom-mon.gait-fly img { animation: kingdom-flap 1.7s ease-in-out infinite; }
+.kingdom-mon.gait-fly.walking img { animation: kingdom-flap .46s ease-in-out infinite; }
+/* Flyers land for most activities; ghosts and floaters stay up. */
+.kingdom-mon.acting.gait-fly img { top: calc(var(--below, 20%) - 14%); }
+.kingdom-mon.acting.gait-fly::after {
+  left: calc(50% - var(--span, 60%) * .4);
+  right: calc(50% - var(--span, 60%) * .4);
+  opacity: 1;
+}
+.kingdom-mon.greeting img,
+.kingdom-mon.greeting.walking img { animation: kingdom-greet .42s ease-in-out 2; }
+.kingdom-mon.hopping img { animation: kingdom-hop-arc .46s ease-out; }
+
+@keyframes kingdom-hop-step {
+  0%, 100% { translate: 0 0; scale: 1.05 .95; }
+  45% { translate: 0 -13%; scale: .96 1.05; }
+}
+@keyframes kingdom-stomp {
+  0%, 100% { translate: 0 0; rotate: -2deg; }
+  25%, 75% { translate: 0 -2.5%; rotate: 0deg; }
+  50% { translate: 0 0; rotate: 2deg; }
+}
+@keyframes kingdom-slither {
+  0%, 100% { translate: -3% 0; rotate: -3deg; }
+  50% { translate: 3% 0; rotate: 3deg; }
+}
+@keyframes kingdom-float {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -6%; }
+}
+@keyframes kingdom-flap {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -7%; }
+}
+@keyframes kingdom-hop-arc {
+  0% { scale: 1.08 .9; }
+  30% { scale: .94 1.08; }
+  85% { scale: 1.06 .93; }
+  100% { scale: 1 1; }
+}
+
+/* ---- Activities ---------------------------------------------------------- */
+.kingdom-mon.acting img { animation: kingdom-breathe 1.8s steps(1, end) infinite; }
+.kingdom-mon.act-sit img,
+.kingdom-mon.act-rest img { animation: kingdom-sit 3.6s steps(1, end) infinite; }
+.kingdom-mon.act-watch img { animation: kingdom-watch 6s steps(1, end) infinite; }
+.kingdom-mon.act-sleep img { animation: kingdom-sleep 4s steps(1, end) infinite; }
+.kingdom-mon.act-browse img { animation: kingdom-browse 2.8s ease-in-out infinite; }
+.kingdom-mon.act-eat img { animation: kingdom-nom .52s ease-in-out infinite; }
+.kingdom-mon.act-read img { animation: kingdom-read 3.2s ease-in-out infinite; }
+.kingdom-mon.act-ring img { animation: kingdom-ring 1.15s ease-in-out infinite; }
+.kingdom-mon.act-sniff img { animation: kingdom-sniff 1.5s ease-in-out infinite; }
+.kingdom-mon.act-pick img { animation: kingdom-pick 1.6s ease-in-out infinite; }
+.kingdom-mon.act-buzz img { animation: kingdom-buzz 1.2s ease-in-out infinite; }
+.kingdom-mon.act-press img { animation: kingdom-press .9s ease-in-out infinite; }
+.kingdom-mon.act-warm img { animation: kingdom-warm 3.6s steps(1, end) infinite; }
+.kingdom-mon.act-stargaze img { animation: kingdom-stargaze 4s steps(1, end) infinite; }
+.kingdom-mon.act-peer img { animation: kingdom-peer 4.4s ease-in-out infinite; }
+.kingdom-mon.act-dance img { animation: kingdom-dance 2.4s ease-in-out infinite, kingdom-dance-turn 2.4s linear infinite; }
+.kingdom-mon.act-meditate img { animation: kingdom-meditate 4s ease-in-out infinite; }
+.kingdom-mon.act-fade img { animation: kingdom-fade 2.6s ease-in-out infinite; }
+.kingdom-mon.act-puff img { animation: kingdom-puff 1.15s ease-in-out infinite; }
+.kingdom-mon.act-spark img { animation: kingdom-charge 1.6s ease-in-out infinite, kingdom-charge-glow 1.6s ease-in-out infinite; }
+.kingdom-mon.act-look img { animation: kingdom-look 2.6s ease-in-out infinite; }
+.kingdom-mon.act-preen img { animation: kingdom-preen 1.3s ease-in-out infinite; }
+.kingdom-mon.act-roar img { animation: kingdom-roar 1.4s ease-in-out infinite; }
+.kingdom-mon.act-yawn img { animation: kingdom-yawn 2.6s ease-in-out 1 forwards; }
+.kingdom-mon.act-stretch img { animation: kingdom-stretch 2.9s ease-in-out 1 forwards; }
+.kingdom-mon.act-hop img { animation: kingdom-happy .55s ease-out 2; }
+.kingdom-mon.act-shake img { animation: kingdom-shake .14s linear infinite; }
+.kingdom-mon.act-shelter img { animation: kingdom-huddle 2.6s steps(1, end) infinite; }
+.kingdom-mon.act-roll img { transform-origin: 50% 62%; animation: kingdom-roll 1.7s ease-in-out infinite; }
+.kingdom-mon.act-chase img,
+.kingdom-mon.act-stones img { animation: kingdom-hop-step .4s ease-in-out infinite; }
+.kingdom-mon.act-bask img { animation: kingdom-bask 3.2s ease-in-out infinite; }
+.kingdom-mon.act-garden img { animation: kingdom-peck .95s ease-in-out infinite; }
+.kingdom-mon.act-dig img { animation: kingdom-dig .34s ease-in-out infinite alternate; }
+.kingdom-mon.act-drink img { animation: kingdom-drink 2.3s ease-in-out infinite; }
+.kingdom-mon.act-sing img { animation: kingdom-sing 1.3s ease-in-out infinite; }
+.kingdom-mon.act-headache img { animation: kingdom-headache 1.9s ease-in-out infinite; }
+.kingdom-mon.act-flop img { animation: kingdom-flop .48s ease-in-out infinite; }
+.kingdom-mon.act-cairn img { animation: kingdom-peck 1.3s ease-in-out infinite; }
+.kingdom-mon.act-tally img { animation: kingdom-tally .9s ease-in-out infinite; }
+.kingdom-mon.act-curl img { animation: kingdom-curl 3.2s steps(1, end) infinite; }
+.kingdom-mon.act-climb img { animation: kingdom-gym-climb .72s steps(4, end) infinite; }
+.kingdom-mon.act-bags img { animation: kingdom-gym-bags .6s ease-in-out infinite; }
+.kingdom-mon.act-balance img { animation: kingdom-gym-balance 1.25s ease-in-out infinite; }
+.kingdom-mon.act-hurdles img { animation: kingdom-gym-hurdles .82s ease-in-out infinite; }
+.kingdom-mon.act-spar img { animation: kingdom-gym-spar .9s ease-in-out infinite; }
+.kingdom-mon.act-weights img { animation: kingdom-gym-weights 2s ease-in-out infinite; }
+/* Legs of a route: runs, jumps over hurdles and between stumps, a climb up
+   the wall, and a little cheer at the end of a set. */
+.kingdom-mon.acting.leg-run img { animation: kingdom-hop-step .28s ease-in-out infinite; }
+.kingdom-mon.acting.leg-jump img {
+  animation: none;
+  rotate: calc(var(--face, 1) * 9deg);
+  scale: .94 1.08;
+}
+.kingdom-mon.acting.leg-climb img { animation: kingdom-climb-step .46s steps(2, end) infinite; }
+.kingdom-mon.acting.leg-cheer img { animation: kingdom-happy .55s ease-out 2; }
+
+@keyframes kingdom-sit {
+  0%, 100% { translate: 0 2%; scale: 1.03 .96; }
+  50% { translate: 0 calc(2% - 1px); scale: 1.03 .96; }
+}
+/* Sits and looks around: ahead, off to one side, back, the other side. */
+@keyframes kingdom-watch {
+  0%, 100% { translate: 0 2%; scale: 1.03 .96; rotate: 0deg; }
+  20% { translate: 0 calc(2% - 1px); scale: 1.03 .96; rotate: 0deg; }
+  40% { translate: 0 2%; scale: 1.03 .96; rotate: calc(var(--face, 1) * -4deg); }
+  58% { translate: 0 2%; scale: 1.03 .96; rotate: 0deg; }
+  74% { translate: 0 2%; scale: 1.03 .96; rotate: calc(var(--face, 1) * 3deg); }
+  88% { translate: 0 calc(2% - 1px); scale: 1.03 .96; rotate: 0deg; }
+}
+/* Curled low and still; the slow one-pixel rise and fall is the breathing. */
+@keyframes kingdom-sleep {
+  0%, 100% { translate: 0 5%; scale: 1.04 .95; rotate: calc(var(--face, 1) * -6deg); }
+  50% { translate: 0 calc(5% - 1px); scale: 1.04 .95; rotate: calc(var(--face, 1) * -6deg); }
+}
+@keyframes kingdom-browse {
+  0%, 100% { translate: 0 0; rotate: 0deg; }
+  14% { translate: 0 -2%; rotate: calc(var(--face, 1) * 7deg); }
+  28% { translate: 0 0; rotate: calc(var(--face, 1) * 2deg); }
+  40% { translate: 0 -9%; rotate: 0deg; scale: .97 1.04; }
+  50% { translate: 0 0; scale: 1.04 .96; }
+  68% { rotate: calc(var(--face, 1) * -5deg); }
+  82% { rotate: 0deg; }
+}
+@keyframes kingdom-nom {
+  0%, 100% { scale: 1 1; rotate: 0deg; }
+  40% { scale: 1.03 .96; rotate: calc(var(--face, 1) * 4deg); }
+}
+@keyframes kingdom-read {
+  0%, 100% { rotate: calc(var(--face, 1) * 3deg); translate: 0 0; }
+  50% { rotate: calc(var(--face, 1) * -2deg); translate: 0 -1.5%; }
+}
+@keyframes kingdom-ring {
+  0%, 100% { translate: 0 0; rotate: 0deg; scale: 1 1; }
+  12% { scale: 1.06 .92; }
+  34% { translate: 0 -17%; rotate: calc(var(--face, 1) * -9deg); scale: .95 1.06; }
+  48% { translate: 0 -15%; rotate: calc(var(--face, 1) * 9deg); }
+  66% { translate: 0 0; rotate: 0deg; scale: 1.07 .91; }
+  80% { scale: 1 1; }
+}
+@keyframes kingdom-sniff {
+  0%, 55%, 100% { rotate: 0deg; translate: 0 0; }
+  12%, 32% { rotate: calc(var(--face, 1) * 12deg); translate: calc(var(--face, 1) * 2%) 4%; }
+  22%, 42% { rotate: calc(var(--face, 1) * 7deg); translate: calc(var(--face, 1) * 1%) 2%; }
+}
+@keyframes kingdom-pick {
+  0%, 100% { translate: 0 0; scale: 1 1; }
+  25% { translate: 0 -6%; scale: .94 1.12; }
+  40% { translate: 0 -14%; scale: .95 1.1; }
+  58% { translate: 0 0; scale: 1.07 .92; }
+  72% { scale: 1 1; }
+}
+@keyframes kingdom-buzz {
+  0%, 100% { rotate: -3deg; translate: 0 0; }
+  25% { rotate: 4deg; translate: 0 -3%; }
+  50% { rotate: -4deg; translate: 0 -1%; }
+  75% { rotate: 3deg; translate: 0 -4%; }
+}
+@keyframes kingdom-press {
+  0%, 100% { translate: 0 0; scale: 1 1; }
+  42%, 58% { translate: calc(var(--face, 1) * 6%) 2%; scale: 1.07 .9; rotate: calc(var(--face, 1) * 6deg); }
+}
+/* Sits close to the fire and leans in to it, then back. */
+@keyframes kingdom-warm {
+  0%, 100% { translate: 0 2%; scale: 1.03 .96; rotate: 0deg; }
+  25% { translate: 0 calc(2% - 1px); scale: 1.03 .96; rotate: 0deg; }
+  50% { translate: calc(var(--face, 1) * 1px) 2%; scale: 1.03 .96; rotate: calc(var(--face, 1) * 3deg); }
+  75% { translate: calc(var(--face, 1) * 1px) calc(2% - 1px); scale: 1.03 .96; rotate: calc(var(--face, 1) * 3deg); }
+}
+/* Leans back to look up at the sky. */
+@keyframes kingdom-stargaze {
+  0%, 100% { translate: 0 3%; scale: 1.03 .96; rotate: calc(var(--face, 1) * -6deg); }
+  50% { translate: 0 calc(3% - 1px); scale: 1.03 .96; rotate: calc(var(--face, 1) * -6deg); }
+}
+@keyframes kingdom-peer {
+  0%, 70%, 100% { rotate: calc(var(--face, 1) * 9deg); translate: calc(var(--face, 1) * 3%) 0; scale: 1 1; }
+  78% { rotate: 0deg; translate: 0 -10%; scale: .96 1.06; }
+  86% { rotate: 0deg; translate: 0 0; scale: 1.05 .94; }
+}
+/* Two bouncy hops, a big wind-up and a jump with a quick spin at the top. */
+@keyframes kingdom-dance {
+  0%, 100% { translate: 0 0; scale: 1 1; rotate: 0deg; }
+  6% { translate: 0 1%; scale: 1.1 .88; }
+  14% { translate: 0 -15%; scale: .93 1.09; rotate: calc(var(--face, 1) * -7deg); }
+  22% { translate: 0 0; scale: 1.1 .9; rotate: 0deg; }
+  28% { translate: 0 0; scale: 1 1; }
+  34% { translate: 0 1%; scale: 1.1 .88; }
+  42% { translate: 0 -15%; scale: .93 1.09; rotate: calc(var(--face, 1) * 7deg); }
+  50% { translate: 0 0; scale: 1.1 .9; rotate: 0deg; }
+  56% { translate: 0 0; scale: 1 1; }
+  63% { translate: 0 1.5%; scale: 1.1 .9; }
+  71% { translate: 0 -21%; scale: .95 1.06; }
+  76% { translate: 0 -25%; scale: 1 1; }
+  81% { translate: 0 -19%; scale: .95 1.06; }
+  88% { translate: 0 0; scale: 1.1 .9; }
+  94% { translate: 0 0; scale: .98 1.02; }
+}
+@keyframes kingdom-dance-turn {
+  0%, 70% { --turn: 1; }
+  71%, 75% { --turn: -1; }
+  76%, 80% { --turn: 1; }
+  81%, 85% { --turn: -1; }
+  86%, 100% { --turn: 1; }
+}
+@keyframes kingdom-meditate {
+  0%, 100% { translate: 0 -8%; }
+  50% { translate: 0 -13%; }
+}
+@keyframes kingdom-fade {
+  0%, 100% { opacity: 1; translate: 0 0; }
+  45%, 55% { opacity: .22; translate: 0 -5%; }
+}
+@keyframes kingdom-puff {
+  0%, 100% { scale: 1 1; translate: 0 0; }
+  35% { scale: 1.08 .9; translate: 0 2%; }
+  52% { scale: .95 1.09; translate: 0 -6%; }
+  70% { scale: 1.02 .98; translate: 0 0; }
+}
+/* Pikachu-style charging: a trembling crouch, cheeks brightening, then a
+   little hop as the charge crackles out. */
+@keyframes kingdom-charge {
+  0%, 100% { translate: 0 0; scale: 1 1; }
+  8% { translate: 0 2%; scale: 1.06 .92; }
+  12%, 20%, 28%, 36%, 44%, 52% { translate: -1.4% 2%; scale: 1.06 .92; }
+  16%, 24%, 32%, 40%, 48%, 56% { translate: 1.4% 2.5%; scale: 1.07 .91; }
+  62% { translate: 0 3%; scale: 1.11 .87; }
+  70% { translate: 0 -13%; scale: .9 1.12; }
+  80% { translate: 0 0; scale: 1.08 .92; }
+  88% { translate: 0 0; scale: .98 1.02; }
+}
+@keyframes kingdom-charge-glow {
+  0%, 100% { filter: drop-shadow(0 2px 1px #17211277) drop-shadow(0 0 0 #ffe76a00); }
+  56% { filter: drop-shadow(0 2px 1px #17211277) drop-shadow(0 0 2px #ffe76abb); }
+  68% { filter: drop-shadow(0 2px 1px #17211277) drop-shadow(0 0 6px #fff36a); }
+  84% { filter: drop-shadow(0 2px 1px #17211277) drop-shadow(0 0 1px #ffe76a44); }
+}
+@keyframes kingdom-look {
+  0%, 100% { rotate: 0deg; translate: 0 0; scale: 1 1; }
+  20%, 42% { rotate: calc(var(--face, 1) * -5deg); translate: 0 -1.5%; scale: .99 1.02; }
+  52% { rotate: 0deg; translate: 0 0; scale: 1 1; }
+  70%, 86% { rotate: calc(var(--face, 1) * 3deg); translate: 0 .5%; scale: 1.01 .99; }
+}
+@keyframes kingdom-preen {
+  0%, 50%, 100% { rotate: 0deg; }
+  15%, 35% { rotate: calc(var(--face, 1) * -10deg); translate: 0 1%; }
+  25% { rotate: calc(var(--face, 1) * -6deg); }
+}
+/* Rear back, throw the roar forward, hold it with a tremble, settle. */
+@keyframes kingdom-roar {
+  0%, 100% { scale: 1 1; rotate: 0deg; translate: 0 0; }
+  18% { scale: .94 1.06; rotate: calc(var(--face, 1) * -10deg); translate: calc(var(--face, 1) * -3%) 0; }
+  28% { scale: 1.15 1.05; rotate: calc(var(--face, 1) * 6deg); translate: calc(var(--face, 1) * 4%) 0; }
+  33%, 41%, 49% { scale: 1.13 1.06; translate: calc(var(--face, 1) * 4% - 1.5%) -1%; }
+  37%, 45%, 53% { scale: 1.13 1.06; translate: calc(var(--face, 1) * 4% + 1.5%) 0; }
+  64% { scale: 1.05 1.02; rotate: calc(var(--face, 1) * 2deg); translate: calc(var(--face, 1) * 2%) 0; }
+  80% { scale: 1 1; rotate: 0deg; translate: 0 0; }
+}
+@keyframes kingdom-yawn {
+  0% { scale: 1 1; }
+  40%, 62% { scale: .96 1.07; translate: 0 -3%; }
+  100% { scale: 1.03 .96; translate: 0 1%; }
+}
+@keyframes kingdom-stretch {
+  0% { scale: 1 1; rotate: 0deg; }
+  30% { scale: 1.08 .92; rotate: calc(var(--face, 1) * 6deg); translate: 0 3%; }
+  62% { scale: .95 1.08; rotate: 0deg; translate: 0 -4%; }
+  100% { scale: 1 1; translate: 0 0; }
+}
+@keyframes kingdom-happy {
+  0%, 100% { translate: 0 0; scale: 1 1; }
+  12% { scale: 1.06 .92; }
+  45% { translate: 0 -18%; scale: .95 1.06; }
+  80% { translate: 0 0; scale: 1.05 .94; }
+}
+@keyframes kingdom-shake {
+  0%, 100% { rotate: -7deg; }
+  50% { rotate: 7deg; }
+}
+/* Huddled low, with a little shiver now and then. */
+@keyframes kingdom-huddle {
+  0%, 60%, 100% { scale: 1.04 .95; translate: 0 3%; }
+  30% { scale: 1.04 .95; translate: 0 calc(3% - 1px); }
+  64%, 72% { scale: 1.04 .95; translate: -1px 3%; }
+  68%, 76% { scale: 1.04 .95; translate: 1px 3%; }
+}
+@keyframes kingdom-roll {
+  0%, 100% { rotate: 0deg; translate: 0 0; }
+  25% { rotate: -38deg; translate: -5% 4%; }
+  50% { rotate: 0deg; translate: 0 -3%; }
+  75% { rotate: 38deg; translate: 5% 4%; }
+}
+@keyframes kingdom-bask {
+  0%, 100% { scale: 1 1; rotate: 0deg; }
+  50% { scale: .99 1.03; rotate: calc(var(--face, 1) * -5deg); translate: 0 -2%; }
+}
+@keyframes kingdom-peck {
+  0%, 60%, 100% { rotate: 0deg; translate: 0 0; }
+  22% { rotate: calc(var(--face, 1) * 16deg); translate: calc(var(--face, 1) * 3%) 5%; }
+  36% { rotate: calc(var(--face, 1) * 8deg); translate: calc(var(--face, 1) * 1%) 2%; }
+}
+@keyframes kingdom-dig {
+  from { rotate: calc(var(--face, 1) * 6deg); translate: 0 2%; }
+  to { rotate: calc(var(--face, 1) * 14deg); translate: calc(var(--face, 1) * 2%) 5%; }
+}
+@keyframes kingdom-drink {
+  0%, 82%, 100% { rotate: 0deg; translate: 0 0; }
+  20% { rotate: calc(var(--face, 1) * 17deg); translate: calc(var(--face, 1) * 4%) 7%; }
+  34%, 50%, 66% { rotate: calc(var(--face, 1) * 13deg); translate: calc(var(--face, 1) * 3%) 5%; }
+  42%, 58% { rotate: calc(var(--face, 1) * 18deg); translate: calc(var(--face, 1) * 4%) 8%; }
+}
+@keyframes kingdom-sing {
+  0%, 100% { rotate: -6deg; translate: 0 0; }
+  50% { rotate: 6deg; translate: 0 -4%; }
+}
+@keyframes kingdom-headache {
+  0%, 100% { rotate: -9deg; translate: 0 0; }
+  50% { rotate: 9deg; translate: 0 1%; }
+}
+@keyframes kingdom-flop {
+  0%, 100% { translate: 0 0; rotate: -14deg; scale: 1.05 .95; }
+  50% { translate: 0 -20%; rotate: 16deg; scale: .96 1.05; }
+}
+@keyframes kingdom-tally {
+  0%, 100% { rotate: -5deg; }
+  50% { rotate: 5deg; translate: 0 -2%; }
+}
+/* Tucked up small: shrunk evenly, so the pixel art keeps its shape. */
+@keyframes kingdom-curl {
+  0%, 100% { scale: .86 .83; translate: 0 6%; }
+  50% { scale: .86 .83; translate: 0 calc(6% - 1px); }
+}
+
+/* Water: the sprite is cut at a waterline measured from its own feet and
+   lowered so that line sits where it stands. The head and shoulders (about
+   60% of the sprite) always stay above the water. */
+.kingdom-mon.act-swim,
+.kingdom-mon.act-soak,
+.kingdom-mon.act-splash,
+.kingdom-mon.act-paddle { --cut: calc(var(--below, 25%) + var(--span, 60%) * .36); }
+.kingdom-mon.act-soak { --cut: calc(var(--below, 25%) + var(--span, 60%) * .4); }
+.kingdom-mon.act-splash { --cut: calc(var(--below, 25%) + var(--span, 60%) * .3); }
+.kingdom-mon.act-paddle { --cut: calc(var(--below, 25%) + var(--span, 60%) * .14); }
+.kingdom-mon.act-swim img,
+.kingdom-mon.act-soak img,
+.kingdom-mon.act-splash img,
+.kingdom-mon.act-paddle img {
+  top: calc(var(--cut) - 14%);
+  clip-path: inset(0 0 var(--cut) 0);
+}
+.kingdom-mon.act-swim::after,
+.kingdom-mon.act-soak::after,
+.kingdom-mon.act-splash::after { opacity: 0; }
+.kingdom-mon.act-swim img { animation: kingdom-swim 2.6s ease-in-out infinite; }
+.kingdom-mon.act-soak img { animation: kingdom-soak 4.4s ease-in-out infinite; }
+.kingdom-mon.act-splash img { animation: kingdom-splash .8s ease-in-out infinite; }
+.kingdom-mon.act-paddle img { animation: kingdom-paddle .7s ease-in-out infinite; }
+@keyframes kingdom-swim {
+  0%, 100% { translate: 0 0; rotate: -3deg; }
+  50% { translate: 0 -2%; rotate: 3deg; }
+}
+@keyframes kingdom-soak {
+  0%, 100% { translate: 0 0; scale: 1 1; }
+  50% { translate: 0 -1.5%; scale: 1.02 .99; }
+}
+@keyframes kingdom-splash {
+  0%, 100% { translate: 0 0; rotate: -5deg; }
+  45% { translate: 0 -8%; rotate: 6deg; }
+}
+@keyframes kingdom-paddle {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 0 -2%; }
+}
+.kingdom-ripples {
+  position: absolute;
+  left: calc(50% - var(--span, 60%) * .62);
+  right: calc(50% - var(--span, 60%) * .62);
+  top: 78%;
+  height: 16%;
+  pointer-events: none;
+  z-index: 2;
+}
+.kingdom-ripples::before {
+  content: '';
+  position: absolute;
+  inset: 18% 6%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, #d8f7ff55 0, #9ee6f533 45%, transparent 72%);
+}
+.kingdom-ripples i {
+  position: absolute;
+  inset: 0;
+  /* The near half of the ring and its sides, like a handheld game's ripple:
+     a full outline reads as a focus ring. */
+  border: 2px solid;
+  border-color: transparent #e9fbffd9 #f4fdffe6;
+  border-radius: 50%;
+  opacity: 0;
+  animation: kingdom-ripple 2.4s steps(6, end) infinite;
+}
+.kingdom-ripples i:nth-child(2) { animation-delay: 1.2s; }
+.kingdom-mon.act-soak .kingdom-ripples i { animation-duration: 3.4s; border-color: transparent #fff4e8b3 #fff4e8cc; }
+.kingdom-mon.act-splash .kingdom-ripples i { animation-duration: 1.1s; }
+@keyframes kingdom-ripple {
+  0% { opacity: .9; transform: scale(.45); }
+  100% { opacity: 0; transform: scale(1.3); }
+}
+
+/* Sitting up on a bench, a stool or the edge of a dock: the creature drops
+   so its seat is under its middle and its legs hang over the front edge. */
+.kingdom-mon.perched img { top: calc(var(--below, 20%) - 14% + var(--span, 60%) * .17); }
+.kingdom-mon.perched::after { opacity: 0; }
+
+/* A snack held up to the mouth, nibbled in time with the munching. */
+.kingdom-snack {
+  position: absolute;
+  left: calc(50% + var(--face, 1) * var(--span, 60%) * .3);
+  top: calc(86% - var(--span, 60%) * .45);
+  z-index: 2;
+  pointer-events: none;
+  translate: -50% -50%;
+  animation: kingdom-nibble .52s steps(1, end) infinite;
+}
+.perched .kingdom-snack { top: calc(86% - var(--span, 60%) * .28); }
+@keyframes kingdom-nibble {
+  0%, 100% { transform: translate(0, 0); }
+  40% { transform: translate(calc(var(--face, 1) * -1px), -1px); }
+}
+
+/* Sleepy Zs. */
+.kingdom-zzz {
+  position: absolute;
+  left: calc(50% + var(--span, 60%) * .2);
+  top: calc(86% - var(--span, 60%));
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+.kingdom-zzz i {
+  --i: 9;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  opacity: 0;
+  animation: kingdom-z 3.3s steps(11, end) infinite;
+}
+.kingdom-zzz i:nth-child(2) { animation-delay: 1.1s; }
+.kingdom-zzz i:nth-child(3) { animation-delay: 2.2s; }
+@keyframes kingdom-z {
+  0% { opacity: 0; transform: translate(0, 0); }
+  18% { opacity: 1; }
+  70% { opacity: 1; }
+  100% { opacity: 0; transform: translate(12px, -22px); }
+}
+
+/* Bees around a visitor at the hives. */
+.kingdom-bees {
+  position: absolute;
+  left: 50%;
+  top: 38%;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  z-index: 3;
+}
+.kingdom-bees i,
+.prop-bees i {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 4px;
+  height: 3px;
+  border-radius: 50%;
+  background: #ffd23a;
+  box-shadow: 1px 0 0 #3b2a10, -1px 0 0 #fff7d8aa;
+  animation: kingdom-bee 2.4s linear infinite;
+}
+.kingdom-bees i:nth-child(1) { --r: 20px; }
+.kingdom-bees i:nth-child(2) { --r: 26px; animation-duration: 3.1s; animation-direction: reverse; }
+.kingdom-bees i:nth-child(3) { --r: 15px; animation-duration: 1.9s; animation-delay: -.8s; }
+@keyframes kingdom-bee {
+  0% { transform: rotate(0deg) translateX(var(--r, 18px)) translateY(0) rotate(0deg); }
+  25% { transform: rotate(90deg) translateX(var(--r, 18px)) translateY(-3px) rotate(-90deg); }
+  50% { transform: rotate(180deg) translateX(var(--r, 18px)) translateY(0) rotate(-180deg); }
+  75% { transform: rotate(270deg) translateX(var(--r, 18px)) translateY(3px) rotate(-270deg); }
+  100% { transform: rotate(360deg) translateX(var(--r, 18px)) translateY(0) rotate(-360deg); }
+}
+
+/* A butterfly to chase: two wing frames, fluttering just ahead. */
+.kingdom-butterfly {
+  position: absolute;
+  left: calc(50% + var(--face, 1) * 46%);
+  top: calc(86% - var(--span, 60%));
+  pointer-events: none;
+  z-index: 3;
+  animation: kingdom-flutter .9s ease-in-out infinite;
+}
+.kingdom-butterfly i { --i: 10; animation: kingdom-wings .26s steps(1, end) infinite; }
+@keyframes kingdom-wings {
+  0%, 100% { background-position: -110px -11px; }
+  50% { background-position: -121px -11px; }
+}
+@keyframes kingdom-flutter {
+  0%, 100% { transform: translate(-50%, 0); }
+  25% { transform: translate(-30%, -8px); }
+  50% { transform: translate(-60%, -3px); }
+  75% { transform: translate(-45%, -10px); }
+}
+
+/* Stars over a stargazer. */
+.kingdom-twinkles {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -18%;
+  height: 30%;
+  pointer-events: none;
+  z-index: 3;
+}
+.kingdom-twinkles i {
+  --i: 14;
+  position: absolute;
+  animation: kingdom-twinkle 2.2s steps(4, end) infinite;
+}
+.kingdom-twinkles i:nth-child(1) { left: 12%; top: 40%; }
+.kingdom-twinkles i:nth-child(2) { --i: 6; left: 48%; top: 0; animation-delay: .7s; }
+.kingdom-twinkles i:nth-child(3) { left: 80%; top: 30%; animation-delay: 1.4s; }
+@keyframes kingdom-twinkle {
+  0%, 100% { opacity: .1; }
+  50% { opacity: 1; }
+}
+
+/* Cairnkid's little stack of pebbles. */
+.kingdom-cairn {
+  position: absolute;
+  left: calc(50% + var(--face, 1) * 42%);
+  bottom: 14%;
+  width: 22%;
+  height: 34%;
+  translate: -50% 0;
+  pointer-events: none;
+  z-index: 1;
+}
+.kingdom-cairn i {
+  position: absolute;
+  left: 50%;
+  translate: -50% 0;
+  border-radius: 45%;
+  background: linear-gradient(#cfc6b8, #8b8073);
+  box-shadow: 0 1px 0 #4d443b;
+  opacity: 0;
+  animation: kingdom-stack .4s ease-out forwards;
+}
+.kingdom-cairn i:nth-child(1) { bottom: 0; width: 100%; height: 34%; animation-delay: 1.2s; }
+.kingdom-cairn i:nth-child(2) { bottom: 30%; width: 74%; height: 30%; animation-delay: 2.6s; }
+.kingdom-cairn i:nth-child(3) { bottom: 56%; width: 50%; height: 26%; animation-delay: 4s; }
+@keyframes kingdom-stack {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* A meditator's calm aura. */
+.kingdom-aura {
+  position: absolute;
+  inset: 8% 4% 14%;
+  border-radius: 50%;
+  background: radial-gradient(circle, #d8c8ff55 0, #b39cff2e 45%, transparent 70%);
+  pointer-events: none;
+  z-index: -1;
+  animation: kingdom-aura 4s ease-in-out infinite;
+}
+@keyframes kingdom-aura {
+  0%, 100% { transform: translateY(-8%) scale(.9); opacity: .55; }
+  50% { transform: translateY(-13%) scale(1.08); opacity: 1; }
+}
+
+/* The flash where a punch lands, timed to the swing. */
+.kingdom-pow {
+  position: absolute;
+  left: calc(50% + var(--face, 1) * (var(--span, 60%) * .5 + 4%));
+  top: 44%;
+  width: 15px;
+  height: 15px;
+  translate: -50% -50%;
+  z-index: 3;
+  pointer-events: none;
+  filter: drop-shadow(0 0 2px #ffe08a) drop-shadow(0 1px 0 #6b4d0f88);
+  opacity: 0;
+  animation: kingdom-pow .6s linear infinite;
+}
+.kingdom-pow::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, #fff 0 32%, #fff1a6 60%, #ffc94a 100%);
+  clip-path: polygon(50% 0, 60% 34%, 96% 22%, 70% 50%, 100% 74%, 60% 66%, 50% 100%, 40% 66%, 4% 78%, 30% 50%, 0 24%, 40% 34%);
+}
+.kingdom-mon.act-spar .kingdom-pow { animation: kingdom-pow-combo .9s linear infinite; }
+@keyframes kingdom-pow {
+  0%, 38% { opacity: 0; transform: scale(.2) rotate(0deg); }
+  44% { opacity: 1; transform: scale(1.15) rotate(12deg); }
+  58% { opacity: .9; transform: scale(1) rotate(18deg); }
+  70%, 100% { opacity: 0; transform: scale(1.3) rotate(24deg); }
+}
+@keyframes kingdom-pow-combo {
+  0%, 18% { opacity: 0; transform: scale(.2) rotate(0deg); }
+  23% { opacity: 1; transform: scale(.75) rotate(10deg); }
+  32%, 56% { opacity: 0; transform: scale(1) rotate(16deg); }
+  61% { opacity: 1; transform: scale(1.35) rotate(-8deg); }
+  72% { opacity: .85; transform: scale(1.15) rotate(-14deg); }
+  82%, 100% { opacity: 0; transform: scale(1.5) rotate(-20deg); }
+}
+/* A stone barbell, lifted in time with the press. */
+.kingdom-barbell {
+  /* A frame as tall as the creature, standing on its feet line; the bar sits
+     at its bottom and rides up in steps of the creature's own height: hands
+     low in the squat, at the shoulders, then overhead. */
+  position: absolute;
+  left: 50%;
+  bottom: 14%;
+  width: calc(var(--span, 60%) * 1.45);
+  height: var(--span, 60%);
+  translate: -50% 0;
+  z-index: 3;
+  pointer-events: none;
+  animation: kingdom-barbell 2s ease-in-out infinite;
+}
+.kingdom-barbell i {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 12px;
+  /* The bar: a light top pixel over a darker one. */
+  background:
+    linear-gradient(#e6ecef, #e6ecef) 0 5px / 100% 1px no-repeat,
+    linear-gradient(#7d8a94, #7d8a94) 0 6px / 100% 1px no-repeat;
+}
+.kingdom-barbell i::before,
+.kingdom-barbell i::after {
+  /* Iron plates with a lit edge and a collar. */
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 4px;
+  height: 12px;
+  background: #3b4248;
+  box-shadow: inset 1px 0 0 #6f7b85, 0 0 0 1px #1d2226;
+}
+.kingdom-barbell i::before { left: 2px; }
+.kingdom-barbell i::after { right: 2px; }
+@keyframes kingdom-barbell {
+  0%, 16%, 92%, 100% { transform: translateY(-38%); }
+  30% { transform: translateY(-70%); }
+  40%, 46%, 54%, 62% { transform: translateY(-104%); }
+  50%, 58% { transform: translateY(calc(-104% + 1px)); }
+  68% { transform: translateY(-104%); }
+  78% { transform: translateY(-70%); }
+}
+
+/* Stars circling a sore head. */
+.kingdom-dizzy {
+  position: absolute;
+  left: 50%;
+  top: calc(86% - var(--span, 60%) + 1%);
+  width: 0;
+  height: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+.kingdom-dizzy i {
+  --i: 14;
+  position: absolute;
+  animation: kingdom-orbit 1.2s steps(16, end) infinite;
+}
+.kingdom-dizzy i:nth-child(2) { animation-delay: -.4s; }
+.kingdom-dizzy i:nth-child(3) { animation-delay: -.8s; }
+@keyframes kingdom-orbit {
+  0%, 100% { opacity: 1; transform: translate(-50%, -50%) translate(13px, 0); }
+  12.5% { opacity: 1; transform: translate(-50%, -50%) translate(9px, 3px); }
+  25% { opacity: 1; transform: translate(-50%, -50%) translate(0, 4px); }
+  37.5% { opacity: 1; transform: translate(-50%, -50%) translate(-9px, 3px); }
+  50% { opacity: 1; transform: translate(-50%, -50%) translate(-13px, 0); }
+  62.5% { opacity: .65; transform: translate(-50%, -50%) translate(-9px, -3px); }
+  75% { opacity: .5; transform: translate(-50%, -50%) translate(0, -4px); }
+  87.5% { opacity: .65; transform: translate(-50%, -50%) translate(9px, -3px); }
+}
+
+/* Firelight on residents sitting at a fire. */
+.kingdom-stage .kingdom-mon.act-warm img {
+  filter: brightness(1.02) sepia(.12) drop-shadow(0 0 4px #ffab4d66) drop-shadow(0 2px 1px #17211277);
+}
+
+/* ---- Particles ---------------------------------------------------------
+   Each bit is born at the sprite (left/top in the resident's own box) and
+   carries --dx/--dy (spread), --s (size) and --rot from kingdomFx. Things
+   that come out of a mouth start on the side the resident faces. */
+.kfx {
+  position: absolute;
+  left: 50%;
+  top: 38%;
+  z-index: 3;
+  pointer-events: none;
+  font-style: normal;
+  line-height: 1;
+  animation: kfx-rise 1.6s ease-out var(--delay, 0s) both;
+}
+.kfx-ember,
+.kfx-bubble,
+.kfx-breath,
+.kfx-snow,
+.kfx-shout { left: calc(50% + var(--face, 1) * 20%); }
+
+/* Water. */
+.kfx-drop,
+.kfx-juice {
+  top: 76%;
+  width: 4px;
+  height: 6px;
+  border-radius: 50% 50% 50% 50% / 62% 62% 38% 38%;
+  background: linear-gradient(#f2fdff, #9fe0ff);
+  box-shadow: 0 0 0 1px #2d7fb455;
+  animation: kfx-splash .9s cubic-bezier(.2, .7, .4, 1) var(--delay, 0s) both;
+}
+.kfx-juice { background: linear-gradient(#ffe7a6, #ff9c2e); box-shadow: 0 0 0 1px #b8600f55; }
+.kfx-bubble {
+  top: 40%;
+  width: 8px;
+  height: 8px;
+  border: 1px solid #f4feff;
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 30%, #fff 0 17%, #d6f5ff66 30%, #7fd3ff2a 72%);
+  box-shadow: 0 0 2px #6fc9ffaa, inset 0 0 2px #7fd3ff88;
+  animation: kfx-bubble 1.9s ease-out var(--delay, 0s) both;
+}
+.kfx-steam {
+  top: 58%;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ffffffb8 0, #ffffff42 45%, transparent 70%);
+  filter: blur(1px);
+  animation: kfx-steam 2.2s ease-out var(--delay, 0s) both;
+}
+
+/* Fire, sparks and cold. */
+.kfx-ember {
+  top: 42%;
+  width: 4px;
+  height: 4px;
+  border-radius: 1px;
+  background: #fff1a0;
+  box-shadow: 0 0 2px 1px #ffa236, 0 0 7px 2px #ff5a1c77;
+  animation: kfx-ember 1.5s cubic-bezier(.3, .6, .5, 1) var(--delay, 0s) both;
+}
+.kfx-spark {
+  top: 30%;
+  left: calc(50% + var(--dx) * 36%);
+  width: 7px;
+  height: 12px;
+  filter: drop-shadow(0 0 1px #ffffffcc) drop-shadow(0 0 3px #ffd21f);
+  animation: kfx-zap .46s linear var(--delay, 0s) both;
+}
+.kfx-spark::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(#fffde6, #ffe03a);
+  clip-path: polygon(62% 0, 8% 58%, 44% 58%, 26% 100%, 94% 38%, 56% 38%, 82% 0);
+}
+.kfx-breath {
+  top: 44%;
+  left: calc(50% + var(--face, 1) * 30%);
+  width: 15px;
+  height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, #ffffffd8 0 28%, #d9f2ff80 52%, transparent 72%);
+  animation: kfx-breath 1.15s ease-out var(--delay, 0s) both;
+}
+.kfx-snow {
+  top: 42%;
+  width: 2px;
+  height: 2px;
+  background: #fff;
+  box-shadow: 2px 0 #fff, -2px 0 #fff, 0 2px #fff, 0 -2px #fff, 0 0 4px 1px #a9e2ff;
+  animation: kfx-snow 1.9s ease-out var(--delay, 0s) both;
+}
+
+/* Ground and growing things. */
+.kfx-dust {
+  top: 84%;
+  width: 10px;
+  height: 6px;
+  border-radius: 50%;
+  background: #dcc6a0a8;
+  animation: kfx-dust .7s ease-out var(--delay, 0s) both;
+}
+.kfx-berry,
+.kfx-crumb {
+  top: 20%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #d9a8ff 0 22%, #8a4fd0 48%, #4d2489 80%);
+  box-shadow: 0 0 0 1px #2b134f66;
+  animation: kfx-fall .9s cubic-bezier(.5, 0, .9, .6) var(--delay, 0s) both;
+}
+.kfx-crumb {
+  top: 50%;
+  width: 3px;
+  height: 3px;
+  background: #e8c48c;
+  box-shadow: none;
+  animation-duration: .6s;
+}
+.kfx-leaf,
+.kfx-petal {
+  top: 62%;
+  width: 7px;
+  height: 4px;
+  border-radius: 0 100% 0 100%;
+  background: linear-gradient(135deg, #c4f08a, #4f9a3a);
+  box-shadow: inset 0 0 0 .5px #2f6b2a99;
+  animation: kfx-drift 1.8s ease-in-out var(--delay, 0s) both;
+}
+.kfx-petal {
+  top: 50%;
+  width: 5px;
+  height: 5px;
+  border-radius: 60% 0 60% 0;
+  background: linear-gradient(135deg, #fff0f6, #ff9cc4);
+  box-shadow: inset 0 0 0 .5px #c2457a66;
+}
+.kfx-feather {
+  top: 34%;
+  width: 3px;
+  height: 9px;
+  border-radius: 50% 50% 50% 50% / 70% 70% 30% 30%;
+  background: linear-gradient(90deg, #fffaf0 0 45%, #d7c4a6 55%);
+  box-shadow: 0 0 0 .5px #8a6c4a55;
+  animation: kfx-feather 2.3s ease-in-out var(--delay, 0s) both;
+}
+.kfx-coin {
+  top: 34%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 32%, #fffbd2 0 18%, #ffd23f 42%, #c98a12 82%);
+  box-shadow: 0 0 0 1px #7a520899, 0 0 4px #ffe48a;
+  animation: kfx-coin 1.05s cubic-bezier(.3, .6, .5, 1) var(--delay, 0s) both;
+}
+
+/* Feelings: glyphs with a dark rim so they read on grass, water or night. */
+/* Hearts, notes and sparkles are pixel icons (see .kingdom-icon). */
+.kfx-heart,
+.kfx-note,
+.kfx-sparkle,
+.kfx-twinkle { top: 22%; }
+.kfx-heart { animation: kfx-heart 1.5s ease-out var(--delay, 0s) both; }
+.kfx-note {
+  filter: hue-rotate(var(--hr, 0deg));
+  animation: kfx-note 1.8s ease-out var(--delay, 0s) both;
+}
+.kfx-sparkle,
+.kfx-twinkle { animation: kfx-twinkle 1.3s steps(8, end) var(--delay, 0s) both; }
+/* A roar or a kiai: shock rings spreading from the mouth. */
+.kfx-shout {
+  top: 36%;
+  width: 10px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-right-color: #fff6d6;
+  border-radius: 50%;
+  filter: drop-shadow(0 0 2px #ffe9a8);
+  animation: kfx-shout .7s ease-out var(--delay, 0s) both;
+}
+
+@keyframes kfx-rise {
+  0% { opacity: 0; transform: translate(-50%, 0) scale(.6); }
+  18% { opacity: 1; }
+  100% { opacity: 0; transform: translate(calc(-50% + var(--dx) * 16px), calc(var(--dy) * -38px)) scale(1); }
+}
+@keyframes kfx-splash {
+  0% { opacity: 0; transform: translate(-50%, 0) scale(.6); }
+  12% { opacity: 1; }
+  45% { transform: translate(calc(-50% + var(--dx) * 18px), calc(var(--dy) * -20px)) scale(1); }
+  100% { opacity: 0; transform: translate(calc(-50% + var(--dx) * 30px), 8px) scale(.8); }
+}
+@keyframes kfx-bubble {
+  0% { opacity: 0; transform: translate(-50%, 0) scale(.3); }
+  12% { opacity: 1; transform: translate(calc(-50% + var(--face, 1) * 5px), -4px) scale(.75); }
+  50% { transform: translate(calc(-50% + var(--face, 1) * 11px + var(--dx) * 6px), -20px) scale(var(--s, 1)); }
+  84% { opacity: 1; transform: translate(calc(-50% + var(--face, 1) * 13px - var(--dx) * 4px), calc(var(--dy) * -36px)) scale(var(--s, 1)); }
+  90% { opacity: 1; transform: translate(calc(-50% + var(--face, 1) * 13px - var(--dx) * 4px), calc(var(--dy) * -37px)) scale(calc(var(--s, 1) * 1.4)); }
+  100% { opacity: 0; transform: translate(calc(-50% + var(--face, 1) * 13px - var(--dx) * 4px), calc(var(--dy) * -37px)) scale(calc(var(--s, 1) * 1.8)); }
+}
+@keyframes kfx-steam {
+  0% { opacity: 0; transform: translate(calc(-50% + var(--dx) * 10px), 0) scale(.5); }
+  25% { opacity: .9; }
+  100% { opacity: 0; transform: translate(calc(-50% + var(--dx) * 18px), -34px) scale(1.6); }
+}
+@keyframes kfx-ember {
+  0% { opacity: 0; transform: translate(-50%, 0) scale(.5) rotate(0deg); background: #fffbe0; }
+  12% { opacity: 1; transform: translate(calc(-50% + var(--dx) * 4px), -6px) scale(calc(var(--s, 1) * 1.15)) rotate(25deg); }
+  40% { transform: translate(calc(-50% + var(--dx) * 13px), -19px) scale(var(--s, 1)) rotate(70deg); background: #ffc449; }
+  70% { opacity: .95; transform: translate(calc(-50% + var(--dx) * 7px), -31px) scale(calc(var(--s, 1) * .75)) rotate(115deg); background: #ff7d2a; }
+  100% { opacity: 0; transform: translate(calc(-50% + var(--dx) * 15px), calc(var(--dy) * -44px)) scale(.3) rotate(170deg); background: #d83c18; }
+}
+@keyframes kfx-zap {
+  0% { opacity: 0; transform: translate(-50%, 0) rotate(calc(var(--dx) * 35deg)) scale(.6); }
+  8% { opacity: 1; transform: translate(-50%, -1px) rotate(calc(var(--dx) * 35deg)) scale(1.15); }
+  30% { opacity: .2; }
+  42% { opacity: 1; transform: translate(-50%, -3px) rotate(calc(var(--dx) * 35deg)) scale(1); }
+  70% { opacity: .9; }
+  100% { opacity: 0; transform: translate(calc(-50% + var(--dx) * 6px), -7px) rotate(calc(var(--dx) * 35deg)) scale(.8); }
+}
+@keyframes kfx-breath {
+  0% { opacity: 0; transform: translate(-50%, 0) scale(.3); }
+  22% { opacity: 1; }
+  100% { opacity: 0; transform: translate(calc(-50% + var(--face, 1) * 16px), -6px) scale(1.9); }
+}
+@keyframes kfx-snow {
+  0% { opacity: 0; transform: translate(-50%, 0) rotate(0deg); }
+  14% { opacity: 1; }
+  100% { opacity: 0; transform: translate(calc(-50% + var(--face, 1) * 18px + var(--dx) * 10px), calc(var(--dx) * 8px + 4px)) rotate(135deg); }
+}
+@keyframes kfx-dust {
+  0% { opacity: .9; transform: translate(-50%, 0) scale(.4); }
+  100% { opacity: 0; transform: translate(calc(-50% + var(--dx) * 20px), -4px) scale(1.5); }
+}
+@keyframes kfx-fall {
+  0% { opacity: 0; transform: translate(calc(-50% + var(--dx) * 12px), -6px); }
+  15% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { opacity: 0; transform: translate(calc(-50% + var(--dx) * 16px), 40px); }
+}
+@keyframes kfx-drift {
+  0% { opacity: 0; transform: translate(-50%, 0) rotate(var(--rot, 0deg)); }
+  20% { opacity: 1; }
+  50% { transform: translate(calc(-50% + var(--dx) * 14px), -18px) rotate(calc(var(--rot, 0deg) + 50deg)); }
+  100% { opacity: 0; transform: translate(calc(-50% + var(--dx) * -6px), -26px) rotate(calc(var(--rot, 0deg) - 20deg)); }
+}
+@keyframes kfx-feather {
+  0% { opacity: 0; transform: translate(-50%, -4px) rotate(-35deg); }
+  12% { opacity: 1; }
+  32% { transform: translate(calc(-50% + var(--dx) * 8px + 6px), 4px) rotate(35deg); }
+  56% { transform: translate(calc(-50% + var(--dx) * 8px - 6px), 12px) rotate(-30deg); }
+  80% { opacity: 1; transform: translate(calc(-50% + var(--dx) * 8px + 5px), 19px) rotate(25deg); }
+  100% { opacity: 0; transform: translate(calc(-50% + var(--dx) * 8px), 24px) rotate(-10deg); }
+}
+@keyframes kfx-coin {
+  0% { opacity: 0; transform: translate(-50%, 0) scale(1, 1); }
+  10% { opacity: 1; }
+  25% { transform: translate(calc(-50% + var(--dx) * 5px), -15px) scale(.2, 1); }
+  45% { transform: translate(calc(-50% + var(--dx) * 9px), -20px) scale(1, 1); }
+  65% { transform: translate(calc(-50% + var(--dx) * 12px), -12px) scale(.2, 1); }
+  85% { opacity: 1; transform: translate(calc(-50% + var(--dx) * 14px), 4px) scale(1, 1); }
+  100% { opacity: 0; transform: translate(calc(-50% + var(--dx) * 15px), 2px) scale(1, 1); }
+}
+@keyframes kfx-heart {
+  0% { opacity: 0; transform: translate(-50%, 4px) scale(.2); }
+  18% { opacity: 1; transform: translate(-50%, -4px) scale(1.25); }
+  30% { transform: translate(-50%, -6px) scale(.95); }
+  100% { opacity: 0; transform: translate(calc(-50% + var(--dx) * 8px), -30px) scale(1); }
+}
+@keyframes kfx-note {
+  0% { opacity: 0; transform: translate(-50%, 0) rotate(-10deg) scale(.5); }
+  15% { opacity: 1; transform: translate(calc(-50% + var(--dx) * 4px), -6px) rotate(8deg) scale(var(--s, 1)); }
+  40% { transform: translate(calc(-50% + var(--dx) * 12px + 5px), -16px) rotate(-8deg) scale(var(--s, 1)); }
+  65% { opacity: 1; transform: translate(calc(-50% + var(--dx) * 16px - 3px), -26px) rotate(8deg) scale(var(--s, 1)); }
+  100% { opacity: 0; transform: translate(calc(-50% + var(--dx) * 20px + 4px), calc(var(--dy) * -40px)) rotate(-6deg) scale(var(--s, 1)); }
+}
+@keyframes kfx-twinkle {
+  0% { opacity: 0; transform: translate(calc(-50% + var(--dx) * 14px), calc(var(--dy) * -8px)) scale(0) rotate(0deg); }
+  25% { opacity: 1; transform: translate(calc(-50% + var(--dx) * 16px), calc(var(--dy) * -12px)) scale(calc(var(--s, 1) * 1.3)) rotate(45deg); }
+  45% { transform: translate(calc(-50% + var(--dx) * 17px), calc(var(--dy) * -14px)) scale(calc(var(--s, 1) * .7)) rotate(70deg); }
+  65% { opacity: 1; transform: translate(calc(-50% + var(--dx) * 18px), calc(var(--dy) * -16px)) scale(var(--s, 1)) rotate(90deg); }
+  100% { opacity: 0; transform: translate(calc(-50% + var(--dx) * 19px), calc(var(--dy) * -20px)) scale(0) rotate(135deg); }
+}
+@keyframes kfx-shout {
+  0% { opacity: 0; transform: translate(-50%, -50%) scaleX(var(--face, 1)) scale(.4); }
+  15% { opacity: 1; }
+  100% { opacity: 0; transform: translate(calc(-50% + var(--face, 1) * 14px), -50%) scaleX(var(--face, 1)) scale(2.3); }
+}
+
+.kingdom-emote-bond { animation: kingdom-emote-pop .18s steps(3, end), kingdom-bond 1.6s steps(1, end) .2s; }
+@keyframes kingdom-bond {
+  0%, 60%, 100% { transform: translate(-50%, -100%); }
+  20%, 40% { transform: translate(-50%, calc(-100% - 3px)); }
+}
+
+/* ---- Light after dark ----------------------------------------------------
+   After dusk every resident sits above the town's night tint (in depth order)
+   and is graded by an SVG colour matrix that matches it (kingdomEnsureTints).
+   A resident that makes light gets a lighter grade, a halo behind it and a
+   pool of light at its feet, all inside its own box. */
+.kingdom-stage.phase-night .kingdom-mon img { filter: url(#kq-night) drop-shadow(0 2px 1px #050914aa); }
+.kingdom-stage.phase-dusk .kingdom-mon img { filter: url(#kq-dusk) drop-shadow(0 2px 1px #17211277); }
+.kingdom-stage.phase-night .kingdom-mon.act-warm img { filter: url(#kq-fire-night) drop-shadow(0 2px 1px #050914aa); }
+.kingdom-stage.phase-dusk .kingdom-mon.act-warm img { filter: url(#kq-fire-dusk) drop-shadow(0 2px 1px #17211277); }
+.kingdom-stage.phase-night .kingdom-mon.glows img {
+  filter: url(#kq-glow-night) drop-shadow(0 0 1px var(--glow)) drop-shadow(0 2px 1px #050914aa);
+}
+.kingdom-stage.phase-dusk .kingdom-mon.glows img {
+  filter: url(#kq-glow-dusk) drop-shadow(0 0 1px var(--glow)) drop-shadow(0 2px 1px #17211277);
+}
+/* Props and bits that are not lights take the same grade. */
+.kingdom-stage.phase-night :is(.kingdom-cairn, .kingdom-barbell, .kingdom-butterfly,
+  .kfx-drop, .kfx-juice, .kfx-dust, .kfx-berry, .kfx-crumb, .kfx-leaf, .kfx-petal, .kfx-feather, .kfx-coin) {
+  filter: url(#kq-night);
+}
+.kingdom-stage.phase-dusk :is(.kingdom-cairn, .kingdom-barbell, .kingdom-butterfly,
+  .kfx-drop, .kfx-juice, .kfx-dust, .kfx-berry, .kfx-crumb, .kfx-leaf, .kfx-petal, .kfx-feather, .kfx-coin) {
+  filter: url(#kq-dusk);
+}
+
+.kingdom-halo,
+.kingdom-pool {
+  position: absolute;
+  z-index: -1;
+  display: none;
+  pointer-events: none;
+}
+.kingdom-halo {
+  left: 50%;
+  top: 54%;
+  width: 250%;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(circle closest-side,
+    color-mix(in srgb, var(--glow) 46%, transparent) 0,
+    color-mix(in srgb, var(--glow) 26%, transparent) 30%,
+    color-mix(in srgb, var(--glow) 9%, transparent) 62%,
+    transparent 100%);
+}
+/* About 1.3 sprites wide on the ground. */
+.kingdom-pool {
+  left: 50%;
+  top: 86%;
+  width: calc(var(--span, 60%) * 1.35);
+  height: 15%;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse closest-side,
+    color-mix(in srgb, var(--glow) 52%, transparent) 0,
+    color-mix(in srgb, var(--glow) 20%, transparent) 58%,
+    transparent 100%);
+}
+.kingdom-stage.phase-dawn .kingdom-mon.glows :is(.kingdom-halo, .kingdom-pool) { display: block; opacity: .22; }
+.kingdom-stage.phase-dusk .kingdom-mon.glows :is(.kingdom-halo, .kingdom-pool) { display: block; opacity: .66; }
+.kingdom-stage.phase-night .kingdom-mon.glows :is(.kingdom-halo, .kingdom-pool) { display: block; opacity: 1; }
+.kingdom-stage.phase-night .kingdom-mon.glows .kingdom-pool { opacity: .85; }
+.kingdom-mon.glow-flame .kingdom-halo { animation: kingdom-flicker 2.3s ease-in-out infinite alternate; }
+.kingdom-mon.glow-pulse .kingdom-halo { animation: kingdom-glow-pulse 3.4s ease-in-out infinite; }
+.kingdom-mon.glow-steady .kingdom-halo { animation: kingdom-glow-pulse 6s ease-in-out infinite; }
+/* Opacity and scale only, so a flickering light never repaints the scene. */
+@keyframes kingdom-flicker {
+  0% { opacity: .82; scale: .97; }
+  22% { opacity: 1; scale: 1.03; }
+  40% { opacity: .88; scale: .99; }
+  63% { opacity: 1; scale: 1.02; }
+  80% { opacity: .9; scale: 1.04; }
+  100% { opacity: .96; scale: 1; }
+}
+@keyframes kingdom-glow-pulse {
+  0%, 100% { opacity: .62; }
+  50% { opacity: 1; }
+}
+
+/* ---- Props that come alive ------------------------------------------------ */
+.kingdom-prop {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--w, 8%);
+  aspect-ratio: 1;
+  transform: translate(-50%, -62%);
+  pointer-events: none;
+}
+/* A firepit's fire, lit while anyone sits at it: a pixel-art flame with
+   four hand-drawn frames (assets/ui/kingdom-fire.png) played at about eight
+   frames a second, a few square embers, and a pool of firelight after dark.
+   The box stands on the base of the flames. */
+.kingdom-prop.prop-campfire { transform: translate(-50%, -100%); }
+.prop-campfire .fire-light {
+  position: absolute;
+  left: 50%;
+  top: 62%;
+  z-index: -1;
+  width: 540%;
+  height: 300%;
+  translate: -50% -50%;
+  border-radius: 50%;
+  display: none;
+  pointer-events: none;
+  background: radial-gradient(ellipse closest-side, #ffb04a80 0, #ff8c3240 34%, #ff782814 66%, transparent 100%);
+}
+.kingdom-stage.phase-dusk .prop-campfire.on .fire-light { display: block; opacity: .62; animation: kingdom-flicker 1.9s ease-in-out infinite alternate; }
+.kingdom-stage.phase-night .prop-campfire.on .fire-light { display: block; animation: kingdom-flicker 1.9s ease-in-out infinite alternate; }
+.prop-campfire .flame {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 62%;
+  aspect-ratio: 12 / 13;
+  translate: -50% 0;
+  background: url("../assets/ui/kingdom-fire.png") 0 0 / 400% 100% no-repeat;
+  image-rendering: pixelated;
+  transform-origin: 50% 100%;
+  opacity: 0;
+  scale: .25;
+  transition: opacity .35s steps(3, end), scale .35s steps(3, end);
+}
+.prop-campfire.on .flame { opacity: 1; scale: 1; animation: kingdom-flame .5s steps(4, end) infinite; }
+@keyframes kingdom-flame {
+  from { background-position: 0 0; }
+  to { background-position: 133.333% 0; }
+}
+.prop-campfire .embers {
+  position: absolute;
+  left: 50%;
+  bottom: 62%;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  transition: opacity .5s ease;
+}
+.prop-campfire.on .embers { opacity: 1; }
+.prop-campfire .embers i {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: #ffd43c;
+  box-shadow: 0 0 0 1px #e8501d55;
+  animation: kingdom-ember 2.2s steps(14, end) infinite;
+}
+.prop-campfire .embers i:nth-child(2) { animation-delay: .7s; left: 5px; animation-duration: 1.8s; background: #ff9424; }
+.prop-campfire .embers i:nth-child(3) { animation-delay: 1.4s; left: -6px; animation-duration: 2.5s; }
+@keyframes kingdom-ember {
+  0% { opacity: 0; transform: translate(0, 0); }
+  15% { opacity: 1; }
+  45% { transform: translate(4px, -14px); }
+  75% { opacity: .9; transform: translate(-2px, -24px); }
+  100% { opacity: 0; transform: translate(5px, -34px); }
+}
+/* After dark the flames burn above the night tint, like a glowing resident. */
+.kingdom-stage.phase-dusk .kingdom-prop.prop-campfire,
+.kingdom-stage.phase-night .kingdom-prop.prop-campfire { z-index: calc(5250 + var(--zy, 50)) !important; }
+/* The Moonbell's ring spreading through the air. */
+.prop-bell { width: 7%; }
+.prop-bell i {
+  position: absolute;
+  inset: 0;
+  /* Sound waves: just the arcs either side of the bell. */
+  border: 2px solid;
+  border-color: transparent #fff3c4;
+  border-radius: 50%;
+  opacity: 0;
+}
+.prop-bell.on i { animation: kingdom-bell-ring 1.5s steps(7, end) infinite; }
+.prop-bell.on i:nth-child(2) { animation-delay: .5s; }
+.prop-bell.on i:nth-child(3) { animation-delay: 1s; }
+@keyframes kingdom-bell-ring {
+  0% { opacity: .95; transform: scale(.35); }
+  100% { opacity: 0; transform: scale(1.9); }
+}
+/* Bees around the hives: a few always, a swarm while someone visits. */
+.prop-bees { width: 6%; }
+.prop-bees i { left: 50%; top: 50%; }
+.prop-bees i:nth-child(1) { --r: 22px; }
+.prop-bees i:nth-child(2) { --r: 30px; animation-duration: 3.4s; animation-direction: reverse; }
+.prop-bees i:nth-child(3),
+.prop-bees i:nth-child(4) { opacity: 0; transition: opacity .6s ease; }
+.prop-bees i:nth-child(3) { --r: 16px; animation-duration: 1.8s; }
+.prop-bees i:nth-child(4) { --r: 36px; animation-duration: 2.8s; animation-delay: -1s; }
+.prop-bees.on i:nth-child(3),
+.prop-bees.on i:nth-child(4) { opacity: 1; }
+/* The fountain leaps higher while someone plays in it. */
+.prop-fountain { width: 10%; }
+.prop-fountain i {
+  position: absolute;
+  left: 50%;
+  top: 40%;
+  width: 4px;
+  height: 5px;
+  border-radius: 50%;
+  background: #d8f6ff;
+  box-shadow: 0 0 3px #ffffffbb;
+  opacity: 0;
+}
+.prop-fountain.on i { animation: kingdom-fountain 1.1s cubic-bezier(.2, .7, .4, 1) infinite; }
+.prop-fountain.on i:nth-child(1) { --dx: -1; }
+.prop-fountain.on i:nth-child(2) { --dx: -.5; animation-delay: .22s; }
+.prop-fountain.on i:nth-child(3) { --dx: 0; animation-delay: .44s; }
+.prop-fountain.on i:nth-child(4) { --dx: .5; animation-delay: .66s; }
+.prop-fountain.on i:nth-child(5) { --dx: 1; animation-delay: .88s; }
+@keyframes kingdom-fountain {
+  0% { opacity: 0; transform: translate(-50%, 0); }
+  15% { opacity: 1; }
+  45% { transform: translate(calc(-50% + var(--dx) * 14px), -26px); }
+  100% { opacity: 0; transform: translate(calc(-50% + var(--dx) * 26px), 6px); }
+}
+
+/* Inspector: a resident's nature and friends. */
+.kingdom-inspect-about { margin-top: 2px !important; font-size: 11px; line-height: 1.5; }
+.kingdom-about { display: block; color: #6b5233; font-style: italic; }
+.kingdom-bonds { display: block; color: #9a3550; font-weight: 650; }
+
+/* On the narrow crop, props sit where the picture puts them. */
+@media (max-width: 760px) {
+  .kingdom-prop { left: var(--mx); width: calc(var(--w, 7.2%) * 2.2222); }
+}
+
+/* Re-asserted last so a gait never overrides being held or set down. */
+.kingdom-mon.holding img,
+.kingdom-mon.holding.walking img { animation: kingdom-wiggle .5s ease-in-out infinite; }
+.kingdom-mon.dropped img { animation: kingdom-drop .5s cubic-bezier(.3, 1.6, .5, 1); }
+
+@media (prefers-reduced-motion: reduce) {
+  .kingdom-mon img,
+  .kingdom-decor,
+  .kingdom-decor *,
+  .kingdom-prop *,
+  .kingdom-halo { animation: none !important; }
+  .kfx { display: none; }
+}

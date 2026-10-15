@@ -433,6 +433,7 @@ var KINGDOM_LOCATIONS = [
         { type: 'poly', name: 'east spring', points: [[85, 34], [100, 31], [100, 66],
           [91, 67], [82, 55]] },
         { type: 'ellipse', name: 'fire circle', x: 49, y: 43, rx: 9, ry: 8 },
+        { type: 'ellipse', name: 'fire ring', x: 47.5, y: 47.5, rx: 5, ry: 4.4 },
         { type: 'ellipse', name: 'west garden rock', x: 26, y: 56, rx: 4, ry: 5 },
         { type: 'ellipse', name: 'east garden rock', x: 76, y: 57, rx: 5, ry: 6 },
         { type: 'ellipse', name: 'southwest boulder', x: 18, y: 88, rx: 7, ry: 7 },
@@ -484,7 +485,7 @@ var KINGDOM_LOCATIONS = [
 var KINGDOM_GYM_STATIONS = [
   {
     id: 'climb', icon: '🧗', name: 'Climbing Wall', short: 'Climb', motion: 'climb',
-    x: 37, y: 39, markerX: 24, markerY: 18,
+    x: 37, y: 39, markerX: 15, markerY: 12,
     action: 'scaling the climbing wall', finish: 'reaches the top and hops down proudly'
   },
   {
@@ -499,12 +500,12 @@ var KINGDOM_GYM_STATIONS = [
   },
   {
     id: 'hurdles', icon: '⚡', name: 'Agility Hurdles', short: 'Hurdles', motion: 'hurdles',
-    x: 65, y: 42, markerX: 79, markerY: 38,
+    x: 65, y: 42, markerX: 66, markerY: 30,
     action: 'running the agility hurdles', finish: 'clears the last hurdle cleanly'
   },
   {
     id: 'spar', icon: '🎯', name: 'Training Dummies', short: 'Spar', motion: 'spar',
-    x: 71, y: 58, markerX: 83, markerY: 57,
+    x: 71, y: 58, markerX: 88.5, markerY: 62,
     action: 'sparring with the training dummies', finish: 'lands one last precise strike'
   },
   {
@@ -606,6 +607,8 @@ var KINGDOM_LAST = 0;
 var KINGDOM_SOCIAL_AT = 0;
 var KINGDOM_TIME_ZONE = 'America/Indiana/Indianapolis';
 var KINGDOM_WEATHER = 'clear';
+/* Testing tools (the Kingdom Sandbox) can pin the time of day. */
+var KINGDOM_PHASE_OVERRIDE = null;
 var KINGDOM_RAIN_SOUND = true;
 var KINGDOM_RAIN_AUDIO = null;
 var KINGDOM_RAIN_AUDIO_TOKEN = 0;
@@ -723,9 +726,16 @@ function kingdomPoint(rand, location) {
     }
     var x = box.minX + rand() * (box.maxX - box.minX);
     var y = box.minY + rand() * (box.maxY - box.minY);
+    if (kingdomUnderHud(x, y) && attempt < 100) continue;
     if (kingdomIsWalkable(x, y, location)) return { x: x, y: y };
   }
   return { x: location.nav.home[0], y: location.nav.home[1] };
+}
+
+/* The top corners hold the head count and the news line; nobody idles
+   under them (they can still pass through). */
+function kingdomUnderHud(x, y) {
+  return y < 16 && (x < 15 || x > 70);
 }
 
 function kingdomNearestWalkable(x, y, location) {
@@ -779,8 +789,8 @@ function kingdomEasternTime(now) {
   var hour = Number(values.hour) % 24;
   var minute = Number(values.minute);
   var decimal = hour + minute / 60;
-  var phase = decimal < 5 || decimal >= 20 ? 'night' :
-    decimal < 7 ? 'dawn' : decimal < 18 ? 'day' : 'dusk';
+  var phase = KINGDOM_PHASE_OVERRIDE || (decimal < 5 || decimal >= 20 ? 'night' :
+    decimal < 7 ? 'dawn' : decimal < 18 ? 'day' : 'dusk');
   var label = new Intl.DateTimeFormat('en-US', {
     timeZone: KINGDOM_TIME_ZONE,
     hour: 'numeric', minute: '2-digit', hour12: true
@@ -855,7 +865,7 @@ function kingdomGymStationsHtml(location) {
     var mobileX = station.markerX * 2.222222 - 61.111111;
     h += '<button type="button" class="kingdom-gym-station" data-gym-station="' + station.id +
       '" style="--x:' + station.markerX + '%;--mx:' + mobileX.toFixed(2) + '%;--y:' + station.markerY +
-      '%" onclick="event.stopPropagation();kingdomUseGymStation(\'' + station.id + '\')"' +
+      '%" onclick="event.stopPropagation();kingdomUseSpot(\'' + station.id + '\')"' +
       ' aria-label="Use ' + esc(station.name) + '" title="' + esc(station.name) + '">' +
       '<span aria-hidden="true">' + station.icon + '</span><small>' + esc(station.short) + '</small></button>';
   });
@@ -893,6 +903,7 @@ function renderKingdom() {
       (location.id === 'gym' ? 'Choose a Pokémon, then tap a workout station.' :
         'This corner of town is peaceful.') + '</span></div>' +
       kingdomGymStationsHtml(location) +
+      kingdomSpotFxHtml(location) +
       '<div id="kingdom-daylight" class="kingdom-daylight" aria-hidden="true"></div>' +
       kingdomLanternHtml(location) +
       kingdomWeatherHtml(location) +
@@ -933,6 +944,7 @@ function renderKingdom() {
   if (KINGDOM_MUSIC_ON) kingdomStartMusic(location.id);
 
   kingdomSync(true);
+  kingdomSpotFx(location.id);
   KINGDOM_SOCIAL_AT = performance.now() + 1500;
   kingdomEnsureTick();
   KINGDOM_SYNC_TIMER = setInterval(kingdomSync, 1000);
@@ -1022,6 +1034,7 @@ function kingdomSync(initial) {
       if (where.kind === 'leave' && !actor.trip) {
         kingdomStartTrip(actor, where);
         kingdomAnnounceTrip(actor, where);
+        kingdomTravelCompanions(actor, now);
       }
       return;
     }
@@ -1061,7 +1074,8 @@ function kingdomSync(initial) {
    starts from where the Pokemon was standing (leg.at), so walking off on
    screen and being redrawn later give the same position at the same moment. */
 function kingdomStartTrip(actor, where) {
-  kingdomGymCancel(actor, false);
+  kingdomActCancel(actor, false);
+  actor.follow = null;
   var leg = where.leg;
   var trip = { kind: leg.kind, from: leg.from, to: leg.to, leg: leg };
   trip.points = kingdomSceneRoute(leg.loc, leg.from, leg.to, leg.at);
@@ -1170,12 +1184,12 @@ function kingdomAddActor(entry, position, location, salt) {
   var actor = {
     entry: entry, key: kingdomPlacementKey(entry), el: button, rand: rand, location: location,
     x: point.x, y: point.y, target: kingdomPoint(rand, location), trip: null,
-    speed: 2.7 + rand() * 2.6, pauseUntil: 0, nextTurn: 0, gym: null,
-    gymAt: location.id === 'gym' ? performance.now() + 900 + rand() * 4200 : Infinity
+    speed: 2.7 + rand() * 2.6, pauseUntil: 0, nextTurn: 0, act: null
   };
   button.onclick = function () { kingdomInspect(actor); };
   stage.appendChild(button);
   KINGDOM_ACTORS.push(actor);
+  kingdomActorSetup(actor);
   kingdomPaint(actor);
   return actor;
 }
@@ -1198,7 +1212,7 @@ function kingdomTick(now) {
       if (!kingdomTripStep(a, clock)) kingdomFinishTrip(a);
       continue;
     }
-    if (kingdomGymTick(a, now, still, dt)) continue;
+    if (kingdomLifeTick(a, now, still, dt)) continue;
     if (still || now < a.pauseUntil) {
       a.el.classList.remove('walking');
       kingdomPaint(a);
@@ -1208,8 +1222,8 @@ function kingdomTick(now) {
     var dx = a.target.x - a.x, dy = a.target.y - a.y;
     var dist = Math.sqrt(dx * dx + dy * dy);
     if (dist < .7 || now > a.nextTurn) {
-      a.target = kingdomPoint(a.rand, a.location);
-      a.nextTurn = now + 3500 + a.rand() * 5000;
+      kingdomDecide(a, now);
+      if (a.act || now < a.pauseUntil) a.el.classList.remove('walking');
     } else {
       var step = Math.min(dist, a.speed * dt);
       var moved = kingdomTryStep(a, a.x + dx / dist * step, a.y + dy / dist * step);
@@ -1229,281 +1243,59 @@ function kingdomTick(now) {
     kingdomPaint(a);
   }
   if (now >= KINGDOM_SOCIAL_AT && !still) {
-    kingdomFindFriends(now);
-    KINGDOM_SOCIAL_AT = now + 1500;
+    KINGDOM_SOCIAL_AT = now + kingdomFindFriends(now);
   }
   KINGDOM_RAF = requestAnimationFrame(kingdomTick);
 }
 
+/* On a narrow screen the town picture is cropped to its middle 45% (see the
+   mobile .kingdom-stage rule), so scene x maps to view x the same way the
+   lanterns' and markers' --mx does. Everything placed by scene position goes
+   through these two. */
+var KINGDOM_NARROW_QUERY = window.matchMedia ? window.matchMedia('(max-width: 760px)') : null;
+function kingdomNarrow() { return !!(KINGDOM_NARROW_QUERY && KINGDOM_NARROW_QUERY.matches); }
+function kingdomViewX(x) { return kingdomNarrow() ? x * 2.222222 - 61.111111 : x; }
+function kingdomSceneX(viewX) { return kingdomNarrow() ? (viewX + 61.111111) / 2.222222 : viewX; }
+if (KINGDOM_NARROW_QUERY) {
+  var kingdomOnNarrowChange = function () { KINGDOM_ACTORS.forEach(kingdomPaint); };
+  if (KINGDOM_NARROW_QUERY.addEventListener) KINGDOM_NARROW_QUERY.addEventListener('change', kingdomOnNarrowChange);
+  else if (KINGDOM_NARROW_QUERY.addListener) KINGDOM_NARROW_QUERY.addListener(kingdomOnNarrowChange);
+}
+
+/* After dusk every resident is drawn above the night tint, in depth order,
+   and graded by a filter that matches it (see kingdomEnsureTints), so one that
+   glows can stay bright without being lifted over its neighbours. `lift` is
+   a hop in the air; it moves the sprite without changing its depth. */
 function kingdomPaint(actor) {
-  var depth = .72 + actor.y * .0042;
-  actor.el.style.left = actor.x.toFixed(2) + '%';
-  actor.el.style.top = actor.y.toFixed(2) + '%';
-  actor.el.style.transform = 'translate(-50%, -78%) scale(' + depth.toFixed(3) + ')';
-  actor.el.style.zIndex = String(100 + Math.round(actor.y));
+  /* A climber on the wall keeps the size it had on the ground. */
+  var depth = .72 + (actor.depthY == null ? actor.y : actor.depthY) * .0042;
+  actor.el.style.left = kingdomViewX(actor.x).toFixed(2) + '%';
+  actor.el.style.top = (actor.y - (actor.lift || 0)).toFixed(2) + '%';
+  actor.el.style.transform = 'translate(-50%, -86%) scale(' + depth.toFixed(3) + ')';
+  actor.el.style.zIndex = String((KINGDOM_DARK ? 5250 : 100) + Math.round(actor.y));
+  if (actor.halo) kingdomGlowPaint(actor, depth);
 }
 
-function kingdomFindFriends(now) {
-  if (KINGDOM_ACTORS.length < 2) return;
-  var start = Math.floor(Math.random() * KINGDOM_ACTORS.length);
-  for (var offset = 0; offset < KINGDOM_ACTORS.length; offset++) {
-    var a = KINGDOM_ACTORS[(start + offset) % KINGDOM_ACTORS.length];
-    if (now < a.pauseUntil || a.trip || a.gym) continue;
-    var best = null, bestD = 999;
-    for (var j = 0; j < KINGDOM_ACTORS.length; j++) {
-      var b = KINGDOM_ACTORS[j];
-      if (a === b || now < b.pauseUntil || b.trip || b.gym) continue;
-      var dx = a.x - b.x, dy = a.y - b.y;
-      var d = dx * dx + dy * dy;
-      if (d < bestD) { bestD = d; best = b; }
-    }
-    if (best && bestD < 85) { kingdomSocial(a, best, now); return; }
-  }
-}
-
-function kingdomSocial(a, b, now) {
-  var moments = [
-    { mark: '♥', line: ' are sharing a happy moment.' },
-    { mark: '♪', line: ' found a song in the trees.' },
-    { mark: '!', line: ' started a tiny game of chase.' },
-    { mark: '✦', line: ' stopped to watch the town sparkle.' }
-  ];
-  var moment = moments[Math.floor(Math.random() * moments.length)];
-  [a, b].forEach(function (actor) {
-    actor.pauseUntil = now + 1800;
-    actor.el.classList.remove('walking');
-    actor.el.classList.add('greeting');
-    var old = actor.el.querySelector('.kingdom-emote');
-    if (old) old.remove();
-    var emote = document.createElement('span');
-    emote.className = 'kingdom-emote';
-    emote.textContent = moment.mark;
-    actor.el.appendChild(emote);
-    setTimeout(function () {
-      if (emote.parentNode) emote.remove();
-      actor.el.classList.remove('greeting');
-    }, 1700);
-  });
-  kingdomSay(monName(a.entry.mon) + ' and ' + monName(b.entry.mon) + moment.line, 'chatter');
-}
-
-function kingdomGymStation(id) {
-  for (var i = 0; i < KINGDOM_GYM_STATIONS.length; i++) {
-    if (KINGDOM_GYM_STATIONS[i].id === id) return KINGDOM_GYM_STATIONS[i];
-  }
-  return null;
-}
-
-function kingdomGymOccupant(stationId, except) {
-  for (var i = 0; i < KINGDOM_ACTORS.length; i++) {
-    var actor = KINGDOM_ACTORS[i];
-    if (actor !== except && actor.gym && actor.gym.station.id === stationId) return actor;
-  }
-  return null;
-}
-
-function kingdomGymStateKey(actor) {
-  return actor && actor.gym ? actor.gym.phase + ':' + actor.gym.station.id : 'idle';
-}
-
-function kingdomGymClearVisual(actor) {
-  if (!actor || !actor.el) return;
-  actor.el.classList.remove('gym-working', 'gym-climb', 'gym-bags', 'gym-balance',
-    'gym-hurdles', 'gym-spar', 'gym-weights');
-  var emote = actor.el.querySelector('.kingdom-emote');
-  if (emote) emote.remove();
-}
-
-function kingdomGymEmote(actor, text) {
-  var old = actor.el.querySelector('.kingdom-emote');
-  if (old) old.remove();
-  var emote = document.createElement('span');
-  emote.className = 'kingdom-emote kingdom-gym-emote';
-  emote.textContent = text;
-  actor.el.appendChild(emote);
-}
-
+/* The workout markers light up while their station is in use. */
 function kingdomRefreshGymStations() {
   $$('.kingdom-gym-station').forEach(function (button) {
-    var station = kingdomGymStation(button.getAttribute('data-gym-station'));
-    var occupant = station && kingdomGymOccupant(station.id, null);
-    var working = !!(occupant && occupant.gym.phase === 'working');
+    var spot = kingdomSpot(button.getAttribute('data-gym-station'));
+    var occupant = spot && kingdomSeatOccupant(spot, 0, null);
+    var working = !!(occupant && occupant.act.phase === 'do');
     var selected = occupant && occupant === KINGDOM_INSPECTED;
     button.classList.toggle('busy', !!occupant);
     button.classList.toggle('active', working);
     button.classList.toggle('selected', !!selected);
     button.setAttribute('aria-disabled', String(!!occupant && !selected));
-    button.title = occupant ? station.name + ' — ' + monName(occupant.entry.mon) +
-      (working ? ' is working out' : ' is on the way') : station.name;
+    button.title = occupant ? spot.name + ' — ' + monName(occupant.entry.mon) +
+      (working ? ' is working out' : ' is on the way') : spot ? spot.name : '';
   });
-}
-
-function kingdomGymCancel(actor, cooldown) {
-  if (!actor) return;
-  kingdomGymClearVisual(actor);
-  actor.gym = null;
-  if (actor.location && actor.location.id === 'gym') {
-    actor.gymAt = cooldown === false ? Infinity : performance.now() + 9000 + actor.rand() * 9000;
-  } else {
-    actor.gymAt = Infinity;
-  }
-  kingdomRefreshGymStations();
-  kingdomRefreshInspector();
-}
-
-function kingdomGymBegin(actor, stationId, manual) {
-  var station = kingdomGymStation(stationId);
-  if (!actor || !station || actor.trip || actor.location.id !== 'gym') return false;
-  var occupant = kingdomGymOccupant(station.id, actor);
-  if (occupant) return false;
-  if (actor.gym && actor.gym.station.id === station.id) return true;
-
-  kingdomGymClearVisual(actor);
-  var dx = actor.x - station.x, dy = actor.y - station.y;
-  var route = Math.sqrt(dx * dx + dy * dy) < 18 ? [] :
-    [{ x: actor.location.nav.home[0], y: actor.location.nav.home[1] }];
-  route.push({ x: station.x, y: station.y });
-  actor.gym = {
-    station: station, phase: 'approach', manual: !!manual,
-    route: route, step: 0, startedAt: performance.now(), blocked: 0
-  };
-  actor.target = route[0];
-  actor.pauseUntil = 0;
-  actor.nextTurn = Infinity;
-  actor.el.classList.add('walking');
-  kingdomSay(monName(actor.entry.mon) + ' is heading to the ' + station.name + '.',
-    manual ? 'news' : 'chatter');
-  kingdomRefreshGymStations();
-  kingdomRefreshInspector();
-  return true;
-}
-
-function kingdomGymStartWorkout(actor, now) {
-  var gym = actor.gym;
-  if (!gym) return;
-  gym.phase = 'working';
-  gym.until = now + (gym.manual ? 6800 : 5000 + actor.rand() * 3600);
-  actor.pauseUntil = gym.until;
-  actor.el.classList.remove('walking', 'greeting');
-  actor.el.classList.add('gym-working', 'gym-' + gym.station.motion);
-  kingdomGymEmote(actor, gym.station.icon);
-  kingdomSay(monName(actor.entry.mon) + ' is ' + gym.station.action + '!', gym.manual ? 'news' : 'chatter');
-  kingdomRefreshGymStations();
-  kingdomRefreshInspector();
-}
-
-function kingdomGymFinish(actor, now) {
-  var gym = actor.gym;
-  if (!gym) return;
-  var message = monName(actor.entry.mon) + ' ' + gym.station.finish + '.';
-  kingdomGymClearVisual(actor);
-  actor.gym = null;
-  actor.gymAt = now + 11000 + actor.rand() * 12000;
-  actor.pauseUntil = now + 900;
-  actor.target = kingdomPoint(actor.rand, actor.location);
-  actor.nextTurn = now + 4000;
-  kingdomSay(message, gym.manual ? 'news' : 'chatter');
-  kingdomRefreshGymStations();
-  kingdomRefreshInspector();
-}
-
-/* Returns true while this frame belongs to a gym approach or workout. */
-function kingdomGymTick(actor, now, still, dt) {
-  if (actor.location.id !== 'gym') return false;
-  dt = typeof dt === 'number' ? dt : .05;
-  if (!actor.gym && now >= actor.gymAt) {
-    var free = KINGDOM_GYM_STATIONS.filter(function (station) {
-      return !kingdomGymOccupant(station.id, actor);
-    });
-    if (free.length) {
-      kingdomGymBegin(actor, free[Math.floor(actor.rand() * free.length)].id, false);
-    } else {
-      actor.gymAt = now + 2200 + actor.rand() * 1800;
-    }
-  }
-  var gym = actor.gym;
-  if (!gym) return false;
-  if (gym.phase === 'working') {
-    if (now >= gym.until) kingdomGymFinish(actor, now);
-    else {
-      actor.el.classList.remove('walking');
-      kingdomPaint(actor);
-      return true;
-    }
-    return false;
-  }
-
-  var target = gym.route[gym.step];
-  var dx = target.x - actor.x, dy = target.y - actor.y;
-  var dist = Math.sqrt(dx * dx + dy * dy);
-  if (dist < .8 || still) {
-    actor.x = target.x;
-    actor.y = target.y;
-    gym.step++;
-    if (gym.step >= gym.route.length) {
-      kingdomPaint(actor);
-      kingdomGymStartWorkout(actor, now);
-      return true;
-    }
-    actor.target = gym.route[gym.step];
-    kingdomPaint(actor);
-    return true;
-  }
-
-  actor.el.classList.add('walking');
-  var move = Math.min(dist, actor.speed * dt);
-  var moved = kingdomTryStep(actor, actor.x + dx / dist * move, actor.y + dy / dist * move);
-  if (moved) {
-    gym.blocked = 0;
-    if (Math.abs(dx) > .15) actor.el.style.setProperty('--face', dx < 0 ? '-1' : '1');
-  } else {
-    gym.blocked++;
-    /* Equipment can sit between a resident and the central lane. A short
-       sidestep gives the ordinary collision system another clean approach. */
-    if (gym.blocked > 18) {
-      var sidestep = kingdomPoint(actor.rand, actor.location);
-      gym.route.splice(gym.step, 0, sidestep);
-      gym.blocked = 0;
-      actor.target = sidestep;
-    }
-  }
-  kingdomPaint(actor);
-  return true;
-}
-
-function kingdomUseGymStation(stationId) {
-  var station = kingdomGymStation(stationId);
-  var actor = KINGDOM_INSPECTED;
-  if (!station || KINGDOM_LOCATION !== 'gym') return;
-  if (!actor || KINGDOM_ACTORS.indexOf(actor) < 0 || actor.location.id !== 'gym') {
-    kingdomSay('Choose a Pokémon in the gym first, then pick a workout station.');
-    toast('Choose a Pokémon in Mossroot Gym first.');
-    return;
-  }
-  if (actor.trip || KINGDOM_CARRY) return;
-  var occupant = kingdomGymOccupant(station.id, actor);
-  if (occupant) {
-    var busy = monName(occupant.entry.mon) + ' is using the ' + station.name + ' right now.';
-    kingdomSay(busy);
-    toast(busy);
-    return;
-  }
-  if (actor.gym && actor.gym.station.id === station.id) {
-    toast(monName(actor.entry.mon) + ' is already using the ' + station.name + '.');
-    return;
-  }
-  if (kingdomGymBegin(actor, station.id, true)) {
-    toast(monName(actor.entry.mon) + ' is heading to the ' + station.name + '.');
-  }
 }
 
 /* What a Pokemon is up to, in words, for the inspector. */
 function kingdomTravelLine(actor) {
-  if (actor.gym) {
-    return actor.gym.phase === 'working' ?
-      'Working out at the ' + actor.gym.station.name + ': ' + actor.gym.station.action + '.' :
-      'Heading to the ' + actor.gym.station.name + ' for a workout.';
-  }
+  var doing = kingdomActLine(actor);
+  if (doing) return doing;
   var st = actor.entry.state;
   var now = Date.now();
   if (!st) return 'Spending time in ' + actor.location.name + '.';
@@ -1513,6 +1305,9 @@ function kingdomTravelLine(actor) {
       (via.length ? ' by way of ' + via.join(' and ') : '') +
       ' - about ' + kingdomDurationText(st.trip.end - now) + ' to go.';
   }
+  if (actor.follow && actor.follow.family) {
+    return 'Tagging along after ' + monName(actor.follow.other.entry.mon) + '.';
+  }
   return 'Settled in ' + actor.location.name + '. Feels like wandering off in about ' +
     kingdomDurationText(st.until - now) + '.';
 }
@@ -1520,15 +1315,19 @@ function kingdomTravelLine(actor) {
 function kingdomInspect(actor) {
   KINGDOM_INSPECTED = actor;
   KINGDOM_ACTORS.forEach(function (a) { a.el.classList.toggle('selected', a === actor); });
-  if (!actor.trip && (!actor.gym || actor.gym.phase !== 'working')) {
+  var act = actor.act;
+  var busy = !!(act && act.phase === 'do');
+  var asleep = busy && act.spot.motion === 'sleep';
+  if (!actor.trip && !act) {
     actor.pauseUntil = performance.now() + 3200;
     actor.el.classList.remove('walking');
   }
-  if (!actor.gym || actor.gym.phase !== 'working') {
+  if (!busy) {
     actor.el.classList.add('greeting');
     setTimeout(function () { if (actor.el) actor.el.classList.remove('greeting'); }, 850);
   }
-  playCry(actor.entry.mon.id);
+  /* Nobody wants a cry in the ear while they sleep. */
+  if (!asleep) playCry(actor.entry.mon.id);
   var m = actor.entry.mon, d = dexOf(m.id);
   var home = actor.entry.where === 'party' ? 'Traveling in your party' : 'Living in the PC';
   var travelling = !!(actor.entry.state && actor.entry.state.trip);
@@ -1537,14 +1336,26 @@ function kingdomInspect(actor) {
     '<img src="' + monSprite(m, m.shiny ? 'shiny' : 'front') + '" alt="">' +
     '<div><h3>' + esc(monName(m)) + (m.shiny ? ' ✦' : '') + '</h3><div>' + typePills(d.types) + '</div>' +
     '<p>Level ' + m.lvl + ' · ' + esc(d.genus) + ' · ' + home + '<br><span id="kingdom-inspect-status">' +
-    esc(kingdomTravelLine(actor)) + '</span></p><div id="kingdom-inspect-moves" data-travelling="' +
-    travelling + '" data-gym="' + kingdomGymStateKey(actor) + '">' +
+    esc(kingdomTravelLine(actor)) + '</span></p><p id="kingdom-inspect-about" class="kingdom-inspect-about">' +
+    kingdomAboutHtml(actor) + '</p><div id="kingdom-inspect-moves" data-travelling="' +
+    travelling + '" data-act="' + esc(kingdomActKey(actor)) + '">' +
     kingdomMoveButtonsHtml(actor, travelling) + '</div></div>' +
     '<button class="kingdom-close" onclick="kingdomClearInspect()" aria-label="Close Pokémon details">×</button>';
   kingdomRefreshGymStations();
-  kingdomSay(actor.gym && actor.gym.phase === 'working' ?
-    monName(m) + ' is ' + actor.gym.station.action + '!' :
+  kingdomSay(asleep ? 'Shh! ' + monName(m) + ' is fast asleep.' :
+    busy && !act.quiet ? monName(m) + ' is ' + act.verb + '!' :
     monName(m) + (actor.trip ? ' waved on its way past!' : ' came over to say hello!'));
+}
+
+/* Changes whenever the inspector's buttons would: what this resident is
+   doing, and which seats in the district are taken. */
+function kingdomActKey(actor) {
+  var act = actor.act;
+  var key = act ? act.phase + ':' + (act.spot.base || act.spot).id : 'idle';
+  KINGDOM_ACTORS.forEach(function (other) {
+    if (other !== actor && other.act && !other.act.spot.adhoc) key += '|' + (other.act.spot.base || other.act.spot).id + other.act.seat;
+  });
+  return key;
 }
 
 function kingdomRefreshInspector() {
@@ -1554,11 +1365,11 @@ function kingdomRefreshInspector() {
   status.textContent = kingdomTravelLine(actor);
   var moves = $('#kingdom-inspect-moves');
   var travelling = !!(actor.entry.state && actor.entry.state.trip);
-  var gymKey = kingdomGymStateKey(actor);
+  var actKey = kingdomActKey(actor);
   if (moves && (moves.getAttribute('data-travelling') !== String(travelling) ||
-      moves.getAttribute('data-gym') !== gymKey)) {
+      moves.getAttribute('data-act') !== actKey)) {
     moves.setAttribute('data-travelling', String(travelling));
-    moves.setAttribute('data-gym', gymKey);
+    moves.setAttribute('data-act', actKey);
     moves.innerHTML = kingdomMoveButtonsHtml(actor, travelling);
   }
 }
@@ -1571,20 +1382,7 @@ function kingdomMoveButtonsHtml(actor, travelling) {
     h += '<button type="button" onclick="kingdomMoveInspected(\'' + loc.id + '\')">' +
       loc.icon + ' ' + esc(loc.short) + '</button>';
   });
-  h += '</div>';
-  if (actor.location.id === 'gym') {
-    h += '<div class="kingdom-move-row kingdom-workout-row"><span>Work out</span>';
-    KINGDOM_GYM_STATIONS.forEach(function (station) {
-      var occupant = kingdomGymOccupant(station.id, actor);
-      var current = actor.gym && actor.gym.station.id === station.id;
-      h += '<button type="button" onclick="kingdomUseGymStation(\'' + station.id + '\')"' +
-        (occupant ? ' disabled title="' + esc(monName(occupant.entry.mon)) + ' is using this station"' : '') +
-        (current ? ' class="active" aria-pressed="true"' : '') + '>' + station.icon + ' ' +
-        esc(station.short) + '</button>';
-    });
-    h += '</div>';
-  }
-  return h;
+  return h + '</div>' + kingdomSpotButtonsHtml(actor);
 }
 
 /* Button alternative to carrying: the Pokemon sets off on foot, right now. */
@@ -1593,14 +1391,14 @@ function kingdomMoveInspected(locationId) {
   if (!actor || KINGDOM_ACTORS.indexOf(actor) < 0 || KINGDOM_CARRY || actor.trip) return;
   var target = kingdomLocation(locationId);
   if (!kingdomTravelSend(actor.entry, target.id, [actor.x, actor.y])) return;
-  kingdomGymCancel(actor, false);
+  kingdomActCancel(actor, false);
   actor.pauseUntil = 0;
   kingdomSync();
   toast(monName(actor.entry.mon) + ' is walking to ' + target.name + '.');
 }
 
 function kingdomRemoveActor(actor, keepElement) {
-  kingdomGymCancel(actor, false);
+  kingdomActorTeardown(actor);
   var i = KINGDOM_ACTORS.indexOf(actor);
   if (i >= 0) KINGDOM_ACTORS.splice(i, 1);
   if (!keepElement && actor.el && actor.el.parentNode) actor.el.remove();
@@ -1622,14 +1420,17 @@ function kingdomClearInspect() {
     '<div><h3>Back to exploring</h3><p>Choose another Pokémon whenever you want to visit.</p></div>';
 }
 
-/* Comings and goings are the news; idle chatter waits a few seconds behind them. */
+/* Comings and goings are the news; idle chatter waits a few seconds behind
+   them, and gives each line a moment to be read before the next. */
 var KINGDOM_NEWS_UNTIL = 0;
+var KINGDOM_CHATTER_UNTIL = 0;
 function kingdomSay(message, kind) {
   var story = $('#kingdom-story');
   if (!story) return;
   var now = performance.now();
-  if (kind === 'chatter' && now < KINGDOM_NEWS_UNTIL) return;
+  if (kind === 'chatter' && (now < KINGDOM_NEWS_UNTIL || now < KINGDOM_CHATTER_UNTIL)) return;
   if (kind === 'news') KINGDOM_NEWS_UNTIL = now + 4500;
+  if (kind === 'chatter') KINGDOM_CHATTER_UNTIL = now + 2800;
   story.textContent = message;
 }
 
@@ -1650,11 +1451,27 @@ function kingdomUpdateClock() {
 function kingdomApplyAtmosphere(now) {
   var stage = $('#kingdom-stage');
   if (!stage) return;
+  if (now === undefined) now = Date.now();
   var time = kingdomEasternTime(now);
+  /* Rain follows the town forecast until the player sets it themselves. */
+  if (!KINGDOM_WEATHER_SET) {
+    var forecast = kingdomForecast(now);
+    if (forecast !== KINGDOM_WEATHER) {
+      KINGDOM_WEATHER = forecast;
+      if (forecast === 'rain' && KINGDOM_RAIN_SOUND) kingdomStartRainAudio();
+      else kingdomStopRainAudio(false);
+      /* Only news when it changes in front of you, not on arrival. */
+      if (/\bphase-/.test(stage.className)) {
+        kingdomSay(forecast === 'rain' ? 'Clouds roll in, and a gentle rain begins.' :
+          'The rain stops and the town shakes itself dry.', 'news');
+      }
+    }
+  }
   ['dawn', 'day', 'dusk', 'night'].forEach(function (phase) {
     stage.classList.toggle('phase-' + phase, phase === time.phase);
   });
   stage.classList.toggle('weather-rain', KINGDOM_WEATHER === 'rain');
+  kingdomLifeAtmosphere(time.phase, KINGDOM_WEATHER === 'rain');
   var timeLabel = $('#kingdom-local-time');
   if (timeLabel) {
     var icon = time.phase === 'night' ? '🌙 ' : time.phase === 'dawn' ? '🌅 ' :
@@ -1666,6 +1483,7 @@ function kingdomApplyAtmosphere(now) {
     var raining = KINGDOM_WEATHER === 'rain';
     button.setAttribute('aria-pressed', String(raining));
     button.textContent = raining ? '🌧️ Rain: on' : '☁️ Rain: off';
+    button.title = KINGDOM_WEATHER_SET ? 'You set the weather' : 'Following the town forecast';
   }
   var soundButton = $('#kingdom-sound-toggle');
   if (soundButton) {
@@ -1959,6 +1777,7 @@ function kingdomStopMusic(immediate) {
 }
 
 function kingdomToggleWeather() {
+  KINGDOM_WEATHER_SET = true;
   KINGDOM_WEATHER = KINGDOM_WEATHER === 'rain' ? 'clear' : 'rain';
   kingdomApplyAtmosphere();
   if (KINGDOM_WEATHER === 'rain' && KINGDOM_RAIN_SOUND) kingdomStartRainAudio();
@@ -2046,7 +1865,8 @@ function kingdomStagePointerDown(ev) {
 
 function kingdomBeginHold(actor, ev) {
   kingdomCancelHold(true);
-  kingdomGymCancel(actor, true);
+  kingdomActCancel(actor, true);
+  actor.follow = null;
   actor.pauseUntil = Infinity;
   actor.el.classList.remove('walking');
   actor.el.classList.add('holding');
@@ -2117,18 +1937,18 @@ function kingdomPickUp() {
 }
 
 /* The hand grips the top of the sprite, so it is aimed by its feet - the same
-   anchor kingdomPaint uses (78% down a sprite that hangs from 20% above the hand). */
+   anchor kingdomPaint uses (86% down a sprite that hangs from 20% above the hand). */
 function kingdomFeetPoint(cx, cy) {
   var stage = $('#kingdom-stage');
   if (!stage || !KINGDOM_CARRY) return null;
   var r = stage.getBoundingClientRect();
-  var fy = cy + KINGDOM_CARRY.size * .58;
+  var fy = cy + KINGDOM_CARRY.size * .66;
   /* Hit-test rather than trust the rectangle: the fixed nav bar can cover
      the bottom of the town. The carried sprite ignores pointer events. */
   var under = document.elementFromPoint(cx, cy);
   return {
     inside: !!under && stage.contains(under),
-    x: Math.max(0, Math.min(100, (cx - r.left) / r.width * 100)),
+    x: Math.max(0, Math.min(100, kingdomSceneX((cx - r.left) / r.width * 100))),
     y: Math.max(0, Math.min(100, (fy - r.top) / r.height * 100))
   };
 }

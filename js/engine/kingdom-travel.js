@@ -234,13 +234,14 @@ function kingdomTownRoute(from, to, rand) {
 /* `startPoint` is where the Pokemon is standing when it sets off; the leave
    leg is walked from there (instead of the district's home spot), so the
    schedule matches what the player saw. */
-function kingdomPlanTrip(key, from, to, start, rand, startPoint) {
-  if (!to) {
-    var others = KINGDOM_LOCATIONS.filter(function (loc) { return loc.id !== from; });
-    to = others[Math.floor(rand() * others.length)].id;
-  }
-  var path = kingdomTownRoute(from, to, rand);
-  var speed = kingdomTemperament(key).speed;
+/* A `lead` trip (a friend it is tagging along with) sets the route, the
+   walking pace and the time on each road, so the two travel side by side. */
+function kingdomPlanTrip(key, from, to, start, rand, startPoint, lead) {
+  /* Where to next leans on what the species likes (see kingdom-life.js). */
+  if (!to) to = kingdomPickDestination(key, from, rand);
+  var path = lead ? lead.path.slice() : kingdomTownRoute(from, to, rand);
+  var speed = lead && lead.speed ? lead.speed : kingdomTemperament(key).speed;
+  var roads = lead ? lead.legs.filter(function (leg) { return leg.kind === 'road'; }) : [];
   var legs = [];
   var t = start;
   var push = function (leg, length) {
@@ -258,11 +259,12 @@ function kingdomPlanTrip(key, from, to, start, rand, startPoint) {
     push(leg, kingdomLineLength(kingdomSceneRoute(here, prev, next, leg.at)));
     if (next) {
       var road = { kind: 'road', loc: null, from: here, to: next, start: t };
-      road.end = t = t + Math.round(KINGDOM_ROAD_MS * (.8 + rand() * .6));
+      var led = roads[i];
+      road.end = t = t + (led ? led.end - led.start : Math.round(KINGDOM_ROAD_MS * (.8 + rand() * .6)));
       legs.push(road);
     }
   }
-  return { from: from, to: to, path: path, start: start, end: t, legs: legs };
+  return { from: from, to: to, path: path, start: start, end: t, legs: legs, speed: speed };
 }
 
 /* ---- The shared itinerary store ------------------------------------------- */
@@ -384,6 +386,22 @@ function kingdomTravelSend(entry, locationId, startPoint) {
   if (st.trip || st.loc === locationId) return null;
   if (!startPoint && st.at) startPoint = [st.at.x, st.at.y];
   st.trip = kingdomPlanTrip(key, st.loc, locationId, now, kingdomTravelRand(key, st.n++), startPoint);
+  st.until = st.trip.end;
+  st.spot = null;
+  st.at = null;
+  KINGDOM_TRAVEL_DIRTY = true;
+  kingdomTravelSave();
+  return st;
+}
+
+/* Tag along: set off a moment after a friend, on the same trip at its pace. */
+function kingdomTravelFollow(entry, lead, startPoint, delay) {
+  var key = kingdomPlacementKey(entry);
+  var now = Date.now();
+  var st = kingdomTravelState(entry, now);
+  if (st.trip || st.loc !== lead.from) return null;
+  st.trip = kingdomPlanTrip(key, st.loc, lead.to, now + (delay || 0), kingdomTravelRand(key, st.n++),
+    startPoint, lead);
   st.until = st.trip.end;
   st.spot = null;
   st.at = null;

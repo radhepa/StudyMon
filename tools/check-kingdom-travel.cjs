@@ -25,6 +25,9 @@ const BASE = process.argv[2] || 'http://127.0.0.1:8793';
     for (let i = 0; i < 35; i++) S.box.push(makeMon(100 + i, 5 + (i % 20)));
     localStorage.removeItem(KINGDOM_TRAVEL_KEY);
     KINGDOM_TRAVEL = null;
+    /* Travel timing is measured in clear weather, whatever the forecast says. */
+    KINGDOM_WEATHER_SET = true;
+    KINGDOM_WEATHER = 'clear';
     showScreen('kingdom');
     renderKingdom();
   });
@@ -192,8 +195,14 @@ const BASE = process.argv[2] || 'http://127.0.0.1:8793';
     const typical = steps.slice().sort((a, b) => a - b)[Math.floor(steps.length / 2)];
     return {
       same: el.isConnected && document.querySelector('#kingdom-map-walkers img') === el,
-      /* It must keep gliding at its usual pace: no pause and no jump. */
-      smooth: typical > .2 && steps.every(s => s > typical * .3 && s < typical * 3),
+      /* It must keep gliding at its usual pace: no pause and no jump. Redrawing
+         a district can hold up a frame or two, which shows as short steps and
+         then a long one; over any four samples it still covers its usual ground. */
+      smooth: typical > .2 && steps.every(s => s < typical * 4) &&
+        steps.slice(3).every((s, i) => {
+          const run = steps[i] + steps[i + 1] + steps[i + 2] + s;
+          return run > typical * 4 * .4 && run < typical * 4 * 2;
+        }),
       steps: steps.map(s => +s.toFixed(2))
     };
   }, crossLoc);

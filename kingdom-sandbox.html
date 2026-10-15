@@ -37,6 +37,15 @@
         <select id="sbx-type" aria-label="Filter by type"><option value="">All types</option><option value="originals">★ StudyMon originals</option></select>
         <label class="sbx-num">Lv <input id="sbx-level" type="number" min="1" max="100" value="20"></label>
       </div>
+      <div class="sbx-row">
+        <select id="sbx-phase" aria-label="Time of day">
+          <option value="">🕰️ Live time</option><option value="dawn">🌅 Dawn</option>
+          <option value="day">☀️ Day</option><option value="dusk">🌇 Dusk</option><option value="night">🌙 Night</option>
+        </select>
+        <select id="sbx-weather" aria-label="Weather">
+          <option value="">🌦️ Forecast</option><option value="clear">☁️ Clear</option><option value="rain">🌧️ Rain</option>
+        </select>
+      </div>
       <div class="sbx-row sbx-checks">
         <label><input id="sbx-shiny" type="checkbox"> Shiny</label>
         <label><input id="sbx-party" type="checkbox"> Party ★</label>
@@ -63,6 +72,7 @@
 <script src="js/engine/ui.js"></script>
 <script src="js/engine/kingdom.js"></script>
 <script src="js/engine/kingdom-travel.js"></script>
+<script src="js/engine/kingdom-life.js"></script>
 <script src="js/sandbox/kingdom-sandbox.js"></script>
 </body>
 </html>

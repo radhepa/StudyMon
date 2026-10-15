@@ -19,6 +19,66 @@ Portraits are not covered there. After importing art, rebuild the contact sheets
 and look at them; tools/reframe-portraits.py holds the per-character framing
 corrections.
 
+# Kingdom life: places, personalities, night and weather
+
+The Kingdom used to be a town of wanderers who did the same few things. Its
+residents now live a day: `js/engine/kingdom-life.js` (loaded after
+`kingdom.js` and `kingdom-travel.js`) holds everything below.
+
+**Activity spots.** `KINGDOM_SPOTS` lists 49 places across the ten districts.
+Each spot has seats in stage percent: `at` is where the resident's feet go,
+`from` is the open ground it hops over from (onto a bench, into a pool), `via`
+are stairs, and `drift` keeps a swimmer moving round its pool. `driftMode:
+'route'` turns the drift into a course with `hop`, `jump`, `run` and `climb`
+legs and pauses (the gym circuit). `perch` seats sit the creature up on a
+bench, stool or dock edge with its legs over the front, `snack` gives eaters a
+berry or a cupcake, and `fx` lights a prop (campfire, Moonbell, bees,
+fountain). Swim and soak points were placed by measuring the water in the
+district art, so every one is really in the water, and the waterline keeps at
+least the head and shoulders (about 60% of the sprite) above it.
+`KINGDOM_AMBIENT` holds 36 things a resident does on the spot (dig, roar,
+stargaze, chase a butterfly, Jigglypuff's lullaby). A resident about to settle
+first steps aside if someone is already there, or if the spot is under the HUD.
+
+**Personality.** `kingdomTraits` gives every species a gait (hop, stomp,
+slither, float, fly), type favourites for places and districts, and flags such
+as night owl, sleepy, glows or fish (fish are kept off the gym circuit).
+
+**Friendships.** Two residents who meet in a district have a short moment: pixel
+emote bubbles over both and a line in the news bar (95 lines, chosen to fit the
+place, time, weather and types). Each pair counts at most one meeting a
+minute; 3, 6 and 10 meetings make friends, close friends and best friends, and
+three meetings at the gym (or between two fighting types) make gym rivals.
+Bonds are saved in `studymon.kingdom.bonds.v1`. Friends walk over to say hello,
+close friends (35%) and best friends (65%) tag along on trips, and
+pre-evolutions follow their evolved relatives. The inspector shows a
+resident's top friendships.
+
+**Night and weather.** After dusk every resident is drawn above the town's night
+tint, still in depth order, and graded by an SVG colour matrix that matches the
+tint (`KINGDOM_TINTS`). Pokémon that make light get a lighter grade, a halo
+and a pool of light inside their own box, so nothing blends over the whole
+stage. Most residents sleep at night and night owls nap by day. The forecast
+(`kingdomForecast`) is the same for everyone at a given hour; in rain, fire
+types look for shelter or huddle up, and water types dance in it.
+
+**Pixel-art rules.** The sprites are drawn looking left, so the sprite image is
+mirrored and `--face: 1` means looking right; before this pass every resident
+walked backwards. Turning around is instant (`--turn` flips in one frame)
+because a tweened flip squeezes the sprite paper-thin. Held poses squash by no
+more than about 4% and tilt no more than 6°, and idle breathing is a
+one-pixel, two-frame bob in steps, because smoothly scaling pixel art makes its
+rows shimmer. Campfire flames, emote icons, hearts, notes, sparkles, sleepy Zs
+and the butterfly are hand-drawn pixel sheets built by
+`python tools/build-kingdom-pixel-art.py` (`assets/ui/kingdom-fire.png`,
+`assets/ui/kingdom-icons.png`), not emoji.
+
+**Checks and screenshots.** `node tools/check-kingdom.cjs <url>` now also audits
+every spot (walkable, reachable, short hops), gym routes, glow, sleep, rain,
+bonds, families, favourites, the forecast and the phone-width layout.
+`node tools/capture-kingdom-showcase.cjs <url>` stages six scenes in the
+Kingdom Sandbox and rewrites the `kingdom-*.jpg` README screenshots.
+
 # Your house has a purpose now
 
 Three pieces of furniture in **Your Home** (Bootstrap Town) do something. Walk up
